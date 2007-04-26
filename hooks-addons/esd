@@ -2,7 +2,7 @@
 # need esound
 
 
-if [ $TCOS_SOUND -a ! $TCOS_PULSEAUDIO ]; then
+if [ $TCOS_SOUND ] &&  [ ! $TCOS_PULSEAUDIO ]; then
 sound_error=0
 esound=$(dpkg -l esound|grep -c ^ii)
 if [ ${esound} != 1 ]; then

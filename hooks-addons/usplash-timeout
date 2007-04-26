@@ -6,6 +6,20 @@ if [ -e $DESTDIR/scripts/init-top/usplash ]; then
 
 cat << EOF >> $DESTDIR/scripts/init-top/usplash
 
+# kill usplash if cmdline have "nousplash" or "nosplash"
+for x in \$(cat /proc/cmdline); do
+        case \$x in
+        no*splash)
+		KILL_USPLASH=true
+                ;;
+        esac
+done
+
+if [ "\$SPLASH" = "true" ] && [ "\$KILL_USPLASH" = "true" ] ; then
+  usplash_write "QUIT"
+  killall usplash
+  chvt 1
+fi
 
 if [ "\$SPLASH" = "true" ]; then
    usplash_write "TEXT Preparing to boot..."

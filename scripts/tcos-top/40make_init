@@ -79,10 +79,14 @@ move_file /tmp/initramfs.debug /root
 touch /etc/mtab
 move_file /etc/mtab         /root
 
- 
-log_begin_msg "Re-Updating modules dependencies"
-  chroot /root depmod -a
-log_end_msg
+mkdir -p /root/proc
+mkdir -p /root/dev
+mkdir -p /root/sys
+
+# done in gentcos -rootfs 
+#log_begin_msg "Re-Updating modules dependencies"
+#  chroot /root depmod -a
+#log_end_msg
 
 
 exit 0

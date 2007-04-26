@@ -14,7 +14,7 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
    echo "ERROR:"
    echo ""
    echo "Not LTSPFS support, please install ltspfs-client to build image."
-   echo "        You can get it in http://soleup.eup.uva.es/tcos/extras/"
+   echo ""
    echo ""
   fi
 

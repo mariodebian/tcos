@@ -61,6 +61,7 @@ echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
 mkdir -p $DESTDIR/usr/bin
 mkdir -p $DESTDIR/usr/sbin
 mkdir -p $DESTDIR/lib/lsb/
+
 cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
 cpifexists /etc/debian_version  /etc/
 
@@ -112,8 +113,10 @@ egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobod
 egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
 
 # change shell to /bin/sh
-cat $DESTDIR/etc/passwd | sed s/bash/sh/g > $DESTDIR/etc/passwd~ ; cat $DESTDIR/etc/passwd~ > $DESTDIR/etc/passwd
-rm $DESTDIR/etc/passwd~
+sed -i s/bash/sh/g ${DESTDIR}/etc/passwd
+
+#cat $DESTDIR/etc/passwd | sed s/bash/sh/g > $DESTDIR/etc/passwd~ ; cat $DESTDIR/etc/passwd~ > $DESTDIR/etc/passwd
+#rm $DESTDIR/etc/passwd~
 
 
 # check for a decent version of busybox
@@ -128,8 +131,6 @@ if [ $DESTDIR/bin/busybox ]; then
        _echo "   INFO:  Better busybox found, replacing it..."
        rm $DESTDIR/bin/busybox
        cpifexists /bin/busybox /bin/
-       # replace sh too (in ubuntu is a link to /usr/lib/initramfs-tools/busybox)
-       (cd $DESTDIR/bin && rm -f sh && ln -s busybox sh )
     else
        _echo "ERROR:"
        _echo ""
@@ -138,6 +139,8 @@ if [ $DESTDIR/bin/busybox ]; then
        _echo ""
        _echo "     This TCOS image will not work."
        _echo ""
+       _echo " Press Ctrl+C to abort"
+       read
        sleep 2
     fi
   else
@@ -230,9 +233,12 @@ mkdir -p $DESTDIR/usr/sbin >/dev/null 2>&1
 cpifexists /sbin/reboot     /usr/sbin/
 cpifexists /sbin/poweroff     /usr/sbin/
 
+rm -f $DESTDIR/bin/reboot
+rm -f $DESTDIR/bin/poweroff
+rm -f $DESTDIR/bin/halt
 
 ###
-### FIXME add usplash support to reboot and poweroff scripts
+### add usplash support to reboot and poweroff scripts
 ###
 
 # reboot script
@@ -321,7 +327,15 @@ if [ $TCOS_DISABLE_ACPI ]; then
   rm -rf $DESTDIR/sbin/mdadm
   rm -rf $DESTDIR/sbin/mdrun
   rm -rf $DESTDIR/sbin/vgchange
+  rm -rf $DESTDIR/sbin/cryptsetup
+  rm -rf $DESTDIR/sbin/dmsetup
   rm -rf $DESTDIR/lib/lvm*
+  rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/md/
+  rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/scsi
+  manual_add_modules scsi_mod
+  manual_add_modules sd_mod
+  manual_add_modules sr_mod
+
   stat_after "Disable ACPI and RAID support"
   #set +x
 fi

@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.60.2) unstable; urgency=low
+
+  * bin/gentcos:
+     - Clean initramfs unwanted files after mkinitramfs
+  * ALL:
+     - reduce required RAM (min now is 24 Mb, probably need swap)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue,  6 Feb 2007 19:26:15 +0100
+
 initramfs-tools-tcos (0.60.1) unstable; urgency=low
 
   * Remove PREREQS in init scripts (scripts have numbers, should start in order...)

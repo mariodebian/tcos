@@ -1,6 +1,7 @@
 # save generated date and version into tcos.conf
 
 tcos_version=$(dpkg -l initramfs-tools-tcos|grep ^ii| awk '{print $3}')
+
 echo "# version of initramfs-tools-tcos" >> ${DESTDIR}/conf/tcos.conf
 echo "TCOS_VERSION=\"${tcos_version}\"" >> ${DESTDIR}/conf/tcos.conf
 echo "" >> ${DESTDIR}/conf/tcos.conf
@@ -10,11 +11,7 @@ echo "# date of image" >> ${DESTDIR}/conf/tcos.conf
 echo "TCOS_DATE=\"${tcos_date}\"" >> ${DESTDIR}/conf/tcos.conf
 echo "" >> ${DESTDIR}/conf/tcos.conf
 
-# for debug
-#tail -5 $DESTDIR/conf/tcos.conf
 
-# FORCE BOOT=tcos init
-#sed -i s/"\/scripts\/\${BOOT}"/"\/scripts\/tcos"/g  ${DESTDIR}/init
 
 # export some vars
 echo "" >> ${DESTDIR}/conf/tcos.conf
@@ -25,5 +22,6 @@ echo "export DISPLAY=:0" >> ${DESTDIR}/conf/tcos.conf
 
 cat << EOF > $DESTDIR/etc/issue
 TCOS $tcos_version \n \l
+
 
 EOF

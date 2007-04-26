@@ -37,4 +37,13 @@ if [ ${have_mem} -lt ${TCOS_MIN_RAM} ]; then
   echo 1 > /tmp/less_ram
 fi
 
+
+# force boot without nfs if booting from disk
+FORCE_NO_NFS=$(read_cmdline_var 'nonfs' '0')
+
+if [ $FORCE_NO_NFS = 1 ]; then
+  echo 0 > /tmp/less_ram
+fi
+
+
 exit 0

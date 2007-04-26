@@ -8,7 +8,7 @@
 #     or
 #  using this env var PULSE_SERVER="thin_client_hostname"
 
-if [ $TCOS_PULSEAUDIO -a $TCOS_SOUND ]; then
+if [ $TCOS_PULSEAUDIO ] && [ $TCOS_SOUND ]; then
 
 # check for apps
 check1=0
@@ -68,7 +68,7 @@ else
 . /conf/tcos-run-functions
 
 # generate conf
-rm -f /etc/pulse/default.pa || echo "ERROR deleting default PulseAudio config."
+rm -f /etc/pulse/default.pa
 cat << FIN > /etc/pulse/default.pa
 #!/usr/bin/pulseaudio -nF
 

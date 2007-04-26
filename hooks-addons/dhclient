@@ -22,7 +22,6 @@ elif [ -f /sbin/dhclient3 ]; then
 
 # exit 1
 
-  # FIXME need work
 
  copydir /etc/dhcp3                /etc/
  cpifexists /sbin/dhclient         /sbin/

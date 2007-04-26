@@ -36,7 +36,7 @@ config_svn:
 ubuntu-conf:
 	if [ "$(DISTRO)" = "ubuntu" ]; then\
 		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
-		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/default ;\
+		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/default.tpl ;\
 		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
 	fi
 
@@ -72,7 +72,8 @@ install:
 	# FIXME this file isn't in Xorg 7.0 anymore???
 	install -m 644 SecurityPolicy $(DESTDIR)/$(TCOS_CONF)
 
-	install -m 644 tcos/default $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
+#	install -m 644 tcos/default $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
+	install -m 644 tcos/default.tpl $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
 	install -m 644 tcos/help.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/tcos.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/logo.lss $(DESTDIR)$(TFTP_DIR)/
@@ -83,7 +84,7 @@ install:
 	for i in `find hooks/ -type f`; do install -m 755 $$i $(DESTDIR)$(TCOS_DIR)/$$i; done
 	for i in `find hooks-addons/ -maxdepth 1 -type f`; do install -m 644 $$i $(DESTDIR)$(TCOS_DIR)/$$i; done
 
-	# delete tcosmain
+	# delete tcosmain from initramfs-tools-tcos/hooks/
 	rm -rf $(DESTDIR)$(TCOS_DIR)/hooks/tcosmain
 	chmod -x $(DESTDIR)$(TCOS_DIR)/scripts/tcos
 

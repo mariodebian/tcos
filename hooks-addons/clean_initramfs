@@ -1,0 +1,42 @@
+# this hook is called before mkinitramfs is called
+
+. /etc/tcos/tcos.conf
+. /usr/share/initramfs-tools/hook-functions
+
+
+
+if [ "${DESTDIR}" = "" ]; then
+  echo "ERROR: DESTDIR var not set. not cleaning initramfs..."
+  exit 1
+fi
+
+
+if [ $TCOS_DISABLE_ACPI ] && [ "${DESTDIR}" != "" ] ; then
+
+  rm -rf $DESTDIR/bin/sh*
+  ( cd ${DESTDIR}/bin/ && ln -s busybox sh )
+
+  rm -rf $DESTDIR/scripts/usb*
+  rm -rf $DESTDIR/scripts/live*
+  rm -rf $DESTDIR/scripts/local*
+  rm -rf $DESTDIR/scripts/casper*
+  rm -rf $DESTDIR/scripts/nfs*
+  rm -rf $DESTDIR/scripts/init-premount/thermal
+  rm -rf $DESTDIR/sbin/mdadm
+  rm -rf $DESTDIR/sbin/mdrun
+  rm -rf $DESTDIR/sbin/vgchange
+  rm -rf $DESTDIR/sbin/cryptsetup
+  rm -rf $DESTDIR/sbin/dmsetup
+  rm -rf $DESTDIR/lib/lvm*
+  rm -rf ${DESTDIR}/lib/modules/${TCOS_KERNEL}/kernel/drivers/md/
+  rm -rf ${DESTDIR}/lib/modules/${TCOS_KERNEL}/drivers/md/
+  rm -rf ${DESTDIR}/lib/modules/${TCOS_KERNEL}/drivers/acpi/
+
+#  rm -rf $(find ${DESTDIR}/lib/modules/${TCOS_KERNEL}/kernel/drivers/scsi/ \
+#	-not -name "sd_mod.ko" -not -name "sr_mod.ko" \
+#	-not -name "scsi_mod.ko" -not -name "sg.ko" )
+
+
+fi
+
+

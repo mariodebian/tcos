@@ -29,6 +29,10 @@ export PATH
 # if break=inittcos STOP here
 maybe_break inittcos
 
+
+[ -d /usr/lib/discover ] &&  ln -s /usr/lib/discover /lib/
+
+
 # DOCUMENTME opentelnet | write some debug entry's to /etc/inetd.conf to allow kill or start X with telnet terminal-ip port
 opentelnet=$(read_cmdline_var "opentelnet")
 

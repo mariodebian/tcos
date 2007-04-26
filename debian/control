@@ -26,7 +26,7 @@ Depends: initramfs-tools (>= 0.40), syslinux, dhcp-client | dhcp3-client,
          console-data, libnss-db, iftop, strace, twm, xterm, dosfstools, 
          netkit-inetd | inetutils-inetd | openbsd-inetd, 
          debootstrap, libltdl3, tinylogin, ltspfs-client
-PreDepends: tcos-tcosmonitor (>= 0.0.18)
+Pre-Depends: tcos-tcosmonitor (>= 0.0.18)
 Conflicts: tcos-tcosmonitor (<= 0.0.17)
 Suggests: unionfs-modules, squashfs-modules
 Description: tools for generating a thin client bootable image

@@ -25,37 +25,6 @@ rm -rf ${DESTDIR}/scripts/nfs*
 rm -rf ${DESTDIR}/sbin/vgchange
 rm -rf ${DESTDIR}/lib/libdevmapper*
 
-# remove busybox and make a script that makes a link
-
-#rm -rf ${DESTDIR}/bin/busybox
-
-cat << EOF > ${DESTDIR}/scripts/init-top/busylink
-#!/bin/sh
-
-PREREQ=""
-prereqs()
-{
-        echo "$PREREQ"
-}
-case \$1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
-
-if [ ! -L /bin/busybox ]; then
-  rm -f /bin/busybox 
-  ln -s /bin/sh /bin/busybox
-fi
-
-exit 0
-EOF
-
-chmod +x ${DESTDIR}/scripts/init-top/busylink
-
-
 
 
 stat_after "Clean NFS initramfs"

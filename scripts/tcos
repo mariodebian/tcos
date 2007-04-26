@@ -2,7 +2,6 @@
 # (Thin Client Operating System)live filesystem mounting
 # 
 
-verbose=y
 
 # Parameter: Where to mount the filesystem
 mountroot ()

@@ -56,8 +56,10 @@ egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobod
 egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
 
 . ${TCOS_DIR}/hooks-addons/dhclient
-. ${TCOS_DIR}/hooks-addons/clean_nfs_image
 . ${TCOS_DIR}/hooks-addons/hex2ascii
+. ${TCOS_DIR}/hooks-addons/usplash-timeout
+. ${TCOS_DIR}/hooks-addons/wireless
+. ${TCOS_DIR}/hooks-addons/clean_nfs_image
 
 
 manual_add_modules unionfs
