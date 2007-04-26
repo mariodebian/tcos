@@ -7,8 +7,9 @@ initramfs-tools-tcos (0.68) unstable; urgency=low
   * hooks/tcosbin and hooks-addons/*:
     - move some code to hooks-addons
   * Change depends, move to tcos metapackage.
+  * Change Makefiles to allow not building tcos-usplash (HAVE_USPLASH=0)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 Mar 2007 19:56:29 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 19 Mar 2007 13:29:37 +0100
 
 initramfs-tools-tcos (0.67) unstable; urgency=low
 

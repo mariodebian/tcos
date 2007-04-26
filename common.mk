@@ -29,6 +29,11 @@ TCOS_BINS=$(shell awk -F "=" '/TCOS_BINS=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 TCOS_XMLRPC_DIR=$(PREFIX)/share/tcosmonitor/xmlrpc/
 DBUS_CONF=/etc/dbus-1/system.d/
 X11_CONF=/etc/X11/Xsession.d/
+DISABLE_USPLASH=0
+
+ifeq ($(HAVE_USPLASH),0)
+DISABLE_USPLASH=1
+endif
 
 
 
@@ -85,4 +90,5 @@ test:
 	@echo
 	@echo DISTRO=$(DISTRO)
 	@echo DEB_MIRROR=$(DEB_MIRROR)
+	@echo DISABLE_USPLASH=$(DISABLE_USPLASH)
 	@echo "------------------------------------"

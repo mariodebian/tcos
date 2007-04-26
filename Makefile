@@ -4,11 +4,8 @@
 ##    mariodebian \/at\/ gmail \/dot\/ com
 
 all:
-	cd usplash     && make
+	if [ $(DISABLE_USPLASH) = 0 ]; then cd usplash && make; fi
 	cd debootstrap && make
-#	cd discover    && make
-#	cd esound      && make
-#	cd opengl      && make
 	cd hex2ascii   && make
 
 include common.mk
@@ -22,7 +19,7 @@ clean:
 	cd hex2ascii   && make clean
 
 gedit:
-	gedit-cvs $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
+	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
 
 boot_imgs:
 	ppmtolss16 '#c0cfc0=7' < images/logo.ppm > tcos/logo.lss
@@ -59,7 +56,7 @@ install:
 	install -d $(DESTDIR)$(TFTP_DIR)/conf/
 
 	# usplash
-	cd usplash && make install DESTDIR=$(DESTDIR)
+	if [ $(DISABLE_USPLASH) = 0 ]; then cd usplash && make install DESTDIR=$(DESTDIR); fi
 
 	install -d $(DESTDIR)$(TCOS_CONF)/hooks
 	for i in `find scripts/ -type d`; do install -d $(DESTDIR)$(TCOS_CONF)/$$i; done
@@ -71,9 +68,6 @@ install:
 
 	# FIXME this file isn't in Xorg 7.0 anymore???
 	install -m 644 SecurityPolicy $(DESTDIR)/$(TCOS_CONF)
-
-#	install -m 644 tcos/default $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
-#	install -m 644 tcos/default.tpl $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
 
 	install -m 644 tcos/default.tpl $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl
 
@@ -122,9 +116,6 @@ install:
 	install -m 644 bin/shfscommon.sh $(DESTDIR)$(TCOS_DIR)/inc/shfscommon.sh
 
 	cd debootstrap && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
-#	cd discover    && make install DESTDIR=$(DESTDIR)
-#	cd esound      && make install DESTDIR=$(DESTDIR)
-#	cd opengl      && make install DESTDIR=$(DESTDIR)
 	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
 
 
@@ -132,9 +123,6 @@ targz: clean
 	rm -rf ../tmp 2> /dev/null
 	mkdir ../tmp
 	cp -ra * ../tmp
-	###################
-	# Borrando svn... #
-	###################
 	rm -rf `find ../tmp/* -type d -name .svn`
 	mv ../tmp ../initramfs-tools-tcos-$(VERSION)
 	tar -czf ../initramfs-tools-tcos-$(VERSION).tar.gz ../initramfs-tools-tcos-$(VERSION)

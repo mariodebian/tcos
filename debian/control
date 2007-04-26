@@ -1,5 +1,5 @@
 Source: initramfs-tools-tcos
-Section: admin
+Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
 Build-Depends: debhelper (>= 4.0.0), usplash, libbogl-dev

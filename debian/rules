@@ -1,5 +1,4 @@
 #!/usr/bin/make -f
-
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
@@ -15,8 +14,6 @@ endif
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	# Add here commands to configure the package.
-
 	touch configure-stamp
 
 
@@ -24,18 +21,13 @@ build: build-stamp
 
 build-stamp: configure-stamp 
 	dh_testdir
-
-	# Add here commands to compile the package.
 	$(MAKE)
-
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-
-	# Add here commands to clean up after the build process.
 	-$(MAKE) clean
 
 	dh_clean 
@@ -46,18 +38,9 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# Add here commands to install the package into debian/tmp
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 
 	dh_link /usr/lib/syslinux/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
-#	dh_link /etc/tcos/pxelinux.cfg.tpl /var/lib/tcos/tftp/pxelinux.cfg/default.tpl
-
-	# clean SVN dirs in package
-	for i in `find debian/tmp -type d -name .svn`; do rm -rf $$i; done
-
-#	mkdir -p $(CURDIR)/debian/gentcos/usr/share/lintian/overrides/
-#	install -m 644 $(CURDIR)/debian/gentcos.lintian-overrides \
-#		$(CURDIR)/debian/gentcos/usr/share/lintian/overrides/gentcos
 
 
 
@@ -73,7 +56,6 @@ binary-arch: build install
 	dh_installdocs
 	dh_installexamples
 	dh_install --sourcedir=$(CURDIR)/debian/tmp --list-missing
-
 	dh_installman
 	dh_link
 	dh_strip
