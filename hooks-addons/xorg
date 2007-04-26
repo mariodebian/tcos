@@ -110,13 +110,15 @@ if [ $XORG = 6 ]; then
 
  mkdir -p  $DESTDIR/usr/X11R6/lib/modules/extensions
  cp -ra /usr/X11R6/lib/modules/extensions/lib*.so $DESTDIR/usr/X11R6/lib/modules/extensions/
+ # delete nvidia/ati glx module
+ rm -f $DESTDIR/usr/X11R6/lib/modules/libglx.so
  rm -rf $DESTDIR/usr/X11R6/lib/modules/extensions/libGLcore.so
 
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support IS ENABLED"
     if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0 ]; then
 
-       if [ -d /var/lib/tcos/opengl ]; then
+       if [ -d /usr/lib/tcos/opengl ]; then
           cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/X11R6/lib/modules/extensions
           cpifexists /usr/lib/tcos/opengl/libGL.so.*  /usr/lib/
           cp -ra     /usr/lib/tcos/opengl/libGLU.so.1.* $DESTDIR/usr/lib/
@@ -155,13 +157,15 @@ else
 
  mkdir -p  $DESTDIR/usr/lib/xorg/modules/extensions
  cp -ra /usr/lib/xorg/modules/extensions/lib*.so $DESTDIR/usr/lib/xorg/modules/extensions/
+ # delete nvidia/ati glx module
+ rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so
  rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
  
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support is ENABLED"
     if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0 ]; then
 
-       if [ -d /var/lib/tcos/opengl ]; then
+       if [ -d /usr/lib/tcos/opengl ]; then
           cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/lib/xorg/modules/extensions/
           cpifexists /usr/lib/tcos/opengl/libGL.so.*  /usr/lib/
           cp -ra     /usr/lib/tcos/opengl/libGLU.so.1.* $DESTDIR/usr/lib/
