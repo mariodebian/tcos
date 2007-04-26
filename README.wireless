@@ -1,0 +1,54 @@
+#########################################
+     Boot TCOS from wireless device
+#########################################
+
+
+1.- Edit /etc/tcos/tcos.conf and set vars this vars:
+
+TCOS_WIRELESS_MODS="driver"
+TCOS_WIRELESS_ENC="enc"
+
+ when driver can be:
+
+  * madwifi: alias of atheros chipset (copy ath-pci, ath-hal....)
+  * ipw2*00: need firmware in /lib/firmware
+  * other kernel wireless module
+
+  you can put more than one module (space separated)
+
+ enc is type of encryption:
+
+  * empty: use a free wireless network
+  * WEP:   you will be asked for passprhase (not work yet)
+  * WPA: if you have a file like this /etc/wpa_supplicant/*.conf
+         passhprhase and ESSID will be used, if not will be asked
+         during boot
+
+
+  Rebuild image:
+
+  # gentcos -tftp
+
+  You will see "Package Wireless support ...."
+
+
+ Then copy the following files into hdd of wireless thin client:
+
+  vmlinuz-x.x.x (same version of compiled with tcos)
+  /tftpboot/tcos/initramfs-x.x.x
+
+  And add the following to grub menu.lst:
+
+# tcos
+title           TCOS, kernel 2.6.17-10-generic
+root            (hd0,0)
+kernel          /boot/vmlinuz-2.6.17-10-generic ramdisk_size=65536 root=/dev/ram0 quiet boot=tcos wifi=1 essid=ESSID server=192.168.0.254
+initrd          /tftpboot/tcos/initramfs-2.6.17-10-generic
+boot
+
+
+  Important vars:
+
+    wifi=1             (enable wifi network)
+    essid=ESSID        (your wireless ESSID)
+    server=xx.xx.xx.xx (TFTP and XMDCP server)
