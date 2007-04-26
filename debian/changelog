@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.56.17) unstable; urgency=low
+
+  * New package: tcos-opengl-libs (force free opengl drivers)
+     - libGL.so.1.2
+     - libGLU.so.1.*
+     - libGLcore.so
+     Ati (fglrx) and Nvidia drivers don't work on thin client.
+  * Fix hooks-addons/xorg to use new files of new package (tcos-opengl-libs)
+    Must work if packages are created in same Xorg version that server runs.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 10 Dec 2006 17:00:19 +0100
+
 initramfs-tools-tcos (0.56.16) unstable; urgency=low
 
   * Enable by default OpenGL support, now screensaver and gcompris must work.

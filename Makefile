@@ -7,6 +7,7 @@ all:
 	cd usplash     && make
 	cd debootstrap && make
 	cd discover    && make
+	cd opengl      && make
 
 include common.mk
 
@@ -106,6 +107,7 @@ install:
 
 	cd debootstrap && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd discover    && make install DESTDIR=$(DESTDIR)
+	cd opengl      && make install DESTDIR=$(DESTDIR)
 
 
 targz: clean

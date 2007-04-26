@@ -16,10 +16,8 @@ if [ ! -f /sbin/dhclient ]; then
 elif [ -f /sbin/dhclient3 ]; then
 
  _echo ""
- _echo "    WARNING:"
- _echo "           Detected dhcp3-client package !!!"
- _echo "           TCOS support for this package is very experimental"
- _echo "           Please install dhcp-client package (without \"3\" number)"
+ _echo "    WARNING: dhcp3-client package support is very bad,"
+ _echo "             please use dhcp-client instead"
  _echo ""
 
 # exit 1

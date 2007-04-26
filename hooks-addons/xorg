@@ -114,14 +114,26 @@ if [ $XORG = 6 ]; then
 
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support IS ENABLED"
-    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 ]; then
-       _echo " ********************************************** "
-       _echo "         WARNING nvidia libs found !!!!!!       "
-       _echo "  OpenGL support will not work on thin clients  "
-       _echo " ********************************************** "
+    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0]; then
+
+       if [ ! -d /var/lib/tcos/opengl ]; then
+          cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/X11R6/lib/modules/extensions
+          cpifexists /usr/lib/tcos/opengl/libGL.so.*  /usr/lib/
+          cp -ra     /usr/lib/tcos/opengl/libGLU.so.1.* $DESTDIR/usr/lib/
+       else
+          _echo " ********************************************** "
+          _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
+          _echo "                                                "
+          _echo "      Please install tcos-opengl-libs or        "
+          _echo "         uninstall nvidia/ati drivers           "
+          _echo "                                                "
+          _echo "  OpenGL support will not work on thin clients  "
+          _echo " ********************************************** "
+       fi
+
     fi
     cpifexists /usr/X11R6/lib/modules/extensions/libGLcore.so /usr/X11R6/lib/modules/extensions
-    cpifexists /usr/lib/libGL.so.1.2  /usr/lib/
+    cpifexists /usr/lib/libGL.so.1  /usr/lib/
     cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
  else
     _echo "    * OpenGL support is not enabled!!"
@@ -147,19 +159,26 @@ else
  
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support is ENABLED"
-    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 ]; then
-       _echo " ********************************************** "
-       _echo "         WARNING nvidia libs found !!!!!!       "
-       _echo "  OpenGL support will not work on thin clients  "
-       _echo " ********************************************** "
+    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0]; then
 
-       #if [ -d /usr/lib/nvidia ]; then
-       #   cpifexists /usr/lib/nvidia/libGL.so.1.2* /usr/lib/libGL.so.1.2
-       #fi
+       if [ ! -d /var/lib/tcos/opengl ]; then
+          cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/lib/xorg/modules/extensions/
+          cpifexists /usr/lib/tcos/opengl/libGL.so.*  /usr/lib/
+          cp -ra     /usr/lib/tcos/opengl/libGLU.so.1.* $DESTDIR/usr/lib/
+       else
+          _echo " ********************************************** "
+          _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
+          _echo "                                                "
+          _echo "      Please install tcos-opengl-libs or        "
+          _echo "         uninstall nvidia/ati drivers           "
+          _echo "                                                "
+          _echo "  OpenGL support will not work on thin clients  "
+          _echo " ********************************************** "
+       fi
 
     fi
     cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
-    cpifexists /usr/lib/libGL.so.1.2  /usr/lib/
+    cpifexists /usr/lib/libGL.so.1  /usr/lib/
     cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
  else
     _echo "    * OpenGL support is not enabled!!"
