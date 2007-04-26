@@ -124,9 +124,14 @@ LABEL tcos
         KERNEL vmlinuz
         APPEND ramdisk_size=65536 initrd=initrd.gz root=/dev/ram0 BOOT=tcos quiet splash
 
+LABEL update
+        KERNEL vmlinuz
+        APPEND ramdisk_size=65536 initrd=initrd.gz root=/dev/ram0 BOOT=tcos quiet splash startx=N installer-update
+
 LABEL nfs
         KERNEL vmlinuz
         APPEND ramdisk_size=65536 initrd=initrd.nfs root=/dev/ram0 BOOT=tcos quiet splash
+
 EOF
 echo " done."
 
