@@ -58,6 +58,22 @@ if [ $TCOS_WIRELESS ]; then
       cpifexists /sbin/wpa_action      /sbin/
       cpifexists /sbin/wpa_cli         /sbin/
       cpifexists /sbin/wpa_supplicant  /sbin/
+      # need linked libs in /lib not /usr/lib
+      for lib in $(ldd /sbin/wpa_supplicant /sbin/wpa_action /sbin/wpa_cli | awk '{print $3}' |grep ^/); do
+        newlib=$(echo $lib | sed s/"\/i686\/cmov"//g | sed s/"\/tls"//g )
+        _echo "   DEBUG: WPA: copying lib=$lib newlib=$newlib"
+        if [ -e $newlib ]; then
+          if [ ! -e $DESTDIR/lib/$(basename $lib) ]; then
+            cp $newlib $DESTDIR/lib/
+          else
+            _echo "  DEBUG: WPA: $newlib is in image, not copy."
+          fi
+        else
+          _echo "  DEBUG: WPA: ### ERROR ### $newlib not found !!!!"
+        fi
+      done
+
+
       copydir /etc/wpa_supplicant      /etc/
 cat << EOF > $DESTDIR/sbin/start-wpa.sh
 #!/bin/sh
