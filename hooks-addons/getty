@@ -1,0 +1,29 @@
+# getty console
+
+
+cat << EOF > $DESTDIR/sbin/rungetty
+#!/bin/sh
+
+if [ ! -e /sbin/getty ]; then
+  echo "Error: getty comnand not found, please install tinylogin"
+  exit 1
+fi
+
+
+VEL=38400
+CONSOLE_NUMBER=\$1
+
+if [ "\${CONSOLE_NUMBER}" = "" ]; then
+  echo "Error: need a console name (example tty1)"
+  exit 1
+fi
+
+
+while [ 1 ]; do
+  getty \$VEL \$CONSOLE_NUMBER
+done
+
+
+EOF
+
+chmod +x $DESTDIR/sbin/rungetty

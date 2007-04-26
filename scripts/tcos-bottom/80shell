@@ -32,7 +32,7 @@ clear
 while [ ${TCOS_TTY} -ge 1 ]; do
    if [ ${TCOS_TTY} = 1 ] ; then
      if [ "${TCOS_TTY1_PROTECTED}" = "1" ]; then
-         getty 38400 tty${TCOS_TTY}
+         rungetty tty${TCOS_TTY}
        else     
          echo ""
          echo ""  
@@ -41,7 +41,7 @@ while [ ${TCOS_TTY} -ge 1 ]; do
          sh
      fi
    else
-     getty 38400 tty${TCOS_TTY} &
+     rungetty tty${TCOS_TTY} &
    fi
 
    TCOS_TTY=$((TCOS_TTY -1))
@@ -51,6 +51,8 @@ done
 
 
 
+while [ 1 ]; do
+ sh
+done
 
-sh
 exit 0
