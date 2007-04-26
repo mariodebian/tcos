@@ -300,6 +300,8 @@ echo -e "Usage:
           $RED-nfs$NORMAL   [$GREEN-rootfs$NORMAL]                 LTSP like (28 - 64 Mb)
           $RED-nbi$NORMAL   [-nbi-output=linux.nbi]   Floppy
           $RED-cdrom$NORMAL [-type=grub] [-force]     CDROM
+          $RED-instpkg$NORMAL pkgname
+          $RED-listpkg$NORMAL pkgname
 
       [-h] or [-help] $(basename $0) extended help
       [${RED}-vmlinux=${WHITE}vmlinuz-x.x.x${RED}|${WHITE}/boot/vmlinuz-x.x.x${NORMAL}] kernel version
@@ -340,6 +342,16 @@ This is gentcos help info about generating net init images.
     [${GREEN}-force${NORMAL}] force cdrom build if external SQUASH is enabled
             ( this will put squashfs into initramfs )
 
+  ${BLUE}Install package in cache:${NORMAL}
+     ${GREEN}-instpkg${NORMAL}
+        This option download with apt-get install -d -y (not install)
+        and extract package in ${TCOS_PKG_CACHE}
+        This is used for use some tool (example esound) without instllin it.
+
+  ${BLUE}List cached packages:${NORMAL}
+     ${GREEN}-listpkg${NORMAL}
+        This option list all cached packages with -instpkg option
+
    In all build you can add this params:
 
     ${BLUE}-vmlinuz${NORMAL}=[ vmlinuz.x.x.x | /boot/vmlinuz.x.x.x ]
@@ -351,6 +363,8 @@ ${WHITE}
      gentcos -nfs -rootfs
      gentcos -cdrom -type=grub
      gentcos -nbi -extra-append=\"splash vga=791 uselocal\"
+     gentcos -instpkg esound
+     gentcos -listpkg
 ${NORMAL}
 "
 }
@@ -458,8 +472,47 @@ for opt in $@ ; do
         -rootfs)
             TCOS_ROOTFS=1
             ;;
+        -instpkg) TCOS_INST_PKG=${@#-instpkg}
+            ;;
+        -listpkg) TCOS_LIST_PKG=1
+            ;;
 	esac
 done
+
+if [ "${TCOS_LIST_PKG}" = "1" ]; then
+  echo "Installed cached packages are:"
+  ls -1 ${TCOS_PKG_CACHE} 2>/dev/null
+ _exit 0
+fi
+
+if [ "${TCOS_INST_PKG}" != "" ]; then
+  echo "Install PKG \"$TCOS_INST_PKG\""
+  for PKG in ${TCOS_INST_PKG}; do
+    PKG_URI=$(apt-get install --reinstall -y --print-uris ${PKG} | tail -1 | awk '{print $1}' | sed s/"'"//g)
+    PKG_PROTOCOL=$(echo ${PKG_URI} | awk -F ":" '{print $1}')
+    if [ "${PKG_PROTOCOL}" = "http" ] || [ "${PKG_PROTOCOL}" = "ftp" ]; then
+      PKG_FILE=/tmp/$(basename $PKG_URI)
+      wget -q "${PKG_URI}" -O ${PKG_FILE}
+    elif [ "${PKG_PROTOCOL}" = "file" ]; then
+      PKG_FILE=$(echo ${PKG_URI} | sed s/"file:\/\/"//g )
+      echo "Using file:// protocol, package is in ${PKG_FILE} "
+    else
+      echo "Unknow PKG_URI=${PKG_URI} protocol: ${PKG_PROTOCOL} "
+      PKG_FILE=""
+    fi
+    if [ "${PKG_FILE}" = "" ] ; then
+      echo "Error: Unknow package: ${PKG}"
+    else
+      echo "Extracting $(basename ${PKG_FILE})..."
+      rm -rf ${TCOS_PKG_CACHE}/${PKG}
+      mkdir ${TCOS_PKG_CACHE}/${PKG}
+      dpkg --extract "${PKG_FILE}" ${TCOS_PKG_CACHE}/${PKG}
+    fi
+  done
+  echo "Install Package extract all packages."
+ _exit 0
+fi
+
 
 if [ $TCOS_VMLINUZ ]; then
    if [ -f $TCOS_VMLINUZ ] ; then

@@ -109,6 +109,27 @@ Iso image is saved in /var/lib/tcos/isos/
 .B   Floppy boot
      # gentcos -nbi -extra-append="splash vga=791 uselocal"
 
+.SH Package cache
+
+Sometimes TCOS need some software that conflicts with installed packages.
+To solve this, gentcos can download and extract package files in 
+/var/cache/tcos/packages/pkg_name to copy files to initramfs.
+
+.PP
+.B Howto install a cached package
+.B
+.IP \-instpkg\ foo
+Exec 
+.B apt-get install -d -y foo
+ (download only mode) and extract
+into /var/cache/tcos/packages/foo
+
+.PP
+.B List installed packages
+.B
+.IP \-listpkg
+Show all packages installed.
+
 .SH BUGS
 Contact Mario Izquierdo <mariodebian@gmail.com>
 
