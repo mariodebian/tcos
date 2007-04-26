@@ -31,6 +31,13 @@ distclean:
 config_svn:
 	svn propedit svn:ignore .
 
+ubuntu-conf:
+	if [ "$(DISTRO)" = "ubuntu" ]; then\
+		sed -i 's/"quiet splash"/"splash"/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
+		sed -i 's/"quiet splash"/"splash"/g' $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/default ;\
+		sed -i 's/"quiet splash"/"splash"/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
+	fi
+
 
 install:
 	#  Creating directories
@@ -90,6 +97,9 @@ install:
 	install -m 644 conf/template $(DESTDIR)$(TCOS_CONF)/hacking/template
 	install -m 644 grub/menu.lst-tcos $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos
 	install -m 644 images/logo.xpm.gz $(DESTDIR)$(TCOS_CONF)/logo.xpm.gz
+
+	# this delete "quiet" for usplash verbose textbox
+	make ubuntu-conf
 	
 	# gentcos build script
 	install -m 755 bin/gentcos            $(DESTDIR)/usr/sbin/gentcos
