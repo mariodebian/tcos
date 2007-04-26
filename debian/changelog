@@ -2,8 +2,12 @@ initramfs-tools-tcos (0.71) unstable; urgency=low
 
   * hooks/tcosbin:
     - add absolute path of mksquashfs bin.
+    - hide hack load info
+  * In debian unstable start thin client with vga=791 (usplash at 640x480 not work)
+  * Not load pcspkr module
+  * Depends on libusplash-dev (only valid with new usplash package)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 17 Apr 2007 11:25:36 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 18 Apr 2007 10:36:24 +0200
 
 initramfs-tools-tcos (0.70) unstable; urgency=low
 
