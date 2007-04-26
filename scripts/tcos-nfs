@@ -1,0 +1,9 @@
+# TCOS 			-*- shell-script -*-
+# (Thin Client Operating System)live filesystem mounting
+# 
+
+# Parameter: Where to mount the filesystem
+mountroot ()
+{
+	run_scripts /scripts/tcos-nfs-top
+}

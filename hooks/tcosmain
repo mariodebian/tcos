@@ -1,0 +1,40 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+. /usr/share/initramfs-tools/hook-functions
+. /usr/share/initramfs-tools/scripts/functions
+
+. $CONFDIR/initramfs.conf
+
+# read from env vars TCOS_BOOT
+TCOS_BOOT=$(env| awk -F "=" '/^TCOS_BOOT=/ {print $2}')
+if [ "${TCOS_BOOT}" != "" ]; then
+  BOOT=$TCOS_BOOT
+fi
+
+if [ "${BOOT}" = "tcos" -o "${BOOT}" = "tcos-nfs" ]; then
+
+. $CONFDIR/tcos.conf
+. $TCOS_DIR/tcos-generation-functions.sh
+
+  # copy scripts into image
+  cp -ra ${TCOS_DIR}/scripts/* ${DESTDIR}/scripts/
+
+  run_scripts ${TCOS_DIR}/hooks
+fi
+

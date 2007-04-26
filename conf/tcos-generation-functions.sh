@@ -1,0 +1,115 @@
+# vars
+
+
+
+# functions used by tcos hooks
+
+_echo () {
+ # wrapper to echo in scripts, only print if debug is enabled
+  if [ ${TCOS_DEBUG} ]; then
+    echo "$@"
+  fi
+}
+
+convert_links2files () {
+# convert all links in $DESTDIR to linked files
+# needed to calculate initramfs space
+ #_echo "Converting links to files..."
+ dir=$(pwd)
+ cd $DESTDIR
+ # copy binary not links
+ for xfile in $(find usr -type l); do
+   if [ -f /$xfile ] ;then
+     rm -f $DESTDIR/$xfile
+     cp -f /$xfile $DESTDIR/$xfile
+   else
+     #_echo "    convert_links2files() "
+     _link=$(readlink $xfile)
+     #_echo "    link=$_link"
+     rm -f $DESTDIR/$xfile
+     cp -f $_link $DESTDIR/$xfile
+   fi
+ done
+ cd $dir
+}
+
+
+stat_before () {
+  # read space in $DESTDIR (this functions is a checkpoint)
+  size1=$(du -s ${DESTDIR} 2>/dev/null| awk '{print $1}')
+}
+stat_after () {
+  # read size after checkpoint and prints diff between disk space
+  # this give what space need an app
+  convert_links2files
+  size2=$(du -s ${DESTDIR} 2>/dev/null| awk '{print $1}')
+  diff_size=$(echo $((size2 -size1)) )
+  if [ ${TCOS_DEBUG} ]; then
+     _echo "  Package $1 get ${diff_size} Kb."
+  fi
+}
+
+pathof() {
+  # give absolute path of $1 binary (if found)
+    location=$(which $1 | awk '{print $1}')
+    if [ -z $location ]; then
+        location=$(whereis $1 | awk '{print $2}')
+    fi
+    if [ ! -e $location ]; then
+        echo "pathof() ERROR $1 not found !!!" 1>&2
+    fi
+    echo $location
+}
+
+cpifexists () {
+ #_echo "DEBUG: \$1=$1 \$2=$2"
+  if [ -f $DESTDIR/$1 ]; then
+    #echo "cpifexists(): WARNING: $1 exists in $DESTDIR, not copying again!!!"
+    return 1
+  fi
+  if [ $# != 2 ]; then
+   echo "  cpifexists() ERROR: Need 2 arguments: \$1=$1 \$2=$2"
+   #_echo "     DEBUG: \$1=$1 \$2=$2"
+   return 1
+ fi
+ if [ ! -f $1 ]; then
+   echo "  cpifexits() ERROR: $1 no exists"
+   #_echo "     DEBUG: \$1=$1 \$2=$2"
+   return 1
+ fi
+
+ if [ ! -d $DESTDIR/$2 ]; then
+   echo "  cpifexits() WARNING: $DESTDIR/$2 don't exists"
+   #_echo "     DEBUG: \$1=$1 \$2=$2"
+ fi
+#echo "DEBUG: copy_exec $1 $2"
+copy_exec "${1}" "${2}"
+return 0
+}
+
+copydir () {
+ if [ $# != 2 ]; then
+   echo "copydir() ERROR Need 2 arguments: \$1=$1 \$2=$2"
+   #_echo "     DEBUG: \$1=$1 \$2=$2"
+   return 1
+ fi
+ if [ ! -d $1 ]; then
+   echo "copydir() WARNING $1 dir not exits"
+   #_echo "     DEBUG: \$1=$1 \$2=$2"
+   return 1
+ fi
+ 
+#_echo "cp -ra \"${1}\" \"${DESTDIR}/${2}\""
+cp -ra "${1}" "${DESTDIR}/${2}"
+return 0
+}
+
+read_env_var() {
+# read from env var
+tmpvar=$(env| grep "^$1=" | awk -F "=" '{print $2}')
+if [ "$tmpvar" = "" ]; then
+  echo "$2"
+else
+  echo $tmpvar
+fi
+}

@@ -1,0 +1,375 @@
+# debootstrap hook-addon
+
+
+if [ $TCOS_DEBOOTSTRAP ]; then
+
+
+  stat_before
+
+  ##########   debootstarp stuff....   ########
+  mkdir -p $DESTDIR/usr/lib/ $DESTDIR/usr/bin/
+  copydir    /usr/lib/debootstrap     /usr/lib/
+  cpifexists /usr/sbin/debootstrap    /usr/bin/
+  #############################################
+
+  # pkgdetails.c from source of debootstrap (no using perl)
+  cpifexists ${TCOS_BINS}/pkgdetails  /usr/lib/debootstrap/
+
+  # dpkg
+  cpifexists /usr/bin/dpkg   /usr/bin/
+  cpifexists /usr/bin/id     /usr/bin/
+
+  ####   cfdisk  ####
+  cpifexists /sbin/cfdisk    /sbin/
+
+  # FIXME use dpkg -L grub to search grub utils !!!
+
+  ####   GRUB    ####
+  if [ -x /usr/sbin/grub ]; then
+    # for debian
+    copydir    /usr/lib/grub                 /usr/lib/
+    cpifexists /usr/sbin/grub                /sbin/
+    cpifexists /usr/sbin/grub-install.real   /sbin/
+    #cpifexists /usr/sbin/grub-install        /sbin/
+    cpifexists /usr/sbin/grub-set-default    /sbin/
+
+  elif [ -x /sbin/grub ]; then
+    # for ubuntu
+    copydir    /lib/grub                 /lib/
+    cpifexists /sbin/grub                /sbin/
+    cpifexists /sbin/grub-install        /sbin/
+    cpifexists /sbin/grub-set-default    /sbin/
+  fi
+
+cat << EOF > $DESTDIR/sbin/install-system.sh
+#!/bin/sh
+# install-system with debootstrap
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+export PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
+# some vars
+mirror=http://192.168.0.3
+distro=debian
+version=sid
+
+clear
+echo "#############################################"
+echo ""
+echo "     TCOS debootstrap INSTALL SYSTEM  "
+echo "
+Welcome to install-system with debootstrap,
+next I have some questions to install a linux distro (debian/ubuntu)
+in one of your partitions.
+
+Please write all answers, if you wrong any, you can cancel
+and re-run install-system.sh
+"
+
+echo -n "Which distro [debian/ubuntu]? "
+read distro
+if [ "\$distro" != "debian" -a "\$distro" != "ubuntu" ]; then
+ echo "ERROR: need a distro: debian or ubuntu, existing..."
+ exit 1
+fi
+
+avalaible_versions="\$(ls /usr/lib/debootstrap/scripts/ |grep -v buildd |grep -v fake)"
+
+echo -n "Which version ?
+
+\${avalaible_versions}  
+                   => "
+read version
+
+echo -n "Mirror (no write debian or ubuntu strings)?
+ (default= http://\$(get_server)) ===> "
+read mirror
+
+apt_mirror=\${mirror}/\${distro}
+
+echo "Ok, we have some data now: "
+echo "    mirror:     \$mirror"
+echo "    distro:     \$distro"
+echo "    version:    \$version"
+echo "   apt mirror:  \$apt_mirror
+"
+
+echo -n "Continue [Y/n] ? "
+read cont
+if [ "\$cont" = "n" ]; then
+  echo "aborted."
+  exit 1
+fi
+
+
+disks=\$(LC_ALL=C  fdisk -l|grep ^Disk| awk '{print \$2}'| awk -F ":" '{print \$1}')
+
+echo "
+Now, we need to create a harddisk partitions:
+
+Found parts:
+"
+for disk in \$disks; do
+  echo "Disk: \$disk"
+  disk_partitions=\$(fdisk -l \$disk |grep ^/dev| awk '{print \$1}')
+  echo "      partitions: \$disk_partittions"
+done
+
+echo ""
+echo -n "Start partition tool (cfdisk) [Y/n] ?"
+read part
+if [ "\$part" != "n" ]; then
+  echo -n "Which disk ?  [\$disks] " 
+  read disk
+  cfdisk \$disk
+fi
+
+echo "
+We need now to format partition, ext3 is only supported
+
+"
+
+if [ ! -f /etc/mtab ]; then
+  ln -s /proc/mounts /etc/mtab
+fi
+
+echo -n "Wich partition need to format:
+ \$(fdisk -l|grep ^/dev | awk '{print \$1}') or "skip" ? 
+               ====> "
+read part
+if [ \$part != "skip" ]; then
+  mkfs.ext3 \$part
+else
+  echo -n "SKIP format, Which part to install in ? "
+  read part
+fi
+
+echo "
+done.
+
+Now I try to mount filesystem in /target and try to install in it
+"
+
+# wait to part detection
+sync
+sleep 2
+
+rm -rf /target
+mkdir -p /target
+
+mount -t ext3 \$part /target
+sync
+sleep 1
+
+if [ \$(grep -c /target /proc/mounts) != 1  ]; then
+  echo "Error while mounting... giving a shell to try manually
+       CTRL + D to return to install-system"
+  sh
+fi
+
+
+echo "
+Now install it...
+
+debootstrap \$version /target \$mirror/\$distro
+
+"
+
+echo -n "Continue [Y/n/skip] ?"
+read cont
+if [ "\$cont" = "n" ]; then
+  echo "aborted"
+  exit 1
+fi
+
+if [ "\$cont" != "skip" ]; then
+  debootstrap \$version /target \$mirror/\$distro
+fi
+
+
+if [ ! -f /target/etc/apt/sources.list  ]; then
+  echo "Error in debootstrap... giving a shell to try manually
+       CTRL + D to return to install-system"
+  sh
+fi
+
+
+echo "
+Debootstrap has finished, now we make a
+dpkg-reconfigure -a into it, please, answer all questions
+
+
+"
+mount -o bind /dev  /target/dev
+mount -o bind /proc /target/proc
+mount -o bind /sys  /target/sys
+
+# made a /etc/fstab
+
+cat << FIN > /target/etc/fstab
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    defaults        0       0
+
+FIN
+echo "\$part		/		ext3	defaults,errors=remount-ro 0 1" >> /target/etc/fstab
+
+cat << FIN >> /target/etc/fstab
+
+/dev/hdc        /media/cdrom0   udf,iso9660 user,noauto     0       0
+/dev/fd0        /media/floppy0  auto    rw,user,noauto  0       0
+
+FIN
+
+if [ \$(fdisk -l |grep -c swap) -gt 0 ]; then
+  echo "\$(fdisk -l |grep swap| awk '{print \$1}')	none swap sw 0 0" >> /target/etc/fstab
+fi
+
+echo "
+
+/etc/fstab done.
+
+"
+
+if [ \$(grep -c ^/dev /proc/swaps) = 0  ]; then
+  # search for a swap
+  if [ \$(fdisk -l |grep -c swap) -gt 0 ]; then
+    swap_part=\$(fdisk -l |grep swap| awk '{print \$1}' | head -1)
+    echo "Making a swap part in \$swap_part ..."
+    mkswap \$swap_part
+    echo "Ussing it...."
+    swapon \$swap_part
+  fi
+fi
+
+
+
+cat << FIN > /target/etc/network/interfaces
+# generated by TCOS install-system.sh
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+FIN
+
+
+if [ -x /sbin/grub ]; then
+  ln -s /sbin/grub /usr/sbin/grub
+fi
+
+
+chroot /target apt-get update
+chroot /target apt-get install -y grub
+mkdir -p /target/boot/grub
+chroot /target dpkg-reconfigure -a
+
+echo "
+
+reconfigure done !!!
+
+Now install a kernel, of these:
+
+"
+
+chroot /target apt-cache search kernel-image | awk '{print \$1}'
+chroot /target apt-cache search linux-image  | awk '{print \$1}'
+
+echo  "
+
+Which kernel? ==> "
+read kernel
+chroot /target apt-get install -y \$kernel
+
+
+echo "
+
+Next to boot from disk we try to install GRUB.
+
+creating devices.map...
+
+"
+
+# have \$part, need a grub based
+DRIVE=\${part%[0-9]}
+let PART=\${part#\$DRIVE}-1
+
+grub-install --root-directory=/target \$DRIVE 2>/dev/null
+
+GRUB_DEV=\$(grep "\$DRIVE" /target/boot/grub/device.map | cut -c2-4)
+ROOT="(\${GRUB_DEV},\${PART})"
+
+
+
+
+echo "
+ chroot /target /sbin/grub --batch --device-map=/boot/grub/device.map
+ root \$ROOT
+ setup (hd0)
+"
+
+echo -n "Continue ? [Y/n/shell] ?"
+read cont
+if [ "\$cont" = "shell" ]; then
+  echo ""
+  echo "SHELL, to continue press CTRL+D"
+  sh
+elif [ "\$cont" = "n" ]; then
+  echo "aborting...."
+  exit 1
+fi
+
+
+chroot /target /sbin/grub --batch --device-map=/boot/grub/device.map <<EOT > /dev/null
+root    \$ROOT
+setup   (hd0)
+quit
+EOT
+
+echo "
+Generating menu.lst...
+
+answer yes !!!
+"
+
+chroot /target /sbin/update-grub
+
+# delete savedefault line
+sed -i s/"savedefault"//g /target/boot/grub/menu.lst
+
+echo "
+
+Umounting /proc /dev /sys....
+
+"
+
+umount -l /target/proc
+umount -l /target/dev
+umount -l /target/sys
+
+
+echo "
+
+We have finished, I hope you can boot with your new
+    \$distro \$version
+"
+
+
+echo "
+
+FIXME, need to configure other things
+
+"
+
+
+EOF
+chmod +x $DESTDIR/sbin/install-system.sh
+
+
+  stat_after "debootstrap install-system.sh"
+
+
+fi # end of TCOS_DEBOOTSTRAP

@@ -1,0 +1,123 @@
+#!/bin/sh
+# 
+
+PREREQ="01download_settings 05inittcos 10ldconfig 20autofs 30devices 40initsound 50freespace"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+. /conf/tcos-modules.conf
+
+# if break=startx STOP here
+maybe_break startx
+
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+modprobe -q mousedev 2>&1 >> /tmp/initramfs.debug
+modprobe -q psmouse  2>&1 >> /tmp/initramfs.debug
+
+
+# Create magic cookie
+# http://www.xs4all.nl/~zweije/xauth-6.html
+# cookie=$(dd if=/dev/urandom count=1 2>/dev/null | md5sum | awk '{print $1}' |sed -e 's/^/add :0 . /')
+# cookie=$(mcookie)
+# xauth -f /root/.Xauthority -q ${cookie}
+
+if [ ! -f $XAUTHORITY ]; then
+  log_begin_msg "Creating magic cookie for X"
+    _log "STARTX creating cookie..."
+    MYIP=$(ifconfig eth0| awk '/inet addr/ {split ($2,A,":"); print A[2]}')    
+    cookie=$(mcookie)
+    xauth -f $XAUTHORITY -q add :0                      MIT-MAGIC-COOKIE-1 $cookie 2>> /tmp/initramfs.debug
+    xauth -f $XAUTHORITY -q add localhost:0             MIT-MAGIC-COOKIE-1 $cookie 2>> /tmp/initramfs.debug
+    xauth -f $XAUTHORITY -q add localhost.localdomain:0 MIT-MAGIC-COOKIE-1 $cookie 2>> /tmp/initramfs.debug
+    xauth -f $XAUTHORITY -q add $(hostname):0           MIT-MAGIC-COOKIE-1 $cookie 2>> /tmp/initramfs.debug
+    xauth -f $XAUTHORITY -q add ${MYIP}:0               MIT-MAGIC-COOKIE-1 $cookie 2>> /tmp/initramfs.debug
+    xauth list >> /tmp/initramfs.debug
+    _log "STARTX end cookie"
+  log_end_msg
+fi
+
+
+# for man Xserver, section Granting access
+# create auth list (localhost default)
+#cat << EOF > /etc/X0.hosts
+#localhost
+#127.0.0.1
+#EOF
+
+#for host in $TCOS_XORG_XHOSTS; do
+#  echo "$host" >> /etc/X0.hosts
+#done
+
+
+# generate xorg.conf
+log_begin_msg "Generating xorg.conf"
+  configurexorg --newsettings --outputfile=/etc/X11/xorg.conf
+log_end_msg
+
+# DOCUMENTME startx=X | set default X session (R=remote L=local N=none, F=freenx, S=sshX)
+startx=$TCOS_XORG_TYPE
+
+if [ $(cat /conf/mysettings.conf | wc -l) -gt 1 ] ;then
+ startx_type=$(grep ^xsession /conf/mysettings.conf  | awk -F "=" '{print $2}' | sed s/'"'/''/g )
+ case $type in
+    XDMCP)
+       startx=R
+       ;;
+    local)
+       startx=L
+       ;;
+    sshX)
+       startx=S
+       ;;
+    FreeNX)
+       startx=F
+       ;;
+ esac
+fi
+
+
+# always overwrite with cmdline
+startx=$(read_cmdline_var "startx" "${startx}")
+
+
+
+# kill usplash
+kill_usplash
+
+
+if [ "$startx" = "L" ] ; then
+   ln -s /sbin/startlocalx /sbin/startx
+   startlocalx &
+elif [ "$startx" = "R"  ] ; then
+   ln -s /sbin/startremotex /sbin/startx
+   startremotex &
+elif [ "$startx" = "F"  ] ; then
+   ln -s /sbin/startnx /sbin/startx
+   startnx &
+elif [ "$startx" = "S"  ] ; then
+   ln -s /sbin/startsshx /sbin/startx
+   startsshx &
+else
+   sh
+fi
+
+exit 0

@@ -1,0 +1,395 @@
+initramfs-tools-tcos (0.56.6) unstable; urgency=low
+
+  * Add tcos metapackage.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 13 Oct 2006 12:09:31 +0200
+
+initramfs-tools-tcos (0.56.5) unstable; urgency=low
+
+  * Fix more minor things in pulseaudio hook-addon
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 13 Oct 2006 00:05:44 +0200
+
+initramfs-tools-tcos (0.56.4) unstable; urgency=low
+
+  * Possibly ubuntu dapper now work.
+  * Support for dhcp3-client (configure network with ifconfig and route)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun,  8 Oct 2006 20:30:53 +0200
+
+initramfs-tools-tcos (0.56.3) unstable; urgency=low
+
+  * Provide manual_add_modules (ubuntu dapper initramfs-tools is very old)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun,  8 Oct 2006 11:12:49 +0200
+
+initramfs-tools-tcos (0.56.2) unstable; urgency=low
+
+  * Error in conf/tcos-run-functions while need do not then :$
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat,  7 Oct 2006 15:52:34 +0200
+
+initramfs-tools-tcos (0.56.1) unstable; urgency=low
+
+  * New stable release.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri,  6 Oct 2006 09:37:40 +0200
+
+initramfs-tools-tcos (0.55.3) unstable; urgency=low
+
+  * Add tcos-discover2 package (all discover2 files into /usr/lib/tcos/discover)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon,  2 Oct 2006 18:27:56 +0200
+
+initramfs-tools-tcos (0.55.2) unstable; urgency=low
+
+  * Ubuntu part2, use /bin/busybox (not static) but with more utils
+  * New scripts/tcos-top/01busybox that make symlinks of utils with new busybox
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 29 Sep 2006 12:45:05 +0200
+
+initramfs-tools-tcos (0.55.1) unstable; urgency=low
+
+  * Try to work with ubuntu, part1. More work needed....
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 29 Sep 2006 11:18:01 +0200
+
+initramfs-tools-tcos (0.54.9) unstable; urgency=low
+
+  * Use /usr/lib/tcos to put scripts and bins ==> $TCOS_BINS
+  * Add install-system.sh script with cfdisk and debootstrap
+    This install a debian/ubuntu distro in thin client.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 28 Sep 2006 11:16:47 +0200
+
+initramfs-tools-tcos (0.54.8) unstable; urgency=low
+
+  * Minor bugs in some scripts (pulseaudio, alsa...)
+  * Add support for ISA sound cards (TCOS_SOUND_ISA new var in tcos.conf)
+  * Use mcookie to create xauth cookies and start Xorg with -auth /root/.Xauthority
+  * Fix /etc/hosts creation, hostname is ip not 127.0.0.1
+  * Disable creation of /etc/X0.hosts, Xorg auth is with cookies
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 24 Sep 2006 22:44:51 +0200
+
+initramfs-tools-tcos (0.54.7) unstable; urgency=low
+
+  * Work in bin/configurexorg, now autodetects xdriver with discover, can detect more things...
+  * Add new var TCOS_XORG_ALLDRIVERS to copy all X drivers into image (usr.squashfs)
+  * Remove "-ac" flag to Xorg startup, now access is disabled to all
+    except localhost or 127.0.0.1. To allow more host to connect edit tcos.conf and add them
+    to TCOS_XORG_XHOSTS separeted with spaces. Need localhost for lockscreen and scrot commands.
+    During boot new file will be created /etc/X0.hosts listing allowed hosts (man Xserver)
+  * Add TCOS_XORG_OPTS var to allow put some Xorg params from conf file.
+  * ltspfsd now works with auth (remove -a param)
+  * configurexorg seems to work fine with new auto setup ==> tcospersonalize
+  * Add more sleep time to pax11publish
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 22 Sep 2006 13:54:43 +0200
+
+initramfs-tools-tcos (0.54.6) unstable; urgency=low
+
+  * Copy /lib/terminfo/x/xterm (needed if use ssh + iftop)
+  * Fix build of floppy boot images (gentcos -nbi)
+  * Add mkfs in debug hook-addon (to format disks or floppies)
+  * Copy some udev files from /lib/udev (write_net_rules crash startup eth0=>eth2)
+  * Make autofs support optional
+  * Fix some alsa startup scripts
+  * Fix TCOS_EXTRA_MODULES, now works like a charm...
+  * Add more modules to conf/tcos-modules.conf (intel audio, realtek...)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 20 Sep 2006 22:04:41 +0200
+
+initramfs-tools-tcos (0.54.5) unstable; urgency=low
+
+  * Fix minor bug in detection of sound devices
+    (scripts/tcos-bottom/40initsound)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 13 Sep 2006 19:56:01 +0200
+
+initramfs-tools-tcos (0.54.4) unstable; urgency=low
+
+  * Add some options to NFS mount
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 11 Sep 2006 21:56:38 +0200
+
+initramfs-tools-tcos (0.54.3) unstable; urgency=low
+
+  * Add hex2ascii to nfs build.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 11 Sep 2006 21:53:33 +0200
+
+initramfs-tools-tcos (0.54.2) unstable; urgency=low
+
+  * Forgot file hooks-addons/clean_nfs_image FIXED !!!
+  * Disable some debug messages
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 10 Sep 2006 13:09:19 +0200
+
+initramfs-tools-tcos (0.54.1) unstable; urgency=low
+
+  * Make powerfull NFS support (TCOS boot in 28 Mb RAM!!!)
+  * Make work change passwd (need /etc/login.defs and no locks)
+  * Reorganize scripts/tcos-bottom (it's used by normal and nfs tcos)
+  * Make a /tftpboot/tcos/pxeslinux.cfg/default with more examples
+  * A lot of bin/gentcos work:
+     - gentcos -tftp (no changes)
+     - gentcos -nfs (generate a small initramfs and mount a remmote NFS)
+     - gentcos -rootfs (generate NFS dir /opt/tcos/fs-${TCOS_KERNEL} )
+        ( need this line in /etc/exports, and a nfs server: )
+        /opt/tcos  192.168.0.0/255.255.255.0(ro,no_root_squash,sync,no_subtree_check)
+  * Better way to generate nfs image and filesystem is:
+       # gentcos -nfs -rootfs
+  * Fix PulseAudio startup params, and start silently log > /var/log/pulseaudio.log
+  * Update gentcos man page
+  * Change editing initramfs.conf in gentcos for exporting some env vars
+    (need sync with TcosConfig)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 10 Sep 2006 10:02:58 +0200
+
+initramfs-tools-tcos (0.53.pre6) unstable; urgency=low
+
+  * Fix some paths.
+  * Detect sound device as /dev/dsp or /dev/snd
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu,  7 Sep 2006 10:38:18 +0200
+
+initramfs-tools-tcos (0.53.pre5) unstable; urgency=low
+
+  * Fix convert_files2links() function in conf/tcos-generation-functions.sh
+     - If app isn't in path can't copy, use readlink instead of pathof
+  * Use initramfs-${SUFFIX}-${KERNEL_VERSION}, for support multiple kernel
+  * Change pxelinux.cfg/default to initramfs-2.6.16-1-486
+  * Add all build vars in /etc/tcos/tcos.conf
+  * Fix bin/gentcos to use /etc/tcos/tcos.conf new vars
+  * Use hex2ascii tcosmonitor hack to retrieve hostname in a string in dhcp dinamic servers
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue,  5 Sep 2006 23:11:41 +0200
+
+initramfs-tools-tcos (0.53.pre4) unstable; urgency=low
+
+  * Upload last changes to svn
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun,  3 Sep 2006 20:20:55 +0200
+
+initramfs-tools-tcos (0.53.pre3) unstable; urgency=low
+
+  * Change /etc/tcos for /usr/share/initramfs-tools-tcos/ for hooks and scripts
+  * Start NFS support and complety rootfs
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri,  1 Sep 2006 19:52:03 +0200
+
+initramfs-tools-tcos (0.53.pre2) unstable; urgency=low
+
+  * Initial PulseAudio support, new var TCOS_PULSEAUDIO
+  * Delete obsolete TCOS_XMLRPC username and pass.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 24 Aug 2006 19:45:16 +0200
+
+initramfs-tools-tcos (0.52) unstable; urgency=low
+
+  * Add destripar_initramfs.sh script (mount initramfs and chroot into it) .
+  * Fix /lib/lsb dir creation (hooks/tcosbin)
+  * Delete in postinst: /etc/tcos/scripts/tcos-bottom/40freespace
+  * Fix some scripts/tcos-bottom/10initsound
+  * Move mount_unionfs into conf/tcos-run-functions
+  * Add check_module before manual_add_modules because some files not copied
+     - see debian bug: #384043
+  * Rename allmodules.squashfs to allmodules-$(uname -r).squashfs
+  * Add some remove stuff in postinst, to clean /etc/tcos dir
+  * Add force_add_module #384043, and remove check_module
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 21 Aug 2006 22:06:14 +0200
+
+initramfs-tools-tcos (0.51) unstable; urgency=low
+
+  * Remove some FIXME code
+  * usplash-tcos.so is in svn repos while there is a easy way to compile it (based on debian-edu)
+  * Remove some extra functions in tcos-*-functions
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 16 Aug 2006 16:14:44 +0200
+
+initramfs-tools-tcos (0.50) unstable; urgency=low
+
+  * Add usplash artwork (tcos-usplash) usplash is now in debian unstable.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon,  7 Aug 2006 15:50:19 +0200
+
+initramfs-tools-tcos (0.49) unstable; urgency=low
+
+  * New stable release
+  * conf/tcos-functions is deprecated, split in two files:
+     - tcos-run-functions used in thin client
+     - tcos-generation-functions used by gentcos
+  * Disable fstab generation if uselocal is not set
+  * Do some actions in background & (better timming 15 seconds with usr.squashfs download)
+  * Resync with TcosMonitor 0.0.10.b3
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 15 Jul 2006 22:29:09 +0200
+
+initramfs-tools-tcos (0.48.b4) unstable; urgency=low
+
+  * Launch session in background ( & )
+  * Disable tcos-bootom/25freespace
+  * Delete old stuff (20ltspfs)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 10 Jul 2006 12:51:45 +0200
+
+initramfs-tools-tcos (0.48.b3) unstable; urgency=low
+
+  * Minor changes in bin/configurexorg
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 10 Jul 2006 11:17:53 +0200
+
+initramfs-tools-tcos (0.48.b2) unstable; urgency=low
+
+  * Minor changes in bin/configurexorg
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri,  7 Jul 2006 16:54:32 +0200
+
+initramfs-tools-tcos (0.48.b1) unstable; urgency=low
+
+  * New release
+  * Add configurexorg wrapper and xorg.conf.tpl
+  * Add restartxorg script (exec from TcosMonitor)
+  * Disable freespace (need some work)
+  * Change dependencies >= 0.48
+  * Now depends in dropbear (not recomended)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue,  4 Jul 2006 11:48:11 +0200
+
+initramfs-tools-tcos (0.47.b6) unstable; urgency=low
+
+  * Delete depends of non avalaible unionfs and sqaushfs modules
+  * Add TCOS_XMLRPC_USER and TCOS_XMLRPC_PASS to conf/tcos.conf file
+  * Add background sshx start (close terminal after startx)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 29 Jun 2006 15:44:33 +0200
+
+initramfs-tools-tcos (0.47-b5) unstable; urgency=low
+
+  * Add -extramodules="foo,bar" argument
+  * add hooks-addons/tcos to write into conf date and version
+  * Add hooks-addons/hwclock to setup date by BIOS clock
+  * Add update_progress() to any init script (usplash progress bar)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 20 Jun 2006 17:00:08 +0200
+
+initramfs-tools-tcos (0.47-b4) unstable; urgency=low
+
+  * New subrelease.
+  * Add IP.conf support (put a file in /tftpboot/tcos/conf/
+    like 192.168.0.25.conf and vars will overwrite tcos.conf)
+  * Add X resolution and depth support, cmdline vars:
+    res=800x600
+    depth=16
+  * Disable mouse wheel from cmdline => disablewheel
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed,  7 Jun 2006 20:09:29 +0200
+
+initramfs-tools-tcos (0.47-b3) unstable; urgency=low
+
+  * New subrelease.
+  * Add new startx methods (F=freenx S=ssh -X)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed,  7 Jun 2006 19:47:56 +0200
+
+initramfs-tools-tcos (0.47-b2) unstable; urgency=low
+
+  * Add tinylogin dependency debian/control.
+  * Update initramfs-tools-tcos version dependencies.
+  * Fix tcos-shfs[u]mount scripts (is_remote and is_mounted don't work clean)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed,  7 Jun 2006 10:48:35 +0200
+
+initramfs-tools-tcos (0.47-b1) unstable; urgency=low
+
+  * Add TCOS_ADMIN_USER entry (ssh key and italc key)
+  * Add TCOS_REMOTEFS selector (shfs, ltspfs, none)
+  * Remove TCOS_BIG_BUSYBOX (reboot and poweroff now works!!!)
+  * Add TCOS_SHOW_NEEDED_MODULES (show loaded and discover detected modules)
+  * Add showmodules cmdline to show loaded, discover and not found modules info.
+  * Add tcos-server-utils package:
+    - tcos-shfsmount  (mount shfs in terminal)
+    - tcos-shfsumount (umount shfs)
+  * Add manpages of tcos-shfs[u]mount.1
+  * Update gentcos manpage
+  * Add tinylogin utils to create users and groups with busybox.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 30 May 2006 22:35:59 +0200
+
+initramfs-tools-tcos (0.47) unstable; urgency=low
+
+  * Bad news, TCOS not accepted in SoC :(
+  * Change all dirs to not intercept with initramfs-tools => all code is in /etc/tcos
+  * Split tcosbin hooks file into some package-unit files, ex: xorg, discover, sound, autofs...
+  * Update gentcos scripts and gentcos manpage
+  * Update help.msg (pxelinux help screen)
+  * Fix dropbear SSH server startup failure /dev/random => /dev/urandom
+  * Clean ping before startx (resolved with /dev/urandom)
+  * Start Xorg once time (keyboard seems to work correctly)
+  * Add iTALC support, start ivs and daemonize it
+  * Enable remote reboot and poweroff (copy reboot & poweroff in /usr/sbin, outside of squashfs)
+  * Add reboot and poweroff wrapper scripts (kill X, kill process, umount squash, umount all, reboot/poweroff)
+  * Delete/clean ACPI and RAID stuff (add new var TCOS_DISABLE_ACPI) -215 Kb !!!
+  * Add X11VNC support (not only iTALC)
+  * Join code to mount a ext3/vfat part in 15uselocal and use from swapon or sqmount
+  * Add break points with every startup script:
+    - network, fstab, uselocal, swapon, sqmount, ldconfig, autofs, inittcos, initsound, ltspfs, startx
+  * NOT use package revision numbers, initramfs-tools-tcos is debian based !!!!
+  * Mount /dev/shm as tmpfs in 50ldconfig
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 25 May 2006 11:48:27 +0200
+
+initramfs-tools-tcos (0.46-3) unstable; urgency=low
+
+  * Updates README file ( debug a kernel panic )
+  * Delete scripts/tcos-premount/40unionfs and put code in 30sqmount
+  * More easy script scripts/tcos-premount/30sqmount
+  * add allmodules.squashfs ( all kernel modules to debuging )
+  * add _log() function ( write into /tmp/initramfs.debug )
+  * add reboot and poweroff scripts ( reboot -f / poweroff -f )
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 17 May 2006 16:24:02 +0200
+
+initramfs-tools-tcos (0.46-2) unstable; urgency=low
+
+  * Add info about missing packages
+  * Add TCOS_DISABLE_ACPI to delete acpi and raid stuff
+  * Complete gentcos script support to be more flexible from TcosConfig
+  * Add some debconf scripts and templates
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 14 May 2006 14:12:34 +0200
+
+initramfs-tools-tcos (0.46-1) unstable; urgency=low
+
+  * Add support of embedded web browser (dillo 25Mb or links2 6 Mb)
+  * Reorganize hooks/tcosbin scripts
+  * Add some functions to conf/tcos-functions to copy files and dirs
+  * Add resolv.conf file generated from server resolv.conf ( browser need it )
+  * Add HACKING info.
+  * Add Etherboot support ( NBI images )
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 11 May 2006 12:05:31 +0200
+
+initramfs-tools-tcos (0.46) unstable; urgency=low
+
+  * Initial version of tcos own package.
+  * Rename pxes to TCOS support (Thin Client Operating System)
+  * Add swap file mount and generation system
+  * Mount /usr in read-write mode unionfs and 2 Mb of ram filesystem.
+  * Add ltspfs daemon and autofs to read devices from user session.
+  * Remove samba support.
+  * Split TCOS to his own package.
+  * Add /tftboot/tcos dir to all needed into it.
+  * Create symbolic link to /boot/vmlinuz-xxxxx into /tftpboot/tcos
+  * Add /etc/tcos dir to not touch /etc/mkinitramfs files
+  * Add /etc/tcos/tcos-functions with common shell script functions
+  * Create symbolic link to /usr/lib/syslinux/pxelinux.0 into /tftpboot/tcos
+  * Add support of ssh server (dropbear ssh don't need PAM)
+  * Copy ssh rsa public keys to .ssh root home in initramfs (no pass needed)
+  * Add support of Xorg 7.0 or 6.9 (debian testing unstable generation build systems)
+  * Move vars to /etc/tcos/tcos.conf (only vars)
+  * Use debian kernel 2.6.16-1-486 (can use any > 2.6.12)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun,  7 May 2006 18:43:07 +0200

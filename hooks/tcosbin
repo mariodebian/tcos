@@ -1,0 +1,339 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+
+# Hooks for install binaries for tcos boot
+#
+. /usr/share/initramfs-tools/hook-functions
+
+# read conf file => /etc/tcos/initramfs.conf
+. $CONFDIR/initramfs.conf
+
+# read from env vars TCOS_BOOT
+TCOS_BOOT=$(env| awk -F "=" '/^TCOS_BOOT=/ {print $2}')
+if [ "${TCOS_BOOT}" != "" ]; then
+  BOOT=$TCOS_BOOT
+fi
+
+
+if [ "${BOOT}" == "tcos" ]; then
+
+. $CONFDIR/tcos.conf
+. $TCOS_DIR/tcos-generation-functions.sh
+
+
+# _echo ""
+# _echo "INITRAMFS => BOOT=tcos"
+# _echo ""
+
+# copy internal tcos conf
+cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
+cp $CONFDIR/tcos.conf                $DESTDIR/conf/
+
+# put DNS server
+dns1=$(grep nameserver /etc/resolv.conf | head -1 | awk '{print $2}')
+echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
+
+[ -d $DESTDIR/dev ]  || mkdir -m 0755 $DESTDIR/dev
+[ -d $DESTDIR/root ] || mkdir --mode=0700 $DESTDIR/root
+[ -d $DESTDIR/sys ]  || mkdir $DESTDIR/sys
+[ -d $DESTDIR/proc ] || mkdir $DESTDIR/proc
+[ -d $DESTDIR/tmp ]  || mkdir $DESTDIR/tmp
+[ -d $DESTDIR/ram ]  || mkdir $DESTDIR/ram
+[ -d $DESTDIR/nfs ]  || mkdir $DESTDIR/nfs
+
+mkdir -p $DESTDIR/usr/bin
+mkdir -p $DESTDIR/usr/sbin
+mkdir -p $DESTDIR/lib/lsb/
+cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
+cpifexists /etc/debian_version  /etc/
+
+# needed for swap creation
+cpifexists $(pathof mkswap) /sbin/
+
+# fdisk for fstab generation
+cpifexists $(pathof fdisk) /sbin/
+
+# to change pass during boot
+copy_exec $(pathof chpasswd) /usr/bin/
+cpifexists /etc/login.defs   /etc
+
+# some network stuff
+touch $DESTDIR/etc/hosts.allow
+touch $DESTDIR/etc/hosts.deny
+cpifexists /etc/host.conf        /etc/
+cpifexists /etc/nsswitch.conf    /etc/
+
+# LIBRARIES
+cpifexists $(pathof ldconfig)    /sbin/
+[ -f /etc/ld.so.conf ] && cpifexists /etc/ld.so.conf       /etc/
+[ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
+
+cpifexists /etc/localtime        /etc/
+cpifexists /etc/adjtime        /etc/
+
+# server kbmap
+cpifexists $(pathof loadkeys) /usr/bin
+
+if [ -f /etc/console/boottime.kmap.gz ]; then
+  mkdir $DESTDIR/etc/console
+  cpifexists /etc/console/boottime.kmap.gz /etc/console
+fi
+
+# for ubuntu
+if [ -f /etc/console-setup/boottime.kmap.gz ]; then
+  mkdir $DESTDIR/etc/console
+  cpifexists /etc/console-setup/boottime.kmap.gz /etc/console
+fi
+
+# create /etc/passwd /etc/shadow and /etc/group
+egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/passwd > $DESTDIR/etc/passwd
+egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/group > $DESTDIR/etc/group
+egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
+
+# change shell to /bin/sh
+cat $DESTDIR/etc/passwd | sed s/bash/sh/g > $DESTDIR/etc/passwd~ ; cat $DESTDIR/etc/passwd~ > $DESTDIR/etc/passwd
+rm $DESTDIR/etc/passwd~
+
+
+# check for a decent version of busybox
+# ubuntu busybox-initramfs don't have some utils
+if [ $DESTDIR/bin/busybox ]; then
+  test1=$($DESTDIR/bin/busybox tftp 2>&1 | grep -c -i usage)
+  test2=$($DESTDIR/bin/busybox awk 2>&1 | grep -c -i usage)
+
+  if [ $test1 = 0 -o $test2 = 0 ]; then
+    if [ -x /bin/busybox ]; then
+       _echo "   INFO:  Better busybox found, replacing it..."
+       rm $DESTDIR/bin/busybox
+       cpifexists /bin/busybox /bin/
+    else
+       _echo "ERROR:"
+       _echo ""
+       _echo "     The initramfs busybox version don't have some needed utils."
+       _echo "     Please install other busybox that have awk and tftp"
+       _echo ""
+       _echo "     This TCOS image will not work."
+       _echo ""
+    fi
+  else
+    _echo "    busybox pass test: OK"
+  fi
+else
+  _echo "busybox not found in initramfs yet..."
+fi
+
+
+
+# load hooks-addons (small files with group of packages inside)
+for addon in $(find ${TCOS_DIR}/hooks-addons/ -type f) ; do
+  #_echo "  LOADING: system addon: ${addon}"
+  . ${addon}
+done
+
+# load hooks-addons (small files with group of packages inside)
+for addon in $(find ${TCOS_CONF}/hooks-addons/ -type f) ; do
+  #_echo "  LOADING: personal addon: ${addon}"
+  . ${addon}
+done
+
+
+# read all files in ${TCOS_CONF}/hacking/ and load it ( personal files )
+for hack in $(find ${TCOS_CONF}/hacking/ -type f) ; do 
+  #_echo "  LOADING: hack: ${hack}"
+ . ${hack} 
+done
+
+
+# to be sure that /usr have files and not links
+# we search links delete them and put file instead
+convert_links2files
+
+
+# usplash support
+mkdir -p $DESTDIR/usr/lib/usplash/
+cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+
+# read from env vars TCOS_BOOT
+TCOS_ENV_DISABLE_SQUASHFS=$(env| awk -F "=" '/^TCOS_ENV_DISABLE_SQUASHFS=/ {print $2}')
+if [ "${TCOS_ENV_DISABLE_SQUASHFS}" != "" ]; then
+  TCOS_DISABLE_SQUASHFS=$TCOS_ENV_DISABLE_SQUASHFS
+fi
+
+
+
+if [ -z $TCOS_DISABLE_SQUASHFS ]; then
+  # create usr.squashfs
+  if [ $(env | grep -c ^TCOS_SUFFIX) = 1 ]; then
+    TCOS_SUFFIX=$(env | grep ^TCOS_SUFFIX | awk -F "=" '{print $2}')
+    #_echo "Copying SQUASHFS_FILE to $DESTDIR/conf/tcos.conf"
+    echo "SQUASHFS_FILE=\"usr${TCOS_SUFFIX}-${version}.squashfs\"" >> $DESTDIR/conf/tcos.conf
+  fi
+  SQUASHFS_FILE="usr${TCOS_SUFFIX}-${version}.squashfs"
+  _echo "     Creating ${SQUASHFS_FILE} of /usr"
+  mkdir -p $DESTDIR/mnt/tmp
+  mksquashfs $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /dev/null 2>&1
+  # mksquashfs create files with 700 rights, change to 644
+  chmod 644 $DESTDIR/mnt/tmp/${SQUASHFS_FILE}
+  rm -rf $DESTDIR/usr/ && mkdir $DESTDIR/usr
+
+  # usplash support
+  mkdir -p $DESTDIR/usr/lib/usplash/
+  cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+
+  # overwrite TCOS_SQUASHFS from shell env var
+  # this allow to create cdrom with usr.squashfs embedded
+  if [ $(env | grep -c ^TCOS_SQUASHFS) = 1 ]; then
+    TCOS_SQUASHFS=$(env | grep ^TCOS_SQUASHFS | awk -F "=" '{print $2}')
+    _echo "DEBUG: overwrite TCOS_SQUASHFS=$TCOS_SQUASHFS"
+  else
+    if [ "${TCOS_SQUASHFS}" = "1" ] ; then
+      _echo "     Moving ${SQUASHFS_FILE} to ${TCOS_OPT}/files and linking in ${TFTP_DIR}"
+      mv $DESTDIR/mnt/tmp/${SQUASHFS_FILE} ${TCOS_OPT}/files
+      rm -f ${TFTP_DIR}/${SQUASHFS_FILE}
+      ln -s ${TCOS_OPT}/files/${SQUASHFS_FILE} ${TFTP_DIR}
+    fi
+  fi # end of TCOS_SQUASHFS
+fi # end of TCOS_DISABLE_SQUASHFS
+
+
+# now copy reboot and poweroff in /usr/sbin outside of
+# usr.squashfs, because reboot -f is exec after umount /usr
+
+stat_before
+mkdir -p $DESTDIR/usr/sbin >/dev/null 2>&1
+# init reboot poweroff
+cpifexists $(pathof reboot)     /usr/sbin/
+cpifexists $(pathof poweroff)     /usr/sbin/
+
+
+###
+### FIXME add usplash support to reboot and poweroff scripts
+###
+
+# reboot script
+cat <<EOF > ${DESTDIR}/sbin/reboot
+#!/bin/sh
+# reboot wrapper
+. /scripts/functions
+. /conf/tcos-run-functions
+
+kill_xorg
+
+clear
+start_usplash
+
+ log_begin_msg "Rebooting"
+ log_end_msg
+
+kill_all
+
+umount_swap
+
+umount_all
+
+/usr/sbin/reboot -f
+EOF
+chmod +x ${DESTDIR}/sbin/reboot
+
+# poweroff script
+cat <<EOF > ${DESTDIR}/sbin/poweroff
+#!/bin/sh
+# poweroff wrapper
+. /scripts/functions
+. /conf/tcos-run-functions
+
+kill_xorg
+clear
+start_usplash
+
+  log_begin_msg "Poweroff system"
+  log_end_msg
+
+kill_all
+
+umount_swap
+
+umount_all
+
+/usr/sbin/poweroff -f
+EOF
+chmod +x $DESTDIR/sbin/poweroff
+
+stat_after "Init binaries"
+
+
+
+# clean /lib/tls if needed
+if [ -d $DESTDIR/lib/tls ]; then
+   for lib in ${DESTDIR}/lib/tls/*; do
+     tlslib=$lib
+     notlslib=$(echo $lib | sed s/tls//g)
+     notlslib1=$(basename $lib)
+     notlslib2=$(basename $lib | awk -F "." '{print $1}')
+     if [ -f $notlslib ]; then
+      _echo "WARNING rm -f $lib"
+     elif [ -f /lib/${notlslib1} ]; then
+      _echo "WARNING cp -a /lib/${notlslib} $DESTDIR/lib"
+     else    
+      _echo "$tlslib not found"
+     fi
+  done
+fi # end of /lib/tls dir exists
+
+
+
+if [ $TCOS_DISABLE_ACPI ]; then
+  stat_before
+  #_echo "  Disabling ACPI and RAID support"
+  #set -x
+  rm -rf $DESTDIR/lib/modules/*/drivers/md/
+  rm -rf $DESTDIR/lib/modules/*/drivers/acpi/
+  rm -rf $DESTDIR/scripts/usb*
+  rm -rf $DESTDIR/scripts/live*
+  rm -rf $DESTDIR/scripts/local*
+  rm -rf $DESTDIR/scripts/init-premount/thermal
+  rm -rf $DESTDIR/sbin/mdadm
+  rm -rf $DESTDIR/sbin/mdrun
+  rm -rf $DESTDIR/sbin/vgchange
+  rm -rf $DESTDIR/lib/lvm*
+  stat_after "Disable ACPI and RAID support"
+  #set +x
+fi
+
+
+# read shell env variables to search TCOS_ALL_MODULES
+if [ $(env | grep -c ^TCOS_ALL_MODULES) = 1 ]; then
+    TCOS_ALL_MODULES=$(env | grep ^TCOS_ALL_MODULES | awk -F "=" '{print $2}')
+fi  
+
+# create allmodules.squashfs
+if [ $TCOS_ALL_MODULES ]; then
+  _echo "Running depmod of kernel ${version}"
+  depmod -ae ${version}
+  _echo "     Creating allmodules-${version}.squashfs file"
+  mkdir -p $DESTDIR/mnt/tmp > /dev/null 2>&1
+  mksquashfs /lib/modules/${version}/ $DESTDIR/mnt/tmp/allmodules-${version}.squashfs > /dev/null 2>&1
+  # mksquashfs create files with 700 rights, change to 644
+  chmod 644 ${DESTDIR}/mnt/tmp/allmodules-${version}.squashfs
+  _echo "    Moving allmodules-${version}.squashfs to /tftpboot/tcos"
+  mv ${DESTDIR}/mnt/tmp/allmodules-${version}.squashfs /tftpboot/tcos
+fi
+
+
+fi

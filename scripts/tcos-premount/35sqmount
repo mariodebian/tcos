@@ -1,0 +1,160 @@
+#!/bin/sh
+# 
+
+PREREQ="10fstab 15uselocal 20swapon 25download_settings 30rootfs"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+# if break=sqmount STOP here
+maybe_break sqmount
+
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+TCOS_SQUASHFS=$(read_cmdline_var "squashfs" "${TCOS_SQUASHFS}")
+
+if [ ! -z $TCOS_DISABLE_SQUASHFS ]; then
+  _log "SQMOUNT no squashfs support, exiting"
+  # no squashfs support defined
+  exit 0
+fi
+
+
+# load modules
+modprobe -q loop >> /tmp/initramfs.debug 2>&1
+modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
+modprobe -q unionfs >> /tmp/initramfs.debug 2>&1
+
+
+mnt_usr=${download_dir}/usr.squashfs
+allmodules=${download_dir}/allmodules.squashfs
+
+
+# if file exist link it!!!
+if [ -f ${download_dir}/usr-$(uname -r).squashfs ]; then
+  ln -s ${download_dir}/usr-$(uname -r).squashfs $mnt_usr
+fi
+
+if [ ${SQUASHFS_FILE} ]; then
+  remote_squashfs=${SQUASHFS_FILE}
+else
+  remote_squashfs=usr-$(uname -r).squashfs
+fi
+
+
+
+# if force-update write in cmdline delete local usr.squashfs
+# DOCUMENTME force-update | delete from terminal hard disk usr.squashfs forcing to download again
+if [ "$(read_cmdline_var "force-update" "0" )" = "1" ]; then
+  _log "SQMOUNT force-update=1 delete old squashfs"
+  rm -f ${mnt_usr} >/dev/null 2>&1
+  rm -f ${allmodules} >/dev/null 2>&1
+fi
+
+
+
+
+###############################################
+if [ ! -f ${mnt_usr} ] ; then
+# download usr.squashfs from tftp server
+
+# say to usplash more timeout
+if [ -x /sbin/usplash_write ]; then
+  /sbin/usplash_write "TIMEOUT 180" || true
+fi
+
+
+log_begin_msg "Downloading usr.squashfs from $(get_server)"
+    _log "SQMOUNT downloading squashfs"
+    download_file /tcos/${remote_squashfs} ${mnt_usr}
+    sync
+    sleep 1
+log_end_msg
+
+
+  if [ "$(if_is_zero ${mnt_usr})" = "0" ]; then
+   panic "Error downloading extra data from server $(get_server)"
+   # Just in case
+   FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
+  fi
+else
+  log_begin_msg "${remote_squashfs} not downloaded"
+    sync
+  log_end_msg
+fi
+
+##############################################
+
+
+# Mount squashfs filesystems
+log_begin_msg "Mounting usr filesystem"
+ mount -r -o loop -t squashfs ${mnt_usr} /usr >> /tmp/initramfs.debug 2>&1
+log_end_msg $?
+
+
+log_begin_msg "Remounting usr in rw mode"
+ mount_unionfs /mnt/ram /.usr /usr
+log_end_msg
+
+
+###############################################
+
+
+
+# DOCUMENTME allmodules | download with tftp allmodules.squashfs to test what modules need thin client
+TCOS_ALL_MODULES=$(read_cmdline_var "allmodules" "0")
+
+if [ "$TCOS_ALL_MODULES" = "1" ]; then
+
+  if [ ! -f ${allmodules} ]; then
+
+    # say to usplash more timeout
+    if [ -x /sbin/usplash_write ]; then
+      usplash_write "TIMEOUT 180" || true
+    fi
+
+    _log "SQMOUNT Downloading allmodules-$(uname -r).squashfs"
+    log_begin_msg "Downloading all kernel modules: allmodules-$(uname -r).squashfs"
+    download_file /tcos/allmodules-$(uname -r).squashfs ${allmodules}
+    if [ "$(if_is_zero ${allmodules})" = "0" ]; then
+       echo -e "Error downloading allmodules"
+       log_end_msg 1
+       exit 0
+     fi
+    log_end_msg
+  fi
+  
+  log_begin_msg "Mounting allmodules.squashfs"
+    mount -r -o loop -t squashfs ${allmodules} /lib/modules/$(uname -r)/ >> /tmp/initramfs.debug 2>&1
+  log_end_msg $?
+
+  log_begin_msg "Remounting allmodules in RW mode"
+    mount_unionfs /mnt/.ram-modules /mnt/.modules /lib/modules/$(uname -r)
+  log_end_msg
+
+fi
+
+
+update_progress 4
+
+exit 0
+

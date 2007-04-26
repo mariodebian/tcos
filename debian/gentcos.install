@@ -1,0 +1,3 @@
+usr/sbin/gentcos
+var/lib/tcos/*
+tftpboot/*

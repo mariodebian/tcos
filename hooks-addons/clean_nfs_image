@@ -1,0 +1,63 @@
+# addon to clean initramfs-$(uname -r)-nfs
+
+# only exec in tcos-nfs boot
+if [ "${BOOT}" = "tcos-nfs" ]; then
+
+stat_before
+
+
+# delete some kernel modules
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/usb
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/scsi
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ide
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/cdrom
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ieee1394
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/md
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/message
+
+# delete some bins
+rm -rf ${DESTDIR}/scripts/local*
+rm -rf ${DESTDIR}/scripts/nfs*
+rm -rf ${DESTDIR}/scripts/tcos-top
+rm -rf ${DESTDIR}/scripts/tcos-bottom
+rm -rf ${DESTDIR}/scripts/tcos-premount
+
+rm -rf ${DESTDIR}/sbin/vgchange
+rm -rf ${DESTDIR}/lib/libdevmapper*
+
+# remove busybox and make a script that makes a link
+
+#rm -rf ${DESTDIR}/bin/busybox
+
+cat << EOF > ${DESTDIR}/scripts/init-top/busylink
+#!/bin/sh
+
+PREREQ=""
+prereqs()
+{
+        echo "$PREREQ"
+}
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+if [ ! -L /bin/busybox ]; then
+  rm -f /bin/busybox 
+  ln -s /bin/sh /bin/busybox
+fi
+
+exit 0
+EOF
+
+chmod +x ${DESTDIR}/scripts/init-top/busylink
+
+
+
+
+stat_after "Clean NFS initramfs"
+
+fi

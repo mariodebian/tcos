@@ -1,0 +1,592 @@
+#!/bin/sh
+
+template=/conf/xorg.conf.tpl
+tmp_xorg_file=/tmp/xorg.configurexorg
+outputfile=/etc/X11/xorg.conf
+mysettings=/conf/mysettings.conf
+touch ${mysettings}
+
+restartxorg=0
+autodetect_xdriver=1
+force_xdriver=0
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+if [ -d /usr/lib/xorg/modules/drivers ]; then
+  xdriver_dir=/usr/lib/xorg/modules/drivers
+
+elif [ -d /usr/X11R6/lib/modules/drivers ]; then
+  xdriver_dir=/usr/X11R6/lib/modules/drivers
+fi
+
+# set to 0 to disable debug
+verbose=0
+
+debug () {
+  if [ ${verbose} = 1 ]; then
+    echo "DEBUG: $@" >&2
+  fi
+}
+
+tftp_download_again() {
+  # thanks to Juanje Ojeda for awk trick
+  MYIP=$(ifconfig eth0| awk '/inet addr/ {split ($2,A,":"); print A[2]}')
+  debug "downloading file /tcos/conf/${MYIP}.conf"
+  download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf
+}
+
+
+# FIXME use getopt
+
+for x in "$@"; do
+        case $x in
+        --getsettings)
+                method="getsettings"
+                ;;
+        --newsettings)
+                method="newsettings"
+                ;;
+        --changesettings)
+                method="changesettings"
+                ;;
+        --downloadagain)
+                tftp_download_again
+                method="newsettings"
+                ;;
+        --restartx*)
+                restartxorg=1
+                ;;
+        --autodetect)
+                autodetect_xdriver=1
+                ;;
+        --noautodetect)
+                autodetect_xdriver=0
+                ;;
+        --verbose)
+                verbose=1
+                ;;
+        esac
+done
+
+
+# default xorg settings
+xdriver="vesa"
+xres="1024x768"
+xdepth="16"
+xhorizsync="28-49"
+xvertsync="43-72"
+xrefresh="60Hz"
+xdpms=""        # default enabled
+xmousewheel="" # wheel enabled
+xmouseprotocol="ImPS/2"
+xlocalfonts="#" # default disabled
+xmousedev="/dev/input/mice"
+
+
+
+# FIXME serial mouse scan !!!
+if [ -e /dev/input/mice ]; then
+ xmousedev="/dev/input/mice"
+elif [ -e /dev/psaux ]; then
+ xmousedev="/dev/psaux"
+fi
+
+# default is Ctrl Alt <== DISABLED
+xdontzap="1"
+xzap_txt="Section \"Serverflags\"\\
+        Option \"DontZap\"      \"yes\"\\
+EndSection"
+
+xzap=$xzap_txt
+
+# other
+withnofail=0
+setsettings=1
+
+stamp=$(date +'%Y.%m.%d.%H.%M')
+cmdline=$@
+
+
+
+get_myconf() {
+# $1 is var name
+# $2 is default value
+varname=$1
+defvalue=$2
+ value=$(grep ^${varname} ${mysettings} | awk -F "=" '{gsub(/\"/,"",$2); print $2}' )
+ if [ "${value}" != "" ]; then
+   echo ${value}
+ else
+   echo ${defvalue}
+ fi
+}
+
+get_myres() {
+ echo $(awk -F "=" '/^xres/ { gsub(/\"/,"", $2) ; split($2,A," ") ; print A[1]}' ${mysettings} )
+}
+
+get_myrefresh() {
+ echo $(awk -F "=" '/^xres/ { gsub(/\"/,"", $2) ; split($2,A," ") ; print A[3]}' ${mysettings} )
+}
+
+get_mybool() {
+ varname=$1
+ value=$(grep ^${varname} ${mysettings} | awk -F "=" '{gsub(/\"/,"",$2); print $2}' )
+ if [ "${value}" = "1" ]; then
+   echo ""  # enabled
+ else
+   echo "#" # disabled
+ fi
+}
+
+detect_driver() {
+if [ $force_xdriver = 1 ]; then
+  return
+fi
+
+if [ -x $(which discover) ]; then
+  counts=0
+  all_file_drivers=$(ls $xdriver_dir/|grep "_drv.so"|grep -v vga)
+  all_drivers=""
+  for file_driver in $all_file_drivers; do
+    all_drivers="$all_drivers $(echo $file_driver| sed s/'_drv.so'//g)"
+  done
+  debug "detect_driver() all_drivers=$all_drivers"
+  
+  xdevice=$(discover --data-path=xfree86/server/device/driver display)
+  debug "detect_driver() xdevice=$xdevice"
+  for driver in $all_drivers; do
+     if [ "$xdevice" = "$driver" ]; then
+        debug "detect_driver() possible driver: $driver"
+        xdriver_candidate=$driver
+        counts=$((counts + 1))
+     fi
+  done
+  if [ $counts = 1 ]; then
+     xdriver=$xdriver_candidate
+     debug "detect_driver() xdriver FOUND ===> $xdriver"
+  fi
+else
+  debug "detect_driver() discover not found"
+fi
+#
+#
+#  IMPORTANT
+#
+#  for discover other devices use something like this
+#
+# allmodules=""
+# for module in $(discover --data-path=linux/module/name ethernet sound ide usb modem bridge isdn printer scanner mouse webcam floppy); do
+#   if [ "$module" != "" ]; then
+#     allmodules="$allmodules $module"
+#   fi
+# done
+# echo $allmodules
+#
+}
+
+# FIXME use getopt
+
+load_cmdline () {
+   for x in $cmdline; do
+        case $x in
+        --xdriver=*)
+                xdriver=${x#--xdriver=}
+                force_xdriver=1
+                ;;
+        --xres=*)
+                xres=${x#--xres=}
+                ;;
+        --xdepth=*)
+                xdepth=${x#--xdepth=}
+                ;;
+        --xrefresh=*)
+                xrefresh=${x#--xrefresh=}
+                ;;
+        #--xhorizsync=*)
+        #        xhorizsync=${x#--xhorizsync=}
+        #        ;;
+        #--xvertsync=*)
+        #        xvertsync=${x#--xvertsync=}
+        #        ;;
+        --xfontserver=**)
+                xfontserver=${x#--xfontserver=}
+                ;;
+        --xmouseprotocol=**)
+                xmouseprotocol=${x#--xmouseprotocol=}
+                ;;
+        --restartx)
+                restartxorg=1
+                ;;
+        --xmousenowheel)
+                xmousewheel="#"
+                ;;
+        --xnodpms)
+                xdpms="#"
+                ;;
+        --xdontzap)
+                xdontzap="1"
+                ;;
+        --dontzap)
+                xdontzap="1"
+                ;;
+        --zap)
+                xdontzap="0"
+                ;;
+        --xzap)
+                xdontzap="0"
+                ;;
+        --xlocalfonts)
+                xlocalfonts=""
+                ;;
+        --withnofail)
+                withnofail=1
+                ;;
+        --outputfile=*)
+                outputfile=${x#--outputfile=}
+                ;;
+        esac
+   done
+} # end of load_cmdline
+
+
+set_sync() {
+ RES=${1}
+ xhorizsync=$(get_sync "$RES@${xrefresh}" | awk -F ":" '{print $1}')
+ xvertsync=$(get_sync "$RES@${xrefresh}" | awk -F ":" '{print $2}')
+}
+
+get_sync() {
+# horiz and vert sync table
+# orig by debian debconf
+# ==> xserver-xorg.postinst
+
+ RES=${1}
+ case "$RES" in
+        "640x480@60Hz")
+          horiz_sync="28-33"
+          vert_sync="43-72"
+          ;;
+        "640x480@72Hz")
+          horiz_sync="28-38"
+          vert_sync="43-72"
+          ;;
+        "800x600@60Hz")
+          horiz_sync="28-38"
+          vert_sync="43-72"
+          ;;
+        "800x600@72Hz")
+          horiz_sync="28-48"
+          vert_sync="43-72"
+          ;;
+        "800x600@85Hz")
+          horiz_sync="30-54"
+          vert_sync="50-85"
+          ;;
+        "832x624@75Hz")
+          horiz_sync="30-50"
+          vert_sync="50-75"
+          ;;
+        "1024x768@60Hz")
+          horiz_sync="28-49"
+          vert_sync="43-72"
+          ;;
+        "1024x768@70Hz")
+          horiz_sync="30-57"
+          vert_sync="43-72"
+          ;;
+        "1024x768@75Hz")
+          horiz_sync="30-60"
+          vert_sync="50-75"
+          ;;
+        "1152x768@54.8Hz")
+          # This is a 15" PowerBook G4 mode; its video hardware (LCD) was also
+          # capable of 896x600 and 720x480 pixels at a 3:2 aspect ratio and
+          # 1024x768, 800x600, and 640x480 pixels at a 4:3 aspect ratio, so give
+          # its horizontal and vertical ranges a little more "headroom" than
+          # that required by this specific mode to accomodate the others.
+          horiz_sync="30-50"
+          vert_sync="50-72"
+          ;;
+        "1152x864@60Hz")
+          horiz_sync="30-68"
+          vert_sync="50-70"
+          ;;
+        "1152x864@75Hz")
+          horiz_sync="30-68"
+          vert_sync="50-85"
+          ;;
+        "1280x768@60Hz")
+          horiz_sync="30-65"
+          vert_sync="30-60"
+          ;;
+        "1280x800@60Hz")
+          horiz_sync="30-67"
+          vert_sync="30-60"
+          ;;
+        "1280x960@60Hz")
+          horiz_sync="30-60"
+          vert_sync="50-75"
+          ;;
+        "1280x960@85Hz")
+          horiz_sync="30-92"
+          vert_sync="50-85"
+          ;;
+        "1280x1024@60Hz")
+          horiz_sync="30-65"
+          vert_sync="50-75"
+          ;;
+        "1400x1050@60Hz")
+          horiz_sync="30-67"
+          vert_sync="50-75"
+          ;;
+        "1400x1050@75Hz")
+          horiz_sync="30-85"
+          vert_sync="50-80"
+          ;;
+        "1600x1024@85Hz")
+          horiz_sync="30-70"
+          vert_sync="50-90"
+          ;;
+        "1600x1200@60Hz")
+          horiz_sync="30-75"
+          vert_sync="50-85"
+          ;;
+        "1600x1200@75Hz")
+          horiz_sync="30-94"
+          vert_sync="50-75"
+          ;;
+        "1600x1200@85Hz")
+          horiz_sync="30-107"
+          vert_sync="50-85"
+          ;;
+        "1680x1050@60Hz")
+          horiz_sync="30-90"
+          vert_sync="50-60"
+          ;;
+        "1792x1344@75Hz")
+          horiz_sync="30-107"
+          vert_sync="50-85"
+          ;;
+        "1792x1344@60Hz")
+          horiz_sync="30-84"
+          vert_sync="50-75"
+          ;;
+        "1856x1392@60Hz")
+          horiz_sync="30-87"
+          vert_sync="50-75"
+          ;;
+        "1856x1392@75Hz")
+          horiz_sync="30-113"
+          vert_sync="50-75"
+          ;;
+        "1920x1200@60Hz")
+          horiz_sync="30-75"
+          vert_sync="30-60"
+          ;;
+        "1920x1440@60Hz")
+          horiz_sync="30-90"
+          vert_sync="50-75"
+          ;;
+        "1920x1440@75Hz")
+          horiz_sync="30-130"
+          vert_sync="60-160"
+          ;;
+        "1920x1440@85Hz")
+          horiz_sync="30-130"
+          vert_sync="60-160"
+          ;;
+        "2048x1536@60Hz")
+          horiz_sync="30-100"
+          vert_sync="60-85"
+          ;;
+        "2048x1536@75Hz")
+          horiz_sync="30-125"
+          vert_sync="60-100"
+          ;;
+        "2048x1536@85Hz")
+          horiz_sync="30-140"
+          vert_sync="60-160"
+          ;;
+         *)
+          debug "get_sync() Unkwnow screen resolution ${RES}"
+          echo ":"
+          ;;
+      esac
+    echo "$horiz_sync:$vert_sync"  
+}
+
+
+set_settings() {
+
+if [ "$xdriver" != "auto" ]; then
+  autodetect_xdriver=0
+fi
+
+if [ "$xdriver" = "auto" -o $autodetect_xdriver = 1 ]; then
+   detect_driver
+   if [ "$xdriver" = "auto" ]; then
+      xdriver="vesa"
+   fi
+fi
+
+
+if [ "${xdontzap}" = "0" -o "$xdontzap" = "#" ]; then
+  # enable Ctrl Alt <===
+  xzap="#"
+elif [ "$xdontzap" = "1" -o "$xdontzap" = "" ]; then
+  # disable Ctrl Alt <==
+  xzap=${xzap_txt}
+else
+  debug "unknow dontzap"
+  xzap=""
+fi
+
+
+debug "set_settings() xdriver=$xdriver xres=$xres xdepth=$xdepth xdpms=$xdpms"
+debug "xhorizsync=$xhorizsync xvertsync=$xvertsync xrefresh=$xrefresh xmousewheel=$xmousewheel"
+debug "xmousedev=$xmousedev2 xmouseprotocol=$xmouseprotocol2 xlocalfonts=$xlocalfonts"
+debug "date=$stamp server=$SERVER xdontzap=$xdontzap dontzap=$xzap"
+
+# sed template to output file
+sed -e s/"__xdriver__"/"${xdriver}"/g \
+    -e s/"__xres__"/"${xres}"/g \
+    -e s/"__xdepth__"/"${xdepth}"/g \
+    -e s/"__xdpms__"/"${xdpms}"/g \
+    -e s/"__xhorizsync__"/"${xhorizsync}"/g \
+    -e s/"__xvertsync__"/"${xvertsync}"/g \
+    -e s/"__xrefresh__"/"${xrefresh}"/g \
+    -e s/"__xmousewheel__"/"${xmousewheel}"/g \
+    -e s/"__xmousenowheel__"/"${xmousenowheel}"/g \
+    -e s/"__xmousedev__"/"${xmousedev2}"/g \
+    -e s/"__xmouseprotocol__"/"${xmouseprotocol2}"/g \
+    -e s/"__xlocalfonts__"/"${xlocalfonts}"/g \
+    -e s/"__date__"/"${stamp}"/g \
+    -e s/"unix\/:7100"/"tcp\/${SERVER}:7100"/g \
+    -e s/"__xfontserver__"/"${SERVER}"/g \
+    -e s/"__dontzap__"/"${xzap}"/g \
+    -e s/"__xdontzap__"/"${xdontzap}"/g \
+  ${template} > ${tmp_xorg_file}
+}
+
+save_settings() {
+ # backup old settings
+ [ -f ${outputfile} ] && mv ${outputfile} ${outputfile}.${stamp}
+ # move new settings
+ if [ -f ${tmp_xorg_file} ]; then
+  cat ${tmp_xorg_file} > ${outputfile}
+ fi
+}
+
+getsimple() {
+ value=$(grep "^#$1" ${outputfile} 2>/dev/null | tail -1 | awk -F "=" '{print $2}')
+ if [ "${value}" = "#" ]; then
+  value=0
+ elif [ "${value}" = "" ]; then
+  value=1
+ fi
+ echo -n "$1=${value} " 
+}
+
+getvalue() {
+ value=$(grep "^#$1" ${outputfile} 2>/dev/null | tail -1 | awk -F "=" '{print $2}')
+ echo "${value}"
+}
+
+
+get_settings() {
+ getsimple "xdriver"
+ getsimple "xres"
+ getsimple "xdepth"
+ getsimple "xdpms"
+ getsimple "xrefresh"
+ getsimple "xhorizsync"
+ getsimple "xvertsync"
+ getsimple "xfontserver"
+ getsimple "xmousedev"
+ getsimple "xmousewheel"
+ getsimple "xmouseprotocol"
+ #getsimple "xmousenowheel"
+ getsimple "xdontzap"
+}
+
+load_settings() {
+      xdriver=$(getvalue "xdriver")
+         xres=$(getvalue "xres")
+       xdepth=$(getvalue "xdepth")
+        xdpms=$(getvalue "xdpms")
+     xrefresh=$(getvalue "xrefresh")
+   xhorixsync=$(getvalue "xhorizsync")
+    xvertsync=$(getvalue "xvertsync")
+  xfontserver=$(getvalue "xfontserver")
+  xmousewheel=$(getvalue "xmousewheel")
+xmousenowheel=$(getvalue "xmousenowheel")
+     xdontzap=$(getvalue "xdontzap")
+
+}
+
+#########   end functions   ###################
+
+############## start app ######################
+
+if [ $(cat ${mysettings} | wc -l) -gt 1 ]; then
+ debug "loading settings of remote file..."
+
+ xdriver=$(get_myconf "xdriver" ${xdriver})
+ xdepth=$(get_myconf "xdepth" ${xdepth})
+ xres=$(get_myres)
+ xrefresh=$(get_myrefresh)
+ xdpms=$(get_mybool "xdpms")
+ xmousewheel=$(get_mybool "xmousewheel")
+ xdontzap=$(get_mybool "xdontzap")
+fi
+
+
+SERVER=$(get_server)
+# get first one
+for iserver in ${SERVER}; do
+ SERVER=${iserver}
+ break
+done
+
+if [ "${xmousewheel}" = "#" ]; then
+ xmousenowheel=""
+else
+ xmousenowheel="#"
+fi
+xmousedev2=$(echo ${xmousedev} | sed s/'\/'/'\\\/'/g)
+xmouseprotocol2=$(echo ${xmouseprotocol} | sed s/'\/'/'\\\/'/g)
+
+########################################################
+
+if [ "${method}" = "newsettings" ]; then
+ load_cmdline
+ set_sync "${xres}"
+ set_settings
+ save_settings
+elif [ "${method}" = "getsettings" ]; then
+ get_settings
+elif [ "${method}" = "changesettings" ]; then
+ load_settings
+ load_cmdline
+ set_sync "${xres}"
+ set_settings
+ save_settings
+else
+ echo "Usage configurexorg:
+   --getsettings - print xorg settings
+   --newsettings - set all new settings based on default and cmdline
+   --changesettings - change any settings based on configured
+   --downloadagain - download ${mysettings} again
+   --restartxorg - restart Xorg after edit/change/create settings"
+ exit 1
+fi
+
+
+if [ ${restartxorg} = 1 ]; then
+  debug "restarting xorg...."
+  /sbin/start-stop-daemon --start --quiet --background --exec /sbin/restartxorg > /dev/null 2>&1 
+fi
+
+exit 0

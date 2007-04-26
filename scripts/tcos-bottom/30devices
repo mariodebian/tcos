@@ -1,0 +1,71 @@
+#!/bin/sh
+# 
+
+PREREQ="01download_settings 05inittcos 10ldconfig 20autofs"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+quiet=n
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+# if break=ltspfs STOP here
+maybe_break ltspfs
+
+# DOCUMENTME noltspfs | disable ltspfs daemon
+noltspfs=$(read_cmdline_var "noltspfs" "0")
+if [ ${noltspfs} = 1 ]; then
+  _log "LTSPFS ltspfs disabled from cmdline"
+  exit 0
+fi
+
+###################################################
+# http://wiki.ltsp.org/twiki/bin/view/Ltsp/LtspFS #
+###################################################
+
+if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
+ if [ "$(which ltspfsd)" ] ; then
+  # start ltspfsd daemon
+  log_begin_msg "Start ltspfs daemon"
+  _log "LTSPFS Starting ltspfs daemon"
+      # AUTH works ok
+      ltspfsd 
+  log_end_msg
+ fi
+fi # end of TCOS_REMOTEFS=ltspfs
+
+
+
+if [ "$TCOS_REMOTEFS" = "shfs" ]; then
+  log_begin_msg "Adding SHFS filesystem user"
+   # create shfs user, change pass and allow connect throught ssh
+   #root:x:0:0:root:/root:/bin/bash
+   echo "shfs:x:1000:1000::/media/autofs:/bin/sh" >> /etc/passwd
+   echo "shfs:!:13287:0:99999:7:::" >> /etc/shadow
+   echo "shfs:x:1000:" >> /etc/group
+   echo "shfs:shfs" | chpasswd >/dev/null 2>&1
+   chown shfs:root /media/autofs >/dev/null 2>&1
+  log_end_msg
+fi
+
+update_progress
+
+exit 0

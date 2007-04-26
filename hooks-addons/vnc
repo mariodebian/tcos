@@ -1,0 +1,37 @@
+# hooks addon to use X11VNC
+# need x11vnc package
+
+
+if [ ${TCOS_X11VNC} ]; then
+ x11vnc=$(dpkg -l x11vnc|grep -c ^ii)
+ if [ ${x11vnc} != 1 ]; then
+   echo "WARNING:"
+   echo ""
+   echo "x11vnc not found, install x11vnc or disable TCOS_X11VNC."
+   echo "    => # apt-get install x11vnc"
+   echo ""
+ else
+  stat_before
+  cpifexists $(pathof x11vnc)       /usr/bin/
+  cat <<EOF > $DESTDIR/sbin/startvnc
+#!/bin/sh
+# kill all x11vnc process
+killall x11vnc >/dev/null 2>&1
+sleep 1
+DISPLAY=:0 x11vnc -o /tmp/vnc.log -forever -shared -noshm
+#FIXME (daemonize ??)
+EOF
+  chmod +x $DESTDIR/sbin/startvnc
+  stat_after "x11vnc"
+
+# FIXME use inetd for launching (man x11vnc)
+#-inetd
+#  Launched  by inetd(8): stdio instead of listening socket.  Note: if you are not redirecting stderr to a log
+#  file (via shell 2> or -o option) you MUST also specify the -q option, otherwise  the  stderr  goes  to the
+#  viewer  which will cause it to abort.  Specifying both -inetd and -q and no -o will automatically close the stderr.
+
+
+ fi
+fi #end of TCOS_X11VNC
+
+

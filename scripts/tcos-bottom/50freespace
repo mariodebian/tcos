@@ -1,0 +1,119 @@
+#!/bin/sh
+# 
+
+PREREQ="01download_settings 05inittcos 10ldconfig 20autofs 30devices 40initsound"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+#FIXME 
+exit 0
+
+
+quiet=n
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+. /conf/tcos-modules.conf
+
+
+#startx=$TCOS_XORG_TYPE
+#startx=$(read_cmdline_var "startx" "${startx}")
+
+#if [ "${startx}" != "N" ]; then
+# for module in ${XORG_MODULES}; do
+#  _log "FREESPACE force load xorg module: $module"
+#  modprobe -q $module >> /tmp/initramfs.debug 2>&1
+# done
+#fi
+
+
+# load nls ext3 and ide-generic modules (don't delete them!!!)
+#extra_modules="nls-iso8859-1 nls-cp437 ext3 ide-generic"
+# for module in ${extra_modules}; do
+#  _log "FREESPACE force load extra_modules: $module"
+#  modprobe -q $module >> /tmp/initramfs.debug 2>&1
+# done
+
+
+#deleted_modules=""
+
+
+#delete_module() {
+#  txt=$1
+#
+#  # $t is modulename
+#  module=$(find /lib/modules/ -type f -name "*$txt.ko")
+#  if [ -f $module ]; then
+#    #echo "rm $module"
+#    deleted_modules="$deleted_modules $txt"
+#    rm "$module" 2>/dev/null
+#  else  
+#   txt=$(echo $txt | sed s/"_"/"-"/g)
+#   module=$(find /lib/modules/ -type f -name "*$txt.ko")
+#   #echo "rm $module"
+#   deleted_modules="$deleted_modules $txt"
+#   rm "$module" 2>/dev/null
+#  fi
+#}
+
+#is_loaded() {
+#num=$(grep -c $1 /proc/modules)
+# if [ $num = 0 ]; then
+#   #echo $1 is NOT loaded
+#   delete_module "$1"
+# fi
+#}
+
+#set_free_space() {
+# free_space1=$(grep MemFree /proc/meminfo | awk '{print $2}')
+#}
+#get_free_space() {
+# free_space2=$(grep MemFree /proc/meminfo | awk '{print $2}')
+# free_space=$((free_space2 - free_space1))
+# echo ${free_space}
+#}
+
+
+#set_free_space
+
+#log_begin_msg "Deleting unused modules"
+#  for i in $(find /lib/modules/ -name "*.ko"); do
+#    module=$(basename $i | sed s/".ko"/""/g)
+#    module=$(echo $module | sed s/"-"/"_"/g)
+#    is_loaded "$module"
+#  done
+#log_end_msg
+
+#_log "FREESPACE modules $(get_free_space) Kb"
+#_log "FREESPACE deleted modules ${deleted_modules}"
+
+
+#set_free_space
+#log_begin_msg "Deleting some files"
+#  #FIXME
+#  deleted_files="/sbin/fdisk /sbin/dhclient"
+#  for _file in ${deleted_files}  ; do
+#    rm -rf ${_file} > /dev/null 2>&1
+#  done
+#log_end_msg
+
+#_log "FREESPACE files $(get_free_space) Kb"
+#_log "FREESPACE deleted files ${deleted_files} Kb"
+
+#update_progress
+
+exit 0

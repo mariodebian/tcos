@@ -1,0 +1,17 @@
+# hooks addon of inetd
+# need inetd package
+
+if [ $TCOS_INETD ]; then
+ stat_before
+ # inetd and telnet
+ #copy_exec $(pathof in.telnetd) /usr/bin
+ #copy_exec $(pathof telnet) /usr/bin
+
+ cpifexists $(pathof tcpd)      /usr/bin/
+ cpifexists $(pathof inetd)     /usr/bin/
+ cpifexists /etc/services       /etc/
+
+ #echo "telnet          stream  tcp     nowait  root /sbin/tcpd  telnetd" > $DESTDIR/etc/inetd.conf
+ #copy_exec /usr/lib/telnetlogin /usr/lib/
+ stat_after "Inetd daemon"
+fi # end of TCOS_INETD

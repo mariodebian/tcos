@@ -1,0 +1,30 @@
+#!/bin/sh
+# 
+
+PREREQ="01download_settings 05inittcos 10ldconfig 20autofs 30devices 40initsound 50freespace 70startx"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+. /scripts/functions
+
+clear
+echo "Press enter to activate this console..."
+read enter
+export PS1="($(hostname)-$(whoami)) # "
+#export PS1='($(hostname)) > '
+sh
+
+exit 0

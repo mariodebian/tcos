@@ -1,0 +1,72 @@
+# hooks addon of FreeNX
+# need nxclient installed
+
+
+if [ ${TCOS_FREENX} ]; then
+ stat_before
+ mkdir -p $DESTDIR/usr/NX/bin
+ mkdir -p $DESTDIR/usr/NX/lib
+ mkdir -p $DESTDIR/usr/NX/share
+ mkdir -p $DESTDIR/usr/NX/share/keys
+
+# mkdir -p $DESTDIR/etc/nxserver/
+#cat << EOF > $DESTDIR/etc/nxserver/node.conf
+#COMMAND_XAUTH=/usr/bin/xauth
+#ENABLE_SSH_AUTHENTICATION="1"
+#EOF
+ 
+ #FIXME
+ # to work sound need esddsp and this vars
+ ##ENABLE_ESD_PRELOAD="0"
+ ##ESD_BIN_PRELOAD="esddsp"
+ # not know if needed
+ # ssh ssh-keygen md5sum
+ # AGENT_EXTRA_OPTIONS_X commented as Antonio Quesada said
+# firewalled freenx (by Antonio Quesada)
+# $ssh -l pepito -C -2 -L 5000:serverNX:22 dominio.com
+#
+#pepito= cuenta de usuario registrado en el fw
+#serverNX= hostname del servidor NX al que queremos acceder
+#dominio.com= el fw, claro está.
+#5000= Puerto local al que queremos redirigir, puedes escoger el que quieras
+#22= Salvo que redirijas a otro puerto, el NX está a la escucha en el ssh
+#-C -2= utilizar ssh 2 y comprimido
+
+#ahora llamamos al NXclient y le decimos que el servidor es localhost y que se 
+#conecte al puerto 5000 o al que hayamos decidido en la opción -L xxxx:
+
+ cpifexists  /usr/NX/bin/nxclient /usr/NX/bin/
+ cpifexists  /usr/NX/bin/nxesd    /usr/NX/bin/
+ cpifexists  /usr/NX/bin/nxssh    /usr/NX/bin/
+
+ # firewalled connection
+ cpifexists /usr/bin/ssh	/usr/bin/
+ cpifexists /usr/bin/ssh-keygen	/usr/bin/
+
+# expect runs on server
+# cpifexists  /usr/bin/expect    /usr/bin/
+ 
+ #copydir /usr/NX/share/keyboards/ /usr/NX/share/
+ cpifexists /usr/NX/share/keyboards /usr/NX/share/
+ cpifexists /usr/NX/share/keys/server.id_dsa.key /usr/NX/share/keys/
+ copydir /usr/NX/share/images /usr/NX/share/
+
+ cpifexists /lib/libpthread.so.0 /lib/
+ cpifexists /usr/lib/libstdc++-libc6.2-2.so.3 /usr/lib/
+
+ cpifexists /usr/NX/lib/libcrypto.so   /usr/NX/lib/
+ cpifexists /usr/NX/lib/libjpeg.so     /usr/NX/lib/
+ cpifexists /usr/NX/lib/libpng12.so    /usr/NX/lib/
+ cpifexists /usr/NX/lib/libXcomp.so    /usr/NX/lib/
+ cpifexists /usr/NX/lib/libz.so        /usr/NX/lib/
+
+ # not know if necesary
+ cpifexists /usr/lib/libXcomp.so.1       /usr/lib/
+ cpifexists /usr/lib/libXcompext.so.1    /usr/lib/
+ cpifexists /usr/lib/libaudiofile.so.0   /usr/lib/
+
+ #echo "/usr/NX/lib" >> $DESTDIR/etc/ld.so.conf
+
+ stat_after "FreeNX"
+fi # end of TCOS_FREENX
+

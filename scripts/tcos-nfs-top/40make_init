@@ -1,0 +1,78 @@
+#!/bin/sh
+# 
+
+PREREQ="05network 20mountnfs"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+quiet=n
+
+rm -f /root/sbin/init
+cat << EOF > /root/sbin/init
+#!/bin/sh
+
+. /scripts/functions
+
+. /conf/initramfs.conf
+. /conf/tcos.conf
+
+quiet=n
+
+
+# start udev again
+log_begin_msg "Discovering hardware"
+.  /scripts/init-premount/udev
+log_end_msg
+
+
+run_scripts /scripts/tcos-bottom/
+
+EOF
+chmod +x /root/sbin/init
+
+
+
+
+move_file() {
+# $1 orig
+# $2 dest
+
+mkdir -p ${2}/$(dirname ${1})
+
+if [ -f $1 ]; then
+  mv ${1} ${2}/$(dirname ${1})
+  ln -s ${2}/${1} ${1}
+else
+  touch $2/$1
+fi
+}
+
+move_file /var/lib/dhcp/dhclient.leases /root
+move_file /etc/hostname     /root
+move_file /etc/hosts        /root
+move_file /etc/resolv.conf  /root
+move_file /tmp/progress     /root
+move_file /etc/fstab        /root
+move_file /tmp/initramfs.debug /root
+ 
+log_begin_msg "Updating modules dependencies"
+  chroot /root depmod -a
+log_end_msg
+
+
+exit 0

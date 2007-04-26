@@ -1,0 +1,83 @@
+# hook addon DHCLIENT
+# necessary dhcp-client package
+
+
+
+if [ ! -f /sbin/dhclient ]; then
+ echo "ERROR"
+ echo ""
+ echo "NO DHCP support, please install dhcp-client package."
+ echo "  => apt-get install dhcp-client (or)"
+ echo "  => apt-get install dhcp3-client"
+ echo ""
+ # critical error
+ exit 1
+
+elif [ -f /sbin/dhclient3 ]; then
+
+ _echo ""
+ _echo "    WARNING:"
+ _echo "           Detected dhcp3-client package !!!"
+ _echo "           TCOS support for this package is very experimental"
+ _echo "           Please install dhcp-client package (without "3" number)"
+ _echo ""
+
+# exit 1
+
+  # FIXME need work
+
+ copydir /etc/dhcp3                /etc/
+ cpifexists /sbin/dhclient         /sbin/
+
+
+ [ -e /sbin/dhclient-script ]      && cp /sbin/dhclient-script       /sbin/
+ [ -e /etc/dhcp3/dhclient-script ] && rm $DESTDIR/etc/dhcp3/dhclient-script && \
+					cp /etc/dhcp3/dhclient-script $DESTDIR/etc/dhcp3/
+
+ [ -e $DESTDIR/sbin/dhclient-script ] &&\
+    sed -i -e s/"^run_hook "/"#DISABLED run_hook "/g \
+	   -e s/"^run_hookdir "/"#DISABLED run_hookdir "/g \
+	   -e s/"^exit_with_hooks"/"#DISABLED exit_with_hooks"/g \
+	   -e s/"bash"/"sh"/g $DESTDIR/sbin/dhclient-script
+
+ [ -e $DESTDIR/etc/dhcp3/dhclient-script ] &&\
+    sed -i -e s/"^run_hook "/"#DISABLED run_hook "/g \
+	   -e s/"^run_hookdir "/"#DISABLED run_hookdir "/g \
+	   -e s/"^exit_with_hooks"/"#DISABLED exit_with_hooks"/g \
+	   -e s/"bash"/"sh"/g $DESTDIR/etc/dhcp3/dhclient-script
+
+ mkdir -p $DESTDIR/var/lib/dhcp3 $DESTDIR/lib/dhcp3-client
+ cpifexists /lib/dhcp3-client/call-dhclient-script /lib/dhcp3-client/
+
+ # dhclient3 need dhcp user 
+ dhcp_user=$(grep -c "dhcp:" /etc/passwd )
+
+ if [ $dhcp_user -gt 0 ]; then
+  grep "dhcp:" /etc/passwd >> $DESTDIR/etc/passwd
+  grep "dhcp:" /etc/group >> $DESTDIR/etc/group
+  grep "dhcp:" /etc/shadow >> $DESTDIR/etc/shadow
+  
+ # # adjust owner and suids
+  chmod 4755 $DESTDIR/lib/dhcp3-client/call-dhclient-script
+  chown root:dhcp $DESTDIR/lib/dhcp3-client/call-dhclient-script
+ fi
+ 
+
+elif [ -x /sbin/dhclient ]; then
+ # dhcp and network stuff
+ cpifexists $(pathof dhclient)     /sbin/
+ mkdir -p $DESTDIR/var/lib/dhcp/
+ cpifexists /etc/dhclient-script   /etc/
+ cpifexists /etc/dhclient.conf     /etc/
+
+else
+  _echo ""
+  _echo "    ERROR:"
+  _echo "            No dhcp-client package detected"
+  _echo "            Please install dhcp-client package"
+  _echo ""
+  exit 1
+
+fi
+
+

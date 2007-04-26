@@ -1,0 +1,77 @@
+# hooks addon to have a SSH daemon in terminal
+# need dropbear SSH package
+
+
+
+if [ $TCOS_SSH ] ;then
+ stat_before
+ dropbear=$(dpkg -l dropbear|grep -c ^ii)
+ if [ ${dropbear} = 0 ]; then
+        echo "WARNING"
+        echo ""
+        echo "Please install dropbear package or disable SSH support."
+        echo "  => apt-get install dropbear"
+        echo ""
+ else
+  mkdir -p $DESTDIR/etc
+  mkdir -p $DESTDIR/usr/lib/dropbear
+  mkdir -p $DESTDIR/var/log/dropbear
+  mkdir -p $DESTDIR/var/run/dropbear
+
+  copydir /etc/dropbear/                /etc/
+  rm -f $DESTDIR/etc/dropbear/supervise
+  rm -f $DESTDIR/etc/dropbear/log/supervise
+  rm -f $DESTDIR/etc/dropbear/log/main
+
+  cpifexists $(pathof dropbear)         /usr/bin/      # ssh server
+  cpifexists $(pathof dbclient)         /usr/bin/   # ssh client ( no have ssh -X support )
+  cpifexists /lib/libresolv.so.2        /lib/
+  cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
+
+  # FIXME
+  #echo "ssh -X prueba@192.168.0.3 startxfce4" >> $DESTDIR/prueba.sh
+  #chmod +x $DESTDIR/prueba.sh
+
+
+  # need to copy this libs to support usernames with busybox
+  cpifexists /lib/libnss_compat.so.2        /lib/ 
+  cpifexists /lib/libnss_files.so.2         /lib/
+  cpifexists /lib/libnss_nis.so.2           /lib/ 
+  cpifexists /lib/libnss_dns.so.2           /lib/ 
+  cpifexists /usr/lib/libnss_db.so.2        /usr/lib/ 
+  
+  cpifexists /usr/lib/dropbear/dropbearconvert /usr/lib/dropbear/
+  mkdir -p $DESTDIR/var/log
+  touch $DESTDIR/var/log/lastlog
+
+   # copy pub key
+   if [ ${TCOS_ADMIN_USER} ]; then
+      mkdir -p $DESTDIR/root/.ssh
+      _echo "     Copying ${TCOS_ADMIN_USER} public SSH key"
+      if [ "${TCOS_ADMIN_USER}" = "root" ]; then
+        pkey=/root/.ssh/id_rsa.pub
+	key=/root/.ssh/id_rsa
+      else
+        pkey=/home/${TCOS_ADMIN_USER}/.ssh/id_rsa.pub
+	key=/home/${TCOS_ADMIN_USER}/.ssh/id_rsa
+      fi
+      
+        #### key exists? ###
+        if [ -f ${key} ]; then
+          #_echo "     Copying $key...."
+          cat $pkey >> $DESTDIR/root/.ssh/authorized_keys
+	  cat $pkey >> $DESTDIR/root/.ssh/id_rsa.pub
+	  cat $key >> $DESTDIR/root/.ssh/id_rsa
+	  chmod 600 $DESTDIR/root/.ssh/id_rsa
+        else
+          _echo "WARNING: $key not found !!!"
+          _echo "  You need to create ssh-key as \"${TCOS_ADMIN_USER}\" user"
+          _echo "  => $ ssh-keygen -t rsa"
+        fi
+        ####################
+   fi
+
+ fi
+ stat_after "Dropbear ssh server"
+
+fi # end of TCOS_SSH

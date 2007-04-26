@@ -1,0 +1,282 @@
+# hooks addon of Xorg
+# compatible with Xorg 6.9 and 7.0
+
+
+if [ $TCOS_XORG ] ; then
+# Xorg stuff
+ stat_before
+if [ $(pathof Xorg) = /usr/bin/Xorg ]; then
+   XORG=7
+   _echo "   USING Xorg 7.X dirs"
+else
+   XORG=6
+   _echo "   USING Xorg 6.9 dirs"
+fi
+
+
+cpifexists $CONFDIR/tcos-modules.conf         /conf/
+
+cpifexists $(pathof Xorg)    /usr/bin
+cpifexists $(pathof xauth)   /usr/bin
+cpifexists $(pathof mcookie) /usr/bin
+cpifexists $(pathof xhost)   /usr/bin
+cpifexists $(pathof xterm)   /usr/bin
+cpifexists $(pathof twm)     /usr/bin
+#cpifexists $(pathof xfs)    /usr/bin
+
+# some xutils
+cpifexists $(pathof xset) /usr/bin
+cpifexists $(pathof xsetroot) /usr/bin
+cpifexists $(pathof sessreg) /usr/bin
+
+
+mkdir -p $DESTDIR/var/log
+
+
+mkdir -p $DESTDIR/etc/X11/xserver
+
+# no anymore in Xorg 7.0 ??
+#copydir /etc/X11/xserver/      /etc/X11/
+
+################ ugly hack###########################
+mkdir -p $DESTDIR/etc/X11/xserver/
+cp ${TCOS_CONF}/SecurityPolicy $DESTDIR/etc/X11/xserver/
+#####################################################
+
+
+# copy xorg.conf template and generator
+cp ${TCOS_CONF}/xorg.conf.tpl ${DESTDIR}/conf/xorg.conf.tpl
+install -m 755 ${TCOS_BINS}/configurexorg ${DESTDIR}/sbin/configurexorg
+
+
+
+# FONTS modules
+if [ $XORG = 6 ]; then
+ mkdir -p  $DESTDIR/usr/X11R6/lib/modules/
+ copydir /usr/X11R6/lib/modules/fonts /usr/X11R6/lib/modules/
+else
+ mkdir -p  $DESTDIR/usr/lib/xorg/modules/
+ copydir /usr/lib/xorg/modules/fonts /usr/lib/xorg/modules/
+fi
+
+
+# FIXME need light initramfs not fonts....
+#if [ $XORG = 6 ]; then
+# mkdir -p $DESTDIR/usr/X11R6/lib/X11/fonts
+# cp -ra /usr/X11R6/lib/X11/fonts/encodings $DESTDIR/usr/X11R6/lib/X11/fonts/
+# cp -ra /usr/X11R6/lib/X11/fonts/misc $DESTDIR/usr/X11R6/lib/X11/fonts/
+#else
+# mkdir -p $DESTDIR/usr/share/fonts/X11
+# cp -ra /usr/share/fonts/X11/encodings $DESTDIR/usr/share/fonts/X11
+# cp -ra /usr/share/fonts/X11/misc $DESTDIR/usr/share/fonts/X11/misc
+#fi
+
+
+# FIXME clean ja or ko fonts
+#rm -rf $DESTDIR/usr/X11R6/lib/X11/fonts/misc/*ja*
+
+
+
+# MODULES
+if [ $XORG = 6 ]; then
+ mkdir -p $DESTDIR/usr/X11R6/lib/modules/input/
+ cp -ra /usr/X11R6/lib/modules/lib*so $DESTDIR/usr/X11R6/lib/modules/
+ cp -ra /usr/X11R6/lib/modules/input/* $DESTDIR/usr/X11R6/lib/modules/input/
+ mkdir -p  $DESTDIR/usr/X11R6/lib/modules/linux
+ cp -ra /usr/X11R6/lib/modules/linux/lib*so $DESTDIR/usr/X11R6/lib/modules/linux/
+else
+ mkdir -p $DESTDIR/usr/lib/xorg/modules/input/
+ cp -ra /usr/lib/xorg/modules/lib*so $DESTDIR/usr/lib/xorg/modules/
+ cp -ra /usr/lib/xorg/modules/input/* $DESTDIR/usr/lib/xorg/modules/
+ mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
+ cp -ra /usr/lib/xorg/modules/linux/lib*so $DESTDIR/usr/lib/xorg/modules/linux/
+fi
+
+
+# DRIVERS and EXTENSIONS
+if [ $XORG = 6 ]; then
+ mkdir -p  $DESTDIR/usr/X11R6/lib/modules/drivers
+ cp -ra /usr/X11R6/lib/modules/drivers/vesa* $DESTDIR//usr/X11R6/lib/modules/drivers/
+ cp -ra /usr/X11R6/lib/modules/drivers/vga* $DESTDIR//usr/X11R6/lib/modules/drivers/
+ cp -ra /usr/X11R6/lib/modules/drivers/v4l* $DESTDIR//usr/X11R6/lib/modules/drivers/
+
+ if [ $TCOS_XORG_ALLDRIVERS ]; then
+   driver_dir=/usr/X11R6/lib/modules/drivers
+   _echo "    xorg: installing all drivers...."
+   cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
+ fi
+
+ mkdir -p  $DESTDIR/usr/X11R6/lib/modules/extensions
+ cp -ra /usr/X11R6/lib/modules/extensions/lib*.so $DESTDIR/usr/X11R6/lib/modules/extensions/
+ rm -rf $DESTDIR/usr/X11R6/lib/modules/extensions/libGLcore.so
+ #cp -ra /usr/X11R6/lib/libGL.so.1.2 $DESTDIR/usr/X11R6/lib/libGL.so.1.2
+
+
+else
+ mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
+ # essential xorg drivers
+ cp -ra /usr/lib/xorg/modules/drivers/vesa* $DESTDIR/usr/lib/xorg/modules/drivers/
+ cp -ra /usr/lib/xorg/modules/drivers/vga* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
+ cp -ra /usr/lib/xorg/modules/drivers/v4l* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
+
+
+ if [ $TCOS_XORG_ALLDRIVERS ]; then
+   driver_dir=/usr/lib/xorg/modules/drivers
+   _echo "    xorg: installing all drivers...."
+   cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
+ fi
+
+ mkdir -p  $DESTDIR/usr/lib/xorg/modules/extensions
+ cp -ra /usr/lib/xorg/modules/extensions/lib*.so $DESTDIR/usr/lib/xorg/modules/extensions/
+ rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
+ #cp -ra /usr/lib/libGL.so.1.2 $DESTDIR/usr/lib/libGL.so.1.2
+fi
+
+
+# keyboard and keymap
+if [ $XORG = 6 ]; then
+ cp /usr/X11R6/lib/libxk*.so.1 $DESTDIR/usr/X11R6/lib/
+ #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
+ #mkdir -p $DESTDIR/var/lib/xkb
+else
+ cp /usr/lib/libxk*.so.1 $DESTDIR/usr/lib/
+ #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
+ #mkdir -p $DESTDIR/var/lib/xkb
+fi
+
+# xorg locale
+if [ $XORG = 6 ]; then
+ mkdir -p $DESTDIR/usr/share/locale
+ mkdir -p $DESTDIR/usr/lib/X11
+ copydir /usr/lib/X11/locale/          /usr/lib/X11/
+ copydir /usr/lib/X11/config/          /usr/lib/X11/
+ cpifexists /etc/X11/rgb.txt           /etc/X11/
+ copydir /etc/X11/rstart               /etc/X11/
+ cpifexists /usr/lib/X11/XKeysymDB     /usr/lib/X11/
+ cpifexists /usr/lib/X11/XErrorDB     /usr/lib/X11/
+else
+ mkdir -p $DESTDIR/usr/share/locale
+ mkdir -p $DESTDIR/usr/lib/X11
+ copydir /usr/lib/X11/locale/          /usr/lib/X11/
+ copydir /usr/lib/X11/config/          /usr/lib/X11/
+ cpifexists /etc/X11/rgb.txt            /etc/X11/
+ copydir /etc/X11/rstart               /etc/X11/
+ #copydir /usr/lib/X11/rstart-X11R7.0-1.0.1 /usr/lib/X11/
+ #cpifexists /usr/lib/X11/XKeysymDB      /usr/lib/X11/
+fi
+
+stat_after "Xorg"
+
+cat <<EOF > $DESTDIR/sbin/killX
+#!/bin/sh
+echo \"killing xorg process...\"
+killall Xorg 2>/dev/null
+EOF
+chmod +x $DESTDIR/sbin/killX
+
+cat <<EOF > $DESTDIR/sbin/restartxorg
+#!/bin/sh
+killall Xorg 2>/dev/null
+sleep 1
+. /conf/mysettings.conf
+if [ "\${xsession}" = "local" ]; then
+  startlocalx
+elif [ "\${xsession}" = "XDMCP" ]; then
+  startremotex
+elif [ "\${xsession}" = "sshX" ]; then
+  startsshx
+elif [ "\${xsession}" = "FreeNX" ]; then
+  startnx
+else
+  startx
+fi
+EOF
+chmod +x $DESTDIR/sbin/restartxorg
+
+
+cat <<EOF > $DESTDIR/sbin/startlocalx
+#!/bin/sh
+export DISPLAY=:0
+export HOME=/root
+
+if [ -f \$XAUTHORITY ]; then
+  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
+fi
+
+Xorg \${TCOS_XORG_OPTS} >> /tmp/initramfs.debug 2>&1 &
+
+#BACKCOLOR="#76848F"
+#xsetroot -cursor_name left_ptr -solid "\$BACKCOLOR"
+#exec sessreg -a -w /var/log/wtmp -u /var/run/utmp -x "/var/lib/gdm/:0.Xservers" -h "" -l ":0" "root"
+xterm  >> /tmp/initramfs.debug 2>&1 &
+twm  >> /tmp/initramfs.debug 2>&1 &
+EOF
+chmod +x $DESTDIR/sbin/startlocalx
+
+cat <<EOF > $DESTDIR/sbin/startnx
+#!/bin/sh
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+SERVER=\$(get_server)
+export DISPLAY=:0
+export HOME=/root
+export USER_NX_DIR=/root/.nx
+
+if [ -x /usr/bin/ssh ]; then
+  ssh -N -p 2022 -l mario -C -2 -L 5000:localhost:2022 ${SERVER}
+fi
+
+if [ -f $\XAUTHORITY ]; then
+  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
+fi
+
+Xorg \${TCOS_XORG_OPTS} >> /tmp/initramfs.debug 2>&1 &
+twm  >> /tmp/initramfs.debug 2>&1 &
+xterm  >> /tmp/initramfs.debug 2>&1 &
+/usr/NX/bin/nxclient  >> /tmp/initramfs.debug 2>&1 &
+EOF
+chmod +x $DESTDIR/sbin/startnx
+
+cat <<EOF > $DESTDIR/sbin/startremotex
+#!/bin/sh
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+SERVER=\$(get_server)
+export DISPLAY=:0
+
+if [ -f \$XAUTHORITY ]; then
+  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
+fi
+
+Xorg \${TCOS_XORG_OPTS} -query \${SERVER}  >> /tmp/initramfs.debug 2>&1
+EOF
+chmod +x $DESTDIR/sbin/startremotex
+
+
+cat <<EOF > $DESTDIR/sbin/startsshx
+#!/bin/sh
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+SERVER=\$(get_server)
+export DISPLAY=:0
+export HOME=/root
+
+if [ -f \$XAUTHORITY ]; then
+  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth $XAUTHORITY"
+fi
+
+Xorg \${TCOS_XORG_OPTS} >> /tmp/initramfs.debug 2>&1 &
+
+remoteuser=\$(read_cmdline_var "sshuser" "root")
+remotesshhost=\$(read_cmdline_var "sshhost" "\${SERVER}")
+remotesshport=\$(read_cmdline_var "sshport" "2022")
+# gnome-session, startkde , startxfce4
+remotesshdesktop=\$(read_cmdline_var "sshdesktop" "startxfce4")
+
+xterm -e "echo \"SSH \${remoteuser}@\${remotesshhost} -p \${remotesshport}...\" ; ssh -X -C -f -l \${remoteuser} \${remotesshhost} -p \${remotesshport} \${remotesshdesktop}"
+EOF
+chmod +x $DESTDIR/sbin/startsshx
+
+
+fi # end of TCOS_XORG
+

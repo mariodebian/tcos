@@ -1,0 +1,164 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+tcos_manual_add_modules()
+# ubuntu dapper have very old manual_add_modules that don't work correctly
+{
+        for mam_x in $(modprobe --set-version="${version}" --show-depends "${1}" 2>/dev/null | awk '/^insmod/ { print $2 }'); do
+                # Prune duplicates
+                if [ -e "${DESTDIR}/${mam_x}" ]; then
+                        continue
+                fi
+
+                mkdir -p "${DESTDIR}/$(dirname "${mam_x}")"
+                ln -s "${mam_x}" "${DESTDIR}/$(dirname "${mam_x}")"
+                if [ -n "${verbose}" ] && [ "${verbose}" = "y" ]; then
+                        echo "Adding module ${mam_x}"
+                fi
+        done
+}
+
+force_add_module() {
+        # force copy of module modprobe dont show as dependency
+        this_module=$(modprobe --set-version="${version}" -l "${1}")
+        if [ ! -e "${DESTDIR}/${this_module}" ]; then
+                #echo "  WARNING, adding module $(basename ${this_module}), see Debian bug: #384043"
+                mkdir -p "${DESTDIR}/$(dirname "${this_module}")"
+                ln -s "${this_module}" "${DESTDIR}/$(dirname "${this_module}")"
+        fi
+        # end of force copy
+}
+
+
+
+# Hooks for loading necesary modules for the tcos system into the initramfs
+#
+. /usr/share/initramfs-tools/hook-functions
+
+. $CONFDIR/initramfs.conf
+
+# read from env vars TCOS_BOOT
+TCOS_BOOT=$(env| awk -F "=" '/^TCOS_BOOT=/ {print $2}')
+if [ "${TCOS_BOOT}" != "" ]; then
+  BOOT=$TCOS_BOOT
+fi
+
+if [ "${BOOT}" = "tcos" ]; then
+
+. $CONFDIR/tcos.conf
+. $TCOS_CONF/tcos-modules.conf
+. $TCOS_DIR/tcos-generation-functions.sh
+
+TCOS_USB=$(read_env_var "TCOS_USB" "$TCOS_USB")
+TCOS_XORG=$(read_env_var "TCOS_XORG" "$TCOS_XORG")
+TCOS_SOUND=$(read_env_var "TCOS_SOUND" "$TCOS_SOUND")
+TCOS_EXTRA_MODULES=$(read_env_var "TCOS_EXTRA_MODULES" "$TCOS_EXTRA_MODULES")
+TCOS_DISABLE_USB=$(read_env_var "TCOS_DISABLE_USB" "$TCOS_DISABLE_USB")
+TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
+
+#_echo "DEBUG:"
+#_echo ""
+#_echo "TCOS_USB=$TCOS_USB"
+#_echo "TCOS_XORG=$TCOS_XORG"
+#_echo "TCOS_SOUND=$TCOS_SOUND"
+#_echo "TCOS_EXTRA_MODULES=$TCOS_EXTRA_MODULES"
+#_echo "TCOS_DISABLE_USB=$TCOS_DISABLE_USB"
+#_echo "TCOS_DISABLE_IDE=$TCOS_DISABLE_IDE"
+#_echo ""
+#_echo "end of debug"
+
+
+    if [ "$TCOS_USB" != "1" ] ;then
+        _echo "   * Not USB support"
+        USB_MODULES=""
+        TCOS_DISABLE_USB=1
+    fi
+
+    if [ "$TCOS_XORG" != "1" ]; then
+        _echo "   * Not Xorg support"
+        XORG_MODULES=""
+    fi
+
+
+    if [ "$TCOS_SOUND" != "1" ]; then
+        _echo "   * Not Sound support"
+        SOUND_MODULES=""
+    fi
+
+    if [ "$TCOS_SOUND_ISA" != "1" ]; then
+       _echo "   * Not Sound ISA modules"
+       SOUNDISA_MODULES=""
+    else
+       SOUNDISA_MODULES=$(find /lib/modules/${TCOS_KERNEL}/kernel/sound/isa/ -type f -exec basename '{}' \; | sed s/".ko"//g)
+    fi
+
+    MODULES="${CORE_MODULES} ${USB_MODULES} ${LIVE_MODULES} ${NETWORK_MODULES}"
+    MODULES="${MODULES} ${XORG_MODULES} ${SOUND_MODULES} ${SOUNDISA_MODULES} ${MYTCOS_MODULES} "
+
+    for x in ${MODULES} ; do
+      #_echo "Adding module ${x}"
+      tcos_manual_add_modules ${x} 
+      force_add_module ${x}  # wait for debian bug #384043
+    done
+
+
+    # read shell env variables to search TCOS_ALL_MODULES
+    #if [ $(env | grep -c ^EXTRA_MODULES) = 1 ]; then
+    #   EXTRA_MODULES=$(env | grep ^EXTRA_MODULES | awk -F "=" '{print $2}')
+    #   EXTRA_MODULES=$(echo ${EXTRA_MODULES} | sed s/","/" "/g)
+    #   #echo "##############################"
+    #   #echo "EXTRA_MODULES=${EXTRA_MODULES}"
+    #   #echo "##############################"
+    #   for module in ${TCOS_EXTRA_MODULES}; do
+    #     echo "TCOS_EXTRA_MODULES: adding ${module}"
+    #     manual_add_modules ${module}
+    #   done
+    #fi
+
+    if [ "$TCOS_EXTRA_MODULES" != "" ]; then
+       TCOS_EXTRA_MODULES=$(echo ${TCOS_EXTRA_MODULES} | sed s/","/" "/g)
+       for module in ${TCOS_EXTRA_MODULES}; do
+         _echo "   TCOS_EXTRA_MODULES: adding ${module}"
+         tcos_manual_add_modules ${module}
+       done
+    fi
+
+    if [ "$TCOS_DISABLE_USB" = "1" ] ;then
+       # delete some SCSI and USB stuff because we boot from network
+       _echo "   TCOS_DISABLE_USB : deleting some SCSI and USB kernel modules..."
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/usb/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/scsi/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ieee1394/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/md/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/cdrom/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/block/
+    fi
+
+    if [ "$TCOS_DISABLE_IDE" = "1" ] ;then
+       # delete some IDE and filesystem modules
+       _echo "   TCOS_DISABLE_IDE : deleting some IDE and FS kernel modules..."
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/reiserfs/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/xfs/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/ext3/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/isofs/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/isofs/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ide/
+       rm -f ${DESTDIR}/sbin/vgchange
+       rm -f ${DESTDIR}/lib/libdevmapper*
+    fi
+
+fi

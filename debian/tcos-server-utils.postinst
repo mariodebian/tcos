@@ -1,0 +1,19 @@
+#!/bin/sh
+
+OLD_FILES="
+ /etc/tcos/shfscommon.sh \
+"
+
+
+
+remove_old() {
+  #$1 is file
+  if [ -f "${_file}" ]; then
+    echo "  tcos-server-utils: Deleting deprecated $(basename $_file)..."
+    rm -f "$_file"
+  fi
+}
+
+for _file in $TCOS_OLD; do
+  remove_old "${_file}"
+done

@@ -1,0 +1,18 @@
+# copy some extra files to /lib/udev
+#
+#
+#
+
+if [ -f /lib/udev/write_cd_rules ]; then
+
+  mkdir -p $DESTDIR/lib/udev
+
+  cpifexists /lib/udev/write_cd_rules   /lib/udev
+  #cpifexists /lib/udev/write_net_rules  /lib/udev
+
+  cpifexists /lib/udev/udev_run_devd      /lib/udev
+  cpifexists /lib/udev/udev_run_hotplugd  /lib/udev
+  cpifexists /lib/udev/udev_run_devd      /lib/udev
+  cpifexists /lib/udev/logger.agent      /lib/udev
+
+fi

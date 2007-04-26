@@ -1,0 +1,37 @@
+#splashimage
+#splashimage (hd0,0)/boot/grub/splash.xpm.gz
+
+# Font color
+foreground  = CCCCCC
+
+# Bar color
+background  = 663399
+
+
+# default num
+default         0
+
+# timeout sec
+timeout         3
+
+# pretty colours
+color cyan/black white/blue
+
+
+#######################################
+##    Boot TCOS live options         ##
+#######################################
+#
+#  BOOT=[tcos] => boot from usb and start local
+#
+#  rw              => put writable fstab entries (all local partitions are writable by user)
+#
+#  startx=[local|remote|nox]    => start local, remote or not embedded Xorg
+#
+
+
+title   TCOS Thin Client Operating System
+root    
+kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet
+initrd  /boot/initramfs
+boot

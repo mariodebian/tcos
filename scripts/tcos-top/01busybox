@@ -1,0 +1,67 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+create_links() {
+ if [ ! -x /bin/$1 ]; then
+   #_log "BUSYBOX init: linking $1..."
+   ln -s /bin/busybox /bin/$1
+ fi
+}
+
+
+create_links "date"
+create_links "bash"
+create_links "tftp"
+create_links "awk"
+create_links "dirname"
+create_links "chown"
+create_links "wc"
+create_links "head"
+create_links "whoami"
+create_links "swapon"
+create_links "swapoff"
+create_links "dmesg"
+create_links "route"
+create_links "run-parts"
+create_links "killall"
+create_links "which"
+create_links "pidof"
+
+
+
+# hack for ubuntu udev
+
+while [ ! -d /sys/class/net/eth0 ]; do
+     [ -x /sbin/udevtrigger ] && /sbin/udevtrigger
+     [ -x /sbin/udevplug ]    && /sbin/udevplug
+     sleep 1
+done
+
+
+
+exit 0

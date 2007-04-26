@@ -1,0 +1,12 @@
+# hex2ascii converts an hex ip into ascii format
+
+
+if [ -f /usr/share/initramfs-tools-tcos/bin/hex2ascii ]; then
+
+  #stat_before
+
+  cpifexists /usr/share/initramfs-tools-tcos/bin/hex2ascii   /bin/
+
+  #stat_after "hex2ascii tool"
+
+fi

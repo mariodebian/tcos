@@ -1,0 +1,38 @@
+# hooks addon DEBUG support
+# need strace, lsmod and ldd wrapper
+
+
+# for debug purposes
+if [ $TCOS_DEBUG ]; then
+
+ stat_before
+
+ cpifexists $(pathof iftop) /usr/bin/
+ mkdir -p $DESTDIR/lib/terminfo/l/
+ cp -a /lib/terminfo/l/linux $DESTDIR/lib/terminfo/l/
+
+ mkdir -p $DESTDIR/lib/terminfo/x/
+ cp -a /lib/terminfo/x/xterm $DESTDIR/lib/terminfo/x/
+ 
+ cpifexists $(pathof lsmod)  /usr/bin/
+ cpifexists $(pathof strace) /bin/
+ cpifexists /sbin/mkfs       /sbin/
+ cpifexists /sbin/mkfs.vfat  /sbin/
+ cpifexists /sbin/mkfs.ext3  /sbin/
+
+ cat <<EOF > $DESTDIR/bin/ldd
+#!/bin/sh
+file=\$1
+if [ ! -f /\$1 ]; then
+ file=\$(which \$1)
+fi
+if [ ! -e \${file} ]; then
+  echo "\${file} not found"
+  exit 1
+fi
+/lib/ld-linux.so.2 --list \$file
+EOF
+ chmod +x $DESTDIR/bin/ldd
+ 
+ stat_after "Debug tools"
+fi # end of TCOS_DEBUG

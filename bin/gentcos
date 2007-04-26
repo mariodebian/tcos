@@ -1,0 +1,505 @@
+#!/bin/sh
+###########################################################################
+#
+# Author: Mario Izquierdo (a.k.a mariodebian)
+# Email: mariodebian@gmail.com
+# Creation Date: 2 Feb 2006
+# Version: 0.2
+#
+#  Generate bootable cdrom to boot from tcos
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+###########################################################################
+
+. /etc/tcos/tcos.conf
+. ${TCOS_DIR}/tcos-generation-functions.sh
+
+
+# default output files
+OUTPUTIMAGE=${ISOS}/tcos-boot-usb.iso
+
+OUTINITRAMFS=initramfs
+OUTNBI=linux.nbi
+
+OUTROOTFS_TMP=/tmp/rootfs-${TCOS_KERNEL}-$$
+OUTROOTFS_END=${TCOS_OPT}/files/rootfs-${TCOS_KERNEL}.squashfs
+
+# temp vars
+INITRAMFS=/tmp/initramfs-$$
+TMPNBI=/tmp/nbi-$$
+EXTRA_APPEND=""
+TCOS_SUFFIX=
+
+
+# BASH COLORS
+NORMAL="\033[0;39m"
+GRAY="\033[1;30m"
+LIGHT_GRAY="\033[0;37m"
+CYAN="\033[0;36m"
+LIGHT_CYAN="\033[1;36m"
+RED="\033[1;31m"
+GREEN="\033[1;32m"
+YELLOW="\033[1;33m"
+BLUE="\033[1;34m"
+MAGENTA="\033[1;35m"
+WHITE="\033[1;37m"
+
+
+# ugly hack to avoid edit /etc/tcos/tcos.conf file
+rm -f ${TCOS_CONF}/tcos.conf.dpkg* >/dev/null 2>&1
+cp ${TCOS_CONF}/tcos.conf ${TCOS_CONF}/tcos.conf.orig > /dev/null 2>&1
+# TCOS-Config save file before or after call gentcos
+
+
+_exit () {
+ unset TCOS_SQUASHFS
+ unset TCOS_ALL_MODULES
+ unset EXTRA_MODULES
+ unset TCOS_SUFFIX
+ rm -f ${TMPNBI}
+ rm -f ${INITRAMFS}
+ cp ${TCOS_CONF}/tcos.conf.orig ${TCOS_CONF}/tcos.conf > /dev/null 2>&1
+ # exit wrapper
+ #echo "DONE"
+ exit $1
+}
+
+
+# some functions 
+create_initramfs() {
+ # call mkinitramfs
+ _echo "Creating initramfs with ${TCOS_KERNEL} kernel..."
+ mkinitramfs -d ${TCOS_CONF} -o ${INITRAMFS} ${TCOS_KERNEL}
+
+ if [ ! -f ${TFTP_DIR}/vmlinuz-${TCOS_KERNEL} ]; then
+   _echo "  Linking vmlinuz-${TCOS_KERNEL} in ${TFTP_DIR}"
+   ln -s /boot/vmlinuz-${TCOS_KERNEL} ${TFTP_DIR}
+ fi
+}
+
+# some functions 
+create_initramfs_nfs() {
+ # call mkinitramfs
+ _echo "Creating initramfs NFS with ${TCOS_KERNEL} kernel..."
+
+ export TCOS_BOOT=tcos-nfs
+ mkinitramfs -d ${TCOS_CONF} -o ${INITRAMFS}-nfs ${TCOS_KERNEL}
+ unset TCOS_BOOT
+ 
+
+ if [ ! -f ${TFTP_DIR}/vmlinuz-${TCOS_KERNEL} ]; then
+   _echo "  Linking vmlinuz-${TCOS_KERNEL} in ${TFTP_DIR}"
+   ln -s /boot/vmlinuz-${TCOS_KERNEL} ${TFTP_DIR}
+ fi
+
+
+}
+
+
+create_rootfs() {
+ _echo "Creating NFS rootfs in ${TCOS_OPT}/fs-${TCOS_KERNEL}/"
+ rm -rf ${OUTROOTFS_TMP} && mkdir -p ${OUTROOTFS_TMP}
+
+ export TCOS_ENV_DISABLE_SQUASHFS=1
+ create_initramfs
+ unset TCOS_ENV_DISABLE_SQUASHFS
+ 
+ _echo "  Uncompressing initramfs..."
+ # uncompress initramfs
+ cp ${INITRAMFS} ${OUTROOTFS_TMP}/initramfs.gz
+ gunzip ${OUTROOTFS_TMP}/initramfs.gz
+ 
+ old_dir=$(pwd)
+ cd ${OUTROOTFS_TMP}
+ cpio -i < initramfs &> /dev/null
+ rm -f initramfs
+
+ rm -rf ${TCOS_OPT}/fs-${TCOS_KERNEL}
+ mkdir ${TCOS_OPT}/fs-${TCOS_KERNEL}
+ mv ${OUTROOTFS_TMP}/* ${TCOS_OPT}/fs-${TCOS_KERNEL}/
+ 
+ cd ${old_dir}
+}
+
+
+ramdisk_size () {
+  # uncompress initramfs and exec du
+  _echo "Uncompressing ramdisk to get sizes..."
+  tmpdir=/tmp/gentcos-$$
+  mkdir ${tmpdir}
+  cp ${INITRAMFS} ${tmpdir}/initrd.gz
+  gunzip ${tmpdir}/initrd.gz
+  oldpwd=$(pwd)
+  cd ${tmpdir}/
+  cpio -i < initrd >/dev/null 2>&1
+  rm initrd
+  ramdisk_size=$(du -s . | awk '{print $1}')
+  if [ -L ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs ]; then
+    squashfs_size=$(du -s ${TCOS_OPT}/files/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs | awk '{print $1}')
+  else
+    squashfs_size=$(du -s ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs | awk '{print $1}')
+  fi
+  echo "RAMDISK=${ramdisk_size}"
+  echo "EXTERNAL_SQUASHFS=${squashfs_size}"
+  if [ $TCOS_NBI ]; then
+    nbi_size=$(du -s ${TMPNBI} | awk '{print $1}')
+    echo "NBI_IMAGE=${nbi_size}"
+    echo "TOTAL_RAM=$((${nbi_size}+${squashfs_size}))"
+  else
+    echo "TOTAL_RAM=$((${ramdisk_size}+${squashfs_size}))"
+  fi
+  rm -rf ${tmpdir}
+  cd ${oldpwd}
+}
+
+create_nbi() {
+ # call mknbi
+ _echo "Creating nbi image with ${TCOS_KERNEL} kernel"
+ # TCOS_APPEND add more append with -extra-append 
+ echo "Building NBI image with this append:"
+   echo -e "   ${GREEN} ${TCOS_APPEND} ${EXTRA_APPEND} ${NORMAL}"
+ if [ "${EXTRA_APPEND}" = "" ]; then
+   echo " Please add option -extra-append=\"your_modifiers\" "
+ fi
+ /usr/bin/mkelf-linux /boot/vmlinuz-${TCOS_KERNEL} /tmp/initramfs-${TCOS_KERNEL} \
+   --output=${TMPNBI} --append="${TCOS_APPEND} ${EXTRA_APPEND}"
+ rm /tmp/initramfs-${TCOS_KERNEL}
+}
+
+create_grub_iso(){
+ # Create temp dir
+ dir=/tmp/grub-iso$$
+ mkdir -p ${dir}/boot/grub
+ install -m 644 /etc/tcos/menu.lst-tcos ${dir}/boot/grub/menu.lst
+ install -m 644 /lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
+ install -m 644 /boot/vmlinuz-${TCOS_KERNEL} ${dir}/boot/vmlinuz
+ create_initramfs
+ cp ${INITRAMFS} ${dir}/boot/initramfs
+
+mkisofs -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b boot/grub/stage2_eltorito\
+ -no-emul-boot -boot-load-size 4\
+ -boot-info-table -o  ${OUTPUTIMAGE} ${dir}/ >/dev/null 2>&1
+  if [ $? == 0 ]; then
+    echo "Iso image done succesfully: ${OUTPUTIMAGE}"
+   else
+    echo "Error running mkisofs."
+  fi
+  rm -rf ${dir} > /dev/null 2>&1
+}
+
+create_isolinux_iso() {
+ # ISOLINUX
+ dir=/tmp/isolinux-iso$$
+ mkdir -p ${dir}/isolinux
+ create_initramfs
+ cp ${INITRAMFS} ${dir}/isolinux/initramfs
+
+ cp ${TFTP_DIR}/pxelinux.cfg/default ${dir}/isolinux/isolinux.cfg
+ sed -i s/"vmlinuz-${TCOS_KERNEL}"/"vmlinuz"/g ${dir}/isolinux/isolinux.cfg
+
+ cp ${TFTP_DIR}/logo.lss ${dir}/isolinux/
+ cp ${TFTP_DIR}/tcos.msg ${dir}/isolinux/
+ cp ${TFTP_DIR}/help.msg ${dir}/isolinux/
+
+ cp /usr/lib/syslinux/isolinux.bin ${dir}/isolinux/
+ cp /boot/vmlinuz-${TCOS_KERNEL} ${dir}/isolinux/vmlinuz
+
+mkisofs -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b isolinux/isolinux.bin -c boot.cat \
+ -no-emul-boot -boot-load-size 4 -boot-info-table -o  ${OUTPUTIMAGE} ${dir}/ > /dev/null 2>&1
+
+  if [ $? == 0 ]; then
+    echo "Iso image done succesfully: ${OUTPUTIMAGE}"
+   else
+    echo "Error running mkisofs."
+  fi
+  rm -rf ${dir} > /dev/null 2>&1
+}
+
+function usage() {
+echo -e "Usage:
+  $WHITE$(basename $0)$NORMAL $RED-tftp$NORMAL  [-o=initrd-pc1]           PXE (>= 64 Mb)
+          $RED-nfs$NORMAL   [$GREEN-rootfs$NORMAL]                 LTSP like (28 - 64 Mb)
+          $RED-nbi$NORMAL   [-nbi-output=linux.nbi]   Floppy
+          $RED-cdrom$NORMAL [-type=grub] [-force]     CDROM
+
+      [-h] or [-help] $(basename $0) extended help
+      [${RED}-vmlinux=${WHITE}vmlinuz-x.x.x${RED}|${WHITE}/boot/vmlinuz-x.x.x${NORMAL}] kernel version
+      [${RED}-suffix=${WHITE}foo${NORMAL}] ( suffix for filenames )
+      [${RED}-size${NORMAL}]       ( print ramdisk size )
+      [${RED}-allmodules${NORMAL}] ( generate allmodules-${TCOS_KERNEL}.squashfs to
+                              know what kernel modules need )
+      [${RED}-extramodules=${WHITE}"foo,bar"${NORMAL}] ( add coma separated list of modules )
+
+"
+_exit 0
+}
+
+function _help() {
+echo -e "
+This is gentcos help info about generating net init images.
+
+  ${BLUE}TFTP PXE images:${NORMAL}
+     ${GREEN}-tftp${NORMAL}  or [-t] make initramfs-${TCOS_KERNEL} and copy to ${TFTP_DIR}
+    [${GREEN}-o=initramfs-tcos1${NORMAL}] output file
+             ( default ${TFTP_DIR}/${OUTINITRAMFS} )
+
+  ${BLUE}NFS (like LTSP) images:${NORMAL}
+     ${GREEN}-nfs${NORMAL}  or [-n] make initramfs-${TCOS_KERNEL}-nfs and copy to ${TFTP_DIR}
+    [${GREEN}-rootfs${NORMAL}] Make a complete initramfs and uncompress in ${TCOS_OPT}/fs-${TCOS_KERNEL}
+             ( default ${TFTP_DIR}/${OUTINITRAMFS}-nfs )
+
+  ${BLUE}NBI IMAGES:${NORMAL} ( Etherboot floppy )
+     ${GREEN}-nbi${NORMAL}  or [-b] create NBI (network bootable images) in ${TFTP_DIR}
+    [${GREEN}-nbi-output=linux-tcos1.nbi${NORMAL}] output nbi file 
+              ( default ${OUTNBI}-${TCOS_KERNEL} )
+    [${GREEN}-extra-append${NORMAL}] append more options to cmline of NBI image
+      ( Example: -extra-append=\"splash startx=N volume=80%\"
+
+  ${BLUE}ISO IMAGES:${NORMAL}
+     ${GREEN}-cdrom${NORMAL}  or [-c] create cdrom iso file in $ISOS
+    [${GREEN}-type=grub|isolinux${NORMAL}] make cdrom based on isolinux or grub
+    [${GREEN}-force${NORMAL}] force cdrom build if external SQUASH is enabled
+            ( this will put squashfs into initramfs )
+
+   In all build you can add this params:
+
+    ${BLUE}-vmlinuz${NORMAL}=[ vmlinuz.x.x.x | /boot/vmlinuz.x.x.x ]
+        this will build all images with the kernel version of this file
+
+  Examples of use:
+${WHITE}
+     gentcos -tftp -suffix=-pc1
+     gentcos -nfs -rootfs
+     gentcos -cdrom -type=grub
+     gentcos -nbi -extra-append=\"splash vga=791 uselocal\"
+${NORMAL}
+"
+}
+
+if [ $# = 0 ]; then
+ usage
+ _exit 0
+fi
+
+if [ $UID != 0 ]; then
+ echo "You must run this script as root"
+ _exit 1
+fi
+
+NEED_MODULES="unionfs squashfs"
+
+for _module in ${NEED_MODULES}; do
+   have_module=$(modprobe --set-version="${TCOS_KERNEL}" -l ${_module} | wc -l)
+   if [ ${have_module} = 0 ] ; then
+      echo "ERROR:"
+      echo "    to build usable TCOS initramfs images need this kernel module: \"${_module}\""
+      echo "    You can easy build it with next command as root:"
+      echo ""
+      echo "   # apt-get install module-assistant linux-headers-${TCOS_KERNEL} ${_module}-source"
+      echo "   # m-a -k /usr/src/linux-headers-${TCOS_KERNEL} a-i ${_module}"
+      echo ""
+      echo "NOTE: You can change kernel version in ${TCOS_CONF}/tcos.conf file"
+      _exit 1
+   fi
+done
+
+if [ ! -f /etc/X11/fs/config ]; then
+    echo "WARNING:"
+    echo "        TCOS needs a font server, please install xfs package"
+    echo "        and configure to allow remote connections. See README."
+else
+  xfs_config=$(grep -c "^no-listen" /etc/X11/fs/config)
+  if [ $xfs_config != 0 ]; then
+    echo "WARNING:"
+    echo "        TCOS need a network font server. Please edit /etc/X11/fs/config"
+    echo "        search for no-listen = tcp line and put like this:"
+    echo "                 #no-listen = tcp   "
+    echo "        Then restart service:   /etc/init.d/xfs restart"
+  fi
+
+fi
+for opt in $@ ; do
+   case ${opt} in
+        -h) _help
+            _exit 0
+            ;;
+        -help) _help
+            _exit 0
+            ;;
+        -c) TCOS_CDROM=1
+            ;;
+        -cdrom) TCOS_CDROM=1
+            ;;
+        -t) TCOS_TFTP=1
+            ;;
+        -tftp) TCOS_TFTP=1
+            ;;
+        -nfs) TCOS_NFS=1
+            ;;
+        -n) TCOS_NFS=1
+            ;;
+        -o=*) OUTINITRAMFS=${opt#-o=}
+            ;;
+        -b) TCOS_NBI=1 ;
+		    TCOS_TFTP=1 
+            ;;
+        -nbi) TCOS_NBI=1 ;
+		      TCOS_TFTP=1
+            ;;
+        -nbi-output=*) OUTNBI=${opt#-nbi-output=}
+            ;;
+        -extra-append=*) EXTRA_APPEND=${opt#-extra-append=}
+            ;;
+        -suffix=*) TCOS_SUFFIX=${opt#-suffix=}
+            ;;
+        -f) TCOS_FORCE=1
+            ;;
+        -force) TCOS_FORCE=1
+            ;;
+        -type=*) 
+          	TYPE=${opt#-type=} ;
+			TCOS_CDROM=1
+            ;;
+        -vmlinuz=*) 
+          	TCOS_VMLINUZ=${opt#-vmlinuz=} ;
+            ;;
+        -size)
+            TCOS_SIZE=1
+            ;;
+        -allmodules) TCOS_ALL_MODULES=1
+            ;;
+        -extramodules=*) TCOS_EXTRA_MODULES=${opt#-extramodules=}
+            ;;
+        -rootfs)
+            TCOS_ROOTFS=1
+            ;;
+	esac
+done
+
+if [ $TCOS_VMLINUZ ]; then
+   if [ -f $TCOS_VMLINUZ ] ; then
+      vmlinuz=$(basename ${TCOS_VMLINUZ} )
+      TCOS_KERNEL=${vmlinuz#vmlinuz-}
+       if [ $(find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -c vmlinuz) = 0 ]; then
+          # no link, create
+          echo "Linking ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
+          ln -s $TCOS_VMLINUZ ${TFTP_DIR}/
+       fi
+   elif [ -f /boot/${TCOS_VMLINUZ} ]; then
+      vmlinuz=${TCOS_VMLINUZ}
+      TCOS_KERNEL=${vmlinuz#vmlinuz-}
+       if [ $(find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -c vmlinuz) = 0 ]; then
+          # no link, create
+          echo "Linking ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
+          ln -s /boot/$TCOS_VMLINUZ ${TFTP_DIR}/
+       fi      
+   else
+      echo "ERROR: vmlinuz argument not found: ${TCOS_VMLINUZ}"
+      echo "       You can use -vmlinuz=vmlinuz-x.x.x or"
+      echo "                   -vmlinuz=/boot/vmlinuz-x.x.x"
+      echo ""
+      echo "       Using default kernel ${TCOS_KERNEL}"
+   fi
+fi
+
+
+OUTINITRAMFS=initramfs-${TCOS_KERNEL}
+OUTNBI=linux-${TCOS_KERNEL}.nbi
+
+
+# disable usr.squashfs external file (need into initramfs)
+if [ $TCOS_CDROM ] ; then
+  export TCOS_SQUASHFS=
+fi
+
+# add suffix to usr.squashfs into hooks/tcosbin
+if [ $TCOS_SUFFIX ]; then
+  export TCOS_SUFFIX
+fi
+
+# generate allmodules.squashfs to teast all hardware in terminal
+if [ $TCOS_ALL_MODULES ]; then
+  export TCOS_ALL_MODULES
+fi
+
+# add extra modules
+if [ $TCOS_EXTRA_MODULES ]; then
+  export TCOS_EXTRA_MODULES
+fi
+
+
+
+if [ ! -z $TCOS_CDROM ]; then
+ if [ ${TCOS_SQUASHFS} ]; then
+   echo "Can build external usr.squashfs to use in cdrom iso."
+   echo "Edit ${TCOS_CONF}/tcos.conf and set TCOS_DISABLE_SQUASHFS=1 or TCOS_SQUASHFS="
+   if [ ! ${TCOS_FORCE} ]; then
+     echo "  Use [-f | -force]  to continue."
+     _exit 1
+   fi
+ fi
+fi
+
+
+# default isolinux
+if [ ! -z $TCOS_CDROM ]; then
+ if [ "$TYPE" = "grub" ]; then
+    create_grub_iso
+  else
+    create_isolinux_iso
+ fi
+fi
+
+
+
+if [ ! -z $TCOS_TFTP ]; then
+ if [ ! -f ${INITRAMFS} ]; then
+   create_initramfs
+ fi
+
+ if [ $TCOS_NBI ]; then
+   cp ${INITRAMFS} /tmp/initramfs-${TCOS_KERNEL}
+   create_nbi
+ fi
+
+ # don't overwrite initramfs if we are generating NBI image
+ if [ ! ${TCOS_NBI} ]; then
+  _echo "Copying initramfs to ${TFTP_DIR}/${OUTINITRAMFS}${TCOS_SUFFIX}" 
+  cp ${INITRAMFS} ${TFTP_DIR}/${OUTINITRAMFS}${TCOS_SUFFIX}
+ fi
+
+ if [ $TCOS_NBI ]; then
+   _echo "Moving nbi image to ${TFTP_DIR}/${OUTNBI}${TCOS_SUFFIX}"
+   cp ${TMPNBI} ${TFTP_DIR}/${OUTNBI}${TCOS_SUFFIX}
+ fi
+
+fi
+
+if [ $TCOS_NFS ]; then
+  create_initramfs_nfs
+  _echo "Copying initramfs to ${TFTP_DIR}/${OUTINITRAMFS}-nfs" 
+  cp ${INITRAMFS}-nfs ${TFTP_DIR}/${OUTINITRAMFS}-nfs
+fi
+
+if [ $TCOS_ROOTFS ]; then
+  create_rootfs
+fi
+
+if [ $TCOS_SIZE ]; then
+  ramdisk_size
+fi
+
+_exit 0

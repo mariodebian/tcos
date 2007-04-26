@@ -1,0 +1,50 @@
+# hooks addon embedded web browser
+# need links2 or dillo
+# dillo copy some system fonts (25 Mb)
+
+
+if [ "${TCOS_WEB_BROWSER}" = "dillo" ]; then
+ dillo=$(dpkg -l dillo|grep -c ^ii)
+ if [ ${dillo} = 0 ]; then
+        echo "WARNING"
+        echo ""
+        echo "Please install dillo package or disable WEB BROWSER support."
+        echo "  => apt-get install dillo"
+        echo ""
+ else
+    stat_before
+    cpifexists $(pathof dillo)           /usr/bin/
+    cpifexists $(pathof dillocfg)        /usr/bin/
+    cpifexists $(pathof dpid)            /usr/bin/
+    #cpifexists $(pathof dpidc)           /usr/bin/ # FIXME this need perl :(
+    cpifexists /etc/dillorc              /etc/
+    cpifexists /etc/dpidrc               /etc/
+
+    mkdir -p $DESTDIR/usr/lib/dillo/
+    copydir /usr/lib/dillo/dpi           /usr/lib/dillo/
+    mkdir -p $DESTDIR/etc/fonts/
+    cpifexists /etc/fonts/fonts.conf     /etc/fonts/
+    copydir /usr/share/fonts             /usr/share/
+    rm -rf $DESTDIR/usr/share/fonts/X11/
+    stat_after "Dillo, web browser"
+  fi
+fi
+
+
+if [ "${TCOS_WEB_BROWSER}" = "links2" ]; then
+ links2=$(dpkg -l links2|grep -c ^ii)
+ if [ ${links2} = 0 ]; then
+        echo "WARNING"
+        echo ""
+        echo "Please install links2 package or disable WEB BROWSER support."
+        echo "  => apt-get install links2"
+        echo ""
+ else
+    stat_before
+    cpifexists $(pathof links2)           /usr/bin/
+    cpifexists $(pathof xlinks2)        /usr/bin/
+
+    stat_after "Links2, web browser"
+  fi
+fi
+

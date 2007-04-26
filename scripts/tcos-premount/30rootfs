@@ -1,0 +1,167 @@
+#!/bin/sh
+# 
+
+PREREQ="10fstab 15uselocal 20swapon 25download_settings"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+# if break=sqmount STOP here
+maybe_break rootfs
+
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# load modules
+modprobe -q loop >> /tmp/initramfs.debug 2>&1
+modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
+modprobe -q unionfs >> /tmp/initramfs.debug 2>&1
+
+
+
+
+##############################################
+TCOS_ENABLE_USENFS=$(read_cmdline_var "usenfs" "${TCOS_USENFS}")
+
+if [ "$TCOS_ENABLE_USENFS" != "1" ]; then
+  _log "ROOTFS no NFS support, exiting"
+  exit 0
+fi
+
+
+
+rootfs_file=${download_dir}/rootfs-$(uname -r).squashfs
+mkdir -p ${download_dir} /target
+
+if [ "${TCOS_USENFS}" = "nfs" ]; then
+  log_begin_msg "Mounting NFS ${download_dir}"
+    MOPTS="nolock,ro"
+    mount -n -t ramfs none /target
+    #mount -n -o ${MOPTS} $(get_server):${nfs_dir} ${download_dir}
+    nfsmount -o ${MOPTS} $(get_server):${nfs_dir} ${download_dir} 2>&1 > /dev/null || nfsmount -o ${MOPTS} $(get_server):${nfs_dir} ${download_dir} 2>&1 > /dev/null ||  _log "ROOTFS: __ERROR__ can't mount NFS!!!!!"
+  log_end_msg
+
+fi
+
+
+##############################################
+TCOS_ENABLE_ROOTFS=$(read_cmdline_var "rootfs" "${TCOS_ROOTFS}")
+
+if [ "$TCOS_ENABLE_ROOTFS" != "1" ]; then
+  _log "ROOTFS no rootfs support, exiting"
+  exit 0
+fi
+
+
+if [ ! -f ${rootfs_file} ]; then
+  _log "ROOTFS is __NOT__ in ${download_dir}"
+  log_begin_msg "Downloading rootfs"
+     download_file /tcos/rootfs-$(uname -r).squashfs ${rootfs_file}
+  log_end_msg
+else
+  _log "ROOTFS is in ${download_dir}"
+  log_begin_msg "Using NFS rootfs"
+    sync
+  log_end_msg
+fi
+
+update_progress
+
+  
+# Mount squashfs filesystems
+_log "ROOTFS mounting rootfs in /target"
+log_begin_msg "Mounting rootfs filesystem"
+   mount -r -o loop -t squashfs ${rootfs_file} /target >> /tmp/initramfs.debug 2>&1
+log_end_msg
+
+update_progress
+
+  
+_log "ROOTFS remounting /target as RW"
+log_begin_msg "Remounting /target in rw mode"
+   mkdir -p /.target
+   mount_unionfs /mnt/rootram /.target /target
+log_end_msg
+
+update_progress
+  
+
+_log "ROOTFS copy some things on /target"
+
+# copy some things
+rm -rf /target/conf/    && cp -ra /conf/   /target/
+rm -rf /target/scripts/ && cp -ra /scripts/  /target/
+mkdir -p /target/tmp    && cp -ra /tmp/*     /target/tmp
+
+mkdir -p /var/lib/dhcp/
+cp /var/lib/dhcp/dhclient.leases /target/var/lib/dhcp/dhclient.leases
+
+cp /etc/hostname /target/etc/hostname
+cp /etc/resolv.conf /target/etc/resolv.conf
+cp /etc/fstab /target/etc/fstab
+cp /etc/mtab /target/etc/mtab
+  
+
+
+_log "ROOTFS creating init_rootfs script"
+  
+# make a /sbin/init_rootfs
+cat << EOF >> /target/init2
+#!/bin/sh
+
+echo "Loading second stage, please wait..."
+. /conf/initramfs.conf
+. /scripts/functions
+
+run_scripts /scripts/tcos-bottom
+  
+EOF
+
+chmod 755 /target/init2
+
+_log "ROOTFS pivot_root /target"
+
+cd /target
+pivot_root . ../
+
+_log "ROOTFS mounting /dev /proc and /sys into /target"
+# mount -o bind some things
+log_begin_msg "Moving /dev /proc and /sys"
+  mkdir -p /target/dev /target/proc /target/sys /target/mnt/tmp
+  mount -n -o move /dev  /target/dev
+  mount -n -o move /sys  /target/sys
+  mount -n -o move /mnt/tmp  /target/mnt/tmp
+  mount -n -o move /proc /target/proc
+log_end_msg
+
+
+# enter to jail
+exec chroot . /scripts/init2 <dev/console >dev/console 2>&1
+
+_log "ROOTFS run-init /script"
+#exec run-init /target/ /scripts/init2 "$@" </target/dev/console >/target/dev/console
+  
+#update progress
+
+
+
+
+exit 0

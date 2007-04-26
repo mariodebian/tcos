@@ -1,0 +1,27 @@
+##############################################
+#                                            #
+#       Template hacking file of TCOS        #
+#                                            #
+##############################################
+#
+# PLEASE, DON'T EDIT THIS FILE, CREATE A NEW ONE
+# IN /etc/tcos/hacking/ dir
+#
+# Examples:
+#
+#   # include nano
+#   cpifexists $(pathof nano) /usr/bin/
+#   cpifexists /etc/nanorc    /etc
+#
+#
+#   # copy a dir
+#   copydir /usr/NX/          /usr/
+#
+#
+#   # create a complex dir structure
+#   mkdir -p $DESTDIR/var/cache/fonts
+#
+#   # $DESTDIR is where initramfs root dir 
+#
+#
+#  Some info in /usr/share/doc/initramfs-tools-tcos/HACKING

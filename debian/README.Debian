@@ -1,0 +1,7 @@
+initramfs-tools-tcos for Debian
+-------------------------
+
+Patch to boot an initramfs image from network
+
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>, Sat, 18 Jan 2006 10:24:07 +0200

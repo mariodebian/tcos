@@ -1,0 +1,120 @@
+.\"Created with GNOME Manpages Editor Wizard
+.\"http://gmanedit.sourceforge.net
+.\"Sergio Rua <srua@gpul.org>
+.\"
+.TH gentcos 1 "May 09, 2006" "gentcos man page"
+
+.SH NAME
+gentcos \- TCOS image boot generator
+
+.SH SYNOPSIS
+.B gentcos
+.RI [ options ]
+.br
+
+.SH DESCRIPTION
+
+This manpage show options for 
+.B gentcos
+boot image generator. See gentcos -h to better descriptions.
+
+.B You must exec this app as root user.
+
+.PP
+\fBgentcos\fP is a shell script that create a TCOS initramfs
+and optionally a iso image to boot from it.
+
+.SH OPTIONS
+.B
+.IP \-h
+.IP \-help
+Show extended usage about gentcos
+
+.B
+.IP \-suffix=foo
+Suffix used to filenames (default empy)
+
+.B
+.IP \-vmlinuz=2.6.16-1-486
+Kernel version used to create initramfs
+
+.B
+.IP \-size
+Print size of uncompressed initramfs ram disk
+
+.B
+.IP \-allmodules
+Generate allmodules.squashfs and copy to /tftpboot/tcos
+
+Then thin client must start with allmodules cmdline to download it
+
+.SH BOOT METHODS
+
+.PP
+.B PXE like method
+.B
+.IP \-tftp 
+Create initramfs-x.x.x (and usr-x.x.x.squashfs) and copy to /tftpboot/tcos
+
+\-o=initramfs-pc1    output filename (in /tftpboot/tcos)
+
+.PP
+.B NFS (LTSP like) method
+.B
+.IP \-nfs
+Create initramfs-x.x.x-nfs  and copy to /tftpboot/tcos
+.B
+.IP \-rootfs
+Creates an complete TCOS and uncompress in /opt/tcos/fs-x.x.x
+
+NOTE:  Need a NFS server (apt-get install nfs-kernel-server) and this line in /etc/exports:
+
+.B /opt/tcos  192.168.0.0/255.255.255.0(ro,no_root_squash,sync,no_subtree_check)
+     (change network data with yours)
+
+.PP
+.B Floppy boot method
+.B
+.IP \-nbi
+Create initramfs (and usr.squashfs) an join with kernel
+in a nbi file then copy to /tftpboot/tcos
+
+.IP \-nbi-output=linux-pc1.nbi
+output filename (in /tftpboot/tcos)
+
+.PP
+.B CDROM method
+.B
+.IP \-cdrom
+Create initramfs and create a bootable iso based on isolunux or grub
+
+.B
+.IP \-type=isolinux
+.B
+.IP \-type=grub
+Select type of cdrom bootloader (default isolinux)
+Iso image is saved in /var/lib/tcos/isos/
+
+.SH EXAMPLES
+.B   PXE like boot (>=64 MB)
+     # gentcos -tftp -suffix=-pc1
+
+.B   NFS (LTSP like) boot (28-64 MB)
+     # gentcos -nfs -rootfs
+
+.B   CDROM boot
+     # gentcos -cdrom -type=grub
+
+.B   Floppy boot
+     # gentcos -nbi -extra-append="splash vga=791 uselocal"
+
+.SH BUGS
+Contact Mario Izquierdo <mariodebian@gmail.com>
+
+Info about TCOS project: http://soleup.eup.uva.es/mediawiki/index.php/TCOS
+
+.SH SEE ALSO
+tcos.conf(5)
+
+.SH AUTHOR
+Mario Izquierdo (mariodebian) <mariodebian@gmail.com>

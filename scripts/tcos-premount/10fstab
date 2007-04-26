@@ -1,0 +1,176 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+touch /etc/fstab
+
+quiet=n
+. /scripts/functions
+# if break=fstab STOP here
+maybe_break fstab
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# DOCUMENTME uselocal | enable use of local disks
+uselocal=$(read_cmdline_var "uselocal" "1")
+if [ ${uselocal} = 0 ]; then
+  _log "FSTAB uselocal disabled from cmdline"
+  exit 0
+fi
+
+
+
+# To avoid fsck
+#touch ${rootmnt}/fastboot
+
+cat <<EOF > /etc/fstab
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    defaults        0       0
+sys             /sys            sysfs   defaults        0       0
+EOF
+
+
+
+#
+# Search local disks partitions
+#
+get_partitions ()
+{
+	echo $(ls /dev/[sh]d[a-z]?* 2>/dev/null)
+}
+
+#
+# Check filesystem
+#
+get_filesystem ()
+{
+linea=$(/sbin/fdisk -l |grep $1 | sed s/*/XX/g)
+if [ "$(echo ${linea} | awk '{print $2}')" = "XX" ] ; then
+ tipo=$(echo ${linea}| awk '{print $6}')
+else
+ tipo=$(echo ${linea}| awk '{print $5}')
+fi
+# guadalinex use this, but in busybox don't work
+#disk=${1:0:8}
+#partition=${1:8}
+#tipo=$(sfdisk -c $disk $partition)
+case "$tipo" in
+  *83*)
+	echo "$1 ext3"
+	;;
+  82)
+	echo "$1 swap"
+	;;
+  b)
+	echo "$1 vfat"
+	;;
+  c)
+	echo "$1 vfat"
+	;;
+  e)
+	echo "$1 vfat"
+	;;
+  f)
+	echo "$1 extended"
+	;;
+  7)
+	echo "$1 ntfs"
+	;;
+  *)
+	echo "$1 auto"	
+	;;
+esac
+
+}
+
+#
+# Search for CD/DVDs
+#
+get_cdroms ()
+{
+	echo $(head -3 /proc/sys/dev/cdrom/info 2>/dev/null | tail -1 | cut -f 3-)
+}
+
+#
+# Create fstab
+#
+create_fstab ()
+{
+	if [ $(cat /proc/cmdline |grep rw| wc -l) = 0 ] ; then
+		defaults="    defaults,users,auto        0       2"
+	else
+		defaults="    ro,users,auto        0       2"
+	fi
+	partitions=$(get_partitions)
+	for part in $partitions; do
+		entry=$(get_filesystem $part)
+		dev=$(echo $entry | cut -d ' ' -f 1 )
+		fs=$(echo $entry | cut -d ' ' -f 2 )
+		if [ "$fs" = "swap" ] ; then
+			entry="${dev}	none	swap    sw              0       0"
+		elif [ "$fs" = "extended" ] ; then
+			# extended partition
+			continue
+		else
+			mntpoint="/media/${dev#/dev/}"
+			mkdir -p $mntpoint
+			if [ "$fs" = "ntfs" ]; then
+				defaults="    defaults,ro,noauto,users,gid=disk        0       2"
+			fi
+			entry="${dev}	${mntpoint}	${fs}	${defaults}"
+		fi
+		echo $entry >> /etc/fstab
+	done
+	num=0
+	cdroms=$(get_cdroms)
+	for cd in $cdroms; do
+		entry="/dev/${cd}        /media/cdrom${num}   udf,iso9660 ro,user,noauto  0       0"
+		mkdir -p /media/cdrom${num} >> /var/log/initramfs.debug 2>&1
+		let num=num+1
+		echo $entry >> /etc/fstab
+	done
+	
+}
+
+get_device ()
+{
+	dev=$(grep /.dirs/dev /proc/mounts | cut -d " " -f 1)
+	echo $dev
+}
+
+log_begin_msg "Searching local disks (fstab)"
+create_fstab
+rm -f /etc/mtab
+cat /proc/mounts > /etc/mtab
+#mount -a  >> /tmp/initramfs.debug 2>&1
+swapon -a >> /tmp/initramfs.debug 2>&1
+#device=$(get_device)
+#mount $device >> /var/log/initramfs.debug 2>&1
+
+
+_log "FSTAB done"
+
+log_end_msg
+
+update_progress
+
+exit 0
+

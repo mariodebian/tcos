@@ -1,0 +1,47 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+# if break=download_settings STOP here
+maybe_break download_settings
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+MYIP=$(ifconfig eth0| grep "inet addr"| awk '{print $2}'| awk -F ":" '{print $2}')
+
+log_begin_msg "Download personalized settings ${MYIP}.conf"
+  download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf
+  # append settings to override them
+  # cat /conf/mysettings.conf >> /conf/tcos.conf 2>> /tmp/initramfs.debug
+log_end_msg
+
+
+update_progress
+
+
+
+
+
+exit 0

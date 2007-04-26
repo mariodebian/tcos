@@ -1,0 +1,249 @@
+Readme file of TCOS build generation system
+
+INDEX: 
+
+ * Boot from PXE network card.
+ * Boot from Etherboot floppy.
+ * Debug terminal that don't start.
+ * Howto decrease RAM requirements.
+
+
+---------------------------------------
+           Boot from PXE
+---------------------------------------
+
+ 1.- Configure /etc/tcos/tcos.conf and enable/disable 
+     all what you want. All vars are comented.
+
+ 2.- Exec:
+
+     # gentcos -tftp
+
+     ( see gentcos -help or man gentcos for more options )
+
+  3.- Configure dhcp server like this:
+
+   host __PCNAME__ {
+    # PXE boot
+    hardware ethernet       00:04:75:ff:b6:aa; # mac address
+    fixed-address           192.168.0.10;      # ip address
+    filename                "/tftpboot/tcos/pxelinux.0";
+    option vendor-encapsulated-options 09:0f:80:00:0c:4e:65:74:77:6f:72:6b:20:62:6f:6f:74:0a:07:00:50:72:6f:6d:70:74:06:01:02:08:03:80:00:00:47:04:80:00:00:00:ff;
+    }
+
+   4.- Restart dhcp server and boot terminal.
+
+   5.- You can add some cmdline options before boot, you can see
+       some of them presing F1 before boot starts.
+
+      Examples:
+         startx=N ( no startx)
+         startx=L ( start local session Xorg + xterm + twm )
+         startx=R ( start remote x default)
+ 
+         server=10.0.0.1 ( tftpboot and XMDCP server, default is dhcp server)
+
+         volume=80% ( volume of PCM and MASTER chanels of audio mixer )
+		  value can be 1%-100% or integer from 1 to 31
+
+         zap ( allow to kill Xorg with  Ctrl + Alt + Backspace, default disabled)
+
+	 force-update ( delete usr.squashfs if found in local harddisk and download again )
+
+	 noswap ( disable swap file generation, swap partittions will be used if found )
+
+	 nounionfs ( disable unionfs mount on /usr, /usr will be read only )
+
+	 noautofs ( disable automount support for thin client devices:
+                 * floppy => /media/autofs/floppy/
+                 * flash (sda1) => /media/autofs/flash
+                 * flash1 (sda) => /media/autofs/flash1 ( pendrive without partitions)
+                 * cdrom0 => /media/autofs/cdrom0/ ( if terminal have more than one cdrom1 cdrom2... )
+
+
+
+---------------------------------------
+     Boot with Etherboot floppy
+---------------------------------------
+
+ 1.- First off all you need a Etherboot floppy
+   that works with your network card.
+
+   You can try with universal FLOPPY, download here:
+
+   http://prdownloads.sourceforge.net/thinstation/BootDisk522b.zip?download
+
+   Or try to build your own in:
+
+   http://rom-o-matic.net/
+
+ 2.- Run gentcos -nbi [-nbi-output=linux-1.nb]
+
+   This will create and put in tftp dir the nbi boot image.
+   You can change default name (linux.nbi) to another one => linux-1.nb
+
+
+ 3.- Configure DHCP server to serve NBI image:
+
+   Example:
+
+    host pc3 {
+      # NBI Etherboot
+      hardware ethernet       00:04:75:ff:b8:31;
+      fixed-address           192.168.0.30;
+      # nbi generated file with: gentcos -nbi
+      filename                "/tftpboot/tcos/linux.nbi";
+     }
+
+ 4.- Restart dhcp server, boot terminal from floppy and enjoy.
+
+
+
+---------------------------------------
+   Debug terminal that don't start
+---------------------------------------
+
+  If terminal don't connect to XMDCP server and give a busybox shell
+  we can read some logs and examine what is the cause.
+
+  1.- Exec:
+   
+  $ more /tmp/initramfs.debug
+ 
+  In this file are all output of many actions during boot.
+
+  2.- View "ps" output.
+
+  3.- View dmesg output.
+
+  We can connect with ssh to thin client ( if enabled ):
+
+   $ ssh root@__TERMINAL-IP__
+
+  If we copy any rsa key, password will not be asked, else
+  root password is defined (plaintext) in /etc/tcos/tcos.conf
+
+  Is possible to mount all thin client filesystem in server:
+
+  mkdir thin-client/
+  ltspfs __TERMINAL-IP__:/ thinc-client/
+
+  To umount
+  fusermount -u thin-client/
+
+  See help about LTSPFS and fuse.
+
+####################################################
+
+  Thin client gives a kernel panic !!!!
+
+####################################################
+
+  If terminal gives a kernel panic we can try to stop boot
+  process using break stament, you can append to cmdline
+  following vars: 
+  (all var are sorted in same order that are exec)
+
+  TCOS-premount breaks:
+
+  break=network  # stop before configure lo and eth0
+  break=fstab    # stop before create /etc/fstab
+  break=uselocal # stop before scan local disks
+  break=swapon   # stop before create/mount swap file
+  break=sqmount  # stop before download usr.squashfs or allmodules.squashfs
+  break=ldconfig # stop before exec ldconfig
+  break=autofs   # stop before run automount daemon
+
+  TCOS-bottom breaks
+
+  break=inittcos  # stops before some daemons are started
+  break=initsound # stops before sound is loaded
+  break=ltspfs    # stops before ltspfs daemon is started
+  break=startx    # stops before startx is started
+
+  When thin clients stops you can do some things:
+
+  see dmesg output
+  see /tmp/initramfs.debug file
+  see loaded modules (lsmod or cat /proc/modules)
+  see mem usage (free or cat /proc/meminfo)
+  see inet info (ifconfig or dhcp.leases file)
+  view process running (ps)
+
+
+---------------------------------------
+Things to do, to decrease RAM requirements
+---------------------------------------
+
+* First of all disable what you don't need
+
+ in /etc/tcos/tcos.conf
+
+ reduce a lot of ram
+   TCOS_SOUND=             ( disabled sound support )
+   TCOS_USB=               ( disabled USB & SCSI support )
+
+ reduce a few ram
+   TCOS_SSH=               ( disabled ssh support )
+ 
+ reduce a bit ram
+   TCOS_INETD=             ( disabled inetd support )
+   TCOS_DISCOVER=          ( disabled discover support )
+
+ You get more info during generation process of needed space
+ for each app.
+
+* Edit /etc/tcos/initramfs.conf and set MODULES var to list
+
+ MODULES=list
+
+ MODULES can be one of this:
+  most     ( include all of network modules and chipset)
+  dep      ( include all modules loaded in server NOT RECOMENDED )
+  netboot  ( include netboot modules, but not block devices )
+  list     ( include all modules we need => tcos-modules.conf low RAM RECOMENDED )
+
+ more info => man initramfs.conf
+
+ with this setting initramfs have exactly all modules you want
+
+* Edit /etc/tcos/tcos-modules.conf
+
+  you can edit some var to exactly put needed modules
+
+  There are 2 methods of know what modules thin client need:
+
+  1.- Use discover:
+    set TCOS_DISCOVER=1 and boot with this params:
+
+    boot: tcos startx=N
+
+    when thin client finish to boot you will have a shell, exec this:
+
+      cat /tmp/initramfs.debug | grep Skipping
+    
+    you could read something like this
+
+       Skipping XXXXX; assuming it is compiled into kernel
+
+   take note of all XXXXX modules and put them in 
+   /etc/tcos/tcos-modules.conf in MYTCOS_MODULES var
+
+   MYTCOS_MODULES="XXXXX XXXXX"
+
+  2.- Second method is to start terminal 
+     with cmdline:
+           tcos allmodules startx=N
+  ( you need allmodules.squashfs in /tftpboot/tcos/ generated with
+    gentcos -allmodules [other options] )
+
+    -allmodules requires at least 14-15 Mb of extra RAM.
+
+    next exec lsmod or cat /proc/modules and take note of all.
+
+#######################################################################
+  WITH ALL OF THESE TCOS will start (without swap[*]) with 26 Mb of RAM  
+#######################################################################
+
+[*] swap in limited thin clients (ex: 32 Mb) is very important, because
+    Xorg need free memory to run.

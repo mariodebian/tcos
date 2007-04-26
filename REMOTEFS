@@ -1,0 +1,75 @@
+###############################################
+
+  Howto Remote filesystem in TCOS
+
+###############################################
+
+1.- Using LTSPFS
+2.- Using SHFS
+3.- Using SAMBA
+4.- Using NFS
+
+===================
+1.- Using LTSPFS
+===================
+  LTSPFS is a remote protocol to mount devices (or dirs)
+  into local filesystem.
+
+  LTSPFS use X-Windows autentication protocol.
+
+  (as root) # adduser USER fuse
+  (as $USER) $ mkdir $HOME/Desktop/Devices
+  (as $USER) $ ltspfs terminal:/media/autofs/ $HOME/Desktop/Devices
+
+===================
+2.- Using SHFS
+===================
+  SHFS is a method to mount remote filesystem throught
+  ssh protocol.
+
+  Install:
+  In server, exec this:
+  # apt-get install module-assistant linux-headers-$(uname -r)
+  # m-a prepare
+  # m-a a-i fuse
+  # m-a a-i shfs
+
+  The shfs-module-2.x.x will install shfs-utils package,
+  set suid to YES when ask.
+
+  In user startup session add tcos-shfsmount
+
+  Gnome:
+   Click in System --> Preferences --> Sessions
+   In startup add "tcos-shfsmount"
+
+  KDE:
+   Add a symlink in .kde/Autostart/
+   ln -s /usr/bin/tcos-shfsmount /home/USERNAME/.kde/Autostart/
+
+  XFCE:
+   can use Desktop/Autostart/ folder same as kde or in xfce4.4
+   use the startups preferences dialog
+
+  To umount, and clean you can use something like this:
+
+  GDM:
+   You can add a line in /etc/gdm/PostSession/Default
+   after PATH declaration.
+      /usr/bin/tcos-shfsumount
+
+  KDM: 
+   FIXME, not know
+
+
+===================
+3.- Using SAMBA
+===================
+
+  FIXME, samba deprecated in TCOS
+
+===================
+4.- Using NFS
+===================
+
+  FIXME, nfs write some info

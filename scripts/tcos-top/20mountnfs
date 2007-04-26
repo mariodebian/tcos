@@ -1,0 +1,26 @@
+#!/bin/sh
+# 
+
+PREREQ="01busybox 05network"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+
+# if use NFS try to mount:
+#
+#   SERVER_IP:/opt/tcos/fs-$(uname -r)
+#
+
+exit 0

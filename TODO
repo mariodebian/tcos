@@ -1,0 +1,18 @@
+TODO for pxes images
+====================
+
+ * Create task that depends squashfs modules (example, try to start samba, 
+   samba binary not found, download samba.squashfs, mount and start)
+   NEED squashfs and unionfs support and remount / with some modules: not checked
+
+ * Admin tags in init scripts ( clean hdd , save config files... )
+
+ * Configure personalized boot options with ip, cmdline, dhcp or both.
+
+ * Study CLUSTER support => openssi 
+
+ * IMPORTANT Network swaping for thin clients < 40 Mb RAM
+
+ * IMPORTANT make pulseaudio works with Xcookies and not allowing from ip.
+
+ * See at VirtualGL performance: http://www.virtualgl.org/Documentation/Version20

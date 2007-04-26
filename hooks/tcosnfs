@@ -1,0 +1,67 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+
+# Hooks for install binaries for tcos boot
+#
+. /usr/share/initramfs-tools/hook-functions
+
+# read conf file => /etc/tcos/initramfs.conf
+. $CONFDIR/initramfs.conf
+
+# read from env vars TCOS_BOOT
+TCOS_BOOT=$(env| awk -F "=" '/^TCOS_BOOT=/ {print $2}')
+if [ "${TCOS_BOOT}" != "" ]; then
+  BOOT=$TCOS_BOOT
+fi
+
+if [ "${BOOT}" == "tcos-nfs" ]; then
+
+. $CONFDIR/tcos.conf
+. $TCOS_DIR/tcos-generation-functions.sh
+
+
+# _echo ""
+# _echo "INITRAMFS => BOOT=tcos-nfs"
+# _echo ""
+
+# copy internal tcos conf
+cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
+cp $CONFDIR/tcos.conf                $DESTDIR/conf/
+
+mkdir -p $DESTDIR/lib/lsb/
+cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
+
+sed -i s/^BOOT=tcos/BOOT=tcos-nfs/g ${DESTDIR}/conf/initramfs.conf
+
+# usplash support
+mkdir -p $DESTDIR/usr/lib/usplash/
+cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+
+egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/passwd > $DESTDIR/etc/passwd
+egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/group > $DESTDIR/etc/group
+egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
+
+. ${TCOS_DIR}/hooks-addons/dhclient
+. ${TCOS_DIR}/hooks-addons/clean_nfs_image
+. ${TCOS_DIR}/hooks-addons/hex2ascii
+
+
+manual_add_modules unionfs
+
+fi

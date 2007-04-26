@@ -1,0 +1,99 @@
+#!/bin/sh
+# 
+
+PREREQ="01download_settings 05inittcos"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+# if break=ldconfig STOP here
+maybe_break ldconfig
+
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+# update lib cache
+log_begin_msg "Updating lib cache"
+ ldconfig & >> /tmp/initramfs.debug 2>&1
+log_end_msg $?
+
+
+# mount /dev/shm
+# if not mounted
+# this causes to break browsers and italc
+mkdir /dev/shm > /dev/null 2>&1
+mount -t tmpfs shmfs /dev/shm >/dev/null 2>&1
+
+
+# tinylogin
+if [ -x /bin/tinylogin ]; then
+  # create links
+  for name in addgroup adduser delgroup deluser login passwd vlock su; do
+    _log "LDCONFIG Creting link ${name} => /bin/tinylogin"
+    ln -s /bin/tinylogin /bin/${name} &
+  done
+    ln -s /bin/tinylogin /sbin/getty &
+    ln -s /bin/tinylogin /sbin/sulogin &
+else
+  _log "LDCONFIG ERROR No tinylogin support found"
+fi
+
+
+if [ ! "$(which Xorg)" ]; then
+  _log "LDCONFIG Xorg not found"
+  log_failure_msg "Xorg not found"
+  log_end_msg
+  exit 0
+fi
+
+
+#XORG_VERSION=$(Xorg -version 2>&1 | grep "System Version"| awk '{print $5}')
+#XORG_MAYOR=$(echo $XORG_VERSION | awk -F "." '{print $1}')
+
+
+if [ -d /usr/lib/xorg/modules/ ]; then
+  XORG_VERSION="7.0.0"
+  XORG_MAYOR=7
+fi
+
+if [ ${XORG_MAYOR} -lt 7 ]; then
+ _log "LDCONFIG Updating links in Xorg 6.9 mode"
+ # updating links for Xorg <= 6.9
+ ln -s /etc/X11/xserver /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
+ ln -s /etc/X11/xkb /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
+ rm -rf /usr/X11R6/lib/X11/compiled  >> /tmp/initramfs.debug 2>&1
+ ln -s /var/lib/xkb /usr/X11R6/lib/X11/compiled  >> /tmp/initramfs.debug 2>&1
+ ln -s /etc/X11/rgb.txt /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
+ mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
+ ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
+else
+ _log "LDCONFIG Updating links in Xorg 7.0 mode"
+ # FIXME need more work Xorg 7.0
+ mkdir -p /usr/share/X11/
+ ln -s /etc/X11/rgb.txt /usr/share/X11/rgb.txt
+ ln -s /etc/X11/xkb /usr/share/X11/
+ mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
+ ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
+fi
+
+update_progress
+
+exit 0

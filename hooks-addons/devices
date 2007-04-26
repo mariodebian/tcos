@@ -1,0 +1,46 @@
+# hooks addon to use terminal devices
+# need autofs and ltspfs
+# ltspfs
+# TCOS_REMOTEFS = shfs ltspfs
+
+if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
+
+ ltspfsd=$(dpkg -l ltspfs-client|grep -c ^ii)
+  if [ ${ltspfsd} = 1 ]; then
+   stat_before
+   cpifexists $(pathof ltspfsd) /usr/bin
+   stat_after "LTSPFS"
+  else
+   echo "ERROR:"
+   echo ""
+   echo "Not LTSPFS support, please install ltspfs-client to build image."
+   echo "        You can get it in http://soleup.eup.uva.es/tcos/extras/"
+   echo ""
+  fi
+
+elif [ "$TCOS_REMOTEFS" = "shfs" ]; then
+  _echo "WARNING:"
+  _echo "  SHFS support enabled, server requires shfs kernel module"
+  cpifexists /etc/login.defs /etc/
+fi
+
+
+if [ "$TCOS_AUTOFS" ]; then
+ autofs=$(dpkg -l autofs|grep -c ^ii)
+  if [ ${autofs} = 0 ]; then
+   echo "ERROR"
+   echo ""
+   echo "No autofs support, please install autofs package."
+   echo "  => apt-get install autofs"
+   echo ""
+  else
+   # autofs
+   stat_before
+   cpifexists $(pathof automount)     /sbin/
+   mkdir -p $DESTDIR/usr/lib/autofs
+   copydir /usr/lib/autofs/          /usr/lib/
+   mkdir -p $DESTDIR/var/run/autofs
+   stat_after "Autofs mounter"
+  fi
+fi
+

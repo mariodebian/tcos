@@ -1,0 +1,96 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# if break=sqmount STOP here
+maybe_break network
+
+# file to save progress %
+echo 5 > /tmp/progress
+
+# localhost
+log_begin_msg "Bring up Local loopback device"
+ ifconfig lo up
+log_end_msg
+
+
+# DHCP
+log_begin_msg "Setup network interfaces"
+ echo "DHCLIENT eth0" >> /tmp/initramfs.debug
+ dhclient eth0 >> /tmp/initramfs.debug  2>&1
+ myip=$(ifconfig eth0 | grep "inet addr"| awk '{print $2}' | awk -F ":" '{print $2}')
+ dhcpserver=$(cat /var/lib/dhcp/dhclient.leases| grep dhcp-server| awk '{print $3}' | awk -F ";" '{print $1}')
+ hostname=$(cat /var/lib/dhcp/dhclient.leases| grep host-name| awk '{print $3}' | awk -F ";" '{print $1}' | sed s/\"//g)
+log_end_msg
+
+if [ -n ${TCOS_DEBUG} ]; then
+ #log_begin_msg "Configured data is:
+ # local-ip=${myip} 
+ # server_ip=${dhcpserver}
+ # hostname=${hostname}"
+  _log "NETWORK data: ip=${myip} server=${dhcpserver} hostname=${hostname}"
+ #log_end_msg
+fi
+
+# count number of ":" in hostname string
+if [ $(echo $hostname | awk '{print split($1, A, ":")}') -gt 1 ]; then
+  if [ -x /bin/hex2ascii ]; then
+    # got an hexadecimal hostname
+    hostname2=$(hex2ascii $hostname)
+    _log "NETWORK HEX hostname \"$hostname\"=\"$hostname2\""
+    hostname=$hostname2
+  fi
+fi
+
+if [ "x{$hostname}" = "x" ]; then
+  hostname=tcos
+fi
+
+
+# Setup the hostname
+log_begin_msg "Setting hostname to ${hostname}"
+  echo $hostname > /etc/hostname
+  echo $hostname > /proc/sys/kernel/hostname
+  cat <<EOF > /etc/hosts
+127.0.0.1       localhost.localdomain   localhost       ${hostname}
+127.0.0.1	localhost
+
+EOF
+
+# set dns
+echo "nameserver $TCOS_DNS_SERVER" > /etc/resolv.conf
+
+
+hostname $hostname
+export HOSTNAME=$hostname
+export hostname
+log_end_msg
+
+
+update_progress
+
+exit 0

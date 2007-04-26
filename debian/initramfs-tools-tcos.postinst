@@ -1,0 +1,90 @@
+#!/bin/sh
+
+TCOS_OLD_SCHEMA="
+/etc/tcos/tcos-run-functions \
+/etc/tcos/tcos-generation-functions \
+/etc/tcos/scripts/tcos-premount/10fstab \
+/etc/tcos/scripts/tcos-premount/20swapon \
+/etc/tcos/scripts/tcos-premount/05network \
+/etc/tcos/scripts/tcos-premount/25download_settings \
+/etc/tcos/scripts/tcos-premount/30rootfs \
+/etc/tcos/scripts/tcos-premount/35sqmount \
+/etc/tcos/scripts/tcos-premount/15uselocal \
+/etc/tcos/scripts/tcos-top/10foo \
+/etc/tcos/scripts/tcos-bottom/30startx \
+/etc/tcos/scripts/tcos-bottom/02autofs \
+/etc/tcos/scripts/tcos-bottom/10initsound \
+/etc/tcos/scripts/tcos-bottom/50error \
+/etc/tcos/scripts/tcos-bottom/01ldconfig \
+/etc/tcos/scripts/tcos-bottom/20devices \
+/etc/tcos/scripts/tcos-bottom/25freespace \
+/etc/tcos/scripts/tcos-bottom/05inittcos \
+/etc/tcos/scripts/tcos \
+/etc/tcos/hooks/tcosmods \
+/etc/tcos/hooks/tcosbin \
+/etc/tcos/hooks-addons/dhclient \
+/etc/tcos/hooks-addons/tcos \
+/etc/tcos/hooks-addons/xorg \
+/etc/tcos/hooks-addons/hwclock \
+/etc/tcos/hooks-addons/vnc \
+/etc/tcos/hooks-addons/alsa \
+/etc/tcos/hooks-addons/italc \
+/etc/tcos/hooks-addons/web_browser \
+/etc/tcos/hooks-addons/devices \
+/etc/tcos/hooks-addons/inetd \
+/etc/tcos/hooks-addons/sound \
+/etc/tcos/hooks-addons/ssh \
+/etc/tcos/hooks-addons/discover \
+/etc/tcos/hooks-addons/tinylogin \
+/etc/tcos/hooks-addons/pulseaudio \
+/etc/tcos/hooks-addons/freenx \
+/etc/tcos/hooks-addons/debug \
+"
+
+TCOS_OLD="
+ /etc/tcos/scripts/tcos-bottom/20ltspfs\
+ /etc/tcos//tcos-functions \
+ /etc/tcos/scripts/tcos-bottom/40freespace \
+ /etc/tcos/scripts/tcos-premount/30sqmount \ 
+ /etc/tcos/scripts/tcos-premount/50ldconfig \
+ /etc/tcos/scripts/tcos-premount/60autofs \ 
+ /etc/tcos/tcos-run-functions \
+ /etc/tcos/tcos-generation-functions \
+ /etc/tcos/hooks-addons/busybox_static \
+"
+
+remove_old() {
+  #$1 is file
+  if [ -f "${_file}" ]; then
+    echo "  initramfs-tools-tcos: Deleting deprecated $(basename $_file)..."
+    rm -f "$_file"
+  fi
+}
+
+for _file in $TCOS_OLD; do
+  remove_old "${_file}"
+done
+
+
+
+#bad_files=$(find ${tcos_dir} -name "*.dpkg*")
+
+#if [ -n "${bad_files}" ]; then
+# echo "Deleting bad files:"
+# echo "${bad_files}"
+ rm -f ${bad_files}
+#fi
+
+
+if dpkg --compare-versions "$2" le-nl "0.53.pre2" ; then
+  # remove old tcos schema
+  for _file in $TCOS_OLD_SCHEMA; do
+    if [ -f ${_file} ]; then
+       echo "  initramfs-tools-tcos: Removing old schema file: ${_file}"
+       rm -f ${_file}
+    fi
+  done
+fi
+
+#DEBHELPER#
+

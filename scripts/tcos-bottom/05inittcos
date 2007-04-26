@@ -1,0 +1,193 @@
+#!/bin/sh
+# 
+
+PREREQ="01download_settings"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# if break=inittcos STOP here
+maybe_break inittcos
+
+# DOCUMENTME opentelnet | write some debug entry's to /etc/inetd.conf to allow kill or start X with telnet terminal-ip port
+opentelnet=$(read_cmdline_var "opentelnet")
+
+
+
+
+if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
+ # setup root passwd
+ log_begin_msg "Updating root password"
+
+   [ -e /dev/log ] || mknod /dev/log c 21 5
+   rm -f /etc/.pwd.lock
+
+   echo "root:${TCOS_ROOT_PASSWD}" | chpasswd  2>&1 >/dev/null
+ log_end_msg
+else
+
+ _log "INITTCOS not updating root passwd, ussing generation root passwd"
+fi
+
+###############################################################
+TCOS_ENABLE_DISCOVER=$(read_cmdline_var "discover" "0")
+
+start_discover=1
+
+# discover
+if [ "$TCOS_ENABLE_DISCOVER" = "0" ]; then
+  start_discover=0
+elif [ -x "$(which discover-modprobe)" ] ; then
+  start_discover=1
+fi
+
+if [ "${start_discover}" = "1" ] ; then
+ log_begin_msg "Discovering hardware"
+   _log "INITTCOS launching discover"
+  discover-modprobe -v >> /tmp/initramfs.debug 2>&1
+ log_end_msg $?
+else
+ _log "INITTCOS not starting discover"
+fi
+
+update_progress
+##########################################################
+
+
+# DOCUMENTME showmodules | show loaded and discover modules and stop loading
+showmodules=$(read_cmdline_var "showmodules" "${TCOS_SHOW_NEEDED_MODULES}")
+
+if [ ${showmodules} ]; then
+  # kill usplash
+  kill_usplash
+  
+  discover_modules=$(grep Discovering /tmp/initramfs.debug | awk -F ":" '{print $2}')
+  loaded_modules=$(lsmod| grep -v ^Module| awk '{print $1}'| sed s/'\n'/''/g)
+  # FIXME very ugly hack
+  loaded=""
+  not_found=""
+  for mod in ${loaded_modules}; do
+    loaded="${loaded} ${mod}"
+  done
+  for mod in ${discover_modules}; do
+    mod2=$(echo ${mod} | sed s/"-"/"_"/g)
+    if [ $(grep -c ${mod2} /proc/modules) = 0 ]; then
+      not_found="${not_found} ${mod2}"
+    fi
+  done
+  
+  log_begin_msg "Loaded modules are
+${loaded}"
+  log_end_msg
+
+  log_begin_msg "Discover needed modules are
+${discover_modules}"
+  log_end_msg
+  
+  if [ "${not_found}" != "" ]; then
+  log_begin_msg "NOT FOUND modules
+${not_found}"
+  log_end_msg
+  else
+  log_begin_msg "OK all needed modules loaded"
+  log_end_msg
+  fi
+
+  echo -n "Press ENTER to continue loading..."
+  read x
+  start_usplash
+fi
+
+update_progress
+
+if [ ${opentelnet} ] ;then
+  echo "INITTCOS opentelnet=1, put some things in /etc/inetd.conf" >> /tmp/initramfs.debug
+  echo "55            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/killX " >> $DESTDIR/etc/inetd.conf
+  echo "56            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/startlocalx " >> $DESTDIR/etc/inetd.conf
+  echo "57            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/startremotex " >> $DESTDIR/etc/inetd.conf
+else
+ _log "INITTCOS not starting opentelnet mode"
+fi
+
+
+if [ "$(which dropbear)" ] ; then
+# need read from /dev/urandom not /dev/random
+# http://www.nomis52.net/?section=projects&sect2=netgear&page=dropbear
+# ugly hack or recompile with #define DROPBEAR_RANDOM_DEV "/dev/urandom"
+mv /dev/random /dev/random.old
+ln -s /dev/urandom /dev/random
+
+ _log "INITTCOS starting dropbear ssh daemon"
+ log_begin_msg "Starting dropbear SSH daemon"
+   ln -s /var/run/dropbear /etc/dropbear/superwise >> /tmp/initramfs.debug 2>&1   
+   ln -s /var/log/dropbear /etc/dropbear/log/main >> /tmp/initramfs.debug 2>&1   
+   ln -s /var/run/dropbear.log /etc/dropbear/log/superwise >> /tmp/initramfs.debug 2>&1   
+   dropbear -p 22 -E -d /etc/dropbear/dropbear_dss_host_key -r /etc/dropbear/dropbear_rsa_host_key 2> /tmp/sshd.log
+ log_end_msg
+
+rm -f /dev/random
+mv /dev/random.old /dev/random
+
+
+else
+ _log "INITTCOS not starting dropbear ssh server"
+fi
+
+
+update_progress
+
+if [ "$(which inetd)" ] ; then
+ _log "INITTCOS starting inetd daemon"
+ log_begin_msg "Starting inetd"
+   inetd
+ log_end_msg
+else
+ _log "INITTCOS not starting inetd"
+fi
+
+update_progress
+
+if [ "$(which loadkeys)" ]; then
+ _log "INITTCOS loading keymap"
+ log_begin_msg "Loading default server keymap"
+   loadkeys -q /etc/console/boottime.kmap.gz >> /tmp/initramfs.debug 2>&1 &
+ log_end_msg
+else
+ _log "INITTCOS not loading default keymap"
+fi
+
+if [ ${TCOS_USB} ]; then
+ MODULES="scsi_mod sd_mod sr_mod isofs vfat floppy usbcore ehci-hcd ohci-hcd uhci-hcd usb-storage"
+ log_begin_msg "Loading usb and floppy modules"
+   for mod in ${MODULES}; do
+     _log "INITTCOS Loading module ${mod}"
+     modprobe -q $mod >> /tmp/initramfs.debug 2>&1 &
+   done
+ log_end_msg
+else
+ _log "INITTCOS usb support disabled"
+fi
+
+update_progress
+
+exit 0

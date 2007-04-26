@@ -1,0 +1,22 @@
+# hooks addon of tinylogin
+# need tinylogin
+# get here:
+# http://soleup.eup.uva.es/tcos/tinylogin_1.4-1_i386.deb
+
+
+tinylogin=$(dpkg -l tinylogin|grep -c ^ii)
+if [ ${tinylogin} = 0 ]; then
+        echo "WARNING"
+        echo ""
+        echo "Please install tinylogin package to allow to create users and groups."
+        echo " Download at http://soleup.eup.uva.es/tcos/tinylogin_1.4-1_i386.deb"
+        echo "  => dpkg -i tinylogin_1.4-1_i386.deb"
+        echo ""
+else
+
+ stat_before
+ cpifexists /usr/lib/tinylogin/bin/tinylogin /bin/
+ # not copy nothing more create links in ldconfig...
+ stat_after "tinylogin"
+
+fi

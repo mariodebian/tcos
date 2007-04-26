@@ -1,0 +1,123 @@
+#!/bin/sh
+# 
+
+PREREQ="10fstab 15uselocal"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+# if break=swapon STOP here
+maybe_break swapon
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+# DOCUMENTME noswap | disable swap file creation (swap partition is used always, if found)
+noswap=$(read_cmdline_var "noswap" "0")
+if [ ${noswap} = 1 ]; then
+  _log "SWAPON swap disabled from cmdline"
+  exit 0
+fi
+
+
+############ VARS ###############
+# need 64 mb of free space (in kb)
+need_free_space=65536
+
+mem_max=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+
+if [ ${need_free_space} -ge ${mem_max} ] ; then
+ # mem_max - 10 Mb
+ need_free_space=$(($mem_max-10240))
+fi
+
+
+#################################
+
+swap_parts_num=$(grep ^/dev /etc/fstab|grep -c swap)
+swap_parts_devs=$(grep ^/dev /etc/fstab|grep swap | awk '{print $1}')
+
+ext3_parts_num=$(grep ^/dev /etc/fstab|grep -c ext3)
+ext3_parts_devs=$(grep ^/dev /etc/fstab|grep ext3 | awk '{print $1}')
+
+fat32_parts_num=$(grep ^/dev /etc/fstab|grep -c vfat)
+fat32_parts_devs=$(grep ^/dev /etc/fstab|grep vfat | awk '{print $1}')
+
+######### FUNCTIONS ##########
+
+check_if_swaps() {
+ # exit if swap is mounted
+ if [ $(grep -c -v ^Filename /proc/swaps ) != 0 ]; then
+   _log "SWAPON have swap !!!"
+   log_end_msg 0
+   exit 0
+ fi
+}
+
+mount_exits_swap() {
+ for dev in $1 ; do
+  swapon ${dev}
+ done
+}
+
+
+swap_mnt_file=/mnt/tmp/swap.file
+
+# check if /mnt/tmp is mounted and create swap file into /mnt/tmp
+create_swap () {
+  if [ $(grep -c /mnt/tmp /proc/mounts) -gt 0 ]; then
+    # have /mnt/tmp !!!!
+    # check if file exists
+     if [ -f ${swap_mnt_file} ]; then
+       # file exists, mount
+       swapon ${swap_mnt_file} >> /tmp/initramfs.debug 2>&1
+     else
+       # file not exists, create it
+       dd if=/dev/zero of=${swap_mnt_file} bs=${need_free_space}k count=1 >> /tmp/initramfs.debug 2>&1
+       mkswap ${swap_mnt_file} >> /tmp/initramfs.debug 2>&1
+       swapon ${swap_mnt_file} >> /tmp/initramfs.debug 2>&1
+     fi
+  fi
+
+}
+
+
+
+############# begin code ############
+
+log_begin_msg "Active swap partitions"
+
+# first we search for a swap mounted and exit
+ _log "SWAPON checking swap mounted partitions"
+ check_if_swaps
+
+# no swap partition, create swap file in /mnt/tmp (if mounted)
+ create_swap
+
+
+
+
+# if here we have no swap
+_log "SWAP no swap avalaible"
+log_end_msg 1
+
+
+update_progress
+exit 0

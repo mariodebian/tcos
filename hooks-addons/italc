@@ -1,0 +1,82 @@
+# hooks addon to use iTALC vnc MasterEye
+# need italc-client
+# also copy xmessage instead of messageviewer
+# that don't need qt libs
+
+if [ ${TCOS_ITALC} ]; then
+ italc=$(dpkg -l italc-client|grep -c ^ii)
+ if [ ${italc} != 1 ]; then
+   echo "WARNING:"
+   echo ""
+   echo "italc-client not found, install italc-client or disable TCOS_ITALC."
+   echo "    => # apt-get install italc-client"
+   echo ""
+ else
+  stat_before
+  cpifexists $(pathof ivs)              /usr/bin/
+  cpifexists $(pathof demoviewer)       /usr/bin/
+  cpifexists $(pathof screenlocker)     /usr/bin/
+  
+  #cpifexists $(pathof messageviewer)    /usr/bin/
+  # messageviewer need qt libs
+  # ugly wrapper less ram
+
+  cpifexists $(pathof xmessage)    /usr/bin/
+  # overwrite, not link
+  rm $DESTDIR/usr/bin/xmessage
+  cp $(pathof xmessage)            $DESTDIR/usr/bin/
+  mv $DESTDIR/usr/bin/xmessage     $DESTDIR/usr/bin/messageviewer
+
+  if [ ${TCOS_ADMIN_USER} ]; then
+    # search public italc key
+    if [ ! -f /etc/italc-client/public-keys/${TCOS_ADMIN_USER}.public ]; then
+      # try to find in $HOME dir
+      if [ "${TCOS_ADMIN_USER}" = "root" ]; then
+        key=/root/.italc/id_rsa.public
+      else
+        key=/home/${TCOS_ADMIN_USER}/.italc/id_rsa.public
+      fi
+    else
+      key=/etc/italc-client/public-keys/${TCOS_ADMIN_USER}.public
+    fi
+      
+    if [ ! -f ${key} ]; then
+        _echo "WARNING:"
+        _echo "  ${key} not found"
+        _echo "  You can generate running italc as ${TCOS_ADMIN_USER} for first time"
+        _echo "  or running italc-keygen"
+    else
+        mkdir -p $DESTDIR/etc/italc-client/public-keys/
+        cp ${key} $DESTDIR/etc/italc-client/public-keys/ 2>&1 > /dev/null
+	mv $DESTDIR/etc/italc-client/public-keys/id_rsa.public $DESTDIR/etc/italc-client/public-keys/${TCOS_ADMIN_USER}.public 2>&1 > /dev/null
+	cp $DESTDIR/etc/italc-client/public-keys/${TCOS_ADMIN_USER}.public $DESTDIR/etc/italc-client/public-keys/root.public 2>&1 > /dev/null
+    fi
+
+  else
+    _echo "WARNING: Unknow TCOS_ADMIN_USER, iTALC need public user key to allow connections"
+    _echo "  Please fill TCOS_ADMIN_USER value"
+  fi
+  
+  
+  
+  cat <<EOF > $DESTDIR/sbin/startivs
+#!/bin/sh
+# kill and wait until Xorg is started
+killall ivs >/dev/null 2>&1
+sleep 1
+DISPLAY=:0 ivs -o /tmp/ivs.log -noshm -forever -shared
+
+#(start again if italc kill it ??)
+#while [ 1 ] ; do
+# killall -9 ivs >/dev/null 2>&1
+# sleep 1
+# DISPLAY=:0 ivs -o /tmp/ivs.log -noshm -forever -shared
+# sleep 2
+#done
+exit 0
+EOF
+  chmod +x $DESTDIR/sbin/startivs
+  stat_after "iTALC"
+ fi
+fi #end of TCOS_ITALC
+

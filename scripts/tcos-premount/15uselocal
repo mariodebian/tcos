@@ -1,0 +1,116 @@
+#!/bin/sh
+# 
+
+PREREQ="10fstab"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+quiet=n
+
+. /scripts/functions
+
+# if break=uselocal STOP here
+maybe_break uselocal
+
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+mkdir -p /mnt/tmp >/dev/null 2>&1
+
+# DOCUMENTME uselocal | enable use of local disks
+uselocal=$(read_cmdline_var "uselocal" "0")
+if [ ${uselocal} = 0 ]; then
+  _log "USELOCAL uselocal not enabled from cmdline"
+  exit 0
+fi
+
+
+# try to mount any part in /mnt/tmp
+#########################################
+ext3_parts_num=$(grep ^/dev /etc/fstab|grep -c ext3)
+ext3_parts_devs=$(grep ^/dev /etc/fstab|grep ext3 | awk '{print $1}')
+
+vfat_parts_num=$(grep ^/dev /etc/fstab|grep -c vfat)
+vfat_parts_devs=$(grep ^/dev /etc/fstab|grep vfat | awk '{print $1}')
+
+need_free_space=131072
+#########################################
+
+
+
+
+if [ ${ext3_parts_num} != 0 ]; then
+log_begin_msg "Try to use some ext3 parts"
+ for ext3 in ${ext3_parts_devs}; do
+   mount -t ext3 -o rw ${ext3} /mnt/tmp >> /tmp/initramfs.debug 2>&1
+   sync
+   sleep 1
+   if [ $(grep -c ${ext3} /proc/mounts) != 1 ]; then
+   _log "USELOCAL ${ext3} not mounted, next..."
+   # not mounted
+   else
+     _log "USELOCAL ${ext3} mounted, check free space"
+     free_space=$(df ${ext3}| grep ^/dev| awk '{print $4}')
+     # check if free space > 64 Mb
+     if [ ${free_space} -ge ${need_free_space} ] ; then
+        _log "USELOCAL have more than ${need_free_space} in ${ext3}"
+        log_end_msg
+        exit 0
+     else
+       _log "USELOCAL no free space in ${ext3}"
+       umount ${ext3}
+     fi
+     
+   fi
+ done
+# if here no ext3 part
+log_end_msg 1
+fi
+
+
+if [ ${vfat_parts_num} != 0 ]; then
+log_begin_msg "Try to use some vfat parts"
+ for vfat in ${vfat_parts_devs}; do
+   mount -t vfat -o rw ${vfat} /mnt/tmp >> /tmp/initramfs.debug 2>&1
+   sync
+   sleep 1
+   if [ $(grep -c ${vfat} /proc/mounts) != 1 ]; then
+   _log "USELOCAL ${vfat} not mounted, next..."
+   # not mounted
+   else
+     _log "USELOCAL ${vfat} mounted, check free space"
+     free_space=$(df ${vfat}| grep ^/dev| awk '{print $4}')
+     # check if free space > 64 Mb
+     if [ ${free_space} -ge ${need_free_space} ] ; then
+        _log "USELOCAL have more than ${need_free_space} in ${vfat}"
+        log_end_msg
+        exit 0
+     else
+       _log "USELOCAL no free space in ${vfat}"
+       umount ${ext3}
+     fi
+     
+   fi
+ done
+# if here no vfat part
+log_end_msg 1
+fi
+
+log_begin_msg "NO parts avalaible (ext3 or fat)"
+log_end_msg
+
+update_progress
+exit 0

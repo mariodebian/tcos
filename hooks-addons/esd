@@ -1,0 +1,39 @@
+# hooks addon SOUND support
+# need esound
+
+
+if [ $TCOS_SOUND -a ! $TCOS_PULSEAUDIO ]; then
+sound_error=0
+esound=$(dpkg -l esound|grep -c ^ii)
+if [ ${esound} != 1 ]; then
+        echo "WARNING:"
+        echo ""
+        echo "esound not installed, install esound to have thin client sound server"
+        echo "   => apt-get install esound"
+        echo ""
+	sound_error=1
+fi
+
+if [ ${sound_error} = 0 ]; then
+stat_before
+
+ cpifexists $(pathof esd) /usr/bin/
+ mkdir -p $DESTDIR/etc/esound
+
+
+ # esound libs
+ cpifexists /lib/libc.so.6          /lib/
+ cpifexists /lib/libpthread.so.0    /lib/
+ cpifexists /lib/libnsl.so.1        /lib/
+
+ cpifexists /lib/libnss_nis.so.2    /lib/
+ cpifexists /lib/libnss_files.so.2  /lib/
+ cpifexists /lib/libnss_compat.so.2 /lib/
+ cpifexists /lib/libm.so.6          /lib/
+ cpifexists /lib/libdl.so.2         /lib/
+
+ stat_after "ESound Daemon (sound server)"
+fi # end of sound_error
+unset sound_error
+
+fi # end of TCOS_SOUND

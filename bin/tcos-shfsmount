@@ -1,0 +1,28 @@
+#!/bin/sh
+# mount remote devices of thin client
+
+. /etc/tcos/initramfs.conf
+. ${TCOS_DIR}/shfscommon.sh
+
+if [ $(is_remote) = 1 ]; then
+  echo "Not remote connection"
+  exit 0
+fi
+
+if [ $(is_mounted) = 0 ]; then
+  echo "${mountpoint} is mounted!!!"
+  exit 0
+fi
+
+# create mountpoint
+mkdir -p ${mountpoint}
+chown $USERNAME:$USERNAME ${mountpoint}
+chmod 700 ${mountpoint}
+
+# mount it
+shfsmount shfs@${myremoteip}:/media/autofs ${mountpoint}
+
+
+
+exit 0
+
