@@ -2,7 +2,7 @@
 
 if [ -e $DESTDIR/scripts/init-top/usplash ]; then
 
-  _echo "Applying usplash timeout patch"
+  _echo "   * Applying usplash timeout patch"
 
 cat << EOF >> $DESTDIR/scripts/init-top/usplash
 
@@ -18,6 +18,6 @@ EOF
 
 else 
 
-  _echo "Usplash not found, timeout path not applied."
+  _echo "   * Usplash not found, timeout path not applied."
 
 fi
