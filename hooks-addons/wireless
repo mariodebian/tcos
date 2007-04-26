@@ -15,7 +15,7 @@ if [ $TCOS_WIRELESS ]; then
 
   # copy udev firmware agent
   mkdir -p $DESTDIR/lib/udev
-  cpifexists /lib/udev/firmware.agent /lib/udev/
+  cp -ra /lib/udev/firmware* $DESTDIR/lib/udev/
 
   mkdir -p $DESTDIR/lib/firmware
 
@@ -49,6 +49,50 @@ if [ $TCOS_WIRELESS ]; then
     fi
 
   done
+
+   if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
+      _echo "   using WEP, do something? "
+   fi
+
+   if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then
+      cpifexists /sbin/wpa_action      /sbin/
+      cpifexists /sbin/wpa_cli         /sbin/
+      cpifexists /sbin/wpa_supplicant  /sbin/
+      copydir /etc/wpa_supplicant      /etc/
+cat << EOF > $DESTDIR/sbin/start-wpa.sh
+#!/bin/sh
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+TCOS_NET_WIFI_ESSID=\$(read_cmdline_var "essid" "")
+
+TCOS_WIRELESS_DEV=\$1
+if [ "\$TCOS_WIRELESS_DEV" = "" ]; then
+   echo "Error, need a wirless network device name"
+   echo " example: \$0 ath0"
+   echo " example: \$0 wlan0"
+fi
+
+WPA_CONF=\$(echo /etc/wpa_supplicant/*conf)
+if [ "\$WPA_CONF" = "" ]; then
+   echo "Error: need a wpa conf file..."
+   echo "Generating it..."
+   echo ""
+   echo "Please enter the (plain) WPA passphrase of \${TCOS_NET_WIFI_ESSID} network"
+   wpa_passphrase "\${TCOS_NET_WIFI_ESSID}" > /etc/wpa_supplicant/wpa.conf
+   WPA_CONF=/etc/wpa_supplicant/wpa.conf
+fi
+
+PID=/var/run/wpa_supplicant.\${TCOS_WIRELESS_DEV}.pid
+WPA_RUN=/var/run/wpa_supplicant
+
+wpa_supplicant -B -P \$PID -i \${TCOS_WIRELESS_DEV} -D wext -c \${WPA_CONF} -C \${WPA_RUN}
+
+EOF
+     chmod +x $DESTDIR/sbin/start-wpa.sh
+   fi
 
  stat_after "Wireless support"
 fi

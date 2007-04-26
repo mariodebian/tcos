@@ -95,9 +95,14 @@ log_begin_msg "Setup network interface $TCOS_NET_ACTIVE"
     # scan wireless
     log_progress_msg "Scanning wireless networks"
     iwlist $TCOS_NET_ACTIVE scan | grep ESSID | awk -F ":" '{print $2}' | sed s/\"//g
+
     # associate if ap cmdline var is set
     if [ "$TCOS_NET_WIFI_ESSID" != "" ]; then
-       # FIXME support encription WEP or WPA
+       if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then
+           log_progress_msg "Wireless WPA mode"
+           /sbin/start-wpa.sh "${TCOS_NET_ACTIVE}"
+       fi
+       
        log_progress_msg "Wireless associating with $TCOS_NET_WIFI_ESSID"
        iwconfig $TCOS_NET_ACTIVE essid "$TCOS_NET_WIFI_ESSID"
     else
