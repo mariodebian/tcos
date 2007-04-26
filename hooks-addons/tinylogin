@@ -17,6 +17,10 @@ else
  stat_before
  cpifexists /usr/lib/tinylogin/bin/tinylogin /bin/
  # not copy nothing more create links in ldconfig...
+ 
+ cpifexists /etc/securetty /etc
+ # /etc/issue is created in hooks-addons/tcos
+
  stat_after "tinylogin"
 
 fi

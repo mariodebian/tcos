@@ -25,9 +25,9 @@ done
 start_usplash() {
   if [ -x /sbin/usplash ]; then
         /sbin/usplash -c &
-        #/sbin/usplash_write "TEXT Resetting the usplash timeout..."
-        /sbin/usplash_write "TIMEOUT 15"
-        #/sbin/usplash_write "SUCCESS ok"
+        /sbin/usplash_write "TEXT Usplash timeout..."
+        /sbin/usplash_write "TIMEOUT 180"
+        /sbin/usplash_write "SUCCESS ok"
   fi
 }
 
@@ -48,7 +48,7 @@ kill_xorg() {
 
 kill_all() {
   # FIXME better scan ps output
-  process="ltspfsd automount esd ivs dhclient dropbear"
+  process="ltspfsd pulseaudio ivs dhclient dropbear"
   for proc in ${process}; do
      log_begin_msg "Stopping ${proc}"
        killall $proc >  /dev/null 2>&1
@@ -67,8 +67,6 @@ kill_all() {
 umount_swap() {
  log_begin_msg "Disable swap"
  swapoff -a
- #swap=$(cat /proc/swaps |grep -v ^Filename| awk '{print $1}')
- #swapoff ${swap}
  log_end_msg
  update_progress "-5"
 }
@@ -181,14 +179,12 @@ update_progress() {
   fi
   # /tmp/progress is created in scripts/tcos-top/10foo with value=5
   old=$(cat /tmp/progress)
-  #old=$(grep PROGRESS_STATE /dev/.initramfs/progress_state | awk -F "=" '{print $2}')
   new=$((${old}+${sum}))
   if [ -x /sbin/usplash_write ]; then
     /sbin/usplash_write "PROGRESS ${new}"
     _log "updating progress to ${new} %"
     echo ${new} > /tmp/progress
   fi
-  #sed -i "/PROGRESS_STATE"/s/"${old}"/"${new}"/g  /dev/.initramfs/progress_state
 }
 
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 
-PREREQ="01busybox 02check_ram 05network"
+PREREQ=""
 
 prereqs()
 {

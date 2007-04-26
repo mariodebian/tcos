@@ -47,9 +47,6 @@ cp $CONFDIR/tcos.conf                $DESTDIR/conf/
 mkdir -p $DESTDIR/lib/lsb/
 cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
 
-# don't change this !! boot=tcos-nfs don't exists
-#sed -i s/^BOOT=tcos/BOOT=tcos-nfs/g ${DESTDIR}/conf/initramfs.conf
-
 # usplash support
 mkdir -p $DESTDIR/usr/lib/usplash/
 cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1

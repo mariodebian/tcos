@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 
-PREREQ="01download_settings 05inittcos 10ldconfig 20autofs 30devices 40initsound"
+PREREQ=""
 
 prereqs()
 {

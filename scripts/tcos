@@ -2,6 +2,8 @@
 # (Thin Client Operating System)live filesystem mounting
 # 
 
+verbose=y
+
 # Parameter: Where to mount the filesystem
 mountroot ()
 {
@@ -14,13 +16,15 @@ mountroot ()
     if [ "$(cat /tmp/less_ram)" = "0" ]; then
 	    # Find and mount the Image
 	    maybe_break tcos-premount
+	    
 	    #log_begin_msg "Running /scripts/tcos-premount"
 	    run_scripts /scripts/tcos-premount
 	    #log_end_msg
         
 	    maybe_break tcos-bottom
+	    
 	    #log_begin_msg "Running /scripts/tcos-bottom"
 	    run_scripts /scripts/tcos-bottom
 	    #log_end_msg
-	fi
+   fi
 }

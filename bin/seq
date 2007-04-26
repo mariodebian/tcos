@@ -1,0 +1,21 @@
+#!/bin/sh
+
+
+MAX=$1
+NUM=1
+
+if [ "$MAX" = "" ]; then
+   echo "Usage:"
+   echo "      seq NUMBER"
+   exit 1
+fi
+
+if [ $MAX -gt 100 ] || [ $MAX -lt 1 ]; then
+  echo "ERROR: 100 is max number to seq and 1 min"
+  exit 1
+fi
+
+while [ $NUM -le $MAX ]; do
+  echo $NUM
+  NUM=$((NUM +1))
+done

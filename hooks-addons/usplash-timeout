@@ -1,0 +1,23 @@
+# Add timeout un usplash startup script
+
+if [ -e $DESTDIR/scripts/init-top/usplash ]; then
+
+  _echo "Applying usplash timeout patch"
+
+cat << EOF >> $DESTDIR/scripts/init-top/usplash
+
+
+if [ "\$SPLASH" = "true" ]; then
+   usplash_write "TEXT Preparing to boot..."
+   usplash_write "TIMEOUT 180"
+   usplash_write "SUCCESS ok"
+fi
+
+
+EOF
+
+else 
+
+  _echo "Usplash not found, timeout path not applied."
+
+fi

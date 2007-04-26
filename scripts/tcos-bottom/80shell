@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 
-PREREQ="01download_settings 05inittcos 10ldconfig 20autofs 30devices 40initsound 50freespace 60installer 70startx"
+PREREQ=""
 
 prereqs()
 {
@@ -18,20 +18,39 @@ esac
 
 quiet=n
 
+. /conf/tcos.conf
 . /scripts/functions
 . /conf/tcos-run-functions
 
+TCOS_TTY=$(read_cmdline_var "ttys" "${TCOS_TTY}")
 
+export PS1="($(hostname)@$(whoami)) # "
 
 clear
-echo ""
-echo ""  
-echo "Press enter to activate this console..."
-read enter
-export PS1="($(hostname)-$(whoami)) # "
+
+
+while [ ${TCOS_TTY} -ge 1 ]; do
+   if [ ${TCOS_TTY} = 1 ] ; then
+     if [ "${TCOS_TTY1_PROTECTED}" = "1" ]; then
+         getty 38400 tty${TCOS_TTY}
+       else     
+         echo ""
+         echo ""  
+         echo "Press enter to activate this console..."
+         read enter
+         sh
+     fi
+   else
+     getty 38400 tty${TCOS_TTY} &
+   fi
+
+   TCOS_TTY=$((TCOS_TTY -1))
+done
+
+
+
+
+
+
 sh
-
-
-
-
 exit 0

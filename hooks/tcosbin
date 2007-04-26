@@ -49,11 +49,12 @@ cp $CONFDIR/tcos.conf                $DESTDIR/conf/
 dns1=$(grep nameserver /etc/resolv.conf | head -1 | awk '{print $2}')
 echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
 
+#[ -d $DESTDIR/sys ]  || mkdir $DESTDIR/sys
+#[ -d $DESTDIR/proc ] || mkdir $DESTDIR/proc
+#[ -d $DESTDIR/tmp ]  || mkdir $DESTDIR/tmp
+
 [ -d $DESTDIR/dev ]  || mkdir -m 0755 $DESTDIR/dev
 [ -d $DESTDIR/root ] || mkdir --mode=0700 $DESTDIR/root
-[ -d $DESTDIR/sys ]  || mkdir $DESTDIR/sys
-[ -d $DESTDIR/proc ] || mkdir $DESTDIR/proc
-[ -d $DESTDIR/tmp ]  || mkdir $DESTDIR/tmp
 [ -d $DESTDIR/ram ]  || mkdir $DESTDIR/ram
 [ -d $DESTDIR/nfs ]  || mkdir $DESTDIR/nfs
 
@@ -62,6 +63,10 @@ mkdir -p $DESTDIR/usr/sbin
 mkdir -p $DESTDIR/lib/lsb/
 cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
 cpifexists /etc/debian_version  /etc/
+
+# seq script
+cpifexists ${TCOS_BINS}/seq /bin
+
 
 # needed for swap creation
 cpifexists /sbin/mkswap /sbin/

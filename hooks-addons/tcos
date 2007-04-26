@@ -22,3 +22,8 @@ echo "# some environment vars" >> ${DESTDIR}/conf/tcos.conf
 echo "export XAUTHORITY=/root/.Xauthority" >> ${DESTDIR}/conf/tcos.conf
 echo "export HOME=/root" >> ${DESTDIR}/conf/tcos.conf
 echo "export DISPLAY=:0" >> ${DESTDIR}/conf/tcos.conf
+
+cat << EOF > $DESTDIR/etc/issue
+TCOS $tcos_version \n \l
+
+EOF

@@ -22,8 +22,12 @@ Description: TCOS is a new thin client implementation
 
 Package: initramfs-tools-tcos
 Architecture: any
-Depends: initramfs-tools (>= 0.40), syslinux, dhcp-client | dhcp3-client, console-data, libnss-db, iftop, strace, twm, xterm, dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, debootstrap, libltdl3
-Suggests: unionfs-modules-2.6.16-2-486, squashfs-modules-2.6.16-2-486, tinylogin
+Depends: initramfs-tools (>= 0.40), syslinux, dhcp-client | dhcp3-client, 
+         console-data, libnss-db, iftop, strace, twm, xterm, dosfstools, 
+         netkit-inetd | inetutils-inetd | openbsd-inetd, 
+         debootstrap, libltdl3, tinylogin, ltspfs-client
+Conflicts: tcos-tcosmonitor (<= 0.0.17)
+Suggests: unionfs-modules, squashfs-modules
 Description: tools for generating a thin client bootable image
  This package contains tools to create and boot an initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
@@ -43,8 +47,10 @@ Description: usplash boot image for TCOS
 
 Package: gentcos
 Architecture: any
-Depends: debconf, grub, syslinux, initramfs-tools-tcos (>= 0.48), squashfs-tools, mknbi, dropbear
-Recommends: autofs, discover, ltspfs-client, ltspfs-server, esound, alsa-utils, links2, dillo
+Depends: debconf, grub, syslinux, initramfs-tools-tcos (>= 0.48), 
+         squashfs-tools, mknbi, dropbear
+Recommends: autofs, discover, ltspfs-client, ltspfs-server, esound, 
+            alsa-utils, links2, dillo, pulseaudio, pulseaudio-utils
 Description: TCOS generation system.
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
@@ -54,7 +60,7 @@ Description: TCOS generation system.
 
 Package: tcos-server-utils
 Architecture: any
-Depends: shfs-utils, python-configobj, initramfs-tools-tcos (>= 0.48), ltspfs-server
+Depends: shfs-utils, python, python-configobj, initramfs-tools-tcos (>= 0.48), ltspfs-server, fuse-utils
 Description: TCOS server utils
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot

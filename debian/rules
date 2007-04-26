@@ -62,6 +62,10 @@ install: build
 	# clean SVN dirs in package
 	for i in `find debian/tmp -type d -name .svn`; do rm -rf $$i; done
 
+	mkdir -p $(CURDIR)/debian/gentcos/usr/share/lintian/overrides/
+	install -m 644 $(CURDIR)/debian/gentcos.lintian-overrides \
+		$(CURDIR)/debian/gentcos/usr/share/lintian/overrides/gentcos
+
 
 
 # Build architecture-independent files here.

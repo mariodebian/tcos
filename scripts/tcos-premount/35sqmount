@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 
-PREREQ="15uselocal 20swapon 25download_settings 30rootfs"
+PREREQ=""
 
 prereqs()
 {

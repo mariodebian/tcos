@@ -8,6 +8,7 @@ all:
 	cd debootstrap && make
 	cd discover    && make
 	cd opengl      && make
+	cd hex2ascii   && make
 
 include common.mk
 
@@ -18,6 +19,7 @@ clean:
 	rm -f build-stamp configure-stamp
 	cd usplash && make clean
 	cd debootstrap && make clean
+	cd hex2ascii   && make clean
 
 gedit:
 	gedit-cvs $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
@@ -105,7 +107,8 @@ install:
 	install -m 755 bin/tcos-gdm-autologin $(DESTDIR)/usr/sbin/tcos-gdm-autologin
 
 	install -m 755 bin/configurexorg $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 bin/installer.sh $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/seq           $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/installer.sh  $(DESTDIR)/$(TCOS_BINS)/
 
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 
@@ -117,6 +120,7 @@ install:
 	cd debootstrap && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd discover    && make install DESTDIR=$(DESTDIR)
 	cd opengl      && make install DESTDIR=$(DESTDIR)
+	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
 
 
 targz: clean
@@ -132,7 +136,7 @@ targz: clean
 	rm -rf ../initramfs-tools-tcos-$(VERSION)
 
 tcos: clean
-	rm -f ../initramfs ../usr.squashfs ../tcos_*deb ../gentcos*deb ../initramfs-tools-tcos*deb ../tcos-server-utils*deb ../tcos-usplash*deb
+	rm -f ../tcos_*deb ../gentcos*deb ../initramfs-tools-tcos*deb ../tcos_*deb ../tcos-server-utils*deb ../tcos-usplash*deb
 	debuild -us -uc; true
 	sudo dpkg -i ../initramfs-tools-tcos*deb ../gentcos*deb ../tcos-server-utils*deb ../tcos-usplash*deb ../tcos_*deb
 

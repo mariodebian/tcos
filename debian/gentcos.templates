@@ -21,7 +21,7 @@ Description-es.UTF-8: Paquetes no instalados en TCOS.
  sino están instalados perderá algunas características del sistema TCOS.
  Esta es una lista de algunos paquetes interesantes:
   
-  * ltspfs-client y autofs: proporcionan soporte de automontaje de dispositivos
+  * ltspfs-client, fuse: proporcionan soporte de automontaje de dispositivos
   * dropbear: arranca un servidor SSH ligero en el terminal
   * esound and alsa-utils: proporciona soporte de sonido
   * discover: carga módulos de hardware del terminal
