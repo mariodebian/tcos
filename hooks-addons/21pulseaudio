@@ -82,7 +82,7 @@ else
 # generate conf
 rm -f /etc/pulse/default.pa
 
-if [ "\$(pidof esd)" != "0" ]; then
+if [ "\$(pidof esd)" != "" ]; then
 cat << FIN > /etc/pulse/default.pa
 #!/usr/bin/pulseaudio -nF
 

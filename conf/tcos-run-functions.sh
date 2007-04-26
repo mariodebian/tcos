@@ -20,7 +20,21 @@ while [ ! -$2 $1 ]; do
 done
 }
 
-
+run_times() {
+# $1 number of times to try exec
+# $2 command
+# $3 is output
+#
+# example:
+#     run_times 3 "Xorg -query tcos_server" "/dev/null"
+#
+times=1
+while [ $times -le $1 ]; do
+  ($2 > $3 2>&1)
+  times=$((times+1))
+  sleep 1
+done
+}
 
 start_usplash() {
   if [ -x /sbin/usplash ]; then

@@ -181,6 +181,7 @@ else
        fi
 
     fi
+    cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
     cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
     cpifexists /usr/lib/libGL.so.1  /usr/lib/
     cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
@@ -263,14 +264,14 @@ if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-Xorg \${TCOS_XORG_OPTS} >> /tmp/initramfs.debug 2>&1 &
+Xorg \${TCOS_XORG_OPTS} > /dev/null 2>&1 & 
 
 
-#BACKCOLOR="#76848F"
-#xsetroot -cursor_name left_ptr -solid "\$BACKCOLOR"
-#exec sessreg -a -w /var/log/wtmp -u /var/run/utmp -x "/var/lib/gdm/:0.Xservers" -h "" -l ":0" "root"
 xterm  >> /tmp/initramfs.debug 2>&1 &
 twm  >> /tmp/initramfs.debug 2>&1 &
+
+# set background color
+xsetroot -cursor_name left_ptr -solid "#338899"
 
 EOF
 chmod +x $DESTDIR/sbin/startlocalx
@@ -292,10 +293,18 @@ if [ -f $\XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-Xorg \${TCOS_XORG_OPTS} >> /tmp/initramfs.debug 2>&1 &
-twm  >> /tmp/initramfs.debug 2>&1 &
-xterm  >> /tmp/initramfs.debug 2>&1 &
-/usr/NX/bin/nxclient  >> /tmp/initramfs.debug 2>&1 &
+Xorg \${TCOS_XORG_OPTS} > /dev/null 2>&1 &
+
+# no window manager for freenx
+#twm  >> /tmp/initramfs.debug 2>&1 &
+
+sleep 2
+# set background color
+xsetroot -cursor_name left_ptr -solid "#338899"
+
+/usr/NX/bin/nxclient  >> /tmp/initramfs.debug 2>&1
+xterm
+
 EOF
 chmod +x $DESTDIR/sbin/startnx
 
@@ -310,9 +319,26 @@ if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-while [ 1 ]; do
- Xorg \${TCOS_XORG_OPTS} -query \${SERVER}  >> /tmp/initramfs.debug 2>&1
-done
+
+run_times 3 "Xorg \${TCOS_XORG_OPTS} -query \${SERVER}" "/dev/null"
+
+echo ""
+echo "Error launching Xorg, check /var/log/Xorg.0.log for errors"
+echo ""
+
+#echo 1 > /tmp/xorg.times
+#
+#while [ 1 ]; do
+# times=\$(cat /tmp/xorg.times)
+# if [ \$times -gt 3 ]; then
+#   echo ""
+#   echo "Error launching Xorg, check /var/log/Xorg.0.log for errors"
+#   echo ""
+#   exit 1
+# fi
+# times=\$((times +1))
+# echo \$times > /tmp/xorg.times
+#done
 EOF
 chmod +x $DESTDIR/sbin/startremotex
 

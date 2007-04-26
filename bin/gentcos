@@ -391,6 +391,9 @@ for _module in ${NEED_MODULES}; do
       echo "   # apt-get install module-assistant linux-headers-${TCOS_KERNEL} ${_module}-source"
       echo "   # m-a -k /usr/src/linux-headers-${TCOS_KERNEL} a-i ${_module}"
       echo ""
+      echo "   You can install ${_module}-modules-${TCOS_KERNEL} if package exists."
+
+      echo ""
       echo "NOTE: You can change kernel version in ${TCOS_CONF}/tcos.conf file"
       _exit 1
    fi
@@ -486,14 +489,16 @@ fi
 if [ "${TCOS_INST_PKG}" != "" ]; then
   echo "Install PKG \"$TCOS_INST_PKG\""
   for PKG in ${TCOS_INST_PKG}; do
-    PKG_URI=$(apt-get install --reinstall -y --print-uris ${PKG} | tail -1 | awk '{print $1}' | sed s/"'"//g)
+    #PKG_URI=$(apt-get install --reinstall -y --print-uris ${PKG} | tail -1 | awk '{print $1}' | sed s/"'"//g)
+    PKG_URI=$(apt-get install -qq --print-uris --reinstall ${PKG}| egrep 'file|http|ftp' | awk '{print $1}'| tr -d "'")
+
     PKG_PROTOCOL=$(echo ${PKG_URI} | awk -F ":" '{print $1}')
     if [ "${PKG_PROTOCOL}" = "http" ] || [ "${PKG_PROTOCOL}" = "ftp" ]; then
       PKG_FILE=/tmp/$(basename $PKG_URI)
       _echo "  * Downloading ${PKG_URI}"
       wget -q "${PKG_URI}" -O ${PKG_FILE}
     elif [ "${PKG_PROTOCOL}" = "file" ]; then
-      PKG_FILE=$(echo ${PKG_URI} | sed s/"file:\/"//g )
+      PKG_FILE=$(echo ${PKG_URI} | sed s/"file:"//g )
       echo "Using file:// protocol, package is in ${PKG_FILE} "
     else
       echo "Unknow PKG_URI=${PKG_URI} protocol: ${PKG_PROTOCOL} "

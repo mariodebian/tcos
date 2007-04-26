@@ -9,6 +9,7 @@ touch ${mysettings}
 restartxorg=0
 autodetect_xdriver=1
 force_xdriver=0
+xdriver_via="#"
 
 . /conf/tcos.conf
 . /conf/tcos-run-functions
@@ -34,6 +35,7 @@ tftp_download_again() {
   MYIP=$(ifconfig eth0| awk '/inet addr/ {split ($2,A,":"); print A[2]}')
   debug "downloading file /tcos/conf/${MYIP}.conf"
   download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf
+  . /conf/mysettings.conf
 }
 
 
@@ -112,6 +114,7 @@ cmdline=$@
 get_myconf() {
 # $1 is var name
 # $2 is default value
+debug "get_myconf() \$1=$1 \$2=\$2"
 varname=$1
 defvalue=$2
  value=$(grep ^${varname} ${mysettings} | awk -F "=" '{gsub(/\"/,"",$2); print $2}' )
@@ -141,7 +144,9 @@ get_mybool() {
 }
 
 detect_driver() {
+debug "detect_driver()"
 if [ $force_xdriver = 1 ]; then
+  debug "detect_driver() force OFF"
   return
 fi
 
@@ -424,15 +429,19 @@ if [ "$xdriver" != "auto" ]; then
   autodetect_xdriver=0
 fi
 
-if [ "$xdriver" = "auto" -o $autodetect_xdriver = 1 ]; then
+if [ "$xdriver" = "auto" ] || [ $autodetect_xdriver = 1 ]; then
    detect_driver
    if [ "$xdriver" = "auto" ]; then
       xdriver="vesa"
    fi
 fi
 
+if [ "$xdriver" = "via" ]; then
+  xdriver_via=""
+fi
 
-if [ "${xdontzap}" = "0" -o "$xdontzap" = "#" ]; then
+
+if [ "${xdontzap}" = "0" ] || [ "$xdontzap" = "#" ]; then
   # enable Ctrl Alt <===
   xzap="#"
 elif [ "$xdontzap" = "1" -o "$xdontzap" = "" ]; then
@@ -452,6 +461,7 @@ debug "date=$stamp server=$SERVER xdontzap=$xdontzap dontzap=$xzap"
 # sed template to output file
 sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xres__"/"${xres}"/g \
+    -e s/"__xdriver_via__"/"${xdriver_via}"/g \
     -e s/"__xdepth__"/"${xdepth}"/g \
     -e s/"__xdpms__"/"${xdpms}"/g \
     -e s/"__xhorizsync__"/"${xhorizsync}"/g \

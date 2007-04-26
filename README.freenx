@@ -1,0 +1,48 @@
+     =========================================
+              FREENX support in TCOS
+     =========================================
+
+
+  If you want to exec FREENX client in TCOS you must do next jobs:
+
+
+  1.- Download FREENX from www.nomachine.com, need 3 files:
+
+   For server:
+     nxnode_2.1.0-15_i386.deb
+     nxserver_2.1.0-18_i386.deb (free version)
+
+   For clients:
+     nxclient_2.1.0-17_i386.deb
+     nxclient-2.1.0-17.i386.tar.gz
+
+   (version number can change in future)
+
+  2.- Install FREENX server packages.
+
+  3.- Prepare squashfs image for TCOS:
+
+        # mkdir /tmp/freenx
+        # tar -zxf nxclient-2.1.0-17.i386.tar.gz -C /tmp/freenx
+        # ( cd /tmp/freenx/NX && mksquashfs . ../nxclient.squashfs )
+
+     Move nxclient.squashfs to /var/lib/tcos/tftp/
+
+        # mv /tmp/freenx/nxclient.squashfs /var/lib/tcos/tftp/
+
+       IMPORTANT: ( make sure that file rights are 644 )
+
+  4.- Rebuild TCOS images with TCOS_FREENX_SQUASHFS=1
+
+  5.- Append this to thin client cmdline:
+
+           freenx=nxclient.squashfs
+
+  6.- Optionally you can create this files:
+
+      nxclient.cfg
+      server.nxs
+
+      And put into /var/lib/tcos/tftp/
+
+      (this files are the nxclient config and one server config)

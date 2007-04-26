@@ -1,0 +1,77 @@
+# hook addon for EPATEC eTC3800
+
+
+if [ $TCOS_ETC3800 ] && [ -f /var/lib/dpkg/info/openchrome.list ] ; then
+stat_before
+ 
+ manual_add_modules drm
+ manual_add_modules via-agp
+ manual_add_modules via
+
+ cpifexists /usr/lib/libviaXvMC.so /usr/lib
+ cpifexists /usr/lib/libviaXvMCPro.so /usr/lib
+
+ mkdir -p ${DESTDIR}/usr/lib/dri
+ cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
+
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/30etc3800
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+PATH=\$PATH:/usr/bin:/usr/sbin
+export PATH
+
+quiet=n
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# check if we are in etc3800 machine
+test1=0
+test1=\$(grep -c "VIA Nehemiah" /proc/cpuinfo)
+
+test2=0
+test2=\$(lspci|grep -c CLE266)
+
+if [ "\$test1" = "0" ] || [ "\$test2" = "0" ] ; then
+   # not in eTC3800
+   exit 0
+fi
+
+log_begin_msg "Loading eTC 3800 modules"
+
+  modprobe drm
+  modprobe via
+
+  configurexorg --newsettings --xdriver=via --outputfile=/etc/X11/xorg.conf
+
+log_end_msg
+
+EOF
+  chmod +x ${DESTDIR}/scripts/tcos-bottom/30etc3800
+
+stat_after "eTC3800 drivers support"
+
+elif [ $TCOS_ETC3800 ] && [ ! -f /var/lib/dpkg/info/openchrome.list ] ; then
+  echo ""
+  echo "   WARNING: EPATEC 3800 enabled but don't have installed openchrome package"
+  echo ""
+  echo "            Please install openchrome VIA drivers package"
+  echo ""
+fi

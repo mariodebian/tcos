@@ -3,8 +3,11 @@ initramfs-tools-tcos (0.67) unstable; urgency=low
   * gentcos depends atftpd | tftpd-hpa and dhcp3-server
   * hooks-addons/*xorg:
     - fix Xorg path search
+  * Do some job in freenx support ( gentcos::README.freenx)
+  * Make an special computer hook (EPATEC eTC3800 force load via driver)
+  * Add acpi button daemon event.
 
- --  <mario@soleup.eup.uva.es>  Fri,  9 Mar 2007 16:41:19 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 11 Mar 2007 17:20:24 +0100
 
 initramfs-tools-tcos (0.66) unstable; urgency=low
 

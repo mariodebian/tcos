@@ -70,3 +70,77 @@ if [ ${TCOS_FREENX} ]; then
  stat_after "FreeNX"
 fi # end of TCOS_FREENX
 
+
+
+if [ ${TCOS_FREENX_SQUASHFS} ]; then
+ stat_before
+
+ cat << EOF > ${DESTDIR}/scripts/tcos-premount/60freenx
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+quiet=n
+
+PATH=\$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+TCOS_FREENX_SQUASHFS_FILE=\$(read_cmdline_var "freenx" "")
+
+if [ "\$TCOS_FREENX_SQUASHFS_FILE" = "" ]; then
+  exit 0
+fi
+
+# load modules
+modprobe -q loop >> /tmp/initramfs.debug 2>&1
+modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
+modprobe -q unionfs >> /tmp/initramfs.debug 2>&1
+
+log_begin_msg "Downloading FREENX squashfs"
+  download_file /tcos/\${TCOS_FREENX_SQUASHFS_FILE} /mnt/tmp/nxclient.squashfs
+  sync
+  sleep 1
+log_end_msg
+
+# Mount squashfs filesystems
+log_begin_msg "Mounting FREENX filesystem"
+ mkdir -p /usr/NX
+ mount -r -o loop -t squashfs /mnt/tmp/\${TCOS_FREENX_SQUASHFS_FILE} /usr/NX >> /tmp/initramfs.debug 2>&1
+log_end_msg $?
+
+# download settings
+mkdir -p /root/.nx/config
+download_file /tcos/nxclient.cfg /root/.nx/config/nxclient.cfg
+download_file /tcos/servidor.nxs /root/.nx/config/servidor.nxs
+
+
+echo "TCOS_XORG_TYPE=\"F\"" >> /conf/tcos.conf
+
+EOF
+
+chmod +x ${DESTDIR}/scripts/tcos-premount/60freenx
+
+
+ # needed libs (libstdc++2.10-glibc2.2 package)
+ cpifexists /usr/lib/libstdc++-libc6.2-2.so.3 /usr/lib/
+
+ stat_after "FreeNX squashfs"
+fi

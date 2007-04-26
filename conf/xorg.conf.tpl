@@ -88,6 +88,11 @@ EndSection
 Section "Device"
 	Identifier	"Generic Video Card"
 	Driver		"__xdriver__"
+__xdriver_via__        Option          "EnableAGPDMA"
+__xdriver_via__        Option          "DisableIRQ"
+__xdriver_via__        Option          "VBEModes" "true"
+__xdriver_via__        Option          "VBERestore"    "true"
+
 EndSection
 
 Section "Monitor"
@@ -137,3 +142,4 @@ __dontzap__
 #xlocalfonts=__xlocalfonts__
 #xfontserver=__xfontserver__
 #xdontzap=__xdontzap__
+#xdriver_via=__xdriver_via__

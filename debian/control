@@ -17,7 +17,7 @@ Description: new thin client implementation
  TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
  Xorg (6.9 or 7.0) and much more utils.
  .
- Homepage: http://soleup.eup.uva.es/trac
+ Homepage: http://cls-tcos.forja.rediris.es
  
 
 Package: initramfs-tools-tcos
@@ -28,15 +28,15 @@ Depends: initramfs-tools (>= 0.40), syslinux, dhcp-client | dhcp3-client,
          debootstrap, libltdl3, tinylogin, ltspfs-client, ltspfs-server
 Conflicts: tcos-tcosmonitor (<= 0.0.17)
 Suggests: unionfs-modules, squashfs-modules
-Description: tools for generating a thin client bootable image
+Description: tools for generating a thin client bootable image: TCOS
  This package contains tools to create and boot an initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
  unpacks that archive into ram, mounts and uses it as initial root file system.
- From there on the mounting of the real root file system occurs in user space.
- klibc handles the boot-time networking setup. Supports nfs root system.
- Any boot loader with initrd support is able to load an initramfs archive.
+ From there thin client configure some hardware, download extra tools 
+ ( /usr dir ) and connect to remote server ussing XMDCP, SSH -X, FreeNX, 
+ rDesktop...
  .
- Thin client support for initramfs-tools.
+ TCOS Thin client support for initramfs-tools.
 
 Package: tcos-usplash
 Architecture: any
@@ -58,14 +58,18 @@ Description: Image generation scripts, and tftp config for TCOS
  TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
  Xorg (6.9 or 7.0) and much more utils.
  and much more utils.
+ .
+ TCOS Thin client generation system.
 
 Package: tcos-server-utils
 Architecture: any
 Depends: shfs-utils, python, python-configobj, 
          initramfs-tools-tcos (= ${Source-Version}), ltspfs-server, fuse-utils
-Description: TCOS server utils
+Description: TCOS server utils (gdm autologin or sshfs mount)
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminal.
  This package contain some utils (scripts) to mount or connect
  thin client devices with server users.
+ .
+ TCOS Thin client usesfull utils to work with TCOS.

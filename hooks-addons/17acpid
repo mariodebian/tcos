@@ -1,0 +1,51 @@
+# hooks addon of acpid
+
+if [ $TCOS_ACPID ]; then
+ stat_before
+
+ manual_add_modules button
+ cpifexists /usr/sbin/acpid     /usr/sbin/
+
+ mkdir -p ${DESTDIR}/etc/acpi
+ mkdir -p ${DESTDIR}/var/run
+
+cat << EOF > ${DESTDIR}/sbin/startacpid
+#!/bin/sh
+
+modprobe button
+/usr/sbin/acpid -c /etc/acpi 
+EOF
+chmod +x ${DESTDIR}/sbin/startacpid
+
+cat << EOF > ${DESTDIR}/etc/acpi/button_event
+event=button[ /]power
+action=/sbin/poweroff
+EOF
+
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/40acpid
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+PATH=\$PATH:/usr/bin:/usr/sbin
+
+[ -x /sbin/startacpid ] && /sbin/startacpid
+EOF
+chmod +x ${DESTDIR}/scripts/tcos-bottom/40acpid
+
+ stat_after "ACPI daemon"
+
+fi # end of TCOS_ACPID
