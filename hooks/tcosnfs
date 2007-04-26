@@ -51,15 +51,55 @@ cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
 mkdir -p $DESTDIR/usr/lib/usplash/
 cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
 
-egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/passwd > $DESTDIR/etc/passwd
-egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/group > $DESTDIR/etc/group
-egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
+# create /etc/passwd /etc/shadow and /etc/group
+cat << EOF >> $DESTDIR/etc/passwd
+root:x:0:0:root:/root:/bin/sh
+daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+bin:x:2:2:bin:/bin:/bin/sh
+sys:x:3:3:sys:/dev:/bin/sh
+lp:x:7:7:lp:/var/spool/lpd:/bin/sh
+proxy:x:13:13:proxy:/bin:/bin/sh
+nobody:x:65534:65534:nobody:/nonexistent:/bin/sh
+sshd:x:105:65534::/var/run/sshd:/bin/false
+EOF
 
-. ${TCOS_DIR}/hooks-addons/dhclient
-. ${TCOS_DIR}/hooks-addons/hex2ascii
-. ${TCOS_DIR}/hooks-addons/usplash-timeout
-. ${TCOS_DIR}/hooks-addons/wireless
-. ${TCOS_DIR}/hooks-addons/clean_nfs_image
+# default password for root user is "root"
+cat << EOF >> $DESTDIR/etc/shadow
+root:QIO6IpW6SDbVI:13562:0:99999:7:::
+daemon:*:13250:0:99999:7:::
+bin:*:13250:0:99999:7:::
+sys:*:13250:0:99999:7:::
+lp:*:13250:0:99999:7:::
+nobody:*:13250:0:99999:7:::
+sshd:!:13250:0:99999:7:::
+EOF
+
+cat << EOF >> $DESTDIR/etc/group
+root:x:0:
+daemon:x:1:
+bin:x:2:
+sys:x:3:
+adm:x:4:
+tty:x:5:
+disk:x:6:
+lp:x:7:
+kmem:x:15:
+audio:x:29:pulse
+users:x:100:
+ssh:x:109:
+audio:x:29:
+EOF
+
+
+#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/passwd > $DESTDIR/etc/passwd
+#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/group > $DESTDIR/etc/group
+#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
+
+. ${TCOS_DIR}/hooks-addons/01dhclient
+. ${TCOS_DIR}/hooks-addons/02hex2ascii
+. ${TCOS_DIR}/hooks-addons/03wireless
+. ${TCOS_DIR}/hooks-addons/95usplash_timeout
+. ${TCOS_DIR}/hooks-addons/99clean_nfs_image
 
 
 manual_add_modules unionfs

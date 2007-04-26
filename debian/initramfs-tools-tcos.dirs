@@ -8,3 +8,4 @@
 /etc/tcos/scripts/tcos-top
 /etc/tcos/hooks
 /etc/tcos/hooks-addons
+/var/cache/tcos/packages

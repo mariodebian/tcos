@@ -70,17 +70,6 @@ fi
 
 
 
-# check if device is avalaible
-#if [  -e /dev/dsp ] || [ -d /dev/snd/ ]; then
-#  log_begin_msg "Sound device detected, configuring"
-#  log_end_msg
-#else
-#  _log "INITSOUND /dev/dsp or /dev/snd don't exists, need other kernel modules!!!"
-#  log_failure_msg "No soundcard device found"
-#  log_end_msg 1
-#  exit 0
-#fi
-
 
 
 # DOCUMENTME volume=XX% | set master and pcm volume levels to value passed (0%-100% or integer from 1 to 31)
@@ -104,8 +93,10 @@ log_begin_msg "Setting volume to ${TCOS_VOLUME}"
   fi
 log_end_msg
 
-if [ $TCOS_SOUND_OSS ]; then
-  esd -public -tcp -d &
+if [ "${TCOS_SOUND_OSS}" = "1" ]; then
+  log_begin_msg "Init sound server (eSound)"
+  esd -public -tcp -public -noterminate  &
+  log_end_msg
 fi
 
 if [ $TCOS_PULSEAUDIO ]; then
@@ -116,7 +107,7 @@ if [ $TCOS_PULSEAUDIO ]; then
 elif [ ! $TCOS_PULSEAUDIO ] && [ ! $TCOS_SOUND_OSS ]; then
   log_begin_msg "Init sound server (esound)"
     _log "INITSOUND starting esd daemon"
-    esd -tcp -public -d &  >> /tmp/initramfs.debug 2>&1
+    esd -public -tcp -public -noterminate  & >> /tmp/initramfs.debug 2>&1
   log_end_msg
 fi
 

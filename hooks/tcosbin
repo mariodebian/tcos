@@ -188,20 +188,20 @@ fi
 
 
 # load hooks-addons (small files with group of packages inside)
-for addon in $(find ${TCOS_DIR}/hooks-addons/ -type f) ; do
+for addon in $(find ${TCOS_DIR}/hooks-addons/ -type f | grep -v ".svn" | grep -v "dpkg" | sort) ; do
   #_echo "  LOADING: system addon: ${addon}"
   . ${addon}
 done
 
 # load hooks-addons (small files with group of packages inside)
-for addon in $(find ${TCOS_CONF}/hooks-addons/ -type f) ; do
+for addon in $(find ${TCOS_CONF}/hooks-addons/ -type f | grep -v ".svn" | grep -v "dpkg" | sort) ; do
   #_echo "  LOADING: personal addon: ${addon}"
   . ${addon}
 done
 
 
 # read all files in ${TCOS_CONF}/hacking/ and load it ( personal files )
-for hack in $(find ${TCOS_CONF}/hacking/ -type f) ; do 
+for hack in $(find ${TCOS_CONF}/hacking/ -type f | grep -v ".svn" | grep -v "dpkg" | sort) ; do 
   #_echo "  LOADING: hack: ${hack}"
  . ${hack} 
 done
