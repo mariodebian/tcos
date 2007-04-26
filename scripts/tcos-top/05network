@@ -101,7 +101,7 @@ fi
  
     # scan wireless
     log_begin_msg "Scanning wireless networks"
-      iwlist $TCOS_NET_ACTIVE scan | grep ESSID | awk -F ":" '{print $2}' | sed s/\"//g
+      iwlist $TCOS_NET_ACTIVE scan | grep ESSID | awk -F ":" '{print $2}' | sed s/\"//g >> /tmp/initramfs.debug 2>&1
     log_end_msg
 
     # associate if ap cmdline var is set
@@ -152,12 +152,7 @@ fi
 
 
 if [ -n ${TCOS_DEBUG} ]; then
- #log_begin_msg "Configured data is:
- # local-ip=${myip} 
- # server_ip=${dhcpserver}
- # hostname=${hostname}"
   _log "NETWORK data: ip=${myip} server=${dhcpserver} hostname=${hostname}"
- #log_end_msg
 fi
 
 # count number of ":" in hostname string

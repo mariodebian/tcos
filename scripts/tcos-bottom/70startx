@@ -56,21 +56,26 @@ if [ ! -f $XAUTHORITY ]; then
 fi
 
 
-# for man Xserver, section Granting access
-# create auth list (localhost default)
-#cat << EOF > /etc/X0.hosts
-#localhost
-#127.0.0.1
-#EOF
+# read some settings from cmdline
+# DOCUMENTME xdriver=foo | set default X driver (auto, vesa , via, vmware, ...)
+xdriver=$(read_cmdline_var "xdriver" "")
 
-#for host in $TCOS_XORG_XHOSTS; do
-#  echo "$host" >> /etc/X0.hosts
-#done
+# DOCUMENTME xres=bar | set default X resolution (1024x768, 800x600, 640x480, ...)
+xres=$(read_cmdline_var "xres" "")
+
+XORG_CFG_APPEND=""
+if [ "${xdriver}" != "" ]; then
+  XORG_CFG_APPEND="${XORG_CFG_APPEND} --xdriver=${xdriver}"
+fi
+
+if [ "${xres}" != "" ]; then
+  XORG_CFG_APPEND="${XORG_CFG_APPEND} --xres=${xres}"
+fi
 
 if [ ! -f /etc/X11/xorg.conf ]; then
   # generate xorg.conf
   log_begin_msg "Generating xorg.conf"
-    configurexorg --newsettings --outputfile=/etc/X11/xorg.conf
+    configurexorg --newsettings ${XORG_CFG_APPEND} --outputfile=/etc/X11/xorg.conf
   log_end_msg
 else
   log_begin_msg "xorg.conf exists, no overwrite"
@@ -106,9 +111,6 @@ fi
 # always overwrite with cmdline
 startx=$(read_cmdline_var "startx" "${startx}")
 
-
-
-# kill usplash
 kill_usplash
 
 
@@ -130,9 +132,5 @@ elif [ "$startx" = "W"  ] ; then
 fi
 
 
-# start italc if found
-#if [ -e /sbin/startica ]; then
-#  startica &
-#fi
 
 exit 0

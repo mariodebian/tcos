@@ -29,14 +29,12 @@ export PATH
 # if break=inittcos STOP here
 maybe_break inittcos
 
-
+# link discover moved to /usr/lib to reduce initramfs space
 [ -d /usr/lib/discover ] &&  ln -s /usr/lib/discover /lib/
 
 
 # DOCUMENTME opentelnet | write some debug entry's to /etc/inetd.conf to allow kill or start X with telnet terminal-ip port
 opentelnet=$(read_cmdline_var "opentelnet")
-
-
 
 
 if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
@@ -49,7 +47,6 @@ if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
    echo "root:${TCOS_ROOT_PASSWD}" | chpasswd  2>&1 >/dev/null
  log_end_msg
 else
-
  _log "INITTCOS not updating root passwd, ussing generation root passwd"
 fi
 
@@ -82,7 +79,6 @@ update_progress
 showmodules=$(read_cmdline_var "showmodules" "${TCOS_SHOW_NEEDED_MODULES}")
 
 if [ ${showmodules} ]; then
-  # kill usplash
   kill_usplash
   
   discover_modules=$(grep Discovering /tmp/initramfs.debug | awk -F ":" '{print $2}')
@@ -135,11 +131,11 @@ fi
 
 
 if [ "$(which dropbear)" ] ; then
-# need read from /dev/urandom not /dev/random
-# http://www.nomis52.net/?section=projects&sect2=netgear&page=dropbear
-# ugly hack or recompile with #define DROPBEAR_RANDOM_DEV "/dev/urandom"
-mv /dev/random /dev/random.old
-ln -s /dev/urandom /dev/random
+ # need read from /dev/urandom not /dev/random
+ # http://www.nomis52.net/?section=projects&sect2=netgear&page=dropbear
+ # ugly hack or recompile with #define DROPBEAR_RANDOM_DEV "/dev/urandom"
+ mv /dev/random /dev/random.old
+ ln -s /dev/urandom /dev/random
 
  _log "INITTCOS starting dropbear ssh daemon"
  log_begin_msg "Starting dropbear SSH daemon"
@@ -149,8 +145,8 @@ ln -s /dev/urandom /dev/random
    dropbear -p 22 -E -d /etc/dropbear/dropbear_dss_host_key -r /etc/dropbear/dropbear_rsa_host_key 2> /tmp/sshd.log
  log_end_msg
 
-rm -f /dev/random
-mv /dev/random.old /dev/random
+ rm -f /dev/random
+ mv /dev/random.old /dev/random
 
 
 else

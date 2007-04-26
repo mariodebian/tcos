@@ -38,23 +38,6 @@ if [  ${TCOS_SOUND} = 0  -o ${TCOS_DISABLE_SOUND} = 1 ]; then
 fi
 
 
-#if [ ! "$(which aumix)" ]; then
-#  _log "INITSOUND aumix  don't avalaible"
-#  log_failure_msg "Mixer not avalaible to give up volume"
-#  log_end_msg
-#  exit 0
-#fi
-
-
-
-# check if sound server is avalaible
-#if [ ! "$(which amixer)" ] ; then
-#  _log "INITSOUND amixer and amixer binaries don't avalaible"
-#  log_failure_msg "Mixer not avalaible to give up volume"
-#  log_end_msg
-#  exit 0
-#fi
-
 # check if soundcard is avalaible
 if [ ! -d /proc/asound  ] && [ ! -e /dev/dsp ] ; then
   _log "INITSOUND /proc/asound and /dev/dsp don't exists, need other kernel modules!!!"
@@ -98,6 +81,7 @@ if [ $TCOS_PULSEAUDIO ]; then
     _log "INITSOUND starting pulseaudio"
     startpulseaudio 2> /var/log/pulseaudio.log &
   log_end_msg
+
 elif [ ! $TCOS_PULSEAUDIO ] && [ ! $TCOS_SOUND_OSS ]; then
   log_begin_msg "Init sound server (esound)"
     _log "INITSOUND starting esd daemon"
