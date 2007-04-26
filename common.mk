@@ -50,11 +50,13 @@ DISTRO=debian
 endif
 
 ifeq ($(DISTRO),debian) 
-DEB_MIRROR=http://ftp.uk.debian.org/debian/
+#DEB_MIRROR=http://ftp.uk.debian.org/debian/
+DEB_MIRROR=http://192.168.0.3/mirror/debian/
 endif
 
 ifeq ($(DISTRO),ubuntu)
-DEB_MIRROR=http://archive.ubuntu.com/ubuntu/
+#DEB_MIRROR=http://archive.ubuntu.com/ubuntu/
+DEB_MIRROR=http://192.168.0.3/mirror/ubuntu/
 endif
 
 

@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.60.4) unstable; urgency=low
+
+  * bin/seq:
+     - Complete seq shell script, now accepts same params like /usr/bin/seq
+         seq LAST
+         seq FIRST LAST
+         seq FIRST INCREMENT LAST
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu,  8 Feb 2007 18:53:33 +0100
+
 initramfs-tools-tcos (0.60.3) unstable; urgency=low
 
   * conf/xorg.conf.tpl:

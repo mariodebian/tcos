@@ -3,19 +3,40 @@
 
 MAX=$1
 NUM=1
+INC=1
 
 if [ "$MAX" = "" ]; then
-   echo "Usage:"
-   echo "      seq NUMBER"
-   exit 1
+  echo "TCOS seq number generator"
+  echo ""
+  echo "Print numbers from FIRST to LAST, in steps of INCREMENT."
+  echo "Usage: seq LAST"
+  echo "  or:  seq FIRST LAST"
+  echo "  or:  seq FIRST INCREMENT LAST"
+  exit 1
+fi
+
+if [ $# = 1 ]; then
+  MAX=$1
+elif [ $# = 2 ]; then
+  NUM=$1
+  MAX=$2
+elif [ $# = 3 ]; then
+  NUM=$1
+  INC=$2
+  MAX=$3
 fi
 
 if [ $MAX -gt 100 ] || [ $MAX -lt 1 ]; then
-  echo "ERROR: 100 is max number to seq and 1 min"
+  echo "ERROR: Max number must be in 1-100"
+  exit 1
+fi
+
+if [ $INC -lt 1 ] ; then
+  echo "ERROR: Increment must be big than 1"
   exit 1
 fi
 
 while [ $NUM -le $MAX ]; do
   echo $NUM
-  NUM=$((NUM +1))
+  NUM=$((NUM +INC))
 done
