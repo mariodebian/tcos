@@ -92,7 +92,7 @@ install:
 	chmod -x $(DESTDIR)$(TCOS_DIR)/scripts/tcos
 
 
-	install -m 644 conf/tcos.conf $(DESTDIR)$(TCOS_CONF)/tcos.conf
+	install -m 600 conf/tcos.conf $(DESTDIR)$(TCOS_CONF)/tcos.conf
 	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
 
 	install -m 644 conf/tcos-generation-functions.sh $(DESTDIR)$(TCOS_DIR)/tcos-generation-functions.sh
