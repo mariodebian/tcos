@@ -13,15 +13,15 @@ if [ ${TCOS_ITALC} ]; then
    echo ""
  else
   stat_before
-  cpifexists $(pathof ivs)              /usr/bin/
-  cpifexists $(pathof demoviewer)       /usr/bin/
-  cpifexists $(pathof screenlocker)     /usr/bin/
+  cpifexists /usr/bin/ivs              /usr/bin/
+  cpifexists /usr/bin/demoviewer       /usr/bin/
+  cpifexists /usr/bin/screenlocker     /usr/bin/
   
-  #cpifexists $(pathof messageviewer)    /usr/bin/
+  #cpifexists /usr/bin/messageviewer    /usr/bin/
   # messageviewer need qt libs
   # ugly wrapper less ram
 
-  cpifexists $(pathof xmessage)    /usr/bin/
+  cpifexists /usr/bin/xmessage    /usr/bin/
   # overwrite, not link
   rm $DESTDIR/usr/bin/xmessage
   cp $(pathof xmessage)            $DESTDIR/usr/bin/

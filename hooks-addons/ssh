@@ -23,8 +23,8 @@ if [ $TCOS_SSH ] ;then
   rm -f $DESTDIR/etc/dropbear/log/supervise
   rm -f $DESTDIR/etc/dropbear/log/main
 
-  cpifexists $(pathof dropbear)         /usr/bin/      # ssh server
-  cpifexists $(pathof dbclient)         /usr/bin/   # ssh client ( no have ssh -X support )
+  cpifexists /usr/sbin/dropbear         /usr/bin/      # ssh server
+  cpifexists /usr/bin/dbclient         /usr/bin/   # ssh client ( no have ssh -X support )
   cpifexists /lib/libresolv.so.2        /lib/
   cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
 
@@ -64,9 +64,9 @@ if [ $TCOS_SSH ] ;then
 	  cat $key >> $DESTDIR/root/.ssh/id_rsa
 	  chmod 600 $DESTDIR/root/.ssh/id_rsa
         else
-          _echo "WARNING: $key not found !!!"
-          _echo "  You need to create ssh-key as \"${TCOS_ADMIN_USER}\" user"
-          _echo "  => $ ssh-keygen -t rsa"
+          _echo "  WARNING: $key not found !!!"
+          _echo "    You need to create ssh-key as \"${TCOS_ADMIN_USER}\" user"
+          _echo "    => $ ssh-keygen -t rsa"
         fi
         ####################
    fi

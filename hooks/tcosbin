@@ -64,13 +64,13 @@ cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
 cpifexists /etc/debian_version  /etc/
 
 # needed for swap creation
-cpifexists $(pathof mkswap) /sbin/
+cpifexists /sbin/mkswap /sbin/
 
 # fdisk for fstab generation
-cpifexists $(pathof fdisk) /sbin/
+cpifexists /sbin/fdisk /sbin/
 
 # to change pass during boot
-copy_exec $(pathof chpasswd) /usr/bin/
+copy_exec /usr/sbin/chpasswd /usr/bin/
 cpifexists /etc/login.defs   /etc
 
 # some network stuff
@@ -80,7 +80,7 @@ cpifexists /etc/host.conf        /etc/
 cpifexists /etc/nsswitch.conf    /etc/
 
 # LIBRARIES
-cpifexists $(pathof ldconfig)    /sbin/
+cpifexists /sbin/ldconfig    /sbin/
 [ -f /etc/ld.so.conf ] && cpifexists /etc/ld.so.conf       /etc/
 [ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
 
@@ -88,7 +88,7 @@ cpifexists /etc/localtime        /etc/
 cpifexists /etc/adjtime        /etc/
 
 # server kbmap
-cpifexists $(pathof loadkeys) /usr/bin
+cpifexists /bin/loadkeys /usr/bin
 
 if [ -f /etc/console/boottime.kmap.gz ]; then
   mkdir $DESTDIR/etc/console
@@ -181,13 +181,13 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
   # create usr.squashfs
   if [ $(env | grep -c ^TCOS_SUFFIX) = 1 ]; then
     TCOS_SUFFIX=$(env | grep ^TCOS_SUFFIX | awk -F "=" '{print $2}')
-    #_echo "Copying SQUASHFS_FILE to $DESTDIR/conf/tcos.conf"
     echo "SQUASHFS_FILE=\"usr${TCOS_SUFFIX}-${version}.squashfs\"" >> $DESTDIR/conf/tcos.conf
   fi
   SQUASHFS_FILE="usr${TCOS_SUFFIX}-${version}.squashfs"
   _echo "     Creating ${SQUASHFS_FILE} of /usr"
   mkdir -p $DESTDIR/mnt/tmp
   mksquashfs $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /dev/null 2>&1
+  
   # mksquashfs create files with 700 rights, change to 644
   chmod 644 $DESTDIR/mnt/tmp/${SQUASHFS_FILE}
   rm -rf $DESTDIR/usr/ && mkdir $DESTDIR/usr
@@ -218,8 +218,8 @@ fi # end of TCOS_DISABLE_SQUASHFS
 stat_before
 mkdir -p $DESTDIR/usr/sbin >/dev/null 2>&1
 # init reboot poweroff
-cpifexists $(pathof reboot)     /usr/sbin/
-cpifexists $(pathof poweroff)     /usr/sbin/
+cpifexists /sbin/reboot     /usr/sbin/
+cpifexists /sbin/poweroff     /usr/sbin/
 
 
 ###
@@ -307,6 +307,7 @@ if [ $TCOS_DISABLE_ACPI ]; then
   rm -rf $DESTDIR/scripts/usb*
   rm -rf $DESTDIR/scripts/live*
   rm -rf $DESTDIR/scripts/local*
+  rm -rf $DESTDIR/scripts/casper*
   rm -rf $DESTDIR/scripts/init-premount/thermal
   rm -rf $DESTDIR/sbin/mdadm
   rm -rf $DESTDIR/sbin/mdrun

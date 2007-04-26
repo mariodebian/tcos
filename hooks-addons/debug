@@ -7,15 +7,15 @@ if [ $TCOS_DEBUG ]; then
 
  stat_before
 
- cpifexists $(pathof iftop) /usr/bin/
+ cpifexists /usr/sbin/iftop /usr/bin/
  mkdir -p $DESTDIR/lib/terminfo/l/
  cp -a /lib/terminfo/l/linux $DESTDIR/lib/terminfo/l/
 
  mkdir -p $DESTDIR/lib/terminfo/x/
  cp -a /lib/terminfo/x/xterm $DESTDIR/lib/terminfo/x/
  
- cpifexists $(pathof lsmod)  /usr/bin/
- cpifexists $(pathof strace) /bin/
+ cpifexists /bin/lsmod       /usr/bin/
+ cpifexists /usr/bin/strace  /bin/
  cpifexists /sbin/mkfs       /sbin/
  cpifexists /sbin/mkfs.vfat  /sbin/
  cpifexists /sbin/mkfs.ext3  /sbin/

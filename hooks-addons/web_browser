@@ -13,10 +13,10 @@ if [ "${TCOS_WEB_BROWSER}" = "dillo" ]; then
         echo ""
  else
     stat_before
-    cpifexists $(pathof dillo)           /usr/bin/
-    cpifexists $(pathof dillocfg)        /usr/bin/
-    cpifexists $(pathof dpid)            /usr/bin/
-    #cpifexists $(pathof dpidc)           /usr/bin/ # FIXME this need perl :(
+    cpifexists /usr/bin/dillo           /usr/bin/
+    cpifexists /usr/bin/dillocfg        /usr/bin/
+    cpifexists /usr/bin/dpid            /usr/bin/
+    #cpifexists /usr/bin/dpidc           /usr/bin/ # FIXME this need perl :(
     cpifexists /etc/dillorc              /etc/
     cpifexists /etc/dpidrc               /etc/
 
@@ -41,8 +41,8 @@ if [ "${TCOS_WEB_BROWSER}" = "links2" ]; then
         echo ""
  else
     stat_before
-    cpifexists $(pathof links2)           /usr/bin/
-    cpifexists $(pathof xlinks2)        /usr/bin/
+    cpifexists /usr/bin/links2         /usr/bin/
+    cpifexists /usr/bin/xlinks2        /usr/bin/
 
     stat_after "Links2, web browser"
   fi

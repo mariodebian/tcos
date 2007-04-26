@@ -19,7 +19,7 @@ elif [ -f /sbin/dhclient3 ]; then
  _echo "    WARNING:"
  _echo "           Detected dhcp3-client package !!!"
  _echo "           TCOS support for this package is very experimental"
- _echo "           Please install dhcp-client package (without "3" number)"
+ _echo "           Please install dhcp-client package (without \"3\" number)"
  _echo ""
 
 # exit 1
@@ -65,7 +65,7 @@ elif [ -f /sbin/dhclient3 ]; then
 
 elif [ -x /sbin/dhclient ]; then
  # dhcp and network stuff
- cpifexists $(pathof dhclient)     /sbin/
+ cpifexists /sbin/dhclient     /sbin/
  mkdir -p $DESTDIR/var/lib/dhcp/
  cpifexists /etc/dhclient-script   /etc/
  cpifexists /etc/dhclient.conf     /etc/

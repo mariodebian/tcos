@@ -2,7 +2,7 @@
 
 stat_before
 
-cpifexists $(pathof hwclock)     /usr/bin/
+cpifexists /sbin/hwclock     /usr/bin/
 
 cat <<EOF > $DESTDIR/scripts/tcos-bottom/04hwclock
 #!/bin/sh

@@ -10,7 +10,7 @@
 # Examples:
 #
 #   # include nano
-#   cpifexists $(pathof nano) /usr/bin/
+#   cpifexists /usr/bin/nano /usr/bin/
 #   cpifexists /etc/nanorc    /etc
 #
 #

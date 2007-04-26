@@ -12,7 +12,9 @@ if [ ${TCOS_X11VNC} ]; then
    echo ""
  else
   stat_before
-  cpifexists $(pathof x11vnc)       /usr/bin/
+  cpifexists /usr/bin/x11vnc       /usr/bin/
+  
+  
   cat <<EOF > $DESTDIR/sbin/startvnc
 #!/bin/sh
 # kill all x11vnc process

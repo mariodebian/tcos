@@ -43,7 +43,8 @@ stat_after () {
   # this give what space need an app
   convert_links2files
   size2=$(du -s ${DESTDIR} 2>/dev/null| awk '{print $1}')
-  diff_size=$(echo $((size2 -size1)) )
+  #diff_size=$(echo $((size2 -size1)) )
+  diff_size=$(echo $size2 $size1 | awk '{print $1 - $2}' )
   if [ ${TCOS_DEBUG} ]; then
      _echo "  Package $1 get ${diff_size} Kb."
   fi
@@ -62,28 +63,40 @@ pathof() {
 }
 
 cpifexists () {
- #_echo "DEBUG: \$1=$1 \$2=$2"
-  if [ -f $DESTDIR/$1 ]; then
-    #echo "cpifexists(): WARNING: $1 exists in $DESTDIR, not copying again!!!"
+ orig=$1
+ dest=$2
+  if [ -f $DESTDIR/$orig ]; then
     return 1
   fi
+  
+  
   if [ $# != 2 ]; then
-   echo "  cpifexists() ERROR: Need 2 arguments: \$1=$1 \$2=$2"
-   #_echo "     DEBUG: \$1=$1 \$2=$2"
+   echo "    cpifexists(): ERROR: Need 2 arguments: \$1=$orig \$2=$dest"
    return 1
  fi
- if [ ! -f $1 ]; then
-   echo "  cpifexits() ERROR: $1 no exists"
-   #_echo "     DEBUG: \$1=$1 \$2=$2"
-   return 1
+ 
+ if [ ! -f $orig ]; then
+   echo "    cpifexits() WARNING: $orig not found, searching with pathof()..."
+   _file=$(pathof $(basename $orig) )
+   if [ "$_file" = "" ]; then
+     echo "    cpifexists(): ERROR $orig not found in PATH, please install package that contain $orig."
+     return 1
+   elif [ -f "$_file" ]; then
+     echo "    cpifexists(): FIXED: $(basename $orig) found in other path: $_file, using it!!!"
+     orig=$_file
+   else
+     echo "   cpifexists(): ERROR: $(basename $orig) no found in PATH, please package that contain $orig"
+     return 1
+   fi   
  fi
 
- if [ ! -d $DESTDIR/$2 ]; then
-   echo "  cpifexits() WARNING: $DESTDIR/$2 don't exists"
-   #_echo "     DEBUG: \$1=$1 \$2=$2"
+ 
+ if [ ! -d $DESTDIR/$dest ]; then
+   echo "  cpifexits() WARNING: $DESTDIR/$dest don't exists"
  fi
-#echo "DEBUG: copy_exec $1 $2"
-copy_exec "${1}" "${2}"
+
+
+copy_exec "${orig}" "${dest}"
 return 0
 }
 

@@ -49,7 +49,7 @@ if [ $TCOS_DISCOVER ] ;then
     else
         stat_before
         # Discover
-        cpifexists $(pathof discover)        /usr/bin/
+        cpifexists /sbin/discover        /usr/bin/
         cpifexists /usr/bin/discover-config  /usr/bin
         cpifexists /sbin/discover-modprobe   /usr/bin
         cpifexists /etc/discover-modprobe.conf /etc/

@@ -8,26 +8,28 @@ if [ $TCOS_XORG ] ; then
 if [ $(pathof Xorg) = /usr/bin/Xorg ]; then
    XORG=7
    _echo "   USING Xorg 7.X dirs"
+   XORG_PATH=/usr/bin
 else
    XORG=6
    _echo "   USING Xorg 6.9 dirs"
+   XORG_PATH=/usr/X11R6/bin
 fi
 
 
 cpifexists $CONFDIR/tcos-modules.conf         /conf/
 
-cpifexists $(pathof Xorg)    /usr/bin
-cpifexists $(pathof xauth)   /usr/bin
-cpifexists $(pathof mcookie) /usr/bin
-cpifexists $(pathof xhost)   /usr/bin
-cpifexists $(pathof xterm)   /usr/bin
-cpifexists $(pathof twm)     /usr/bin
-#cpifexists $(pathof xfs)    /usr/bin
+cpifexists $XORG_PATH/Xorg    /usr/bin
+cpifexists $XORG_PATH/xauth   /usr/bin
+cpifexists $XORG_PATH/mcookie /usr/bin
+cpifexists $XORG_PATH/xhost   /usr/bin
+cpifexists $XORG_PATH/xterm   /usr/bin
+cpifexists $XORG_PATH/twm     /usr/bin
+#cpifexists $XORG_PATH/xfs    /usr/bin
 
 # some xutils
-cpifexists $(pathof xset) /usr/bin
-cpifexists $(pathof xsetroot) /usr/bin
-cpifexists $(pathof sessreg) /usr/bin
+cpifexists $XORG_PATH/xset     /usr/bin
+cpifexists $XORG_PATH/xsetroot /usr/bin
+cpifexists $XORG_PATH/sessreg  /usr/bin
 
 
 mkdir -p $DESTDIR/var/log
@@ -133,7 +135,7 @@ else
 fi
 
 
-# keyboard and keymap
+# keyboard and keymap FIXME
 if [ $XORG = 6 ]; then
  cp /usr/X11R6/lib/libxk*.so.1 $DESTDIR/usr/X11R6/lib/
  #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
@@ -148,7 +150,7 @@ fi
 if [ $XORG = 6 ]; then
  mkdir -p $DESTDIR/usr/share/locale
  mkdir -p $DESTDIR/usr/lib/X11
- copydir /usr/lib/X11/locale/          /usr/lib/X11/
+ [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
  copydir /usr/lib/X11/config/          /usr/lib/X11/
  cpifexists /etc/X11/rgb.txt           /etc/X11/
  copydir /etc/X11/rstart               /etc/X11/
@@ -157,7 +159,7 @@ if [ $XORG = 6 ]; then
 else
  mkdir -p $DESTDIR/usr/share/locale
  mkdir -p $DESTDIR/usr/lib/X11
- copydir /usr/lib/X11/locale/          /usr/lib/X11/
+ [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
  copydir /usr/lib/X11/config/          /usr/lib/X11/
  cpifexists /etc/X11/rgb.txt            /etc/X11/
  copydir /etc/X11/rstart               /etc/X11/
@@ -252,6 +254,8 @@ Xorg \${TCOS_XORG_OPTS} -query \${SERVER}  >> /tmp/initramfs.debug 2>&1
 EOF
 chmod +x $DESTDIR/sbin/startremotex
 
+
+# FIXME, not documented
 
 cat <<EOF > $DESTDIR/sbin/startsshx
 #!/bin/sh

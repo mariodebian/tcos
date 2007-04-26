@@ -31,9 +31,9 @@ else
 
  stat_before
 
- cpifexists $(pathof pulseaudio)     /usr/bin/
- cpifexists $(pathof pax11publish)   /usr/bin/
- cpifexists $(pathof pactl)          /usr/bin/
+ cpifexists /usr/bin/pulseaudio     /usr/bin/
+ cpifexists /usr/bin/pax11publish   /usr/bin/
+ cpifexists /usr/bin/pactl          /usr/bin/
 
  mkdir -p ${DESTDIR}/usr/lib/pulse-0.9
  copydir /usr/lib/pulse-0.9/modules   /usr/lib/pulse-0.9/

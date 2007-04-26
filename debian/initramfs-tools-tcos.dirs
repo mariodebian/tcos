@@ -1,0 +1,10 @@
+/etc
+/etc/tcos
+/etc/tcos/hacking
+/etc/tcos/scripts
+/etc/tcos/scripts/tcos-bottom
+/etc/tcos/scripts/tcos-nfs-top
+/etc/tcos/scripts/tcos-premount
+/etc/tcos/scripts/tcos-top
+/etc/tcos/hooks
+/etc/tcos/hooks-addons

@@ -8,7 +8,7 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
  ltspfsd=$(dpkg -l ltspfs-client|grep -c ^ii)
   if [ ${ltspfsd} = 1 ]; then
    stat_before
-   cpifexists $(pathof ltspfsd) /usr/bin
+   cpifexists /usr/bin/ltspfsd /usr/bin
    stat_after "LTSPFS"
   else
    echo "ERROR:"
@@ -36,7 +36,7 @@ if [ "$TCOS_AUTOFS" ]; then
   else
    # autofs
    stat_before
-   cpifexists $(pathof automount)     /sbin/
+   cpifexists /usr/sbin/automount     /sbin/
    mkdir -p $DESTDIR/usr/lib/autofs
    copydir /usr/lib/autofs/          /usr/lib/
    mkdir -p $DESTDIR/var/run/autofs

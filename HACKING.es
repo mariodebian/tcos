@@ -20,21 +20,11 @@
  ####### /etc/tcos/hacking/display ##############
  # script TCOS para soporte del comando display
 
- cpifexists $(pathof display) /usr/bin
+ cpifexists /usr/bin/display /usr/bin
 
  ##############################################
 
  Ayudantes que podemos usar:
-
- * pathof PROGRAMA
-     Devuelve la ruta completa (path) de una aplicación
-
-     Es usado para conocer las rutas y almacenar su valor en
-     otra variable o invocar a la función cpifexists.
-
-     Ejemplos:
-       dhclientbin=$(pathof dhclient)
-       # La variable dhclientbin valdrá /sbin/dhclient
 
  * cpifexits [BINARIO] [RUTA_DESTINO]
 
@@ -45,7 +35,7 @@
     las librerías de las que depende el binario => man ldd
     
     Ejemplos:
-      cpifexists $(pathof fdisk) /sbin/
+      cpifexists /sbin/fdisk /sbin/
 
    Internamente se ejecuta:
    $ ldd /sbin/fdisk
@@ -80,7 +70,7 @@
     Ejemplo completo:
 
        stat_before
-       cpifexists $(pathof display) /usr/bin/
+       cpifexists /usr/bin/display /usr/bin/
        stat_after "ImageMagick display"
 
      Esto copia el binario (y librerías) en el initramfs
