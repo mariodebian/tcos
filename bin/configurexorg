@@ -26,7 +26,7 @@ verbose=0
 
 debug () {
   if [ ${verbose} = 1 ]; then
-    echo "DEBUG: $@" >&2
+    echo "configurexorg DEBUG: $@" >&2
   fi
 }
 
@@ -266,7 +266,7 @@ get_sync() {
 # horiz and vert sync table
 # orig by debian debconf
 # ==> xserver-xorg.postinst
-
+ debug "get_sync() RES=$1"
  RES=${1}
  case "$RES" in
         "640x480@60Hz")
@@ -419,6 +419,7 @@ get_sync() {
           echo ":"
           ;;
       esac
+    debug "get_sync() $horiz_sync:$vert_sync"
     echo "$horiz_sync:$vert_sync"  
 }
 

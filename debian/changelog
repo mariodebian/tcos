@@ -8,8 +8,10 @@ initramfs-tools-tcos (0.68) unstable; urgency=low
     - move some code to hooks-addons
   * Change depends, move to tcos metapackage.
   * Change Makefiles to allow not building tcos-usplash (HAVE_USPLASH=0)
+  * More debug info in configurexorg with --verbose flag
+  * Fix some typo in conf/xorg.conf.tpl
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 19 Mar 2007 13:29:37 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 20 Mar 2007 11:27:46 +0100
 
 initramfs-tools-tcos (0.67) unstable; urgency=low
 

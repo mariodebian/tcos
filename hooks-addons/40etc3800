@@ -59,7 +59,7 @@ log_begin_msg "Loading eTC 3800 modules"
   modprobe drm
   modprobe via
 
-  configurexorg --newsettings --xdriver=via --outputfile=/etc/X11/xorg.conf
+  configurexorg --newsettings --xdriver=via --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
 
 log_end_msg
 

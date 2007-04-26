@@ -109,7 +109,7 @@ Section "Screen"
 	DefaultDepth	__xdepth__
 	SubSection "Display"
 		Depth		__xdepth__
-		Modes		"__xres__" "1024x768" "" "800x600" "" "640x480" 
+		Modes		"__xres__" "1024x768" "800x600" "640x480" 
 	EndSubSection
 EndSection
 

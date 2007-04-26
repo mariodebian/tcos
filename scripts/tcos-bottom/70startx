@@ -75,7 +75,7 @@ fi
 if [ ! -f /etc/X11/xorg.conf ]; then
   # generate xorg.conf
   log_begin_msg "Generating xorg.conf"
-    configurexorg --newsettings ${XORG_CFG_APPEND} --outputfile=/etc/X11/xorg.conf
+    configurexorg --verbose --newsettings ${XORG_CFG_APPEND} --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
   log_end_msg
 else
   log_begin_msg "xorg.conf exists, no overwrite"
