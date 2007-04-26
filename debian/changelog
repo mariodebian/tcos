@@ -1,8 +1,9 @@
 initramfs-tools-tcos (0.62) unstable; urgency=low
 
   * Add cache support to gentcos, used to use some non installed packages (esound, libesd0..)
+  * Rename all hooks-addons with numbers (exec order)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 24 Feb 2007 13:29:49 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 24 Feb 2007 13:32:20 +0100
 
 initramfs-tools-tcos (0.61) unstable; urgency=low
 

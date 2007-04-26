@@ -507,6 +507,7 @@ if [ "${TCOS_INST_PKG}" != "" ]; then
       rm -rf ${TCOS_PKG_CACHE}/${PKG}
       mkdir ${TCOS_PKG_CACHE}/${PKG}
       dpkg --extract "${PKG_FILE}" ${TCOS_PKG_CACHE}/${PKG}
+      [ -e /tmp/$(basename $PKG_URI) ] && rm -f /tmp/$(basename $PKG_URI)
     fi
   done
   echo "Install Package extract all packages."
