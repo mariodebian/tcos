@@ -1,9 +1,11 @@
 initramfs-tools-tcos (0.72) unstable; urgency=low
 
   * hooks/tcosbin:
-    - Try to remove all stuff in /lib/i686
+    - Try to remove all stuff in /lib/i686 in similar way than /lib/tls
+  * conf/tcos-generation-functions.sh:
+    - convert_links2files acepts one argument (dir where conversion is done)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 20 Apr 2007 16:41:16 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 20 Apr 2007 17:34:24 +0200
 
 initramfs-tools-tcos (0.71) unstable; urgency=low
 

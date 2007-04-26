@@ -224,9 +224,10 @@ stat_after "Init binaries"
 
 # clean /lib/tls if needed
 if [ -d $DESTDIR/lib/tls ]; then
+   _echo "  * WARNING: /lib/tls exists in image"
    for lib in ${DESTDIR}/lib/tls/*; do
      tlslib=$lib
-     notlslib=$(echo $lib | sed s/tls//g)
+     notlslib=$(echo $lib | sed 's/tls//g')
      notlslib1=$(basename $lib)
      notlslib2=$(basename $lib | awk -F "." '{print $1}')
      if [ -f $notlslib ]; then
@@ -240,28 +241,29 @@ if [ -d $DESTDIR/lib/tls ]; then
 fi # end of /lib/tls dir exists
 
 
+convert_links2files "lib/i686"
 # clean /lib/i686 if needed
 if [ -d $DESTDIR/lib/i686 ]; then
-   for lib in $(find ${DESTDIR}/lib/i686/ -type f); do
-     tlslib=$lib
-     notlslib=$(echo $lib | sed s/i686\/cmov//g)
-     notlslib1=$(basename $lib)
-     notlslib2=$(basename $lib | awk -F "." '{print $1}')
-     if [ -f $notlslib ]; then
-      _echo "WARNING rm -f $lib"
-     elif [ -f /lib/${notlslib1} ]; then
-      _echo "WARNING cp -a /lib/${notlslib} $DESTDIR/lib"
+   for lib in $(find ${DESTDIR}/lib/i686 -type f); do
+     i686lib=$lib
+     noi686lib=$(echo $lib | sed 's/i686\/cmov//g')
+     noi686lib1=$(basename $lib)
+     if [ -f $noi686lib ]; then
+      rm -f $lib
+     elif [ -f /lib/${noi686lib1} ]; then
+      cp -f /lib/${noi686lib1} $DESTDIR/lib/
+      rm -f $lib
      else    
-      _echo "$tlslib not found"
+      _echo "WARNING equivalent to $i686lib not found"
      fi
   done
+  
+  (rmdir ${DESTDIR}/lib/i686/cmov && rmdir ${DESTDIR}/lib/i686) || _echo "  * WARNING can't delete /lib/i686 from image (not empty)"
 fi # end of /lib/i686 dir exists
 
 
 if [ $TCOS_DISABLE_ACPI ]; then
   stat_before
-  #_echo "  Disabling ACPI and RAID support"
-  #set -x
   rm -rf $DESTDIR/lib/modules/*/drivers/md/
   rm -rf $DESTDIR/lib/modules/*/drivers/acpi/
   rm -rf $DESTDIR/scripts/usb*
@@ -282,7 +284,6 @@ if [ $TCOS_DISABLE_ACPI ]; then
   manual_add_modules sr_mod
 
   stat_after "Disable ACPI and RAID support"
-  #set +x
 fi
 
 

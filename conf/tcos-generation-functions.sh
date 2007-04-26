@@ -15,10 +15,14 @@ convert_links2files () {
 # convert all links in $DESTDIR to linked files
 # needed to calculate initramfs space
  #_echo "Converting links to files..."
+ subdir=$1
+ if [ "$subdir" = "" ]; then
+   subdir="usr"
+ fi
  dir=$(pwd)
  cd $DESTDIR
  # copy binary not links
- for xfile in $(find usr -type l); do
+ for xfile in $(find "$subdir" -type l); do
    if [ -f /$xfile ] ;then
      rm -f $DESTDIR/$xfile
      cp -f /$xfile $DESTDIR/$xfile
