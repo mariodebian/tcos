@@ -240,6 +240,23 @@ if [ -d $DESTDIR/lib/tls ]; then
 fi # end of /lib/tls dir exists
 
 
+# clean /lib/i686 if needed
+if [ -d $DESTDIR/lib/i686 ]; then
+   for lib in $(find ${DESTDIR}/lib/i686/ -type f); do
+     tlslib=$lib
+     notlslib=$(echo $lib | sed s/i686\/cmov//g)
+     notlslib1=$(basename $lib)
+     notlslib2=$(basename $lib | awk -F "." '{print $1}')
+     if [ -f $notlslib ]; then
+      _echo "WARNING rm -f $lib"
+     elif [ -f /lib/${notlslib1} ]; then
+      _echo "WARNING cp -a /lib/${notlslib} $DESTDIR/lib"
+     else    
+      _echo "$tlslib not found"
+     fi
+  done
+fi # end of /lib/i686 dir exists
+
 
 if [ $TCOS_DISABLE_ACPI ]; then
   stat_before
