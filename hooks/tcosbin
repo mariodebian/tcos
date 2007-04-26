@@ -126,7 +126,7 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
   SQUASHFS_FILE="usr${TCOS_SUFFIX}-${version}.squashfs"
   _echo "     Creating ${SQUASHFS_FILE} of /usr"
   mkdir -p $DESTDIR/mnt/tmp
-  mksquashfs $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /dev/null 2>&1
+  /usr/sbin/mksquashfs $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /dev/null 2>&1
   
   # mksquashfs create files with 700 rights, change to 644
   chmod 644 $DESTDIR/mnt/tmp/${SQUASHFS_FILE}

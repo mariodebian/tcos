@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.71) unstable; urgency=low
+
+  * hooks/tcosbin:
+    - add absolute path of mksquashfs bin.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 17 Apr 2007 11:25:36 +0200
+
 initramfs-tools-tcos (0.70) unstable; urgency=low
 
   * Extends ConfigObj class to use '=' instead of ' = '
