@@ -91,6 +91,9 @@ if [ $(cat /conf/mysettings.conf | wc -l) -gt 1 ] ;then
     FreeNX)
        startx=F
        ;;
+    rDesktop)
+       startx=W
+       ;;
  esac
 fi
 
@@ -116,6 +119,9 @@ elif [ "$startx" = "F"  ] ; then
 elif [ "$startx" = "S"  ] ; then
    ln -s /sbin/startsshx /sbin/startx
    startsshx &
+elif [ "$startx" = "W"  ] ; then
+   ln -s /sbin/startrdesktop /sbin/startx
+   startrdesktop &
 fi
 
 exit 0

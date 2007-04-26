@@ -1,0 +1,41 @@
+# hook for windows rdesktop
+
+if [ ! -e /usr/bin/rdesktop ]; then
+  _echo "   * rDesktop not installed"
+else
+
+  cpifexists /usr/bin/rdesktop   /usr/bin/
+  mkdir -p $DESTDIR/usr/share/
+  copydir  /usr/share/rdesktop/  /usr/share/
+
+cat << EOF > $DESTDIR/sbin/startrdesktop
+#!/bin/sh
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+SERVER=\$(get_server)
+export DISPLAY=:0
+export HOME=/root
+
+if [ -f \$XAUTHORITY ]; then
+  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth $XAUTHORITY"
+fi
+
+Xorg \${TCOS_XORG_OPTS}  >> /tmp/initramfs.debug 2>&1 &
+
+# default server
+rdesktop=\$(read_cmdline_var "rdesktop" "\${SERVER}")
+
+# FIXME spanish keyboard
+# -r sound
+# -f -a 16 fullscreen and 16 color bits
+while [ 1 ]; do
+  /usr/bin/rdesktop -5 -f -a 16 -k es -T "Remotedesktop-Client: \${rdesktop}" \${rdesktop}
+done
+
+EOF
+
+chmod +x $DESTDIR/sbin/startrdesktop
+
+
+fi
