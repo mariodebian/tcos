@@ -108,13 +108,51 @@ if [ -f /etc/console-setup/boottime.kmap.gz ]; then
 fi
 
 # create /etc/passwd /etc/shadow and /etc/group
-egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/passwd > $DESTDIR/etc/passwd
-egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/group > $DESTDIR/etc/group
-egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
+cat << EOF >> $DESTDIR/etc/passwd
+root:x:0:0:root:/root:/bin/sh
+daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+bin:x:2:2:bin:/bin:/bin/sh
+sys:x:3:3:sys:/dev:/bin/sh
+lp:x:7:7:lp:/var/spool/lpd:/bin/sh
+proxy:x:13:13:proxy:/bin:/bin/sh
+nobody:x:65534:65534:nobody:/nonexistent:/bin/sh
+sshd:x:105:65534::/var/run/sshd:/bin/false
+EOF
+
+# default password for root user is "root"
+cat << EOF >> $DESTDIR/etc/shadow
+root:QIO6IpW6SDbVI:13562:0:99999:7:::
+daemon:*:13250:0:99999:7:::
+bin:*:13250:0:99999:7:::
+sys:*:13250:0:99999:7:::
+lp:*:13250:0:99999:7:::
+nobody:*:13250:0:99999:7:::
+sshd:!:13250:0:99999:7:::
+EOF
+
+cat << EOF >> $DESTDIR/etc/group
+root:x:0:
+daemon:x:1:
+bin:x:2:
+sys:x:3:
+adm:x:4:
+tty:x:5:
+disk:x:6:
+lp:x:7:
+kmem:x:15:
+audio:x:29:pulse
+users:x:100:
+ssh:x:109:
+audio:x:29:
+EOF
+
+
+#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/passwd > $DESTDIR/etc/passwd
+#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/group > $DESTDIR/etc/group
+#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
 
 # change shell to /bin/sh
-sed -i s/bash/sh/g ${DESTDIR}/etc/passwd
-
+#sed -i s/bash/sh/g ${DESTDIR}/etc/passwd
 #cat $DESTDIR/etc/passwd | sed s/bash/sh/g > $DESTDIR/etc/passwd~ ; cat $DESTDIR/etc/passwd~ > $DESTDIR/etc/passwd
 #rm $DESTDIR/etc/passwd~
 
@@ -139,9 +177,6 @@ if [ $DESTDIR/bin/busybox ]; then
        _echo ""
        _echo "     This TCOS image will not work."
        _echo ""
-       _echo " Press Ctrl+C to abort"
-       read
-       sleep 2
     fi
   else
     _echo "    busybox pass test: OK"

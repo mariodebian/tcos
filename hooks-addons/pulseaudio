@@ -57,6 +57,8 @@ else
 
  #copydir /etc/pulse                   /etc/
  mkdir -p $DESTDIR/etc/pulse
+ cpifexists /etc/pulse/client.conf     /etc/pulse/
+ cpifexists /etc/pulse/daemon.conf     /etc/pulse/
 
  cat << EOF >> ${DESTDIR}/sbin/startpulseaudio
 #!/bin/sh

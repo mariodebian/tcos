@@ -4,7 +4,7 @@ if [ -e $DESTDIR/scripts/init-top/usplash ]; then
 
   _echo "   * Applying usplash timeout patch"
 
-cat << EOF > $DESTDIR/scripts/init-top/00nousplash
+cat << EOF > $DESTDIR/scripts/init-top/00_nousplash
 #!/bin/sh
 
 PREREQ=""
@@ -31,12 +31,13 @@ for x in \$(cat /proc/cmdline); do
 done
 
 if [ "\$KILL_USPLASH" = "true" ] ; then
-  echo "#!/bin/sh" > /scripts/init-top/framebuffer
-  echo "#!/bin/sh" > /scripts/init-top/usplash
+  echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/framebuffer
+  echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/usplash
 fi
 
 
 EOF
+chmod +x $DESTDIR/scripts/init-top/00_nousplash
 
 cat << EOF >> $DESTDIR/scripts/init-top/usplash
 

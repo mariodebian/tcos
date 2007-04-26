@@ -16,7 +16,6 @@ include common.mk
 
 clean:
 	find * |grep "~" | xargs rm -rf --
-	[ -x /usr/bin/dh_clean ] && dh_clean
 	rm -f build-stamp configure-stamp
 	cd usplash && make clean
 	cd debootstrap && make clean
