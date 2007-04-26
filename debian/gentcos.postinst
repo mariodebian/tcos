@@ -7,19 +7,26 @@ set -e
 
 # read tftpboot of atftpd package
 
+# FIXME read from inetd.conf too
+
 TFTPBOOT=/tftpboot
 # read tftpboot dir from atftpd package
 if [ -f /etc/default/atftpd ]; then
   for txt in $(grep OPTIONS /etc/default/atftpd ); do 
     if [ $(echo $txt |grep -c "/" ) = 1 ]; then 
      TFTPBOOT=$(echo $txt| sed s/"\""/""/g)
-     echo "gentcos: Found TFTPBOOT dir at $TFTPBOOT"
+     #echo "gentcos: Found TFTPBOOT dir at $TFTPBOOT"
     fi
   done
 fi
 
+
 if [ "${TFTPBOOT}" = "" ]; then
    echo "gentcos: ERROR: can't read TFTPBOOT dir, please, install atftp package first."
+elif [ ! -d ${TFTPBOOT} ]; then
+   echo ""
+   echo "gentcos: ERROR: your configured TFTPD dir \"${TFTPBOOT}\" not exits, please create first."
+   echo ""
 else
   # make symlinks
   if [ -d ${TFTPBOOT}/tcos ] && [ ! -L ${TFTPBOOT}/tcos ]; then
@@ -33,14 +40,15 @@ else
     ln -s /var/lib/tcos/tftp ${TFTPBOOT}/tcos
 
   elif [ -L ${TFTPBOOT}/tcos ]; then
-    echo "gentcos: INFO: ${TFTPBOOT}/tcos is a symbolic link, all OK."
+    echo "gentcos: INFO: ${TFTPBOOT}/tcos is a symbolic link, all seems OK."
   fi
 fi 
+
 
 # check for old /opt/tcos dir
 if [ -d /opt/tcos ]; then
    echo ""
-   echo "Warning: You can delete safely /opt/tcos dir"
+   echo "Info:    You can delete safely /opt/tcos dir"
    echo "         This is and old directory for TCOS that don't need anymore"
    echo ""
 fi

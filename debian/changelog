@@ -4,8 +4,9 @@ initramfs-tools-tcos (0.65) unstable; urgency=low
     - Add autodetect support for booting from HD or USB device
       (mount all ext3 or vfat partitions and search usr.squashfs or usr-$(uname -r).squashfs)
   * Update tcos kernel version to 2.6.18-4-486 (debian testing and unstable)
+  * Fix some info and warning messages in gentcos.postinst
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue,  6 Mar 2007 13:15:57 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue,  6 Mar 2007 22:21:59 +0100
 
 initramfs-tools-tcos (0.64) unstable; urgency=low
 
