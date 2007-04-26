@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.56.11) unstable; urgency=low
+
+  * hooks-addons/xorg
+      - add Xorg OpenGL support (new tcos.conf var TCOS_XORG_OPENGL)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 24 Nov 2006 09:28:12 +0100
+
 initramfs-tools-tcos (0.56.10) unstable; urgency=low
 
   * Revert vga=771 patch, initramfs-tools revert mknod /dev/fb0 too...

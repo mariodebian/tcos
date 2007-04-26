@@ -112,7 +112,11 @@ if [ $XORG = 6 ]; then
  cp -ra /usr/X11R6/lib/modules/extensions/lib*.so $DESTDIR/usr/X11R6/lib/modules/extensions/
  rm -rf $DESTDIR/usr/X11R6/lib/modules/extensions/libGLcore.so
  #cp -ra /usr/X11R6/lib/libGL.so.1.2 $DESTDIR/usr/X11R6/lib/libGL.so.1.2
-
+ if [ $TCOS_XORG_OPENGL ]; then
+    cpifexists /usr/X11R6/lib/modules/extensions/libGLcore.so /usr/X11R6/lib/modules/extensions
+    cpifexists /usr/lib/libGL.so.1.2  /usr/lib/
+    cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
+ fi
 
 else
  mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
@@ -132,6 +136,13 @@ else
  cp -ra /usr/lib/xorg/modules/extensions/lib*.so $DESTDIR/usr/lib/xorg/modules/extensions/
  rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
  #cp -ra /usr/lib/libGL.so.1.2 $DESTDIR/usr/lib/libGL.so.1.2
+ 
+ if [ $TCOS_XORG_OPENGL ]; then
+    cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
+    cpifexists /usr/lib/libGL.so.1.2  /usr/lib/
+    cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
+ fi
+ 
 fi
 
 
