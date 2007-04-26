@@ -37,6 +37,7 @@ Usage:
 
 import os, sys
 import getopt
+import popen2
 GDM_CONF_FILE="/etc/gdm/gdm.conf"
 HOME_TEMPLATE="/root/skel.tar.gz"
 USER_GROUPS=["fuse"]
@@ -140,17 +141,38 @@ def show_login():
         sys.exit(1)
     
     # kill all user processes
-    os.system("pkill -9 -u %s" %(username))
+    execmd("pkill -9 -u %s" %(username))
     print username    
     restore_home(home, username)
+
+def read_exe_output(cmd):
+    output=[]
+    (stdout, stdin) = popen2.popen2(cmd)
+    stdin.close()
+    for line in stdout:
+        if line != '\n':
+            line=line.replace('\n', '')
+            output.append(line)
+    return output
 
 
 def restore_home(home, username):
     if not os.path.isfile(HOME_TEMPLATE):
         print_debug ( "skel don't exists: %s" %(HOME_TEMPLATE) )
         return
+
+    # umount all fuse devices
+    if int(read_exe_output("grep -c \"%s\" /proc/mounts" %(home) )[0] ) > 0:
+        print_debug("user %s have fuse mounted devices" %(username) )
+        for mount_dev in read_exe_output("grep \"%s\" /proc/mounts | awk '{print $2}'" %(home) ):
+            print_debug("umounting %s" %(mount_dev) )
+            execmd("fusermount -u %s" %(mount_dev) )
+
     execmd("rm -rf %s 2>/dev/null" %(home) )
-    os.mkdir(home)
+    try:
+        os.mkdir(home)
+    except:
+        pass
     execmd("tar -zxf %s -C %s 2>/dev/null" %(HOME_TEMPLATE, home) )
     execmd("chown -R %s:%s %s 2>/dev/null" %(username, username, home) )
     

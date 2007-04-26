@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.56.15) unstable; urgency=low
+
+  * bin/tcos-gdm-autologin: Umount all fuse devices before restoring template.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon,  4 Dec 2006 10:46:26 +0100
+
 initramfs-tools-tcos (0.56.14) unstable; urgency=low
 
   * FIX tcos-gdm-autologin AddHost() loop ;)
