@@ -10,19 +10,21 @@ all: testlibs
 include ../common.mk
 
 
-LIBGL := $(wildcard /usr/lib/libGL.so)
-LIBGL := $(wildcard /usr/lib/libGL.so.1)
-LIBGL := $(wildcard /usr/lib/libGL.so.1.2)
+LIBGL=
+LBGLU=
 
-LIBGLU := $(wildcard /usr/lib/libGLU.so)
-LIBGLU := $(wildcard /usr/lib/libGLU.so.1)
+LIBGL := $(wildcard /usr/lib/libGL.so.1.2 )
+LIBGLU := $(wildcard /usr/lib/libGLU.so.1 )
 
 
 testvars:
 	@echo LIBGL=$(LIBGL)
-	@echo LIBGLU=$(LIBGL)
+	@echo LIBGLU=$(LIBGLU)
+	@if [ "$(LIBGL)" = "" ]; then false; fi
+	@if [ "$(LIBGLU)" = "" ]; then false; fi
 
-testlibs:
+
+testlibs: testvars
 	@if [ "$$(strings $(LIBGL) |grep -c NVIDIA)" != 0 ]; then\
 		echo "**************************************" ;\
 		echo "Please remove NVIDIA drivers first!!!!" ;\
