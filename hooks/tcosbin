@@ -123,6 +123,8 @@ if [ $DESTDIR/bin/busybox ]; then
        _echo "   INFO:  Better busybox found, replacing it..."
        rm $DESTDIR/bin/busybox
        cpifexists /bin/busybox /bin/
+       # replace sh too (in ubuntu is a link to /usr/lib/initramfs-tools/busybox)
+       (cd $DESTDIR/bin && rm -f sh && ln -s busybox sh )
     else
        _echo "ERROR:"
        _echo ""
