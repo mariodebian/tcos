@@ -18,9 +18,9 @@ rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/message
 # delete some bins
 rm -rf ${DESTDIR}/scripts/local*
 rm -rf ${DESTDIR}/scripts/nfs*
-rm -rf ${DESTDIR}/scripts/tcos-top
-rm -rf ${DESTDIR}/scripts/tcos-bottom
-rm -rf ${DESTDIR}/scripts/tcos-premount
+#rm -rf ${DESTDIR}/scripts/tcos-top
+#rm -rf ${DESTDIR}/scripts/tcos-bottom
+#rm -rf ${DESTDIR}/scripts/tcos-premount
 
 rm -rf ${DESTDIR}/sbin/vgchange
 rm -rf ${DESTDIR}/lib/libdevmapper*

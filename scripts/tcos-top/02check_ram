@@ -1,0 +1,40 @@
+#!/bin/sh
+# 
+
+PREREQ="01busybox"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+echo 0 > /tmp/less_ram
+
+# read MemTotal (in MB)
+have_mem=$(awk '/^MemTotal/ {print int($2/1000)}' /proc/meminfo)
+
+if [ ${have_mem} -lt ${TCOS_MIN_RAM} ]; then
+  # we have less than TCOS_MIN_RAM
+  # need to start in NFS mode
+  echo 1 > /tmp/less_ram
+fi
+
+exit 0

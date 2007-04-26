@@ -22,10 +22,10 @@ stat_before
  grep "audio" /etc/group >> $DESTDIR/etc/group
  grep "audio" /etc/shadow >> $DESTDIR/etc/shadow
 
- #cpifexists /usr/bin/amixer /usr/bin/
+ cpifexists /usr/bin/amixer /usr/bin/
  
  # test for new cpifexists
- cpifexists /usr/sbin/amixer /usr/bin/
+ #cpifexists /usr/sbin/amixer /usr/bin/
 
  mkdir -p $DESTDIR/usr/share/
  copydir /usr/share/alsa/ /usr/share/

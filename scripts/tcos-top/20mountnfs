@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 
-PREREQ="01busybox 05network"
+PREREQ="01busybox 02check_ram 05network"
 
 prereqs()
 {
@@ -16,11 +16,71 @@ prereqs)
 	;;
 esac
 
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+quiet=n
+
+# if break=mountnfs STOP here
+maybe_break mountnfs
+
+
+# read /tmp/less_ram
+if [ "$(cat /tmp/less_ram)" = "0" ]; then
+  # have more than TCOS_MIN_RAM
+  exit 0
+fi
+
+modprobe -q unionfs 2>&1 >> /tmp/initramfs.debug
 
 
 # if use NFS try to mount:
 #
 #   SERVER_IP:/opt/tcos/fs-$(uname -r)
 #
+
+
+MNTOPT="ro,nolock,rsize=2048,wsize=2048,retrans=10"
+NFS_RO=/root/nfs
+NFS_RW=/root
+
+
+mkdir -p /root 
+mkdir -p /root/nfs
+
+# say to usplash more timeout
+if [ -x /sbin/usplash_write ]; then
+  /sbin/usplash_write "TIMEOUT 180" || true
+fi
+
+
+log_begin_msg "Trying to mount NFS"
+  nfsmount -o $MNTOPT $(get_server):${TCOS_OPT}/fs-$(uname -r) ${NFS_RO} 2>/dev/null
+
+
+# try again
+if [ $? -ne 0 ]; then
+  log_begin_msg "Second retry to mount NFS"
+     nfsmount -o $MNTOPT $(get_server):${TCOS_OPT}/fs-$(uname -r) ${NFS_RO} 2> /dev/null
+fi
+
+if [ $? -ne 0 ]; then
+  panic "Unable to mount NFS, check NFS service in server and ${TCOS_OPT}/fs-$(uname -r) dir"
+fi
+
+
+log_begin_msg "Remounting NFS root in RW mode"
+
+  mkdir -p /root/ram
+  #echo "ls /root" && ls /root && sleep 2
+  mount -t tmpfs -o size=5m tmpfs /root/ram
+
+  # NFS mounts must have nfsro instead of ro (see man unionfs)
+  mount -t unionfs -o dirs=/root/ram=rw:/root/nfs=nfsro unionfs /root
+
+log_end_msg
+
+
 
 exit 0

@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 
-PREREQ="10fstab 15uselocal 20swapon 25download_settings"
+PREREQ="15uselocal 20swapon 25download_settings"
 
 prereqs()
 {

@@ -10,15 +10,17 @@ mountroot ()
 	run_scripts /scripts/tcos-top
 	#log_end_msg
 
-
-	# Find and mount the Image
-	maybe_break tcos-premount
-	#log_begin_msg "Running /scripts/tcos-premount"
-	run_scripts /scripts/tcos-premount
-	#log_end_msg
-
-	maybe_break tcos-bottom
-	#log_begin_msg "Running /scripts/tcos-bottom"
-	run_scripts /scripts/tcos-bottom
-	#log_end_msg
+    # if not booting in NFS mode exec other scripts
+    if [ "$(cat /tmp/less_ram)" = "0" ]; then
+	    # Find and mount the Image
+	    maybe_break tcos-premount
+	    #log_begin_msg "Running /scripts/tcos-premount"
+	    run_scripts /scripts/tcos-premount
+	    #log_end_msg
+        
+	    maybe_break tcos-bottom
+	    #log_begin_msg "Running /scripts/tcos-bottom"
+	    run_scripts /scripts/tcos-bottom
+	    #log_end_msg
+	fi
 }

@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 
-PREREQ="05network 20mountnfs"
+PREREQ="01busybox 02check_ram 05network 20mountnfs"
 
 prereqs()
 {
@@ -22,6 +22,14 @@ esac
 
 quiet=n
 
+# read /tmp/less_ram
+if [ "$(cat /tmp/less_ram)" = "0" ]; then
+  # have more than TCOS_MIN_RAM
+  exit 0
+fi
+
+
+
 rm -f /root/sbin/init
 cat << EOF > /root/sbin/init
 #!/bin/sh
@@ -35,7 +43,7 @@ quiet=n
 
 
 # start udev again
-log_begin_msg "Discovering hardware"
+log_begin_msg "Re-Discovering hardware"
 .  /scripts/init-premount/udev
 log_end_msg
 
@@ -51,15 +59,13 @@ chmod +x /root/sbin/init
 move_file() {
 # $1 orig
 # $2 dest
-
-mkdir -p ${2}/$(dirname ${1})
-
-if [ -f $1 ]; then
+ mkdir -p ${2}/$(dirname ${1})
+ if [ -f $1 ]; then
   mv ${1} ${2}/$(dirname ${1})
   ln -s ${2}/${1} ${1}
-else
+ else
   touch $2/$1
-fi
+ fi
 }
 
 move_file /var/lib/dhcp/dhclient.leases /root
@@ -69,8 +75,12 @@ move_file /etc/resolv.conf  /root
 move_file /tmp/progress     /root
 move_file /etc/fstab        /root
 move_file /tmp/initramfs.debug /root
+
+touch /etc/mtab
+move_file /etc/mtab         /root
+
  
-log_begin_msg "Updating modules dependencies"
+log_begin_msg "Re-Updating modules dependencies"
   chroot /root depmod -a
 log_end_msg
 
