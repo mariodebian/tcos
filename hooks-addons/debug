@@ -12,7 +12,7 @@ if [ $TCOS_DEBUG ]; then
  cp -a /lib/terminfo/l/linux $DESTDIR/lib/terminfo/l/
 
  mkdir -p $DESTDIR/lib/terminfo/x/
- cp -a /lib/terminfo/x/xterm $DESTDIR/lib/terminfo/x/
+ cp -a /lib/terminfo/x/xterm* $DESTDIR/lib/terminfo/x/
  
  cpifexists /bin/lsmod       /usr/bin/
  cpifexists /usr/bin/strace  /bin/

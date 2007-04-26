@@ -48,6 +48,18 @@ modprobe -q unionfs >> /tmp/initramfs.debug 2>&1
 mnt_usr=${download_dir}/usr.squashfs
 allmodules=${download_dir}/allmodules.squashfs
 
+# check if we are booting from HD
+_INITRD=$(read_cmdline_var "initrd" "")
+if [ "$_INITRD" = "initrd.gz" ]; then
+   # booting from hdd, use usr.squashfs from HDD if exists
+   mkdir -p /target
+   hda1_fs=$(grep hda1 /etc/fstab | awk '{print $3}')
+   mount -t${hda1_fs} /dev/hda1 /target
+   if [ -f /target/usr.squashfs ]; then
+     mnt_usr=/target/usr.squashfs
+   fi
+fi
+
 
 # if file exist rename it!!!
 if [ -f ${download_dir}/usr-$(uname -r).squashfs ]; then

@@ -9,6 +9,10 @@ label tcos
   kernel vmlinuz-2.6.17-2-486
   append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet splash
 
+label update
+  kernel vmlinuz-2.6.17-2-486
+  append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet splash installer-update
+
 label nfs
   kernel vmlinuz-2.6.17-2-486
   append ramdisk_size=32768 initrd=initramfs-2.6.17-2-486-nfs root=/dev/ram0 boot=tcos-nfs quiet splash

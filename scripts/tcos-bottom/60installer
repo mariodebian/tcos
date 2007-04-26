@@ -1,0 +1,56 @@
+#!/bin/sh
+# 
+
+PREREQ="01download_settings 05inittcos 10ldconfig 20autofs 30devices 40initsound 50freespace"
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+. /scripts/functions
+. /conf/tcos-run-functions
+
+
+# try to exec installer
+INSTALLER=$(read_cmdline_var "installer" "0")
+
+# try to exec installer-update
+INSTALLER_UPDATE=$(read_cmdline_var "installer-update" "0")
+
+if [ "${INSTALLER}" = "1" ]; then
+   # launch installer
+   #clear
+   /sbin/installer.sh
+   echo ""
+   echo "Installer done. You can reboot now or connect server."
+   echo ""
+   echo "    for reboot/poweroff   exec => reboot poweroff"
+   echo "    for connect to server exec => startremotex"
+   echo ""
+   sh
+elif [ "${INSTALLER_UPDATE}" = "1" ]; then
+   # launch installer
+   #clear
+   /sbin/installer.sh --update
+   echo ""
+   echo "Installer update done. You can reboot now or connect server."
+   echo ""
+   echo "    for reboot/poweroff   exec => reboot poweroff"
+   echo "    for connect to server exec => startremotex"
+   echo ""
+fi
+
+
+
+exit 0

@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.57.1) unstable; urgency=low
+
+  * usplashize installer.sh
+  * Move installer launcher before startx script
+  * Add installer update to pxelinux.cfg
+  * Add bigger usplash timeout before udev (need some testing)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 26 Dec 2006 23:33:39 +0100
+
 initramfs-tools-tcos (0.56.18+1) unstable; urgency=low
 
   * hooks-addons/xorg:
