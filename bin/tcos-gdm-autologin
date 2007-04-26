@@ -37,7 +37,8 @@ Usage:
 
 import os, sys
 import getopt
-GDM_CONF_FILE="/etc/gdm/gdm.conf"
+#GDM_CONF_FILE="/etc/gdm/gdm.conf"
+GDM_CONF_FILE="./gdm.conf"
 HOME_TEMPLATE="/root/skel.tar.gz"
 USER_GROUPS=["fuse"]
 
@@ -107,10 +108,10 @@ for o, a in opts:
 
 def execmd(cmd):
     print_debug(cmd)
-    try:
-        os.system(cmd)
-    except:
-        print("Error while exec: \"%s\"" %(cmd))
+    #try:
+    #    os.system(cmd)
+    #except:
+    #    print("Error while exec: \"%s\"" %(cmd))
 
     
 def show_login():
@@ -206,12 +207,12 @@ def AddUser(username):
     execmd("useradd -m %s -p%s -s /bin/bash -d /home/%s" %(username, username, username))
     execmd("echo %s:%s | chpasswd" %(username, username))
     execmd("tar -zxf %s -C /home/%s 2>/dev/null" %(HOME_TEMPLATE, username) )
-    execmd("chowm $s:%s /home/%s " %(username, username, username) )
+    execmd("chowm %s:%s /home/%s " %(username, username, username) )
     for group in USER_GROUPS:
         execmd("adduser %s %s" %(username, group))
 
 def AddHost(hostname, ip):
-    print ( "Adding host: %s %s" %(ip, hostname) )
+    #print ( "Adding host: %s %s" %(ip, hostname) )
     # check if exists
     f=open("/etc/hosts", "r")
     data=f.readlines()
@@ -220,14 +221,15 @@ def AddHost(hostname, ip):
         line=line.replace('\n','')
         if ip + " " in line or ip + '\t' in line:
             print ( "IP %s is in /etc/hosts" %(ip) )
-            pass
-        else:
-            try:
-                f=open("/etc/hosts", "a")
-                f.write("%s\t%s\n" %(ip, hostname) )
-                f.close()
-            except:
-                pass
+            return
+    try:
+        print ("Adding %s %s" %(ip, hostname) )
+        f=open("/etc/hosts", "a")
+        f.write("%s\t%s\n" %(ip, hostname) )
+        f.close()
+    except:
+        print "Error editting /etc/hosts, are you root?"
+        pass
                 
 
 try:
