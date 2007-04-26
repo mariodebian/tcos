@@ -12,7 +12,8 @@ INSTALL_PROGRAM = $(INSTALL) -m 755
 
 usplash-tcos.so: throbber_back.png.c.o throbber_back_16.png.c.o throbber_fore.png.c.o throbber_fore_16.png.c.o \
 						 usplash_1024_768.png.c.o usplash_800_600.png.c.o \
-						 usplash_640_400.png.c.o usplash_640_480.png.c.o usplash-tcos.c.o
+						 usplash_640_400.png.c.o usplash_640_480.png.c.o \
+						 usplash-tcos.c.o helvB10.bdf.c.o
 	$(COMPILE) -shared -o $@ $^
 
 %.png.c: %.png

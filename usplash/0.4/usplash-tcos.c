@@ -21,6 +21,8 @@
  */
 
 #include <usplash-theme.h>
+/* Needed for the custom drawing functions */
+#include <usplash_backend.h>
 
 /*
 .background             = 0x0,
@@ -49,14 +51,13 @@
 #define C_TEXT_FAILURE 0x123
 
 
-/* Needed for the custom drawing functions */
-#include <usplash_backend.h>
 extern struct usplash_pixmap pixmap_usplash_640_400, pixmap_usplash_640_480;
 extern struct usplash_pixmap pixmap_usplash_800_600, pixmap_usplash_1024_768;
 extern struct usplash_pixmap pixmap_throbber_back;
 extern struct usplash_pixmap pixmap_throbber_back_16;
 extern struct usplash_pixmap pixmap_throbber_fore;
 extern struct usplash_pixmap pixmap_throbber_fore_16;
+extern struct usplash_font font_helvB10;
 
 void t_init(struct usplash_theme* theme);
 void t_clear_progressbar(struct usplash_theme* theme);
@@ -76,10 +77,11 @@ struct usplash_theme usplash_theme = {
 	.version = THEME_VERSION, /* ALWAYS set this to THEME_VERSION, 
                                  it's a compatibility check */
     .next = &usplash_theme_640_480,
-    .ratio = USPLASH_16_9,
+    .ratio = USPLASH_4_3,
 
 	/* Background and font */
 	.pixmap = &pixmap_usplash_640_400,
+	.font   = &font_helvB10,
 
 	/* Palette indexes */
         .background             = C_BACKGROUND,
@@ -130,6 +132,7 @@ struct usplash_theme usplash_theme_640_480 = {
 
 	/* Background and font */
 	.pixmap = &pixmap_usplash_640_480,
+	.font   = &font_helvB10,
 
 	/* Palette indexes */
         .background             = C_BACKGROUND,
@@ -180,6 +183,7 @@ struct usplash_theme usplash_theme_800_600 = {
 
 	/* Background and font */
 	.pixmap = &pixmap_usplash_800_600,
+	.font   = &font_helvB10,
 
 	/* Palette indexes */
         .background             = C_BACKGROUND,
@@ -230,6 +234,7 @@ struct usplash_theme usplash_theme_1024_768 = {
 
 	/* Background and font */
 	.pixmap = &pixmap_usplash_1024_768,
+	.font   = &font_helvB10,
 
 	/* Palette indexes */
         .background             = C_BACKGROUND,
