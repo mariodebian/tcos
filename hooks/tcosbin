@@ -215,10 +215,10 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
     _echo "DEBUG: overwrite TCOS_SQUASHFS=$TCOS_SQUASHFS"
   else
     if [ "${TCOS_SQUASHFS}" = "1" ] ; then
-      _echo "     Moving ${SQUASHFS_FILE} to ${TCOS_OPT}/files and linking in ${TFTP_DIR}"
-      mv $DESTDIR/mnt/tmp/${SQUASHFS_FILE} ${TCOS_OPT}/files
+      _echo "     Moving ${SQUASHFS_FILE} to ${TCOS_VAR}/files and linking in ${TFTP_DIR}"
+      mv $DESTDIR/mnt/tmp/${SQUASHFS_FILE} ${TCOS_VAR}/files
       rm -f ${TFTP_DIR}/${SQUASHFS_FILE}
-      ln -s ${TCOS_OPT}/files/${SQUASHFS_FILE} ${TFTP_DIR}
+      ln -s ${TCOS_VAR}/files/${SQUASHFS_FILE} ${TFTP_DIR}
     fi
   fi # end of TCOS_SQUASHFS
 fi # end of TCOS_DISABLE_SQUASHFS

@@ -6,8 +6,9 @@
 all:
 	cd usplash     && make
 	cd debootstrap && make
-	cd discover    && make
-	cd opengl      && make
+#	cd discover    && make
+#	cd esound      && make
+#	cd opengl      && make
 	cd hex2ascii   && make
 
 include common.mk
@@ -119,8 +120,9 @@ install:
 	install -m 644 bin/shfscommon.sh $(DESTDIR)$(TCOS_DIR)/inc/shfscommon.sh
 
 	cd debootstrap && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
-	cd discover    && make install DESTDIR=$(DESTDIR)
-	cd opengl      && make install DESTDIR=$(DESTDIR)
+#	cd discover    && make install DESTDIR=$(DESTDIR)
+#	cd esound      && make install DESTDIR=$(DESTDIR)
+#	cd opengl      && make install DESTDIR=$(DESTDIR)
 	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
 
 

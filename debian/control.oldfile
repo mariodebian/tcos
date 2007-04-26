@@ -67,3 +67,34 @@ Description: TCOS server utils
  thin client terminal.
  This package contain some utils (scripts) to mount or connect
  thin client devices with server users.
+
+
+Package: tcos-discover2
+Architecture: any
+Depends: initramfs-tools-tcos (>= 0.48), ${misc:Depends}, ${shlibs:Depends}
+Description: TCOS discover2 files into /usr/lib/tcos
+ This is a system for generating thin client systems using initramfs.
+ TCOS is a set of build tools to prepare an initramfs image to boot
+ thin client terminal.
+ This package contain discover2 files into /usr/lib/tcos/discover
+ to not have to install discover2 and replace discover1 in server system.
+
+Package: tcos-opengl-libs
+Architecture: any
+Depends: initramfs-tools-tcos (>= 0.48), ${misc:Depends}, ${shlibs:Depends}
+Description: TCOS OpenGL libs files into /usr/lib/tcos
+ This is a system for generating thin client systems using initramfs.
+ TCOS is a set of build tools to prepare an initramfs image to boot
+ thin client terminal.
+ This package contain OpenGL libs (libGL.so libGLU.so libglx.so) in
+ /usr/lib/tcos/opengl to not have to remove nvidia/ati propietary
+ drivers in TCOS server. 
+
+Package: tcos-esound
+Architecture: any
+Depends: initramfs-tools-tcos (>= 0.48), ${misc:Depends}, ${shlibs:Depends}
+Description: TCOS eSound files into /usr/lib/tcos
+ This is a system for generating thin client systems using initramfs.
+ TCOS is a set of build tools to prepare an initramfs image to boot
+ thin client terminal.
+ This package contain eSound (esd libesd.so.0) in /usr/lib/tcos/esound

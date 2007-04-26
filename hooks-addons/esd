@@ -2,38 +2,45 @@
 # need esound
 
 
-if [ $TCOS_SOUND ] &&  [ ! $TCOS_PULSEAUDIO ]; then
-sound_error=0
-esound=$(dpkg -l esound|grep -c ^ii)
-if [ ${esound} != 1 ]; then
+if [ $TCOS_SOUND ]; then
+
+   if [ ! -e /usr/bin/esd ]; then
         echo "WARNING:"
         echo ""
         echo "esound not installed, install esound to have thin client sound server"
         echo "   => apt-get install esound"
         echo ""
 	sound_error=1
-fi
+  else
 
-if [ ${sound_error} = 0 ]; then
-stat_before
+    stat_before
 
- cpifexists /usr/bin/esd /usr/bin/
- mkdir -p $DESTDIR/etc/esound
+    cpifexists /usr/bin/esd /usr/bin/
+    mkdir -p $DESTDIR/etc/esound
+
+    # need libesd0 NOT libesd0-alsa
+    if [ "$(ldd $DESTDIR/usr/lib/libesd.so.0 |grep -c libasound)" = "1" ]; then
+       _echo ""
+       _echo " WARNING: You have installed libesd0-alsa"
+       _echo "              need libesd0 to work with OSS"
+       _echo ""
+    fi
 
 
- # esound libs
- cpifexists /lib/libc.so.6          /lib/
- cpifexists /lib/libpthread.so.0    /lib/
- cpifexists /lib/libnsl.so.1        /lib/
+    # esound libs
+    cpifexists /lib/libc.so.6          /lib/
+    cpifexists /lib/libpthread.so.0    /lib/
+    cpifexists /lib/libnsl.so.1        /lib/
 
- cpifexists /lib/libnss_nis.so.2    /lib/
- cpifexists /lib/libnss_files.so.2  /lib/
- cpifexists /lib/libnss_compat.so.2 /lib/
- cpifexists /lib/libm.so.6          /lib/
- cpifexists /lib/libdl.so.2         /lib/
+    cpifexists /lib/libnss_nis.so.2    /lib/
+    cpifexists /lib/libnss_files.so.2  /lib/
+    cpifexists /lib/libnss_compat.so.2 /lib/
+    cpifexists /lib/libm.so.6          /lib/
+    cpifexists /lib/libdl.so.2         /lib/
 
- stat_after "ESound Daemon (sound server)"
-fi # end of sound_error
-unset sound_error
+ 
+    stat_after "ESound Daemon (sound server)"
+
+  fi # end of sound_error
 
 fi # end of TCOS_SOUND

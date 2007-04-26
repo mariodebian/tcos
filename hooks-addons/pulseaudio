@@ -40,7 +40,6 @@ else
 
  # clean unneeded modules
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*.la
-
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*jack*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*rtp*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*lirc*
@@ -53,11 +52,11 @@ else
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*hal*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*pipe*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*tunel*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*esound-sink*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*volume-restore*
 
 
- copydir /etc/pulse                   /etc/
+ #copydir /etc/pulse                   /etc/
+ mkdir -p $DESTDIR/etc/pulse
 
  cat << EOF >> ${DESTDIR}/sbin/startpulseaudio
 #!/bin/sh
@@ -69,6 +68,22 @@ else
 
 # generate conf
 rm -f /etc/pulse/default.pa
+
+if [ \$TCOS_SOUND_OSS ]; then
+cat << FIN > /etc/pulse/default.pa
+#!/usr/bin/pulseaudio -nF
+
+#load-module module-oss device="/dev/dsp" sink_name=output source_name=input
+load-module module-esound-sink server=127.0.0.1
+
+
+load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(get_server)
+load-module module-esound-protocol-unix
+#load-module module-esound-protocol-tcp
+
+FIN
+
+else
 cat << FIN > /etc/pulse/default.pa
 #!/usr/bin/pulseaudio -nF
 
@@ -81,10 +96,10 @@ load-module module-esound-protocol-unix
 load-module module-rescue-streams
 
 .nofail
-
-# use better pax11bublish
-#load-module module-x11-publish
 FIN
+
+fi
+
 
 DISPLAY=:0
 export DISPLAY

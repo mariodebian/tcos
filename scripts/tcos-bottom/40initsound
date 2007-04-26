@@ -37,39 +37,58 @@ if [  ${TCOS_SOUND} = 0  -o ${TCOS_DISABLE_SOUND} = 1 ]; then
   exit 0
 fi
 
+
+#if [ ! "$(which aumix)" ]; then
+#  _log "INITSOUND aumix  don't avalaible"
+#  log_failure_msg "Mixer not avalaible to give up volume"
+#  log_end_msg
+#  exit 0
+#fi
+
+
+
 # check if sound server is avalaible
-if [ ! "$(which amixer)" ] ; then
-  _log "INITSOUND amixer and amixer binaries don't avalaible"
-  log_failure_msg "Mixer not avalaible to give up volume"
-  log_end_msg
-  exit 0
-fi
+#if [ ! "$(which amixer)" ] ; then
+#  _log "INITSOUND amixer and amixer binaries don't avalaible"
+#  log_failure_msg "Mixer not avalaible to give up volume"
+#  log_end_msg
+#  exit 0
+#fi
 
 # check if soundcard is avalaible
-if [ ! -d /proc/asound  ]; then
-  _log "INITSOUND /proc/asound don't exists, need other kernel modules!!!"
+if [ ! -d /proc/asound  ] && [ ! -e /dev/dsp ] ; then
+  _log "INITSOUND /proc/asound and /dev/dsp don't exists, need other kernel modules!!!"
   log_failure_msg "No soundcard found"
   log_end_msg 1
   exit 0
 fi
 
+if [ -e /dev/dsp ] && [ ! /proc/asound ]; then
+   export TCOS_SOUND_OSS=1
+   echo "TCOS_SOUND_OSS=1" >> /conf/tcos.conf
+fi
+
+
 
 # check if device is avalaible
-if [  -e /dev/dsp -o  -d /dev/snd/ ]; then
-  log_begin_msg "Sound device detected, configuring"
-  log_end_msg
-else
-  _log "INITSOUND /dev/dsp or /dev/snd don't exists, need other kernel modules!!!"
-  log_failure_msg "No soundcard device found"
-  log_end_msg 1
-  exit 0
-fi
+#if [  -e /dev/dsp ] || [ -d /dev/snd/ ]; then
+#  log_begin_msg "Sound device detected, configuring"
+#  log_end_msg
+#else
+#  _log "INITSOUND /dev/dsp or /dev/snd don't exists, need other kernel modules!!!"
+#  log_failure_msg "No soundcard device found"
+#  log_end_msg 1
+#  exit 0
+#fi
 
 
 
 # DOCUMENTME volume=XX% | set master and pcm volume levels to value passed (0%-100% or integer from 1 to 31)
 TCOS_VOLUME=$(read_cmdline_var "volume" "${TCOS_VOLUME}")
 
+cat <<EOF > /etc/esound/esd.conf
+[esd]
+EOF
 
 
 # setting volumes
@@ -77,23 +96,26 @@ log_begin_msg "Setting volume to ${TCOS_VOLUME}"
   _log "INITSOUND Setting volume to ${TCOS_VOLUME}"
   amixer -c 0 set PCM ${TCOS_VOLUME} > /dev/null 2>&1
   amixer -c 0 set PCM unmute > /dev/null 2>&1
-
   amixer -c 0 set Master ${TCOS_VOLUME} > /dev/null 2>&1
   amixer -c 0 set Master unmute > /dev/null 2>&1
+  if [ -x /usr/bin/aumix ]; then
+    aumix -v ${TCOS_VOLUME}
+    aumix -w ${TCOS_VOLUME}
+  fi
 log_end_msg
 
+if [ $TCOS_SOUND_OSS ]; then
+  esd -public -tcp -d &
+fi
 
 if [ $TCOS_PULSEAUDIO ]; then
   log_begin_msg "Init sound server (PulseAudio)"
     _log "INITSOUND starting pulseaudio"
     startpulseaudio 2> /var/log/pulseaudio.log &
   log_end_msg
-else
+elif [ ! $TCOS_PULSEAUDIO ] && [ ! $TCOS_SOUND_OSS ]; then
   log_begin_msg "Init sound server (esound)"
     _log "INITSOUND starting esd daemon"
-cat <<EOF > /etc/esound/esd.conf
-[esd]
-EOF
     esd -tcp -public -d &  >> /tmp/initramfs.debug 2>&1
   log_end_msg
 fi

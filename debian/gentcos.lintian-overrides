@@ -2,6 +2,4 @@ gentcos: file-in-unusual-dir /tftpboot/tcos/pxelinux.cfg/default
 gentcos: file-in-unusual-dir /tftpboot/tcos/help.msg
 gentcos: file-in-unusual-dir /tftpboot/tcos/tcos.msg
 gentcos: file-in-unusual-dir /tftpboot/tcos/logo.lss
-gentcos: dir-or-file-in-opt /opt/tcos/
-gentcos: dir-or-file-in-opt /opt/tcos/files/
 

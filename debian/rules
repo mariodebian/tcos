@@ -1,15 +1,7 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
-
-
 
 
 CFLAGS = -Wall -g
@@ -62,9 +54,9 @@ install: build
 	# clean SVN dirs in package
 	for i in `find debian/tmp -type d -name .svn`; do rm -rf $$i; done
 
-	mkdir -p $(CURDIR)/debian/gentcos/usr/share/lintian/overrides/
-	install -m 644 $(CURDIR)/debian/gentcos.lintian-overrides \
-		$(CURDIR)/debian/gentcos/usr/share/lintian/overrides/gentcos
+#	mkdir -p $(CURDIR)/debian/gentcos/usr/share/lintian/overrides/
+#	install -m 644 $(CURDIR)/debian/gentcos.lintian-overrides \
+#		$(CURDIR)/debian/gentcos/usr/share/lintian/overrides/gentcos
 
 
 
@@ -79,29 +71,13 @@ binary-arch: build install
 	dh_installchangelogs 
 	dh_installdocs
 	dh_installexamples
-	dh_install --sourcedir=`pwd`/debian/tmp --list-missing
+	dh_install --sourcedir=$(CURDIR)/debian/tmp --list-missing
 
-#	# create link to vmlinuz
-#	dh_link /boot/vmlinuz-2.6.16-1-486 /tftpboot/tcos/vmlinuz-2.6.16-1-486
-#	dh_link /boot/vmlinuz-2.6.16-2-486 /tftpboot/tcos/vmlinuz-2.6.16-2-486
-
-	dh_installdebconf	
-#	dh_installmenu
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_installinit
-#	dh_installcron
-#	dh_installinfo
 	dh_installman
 	dh_link
 	dh_strip
 	dh_compress
 	dh_fixperms
-#	dh_perl
-#	dh_python
-#	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol

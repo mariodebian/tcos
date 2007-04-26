@@ -35,7 +35,7 @@ OUTINITRAMFS=initramfs
 OUTNBI=linux.nbi
 
 OUTROOTFS_TMP=/tmp/rootfs-${TCOS_KERNEL}-$$
-OUTROOTFS_END=${TCOS_OPT}/files/rootfs-${TCOS_KERNEL}.squashfs
+OUTROOTFS_END=${TCOS_VAR}/files/rootfs-${TCOS_KERNEL}.squashfs
 
 # temp vars
 INITRAMFS=/tmp/initramfs-$$
@@ -140,7 +140,7 @@ create_initramfs_nfs() {
 
 
 create_rootfs() {
- _echo "Creating NFS rootfs in ${TCOS_OPT}/fs-${TCOS_KERNEL}/"
+ _echo "Creating NFS rootfs in ${TCOS_VAR}/fs-${TCOS_KERNEL}/"
  rm -rf ${OUTROOTFS_TMP} && mkdir -p ${OUTROOTFS_TMP}
 
  export TCOS_ENV_DISABLE_SQUASHFS=1
@@ -157,11 +157,11 @@ create_rootfs() {
  cpio -i < initramfs &> /dev/null
  rm -f initramfs
 
- rm -rf ${TCOS_OPT}/fs-${TCOS_KERNEL}
- mkdir ${TCOS_OPT}/fs-${TCOS_KERNEL}
- mv ${OUTROOTFS_TMP}/* ${TCOS_OPT}/fs-${TCOS_KERNEL}/
+ rm -rf ${TCOS_VAR}/fs-${TCOS_KERNEL}
+ mkdir ${TCOS_VAR}/fs-${TCOS_KERNEL}
+ mv ${OUTROOTFS_TMP}/* ${TCOS_VAR}/fs-${TCOS_KERNEL}/
  echo -n "   * Updating modules dependencies..."
- chroot ${TCOS_OPT}/fs-${TCOS_KERNEL}/ depmod -ae ${TCOS_KERNEL}
+ chroot ${TCOS_VAR}/fs-${TCOS_KERNEL}/ depmod -ae ${TCOS_KERNEL}
  echo " done."
  
  cd ${old_dir}
@@ -181,7 +181,7 @@ ramdisk_size () {
   rm initrd
   ramdisk_size=$(du -s . | awk '{print $1}')
   if [ -L ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs ]; then
-    squashfs_size=$(du -s ${TCOS_OPT}/files/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs | awk '{print $1}')
+    squashfs_size=$(du -s ${TCOS_VAR}/files/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs | awk '{print $1}')
   else
     squashfs_size=$(du -s ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs | awk '{print $1}')
   fi
@@ -301,7 +301,7 @@ This is gentcos help info about generating net init images.
 
   ${BLUE}NFS (like LTSP) images:${NORMAL}
      ${GREEN}-nfs${NORMAL}  or [-n] make initramfs-${TCOS_KERNEL}-nfs and copy to ${TFTP_DIR}
-    [${GREEN}-rootfs${NORMAL}] Make a complete initramfs and uncompress in ${TCOS_OPT}/fs-${TCOS_KERNEL}
+    [${GREEN}-rootfs${NORMAL}] Make a complete initramfs and uncompress in ${TCOS_VAR}/fs-${TCOS_KERNEL}
              ( default ${TFTP_DIR}/${OUTINITRAMFS}-nfs )
 
   ${BLUE}NBI IMAGES:${NORMAL} ( Etherboot floppy )

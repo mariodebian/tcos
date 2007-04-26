@@ -36,7 +36,7 @@ force_add_module() {
         # force copy of module modprobe dont show as dependency
         this_module=$(modprobe --set-version="${version}" -l "${1}")
         if [ ! -e "${DESTDIR}/${this_module}" ]; then
-                #echo "  WARNING, adding module $(basename ${this_module}), see Debian bug: #384043"
+                echo "  WARNING, adding module $(basename ${this_module}), see Debian bug: #384043"
                 mkdir -p "${DESTDIR}/$(dirname "${this_module}")"
                 ln -s "${this_module}" "${DESTDIR}/$(dirname "${this_module}")"
         fi
@@ -111,23 +111,11 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
 
     for x in ${MODULES} ; do
       #_echo "Adding module ${x}"
-      tcos_manual_add_modules ${x} 
+      manual_add_modules ${x}
+      #tcos_manual_add_modules ${x} 
       force_add_module ${x}  # wait for debian bug #384043
     done
 
-
-    # read shell env variables to search TCOS_ALL_MODULES
-    #if [ $(env | grep -c ^EXTRA_MODULES) = 1 ]; then
-    #   EXTRA_MODULES=$(env | grep ^EXTRA_MODULES | awk -F "=" '{print $2}')
-    #   EXTRA_MODULES=$(echo ${EXTRA_MODULES} | sed s/","/" "/g)
-    #   #echo "##############################"
-    #   #echo "EXTRA_MODULES=${EXTRA_MODULES}"
-    #   #echo "##############################"
-    #   for module in ${TCOS_EXTRA_MODULES}; do
-    #     echo "TCOS_EXTRA_MODULES: adding ${module}"
-    #     manual_add_modules ${module}
-    #   done
-    #fi
 
     if [ "$TCOS_EXTRA_MODULES" != "" ]; then
        TCOS_EXTRA_MODULES=$(echo ${TCOS_EXTRA_MODULES} | sed s/","/" "/g)

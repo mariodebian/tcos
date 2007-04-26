@@ -65,11 +65,11 @@ Create initramfs-x.x.x (and usr-x.x.x.squashfs) and copy to /tftpboot/tcos
 Create initramfs-x.x.x-nfs  and copy to /tftpboot/tcos
 .B
 .IP \-rootfs
-Creates an complete TCOS and uncompress in /opt/tcos/fs-x.x.x
+Creates an complete TCOS and uncompress in /var/lib/tcos/fs-x.x.x
 
 NOTE:  Need a NFS server (apt-get install nfs-kernel-server) and this line in /etc/exports:
 
-.B /opt/tcos  192.168.0.0/255.255.255.0\
+.B /var/lib/tcos  192.168.0.0/255.255.255.0
 (ro,no_root_squash,sync,no_subtree_check)
      (change network data with yours)
 

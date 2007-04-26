@@ -22,9 +22,19 @@ stat_before
  grep "audio" /etc/group >> $DESTDIR/etc/group
  grep "audio" /etc/shadow >> $DESTDIR/etc/shadow
 
+ # aumix
+ if [ -x /usr/bin/aumix ]; then
+    cpifexists /usr/bin/aumix   /usr/bin
+ else
+    _echo ""
+    _echo "  WARNING: To have and oss mixer you must install aumix package"
+    _echo "           # apt-get install aumix "
+    _echo ""
+ fi
+
  cpifexists /usr/bin/amixer /usr/bin/
  
- # test for new cpifexists
+ # test for new cpifexists, amixer is in /usr/bin not in /usr/sbin !!!
  #cpifexists /usr/sbin/amixer /usr/bin/
 
  mkdir -p $DESTDIR/usr/share/
@@ -54,22 +64,6 @@ stat_before
    mkdir -p $DESTDIR/etc/modprobe.d/
    cpifexists /etc/modprobe.d/alsa-base /etc/modprobe.d/
  fi
-
- #####################################
- ##########  ALSACONF  ###############
- 
- #cpifexists /usr/bin/getopt      /usr/bin/
- #mkdir -p $DESTDIR//usr/share/sounds/alsa/ $DESTDIR/etc/init.d
- #cpifexists /usr/share/sounds/alsa/test.wav /usr/share/sounds/alsa/
-
- #cpifexists /sbin/modinfo        /sbin/
- #cpifexists /etc/init.d/alsa     /etc/init.d/
-
- #cpifexists /usr/bin/dialog      /usr/bin/
-
- #cpifexists /usr/sbin/alsaconf   /sbin/
- 
- #####################################
 
  
  stat_after "Alsa sound support"

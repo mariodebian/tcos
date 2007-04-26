@@ -1,10 +1,25 @@
-# Add timeout un usplash startup script
+# Add timeout on usplash startup script
 
 if [ -e $DESTDIR/scripts/init-top/usplash ]; then
 
   _echo "   * Applying usplash timeout patch"
 
-cat << EOF >> $DESTDIR/scripts/init-top/usplash
+cat << EOF > $DESTDIR/scripts/init-top/00nousplash
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
 
 # kill usplash if cmdline have "nousplash" or "nosplash"
 for x in \$(cat /proc/cmdline); do
@@ -15,11 +30,16 @@ for x in \$(cat /proc/cmdline); do
         esac
 done
 
-if [ "\$SPLASH" = "true" ] && [ "\$KILL_USPLASH" = "true" ] ; then
-  usplash_write "QUIT"
-  killall usplash
-  chvt 1
+if [ "\$KILL_USPLASH" = "true" ] ; then
+  echo "#!/bin/sh" > /scripts/init-top/framebuffer
+  echo "#!/bin/sh" > /scripts/init-top/usplash
 fi
+
+
+EOF
+
+cat << EOF >> $DESTDIR/scripts/init-top/usplash
+
 
 if [ "\$SPLASH" = "true" ]; then
    usplash_write "TEXT Preparing to boot..."

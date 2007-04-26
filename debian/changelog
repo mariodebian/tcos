@@ -1,3 +1,17 @@
+initramfs-tools-tcos (0.61) unstable; urgency=low
+
+  * Change /opt/tcos with /var/lib/tcos (debian correct)
+  * Remove debconf message
+  * Not build tcos-discover2 tcos-opengl-libs tcos-esound anymore (no clean, not debian)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 Feb 2007 00:20:38 +0100
+
+initramfs-tools-tcos (0.60.7) unstable; urgency=low
+
+  * New package tcos-esound (esd and libesd0)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 Feb 2007 00:09:52 +0100
+
 initramfs-tools-tcos (0.60.6) unstable; urgency=low
 
   * Add support for rdesktop (tested with Windows BadVista / MalaVista)
