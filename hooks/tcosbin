@@ -114,10 +114,11 @@ rm $DESTDIR/etc/passwd~
 # check for a decent version of busybox
 # ubuntu busybox-initramfs don't have some utils
 if [ $DESTDIR/bin/busybox ]; then
-  test1=$($DESTDIR/bin/busybox tftp 2>&1 | grep -c -i usage)
-  test2=$($DESTDIR/bin/busybox awk 2>&1 | grep -c -i usage)
+  test1=$($DESTDIR/bin/busybox tftp --help  2>&1 | grep -c -i usage)
+  test2=$($DESTDIR/bin/busybox awk --help   2>&1 | grep -c -i usage)
+  test3=$($DESTDIR/bin/busybox httpd --help 2>&1 | grep -c -i usage)
 
-  if [ $test1 = 0 -o $test2 = 0 ]; then
+  if [ $test1 = 0 -o $test2 = 0 -o $test3 = 0 ]; then
     if [ -x /bin/busybox ]; then
        _echo "   INFO:  Better busybox found, replacing it..."
        rm $DESTDIR/bin/busybox
@@ -126,10 +127,11 @@ if [ $DESTDIR/bin/busybox ]; then
        _echo "ERROR:"
        _echo ""
        _echo "     The initramfs busybox version don't have some needed utils."
-       _echo "     Please install other busybox that have awk and tftp"
+       _echo "     Please install other busybox that have awk, tftp and httpd"
        _echo ""
        _echo "     This TCOS image will not work."
        _echo ""
+       sleep 2
     fi
   else
     _echo "    busybox pass test: OK"

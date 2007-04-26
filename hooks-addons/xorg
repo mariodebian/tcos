@@ -207,18 +207,18 @@ if [ $XORG = 6 ]; then
  mkdir -p $DESTDIR/usr/share/locale
  mkdir -p $DESTDIR/usr/lib/X11
  [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
- copydir /usr/lib/X11/config/          /usr/lib/X11/
+ #copydir /usr/lib/X11/config/          /usr/lib/X11/
  cpifexists /etc/X11/rgb.txt           /etc/X11/
- copydir /etc/X11/rstart               /etc/X11/
+ #copydir /etc/X11/rstart               /etc/X11/
  cpifexists /usr/lib/X11/XKeysymDB     /usr/lib/X11/
  cpifexists /usr/lib/X11/XErrorDB     /usr/lib/X11/
 else
  mkdir -p $DESTDIR/usr/share/locale
  mkdir -p $DESTDIR/usr/lib/X11
  [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
- copydir /usr/lib/X11/config/          /usr/lib/X11/
+ #copydir /usr/lib/X11/config/          /usr/lib/X11/
  cpifexists /etc/X11/rgb.txt            /etc/X11/
- copydir /etc/X11/rstart               /etc/X11/
+ #copydir /etc/X11/rstart               /etc/X11/
  #copydir /usr/lib/X11/rstart-X11R7.0-1.0.1 /usr/lib/X11/
  #cpifexists /usr/lib/X11/XKeysymDB      /usr/lib/X11/
 fi

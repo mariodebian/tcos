@@ -1,0 +1,56 @@
+# hook addon for wireless
+# need wireless-tools (firmware....)
+
+
+if [ $TCOS_WIRELESS ]; then
+  stat_before
+
+  # copy wireless utils (some aren't necesary)
+  cpifexists /sbin/iwconfig  /sbin/
+  cpifexists /sbin/iwevent   /sbin/
+  cpifexists /sbin/iwgetid   /sbin/
+  cpifexists /sbin/iwlist    /sbin/
+  cpifexists /sbin/iwpriv    /sbin/
+  cpifexists /sbin/iwspy     /sbin/
+
+  # copy udev firmware agent
+  mkdir -p $DESTDIR/lib/udev
+  cpifexists /lib/udev/firmware.agent /lib/udev/
+
+  mkdir -p $DESTDIR/lib/firmware
+
+  # generic modules
+  manual_add_modules ieee80211-crypt-wep
+  manual_add_modules ieee80211-crypt-tkip
+
+  # copy kernel modules
+  for mod in $TCOS_WIRELESS_MODS; do
+
+    manual_add_modules $mod
+    if [ "$mod" = "ipw2200" ]; then
+      _echo "   WIFI: Copying firmware of ipw2200"
+      cp -ra /lib/firmware/ipw2200* $DESTDIR/lib/firmware/
+    fi
+    if [ "$mod" = "ipw2100" ]; then
+      _echo "   WIFI: Copying firmware of ipw2100"
+      cp -ra /lib/firmware/ipw2100* $DESTDIR/lib/firmware/
+    fi
+
+    if [ "$mod" = "ndiswrapper" ]; then
+      _echo "   WIFI: Copying ndiswrapper"
+
+      # perl script :(
+      #LATEST_NDIS=$(ls /usr/sbin/ndiswrapper* -1|tail -1)
+      #cpifexists $LATEST_NDIS   /sbin/
+
+      LATEST_LNDIS=$(ls /sbin/loadndisdriver* -1|tail -1)
+      cpifexists $LATEST_LNDIS    /sbin/
+      copydir /etc/ndiswrapper    /etc/
+    fi
+
+  done
+
+ stat_after "Wireless support"
+fi
+
+
