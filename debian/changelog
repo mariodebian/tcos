@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.60.3) unstable; urgency=low
+
+  * conf/xorg.conf.tpl:
+    - Add serial mouse support
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu,  8 Feb 2007 11:25:29 +0100
+
 initramfs-tools-tcos (0.60.2) unstable; urgency=low
 
   * bin/gentcos:

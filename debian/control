@@ -23,9 +23,9 @@ Description: TCOS is a new thin client implementation
 Package: initramfs-tools-tcos
 Architecture: any
 Depends: initramfs-tools (>= 0.40), syslinux, dhcp-client | dhcp3-client, 
-         console-data, libnss-db, iftop, strace, twm, xterm, dosfstools, 
-         netkit-inetd | inetutils-inetd | openbsd-inetd, 
-         debootstrap, libltdl3, tinylogin, ltspfs-client
+         console-data, libnss-db, iftop, strace, twm, xterm, 
+         dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, 
+         debootstrap, libltdl3, tinylogin, ltspfs-client, ltspfs-server
 Pre-Depends: tcos-tcosmonitor (>= 0.0.18)
 Conflicts: tcos-tcosmonitor (<= 0.0.17)
 Suggests: unionfs-modules, squashfs-modules
@@ -61,7 +61,8 @@ Description: TCOS generation system.
 
 Package: tcos-server-utils
 Architecture: any
-Depends: shfs-utils, python, python-configobj, initramfs-tools-tcos (>= 0.48), ltspfs-server, fuse-utils
+Depends: shfs-utils, python, python-configobj, 
+         initramfs-tools-tcos (>= 0.48), ltspfs-server, fuse-utils
 Description: TCOS server utils
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot

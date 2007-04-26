@@ -57,6 +57,24 @@ Section "InputDevice"
 EndSection
 
 Section "InputDevice"
+	Identifier	"Serial Mouse0"
+	Driver		"mouse"
+	Option		"SendCoreEvents"
+	Option		"Device"		"/dev/ttyS0"
+	Option		"Protocol"		"auto"
+	Option		"Emulate3Buttons"	"true" 
+EndSection
+
+Section "InputDevice"
+	Identifier	"Serial Mouse1"
+	Driver		"mouse"
+	Option		"SendCoreEvents"
+	Option		"Device"		"/dev/ttyS1"
+	Option		"Protocol"		"auto"
+	Option		"Emulate3Buttons"	"true" 
+EndSection
+
+Section "InputDevice"
 	Identifier	"Configured Mouse"
 	Driver		"mouse"
 	Option		"CorePointer"
@@ -95,6 +113,8 @@ Section "ServerLayout"
 	Screen		"Default Screen"
 	InputDevice	"Generic Keyboard"
 	InputDevice	"Configured Mouse"
+	InputDevice	"Serial Mouse0"
+	InputDevice	"Serial Mouse1"
 EndSection
 
 Section "DRI"
