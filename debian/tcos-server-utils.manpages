@@ -1,2 +1,3 @@
 bin/tcos-shfsmount.1
 bin/tcos-shfsumount.1
+bin/tcos-gdm-autologin.1

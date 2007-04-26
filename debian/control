@@ -54,7 +54,7 @@ Description: TCOS generation system.
 
 Package: tcos-server-utils
 Architecture: any
-Depends: shfs-utils, initramfs-tools-tcos (>= 0.48), ltspfs-server
+Depends: shfs-utils, python-configobj, initramfs-tools-tcos (>= 0.48), ltspfs-server
 Description: TCOS server utils
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot

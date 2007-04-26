@@ -26,19 +26,25 @@ color cyan/blue white/blue
 #
 #  rw              => put writable fstab entries (all local partitions are writable by user)
 #
-#  startx=[local|remote|nox]    => start local, remote or not embedded Xorg
+#  startx=[L|R|N|S|F]    => start Local, Remote, Not Xorg, SSH, or FreeNX
 #
 
 
 title   TCOS Thin Client Operating System (normal)
 root    
-kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 boot=tcos quiet splash vga=771
+kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 boot=tcos quiet splash
 initrd  /boot/initramfs
 boot
 
 title   TCOS Thin Client Operating System (HDD installer)
 root    
-kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet splash vga=771 startx=N installer
+kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet splash startx=N installer
+initrd  /boot/initramfs
+boot
+
+title   TCOS Thin Client Operating System (HDD installer UPDATE)
+root    
+kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet splash startx=N installer-update
 initrd  /boot/initramfs
 boot
 

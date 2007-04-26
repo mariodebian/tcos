@@ -1,0 +1,245 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+##########################################################################
+# Tcos writen by MarioDebian <mariodebian@gmail.com>
+#
+#    tcos-gdm-autologin
+#
+# Copyright (c) 2006 Mario Izquierdo <mariodebian@gmail.com>
+# All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+###########################################################################
+
+
+"""
+Usage:
+
+  *  from GDM this app is called to retrieve username based on hostname
+
+  *  Exec standalone, configure GDM /etc/gdm/gdm.conf file with ThinClient values
+  
+"""
+
+
+import os, sys
+import getopt
+GDM_CONF_FILE="/etc/gdm/gdm.conf"
+HOME_TEMPLATE="/root/skel.tar.gz"
+USER_GROUPS=["fuse"]
+
+
+debug=False
+configure=False
+add=False
+
+# this is the values needed to connect to GDM from thin clients
+TCOS_GDM={
+"daemon":[
+    {"TimedLoginEnable":"true"},
+    {"TimedLogin":"/usr/sbin/tcos-gdm-autologin|"},
+    {"TimedLoginDelay":"10"}
+    ],
+"security":[
+    {"AllowRemoteAutoLogin":"true"},
+    {"DisallowTCP":"false"}
+    ],
+"xdmcp":[
+    {"Enable":"true"}
+    ]
+}
+
+def print_debug(txt):
+    if debug:
+        sys.stderr.write("%s::%s\n" %("tcos-gdm-autologin", txt))
+        #print "%s::%s" %("tcos-gdm-autologin", txt)
+
+def usage():
+    print "tcos-gdm-autologin help:"
+    print ""
+    print "    [no options]  (write username to login, used from GDM)"
+    print "    -d [--debug]  (write debug data to stdout)"
+    print "    -h [--help]   (this help)"
+    print "    --configure   (configure gdm with ThinClient values)"
+    print "    --skel=/foo/bar/file.tar.gz (skel template, default %s)" %(HOME_TEMPLATE)
+    print "    --add         (add users and hostnames to system files)"
+
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["help", "debug", "configure", "skel=", "add"])
+except getopt.error, msg:
+    print msg
+    print "for command line options use tcos-gdm-autologin --help"
+    sys.exit(2)
+
+# process options
+for o, a in opts:
+    if o in ("-d", "--debug"):
+        #print "DEBUG ACTIVE"
+        debug = True
+    if o == "--configure":
+        configure=True
+        
+    if o == "--add":
+        add=True
+        
+    if o == "--skel":
+        HOME_TEMPLATE=a
+    if o in ("-h", "--help"):
+        usage()
+        sys.exit(0)
+
+
+######## some functions #############
+
+def execmd(cmd):
+    print_debug(cmd)
+    #try:
+    #    os.system(cmd)
+    #except:
+    #    print("Error while exec: \"%s\"" %(cmd))
+
+    
+def show_login():
+    username=None
+    host=None
+    home=None
+    display=None
+    host, display =  os.environ["DISPLAY"].split(':')
+    if host == "":
+        print_debug ( "localdisplay no have username" )
+        sys.exit(1)
+    # read home for hostname:user
+    f=open("/etc/passwd", "r")
+    data=f.readlines()
+    f.close()
+    newdata=[]
+    for line in data:
+        newdata.append(line.replace('\n', ''))
+    data=newdata
+    for line in data:
+        if host + ":" in line:
+            (username, home) = ( line.split(':')[0], line.split(':')[5] )
+            
+    if not username or not os.path.isdir(home):
+        print "no_username_or_not_home"
+        print_debug("ERROR, username=%s or home=%s not set." %(username, home))
+        sys.exit(1)
+    
+    # kill all user processes
+    os.system("pkill -9 -u %s" %(username))
+    print username    
+    restore_home(home, username)
+
+
+def restore_home(home, username):
+    if not os.path.isfile(HOME_TEMPLATE):
+        print_debug ( "skel don't exists: %s" %(HOME_TEMPLATE) )
+        return
+    execmd("rm -rf %s 2>/dev/null" %(home) )
+    os.mkdir(home)
+    execmd("tar -zxf %s -C %s 2>/dev/null" %(HOME_TEMPLATE, home) )
+    execmd("chown -R %s:%s %s 2>/dev/null" %(username, username, home) )
+    
+    
+def SetVar(section, key, value):
+    from configobj import ConfigObj
+    config=ConfigObj( os.path.realpath(GDM_CONF_FILE) )
+    print_debug("setting section=[%s] key=%s value=%s" %(section, key, value) )
+    config[section][key] = value
+    try:
+        config.write()
+    except:
+        print "Error, can't write in %s" %(GDM_CONF_FILE)
+
+def SetAutologin():
+    for section in TCOS_GDM:
+        for var in TCOS_GDM[section]:
+            for key in var:
+                value=var[key]
+                SetVar(section, key, value)
+    return
+
+def AddUserAndHost():
+    hosts=[]
+    ips=[]
+    prefix=raw_input("Please say me the common prefix of hosts/users (example host): ")
+    number=int(raw_input("Number of host/users to generate (from 1 to number): "))
+    ipbase=raw_input("Need IP Address of devices (example 192.168.0): ")
+    
+    for i in range(1,number+1):
+        hosts.append("%s%s" %(prefix, i))
+        ips.append("%s.%s" %(ipbase, i))
+    
+    print ""
+    print "I will generate users and hostnames from \"%s\" to \"%s\"" %(hosts[0], hosts[-1])
+    print "with ip adresses from %s to %s" %(ips[0], ips[-1])
+    print "and uncompress \"%s\" as HOME_TEMPLATE" %(HOME_TEMPLATE)
+    print ""
+    resp=raw_input("are you sure you want this? [y/n] ")
+    if resp != "y" and resp != "Y":
+        print "cancelled."
+        return
+    
+    for i in range(1,number+1):
+        AddUser( "%s%s" %(prefix, i) )
+        AddHost( "%s%s" %(prefix, i) , "%s.%s" %(ipbase, i) )
+    
+    print "done."
+
+    
+def AddUser(username):
+    print ( "Adding user: %s" %(username) )
+    execmd("useradd -m %s -p%s -s /bin/bash -d /home/%s" %(username, username, username))
+    execmd("echo %s:%s | chpasswd" %(username, username))
+    execmd("tar -zxf %s -C /home/%s 2>/dev/null" %(HOME_TEMPLATE, username) )
+    for group in USER_GROUPS:
+        execmd("adduser %s %s" %(username, group))
+
+def AddHost(hostname, ip):
+    print ( "Adding host: %s %s" %(ip, hostname) )
+    # check if exists
+    f=open("/etc/hosts", "r")
+    data=f.readlines()
+    f.close()
+    for line in data:
+        line=line.replace('\n','')
+        if ip + " " in line or ip + '\t' in line:
+            pass
+        else:
+            try:
+                f=open("/etc/hosts", "a")
+                f.write("%s\t%s" %(ip, hostname) )
+                f.close()
+            except:
+                pass
+                
+
+try:
+    if configure:    
+        SetAutologin()
+    elif add:
+        AddUserAndHost()
+    else:
+        show_login()
+
+except KeyboardInterrupt: # Por si se pulsa Ctrl+C
+    print "\nCtrl+C event, quit now..."
+    sys.exit(1)
+
+
+
+# end of file

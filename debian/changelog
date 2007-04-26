@@ -1,3 +1,19 @@
+initramfs-tools-tcos (0.56.10) unstable; urgency=low
+
+  * Revert vga=771 patch, initramfs-tools revert mknod /dev/fb0 too...
+  * Add tcos-gdm-autologin script (need man page)
+  * Installer:
+     add update method to download files again, but no make parts.
+     add PROMPT 1 in syslinux.cfg and change TIMEOUT to 50 (5 segs)
+  * New rewrite of tcos-gdm-autologin (python based)
+    With tcos-gdm-autologin you can:
+    - configure GDM ( --configure option )
+    - add users and host ( --add interactive option )
+    - gdm autologin (it's called from GDM to return username and restore home from template)
+  * Add python-configobj to tcos-server-utils depends.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 19 Nov 2006 20:13:24 +0100
+
 initramfs-tools-tcos (0.56.9) unstable; urgency=low
 
   * Fix hooks-addons/dhclient dhclient3 path of script
@@ -11,7 +27,7 @@ initramfs-tools-tcos (0.56.8) unstable; urgency=low
   * autodetect ram < 38 and boot from NFS
   * fix hooks-addons/alsa amixer path
   * move fstab from tcos-premount to tcos-top
-  * pxelinux-.cfg/default add vga=771 to force vesa framebuffer start
+  * pxelinux.cfg/default add vga=771 to force vesa framebuffer start
 
  -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed,  8 Nov 2006 22:02:13 +0100
 

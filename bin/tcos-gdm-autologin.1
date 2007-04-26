@@ -1,0 +1,76 @@
+.\"Created with GNOME Manpages Editor Wizard
+.\"http://gmanedit.sourceforge.net
+.\"Sergio Rua <srua@gpul.org>
+.\"
+.TH tcos-gdm-autologin 1 "Nov 19, 2006" "tcos-gdm-autologin man page"
+
+.SH NAME
+tcos-gdm-autologin \- TCOS tool to configure GDM, create users and edit /etc/hosts form TCOS network
+
+.SH DESCRIPTION
+
+.PP
+\fBtcos-gdm-autologin\fP is a python script that configure some GDM vars create users, and edit /etc/hosts to 
+put in ip hostname pairs.
+
+
+.SH OPTIONS
+.B [no options]
+ With no options will return username that correspond with DISPLAY
+ and will restore home from SKEL.
+ (this option is for use from gdm autologin file)
+
+.B --configure
+  Set this vars in /etc/gdm/gdm.conf:
+ [daemon]
+ TimedLoginEnable=true
+ TimedLogin=/usr/sbin/tcos-gdm-autologin|
+ TimedLoginDelay=10
+
+ [security]
+ AllowRemoteAutoLogin=true
+ DisallowTCP=false
+ 
+ [xdmcp]
+ Enable=true
+
+.B --add
+ This option will ask for user/host names prefix to add to system config.
+ Example:
+   prefix=myhost
+   number=4
+   ipbase=192.168.0
+
+ Will generate the following:
+
+   user: myhost1 pass: myhost1 home: /home/myhost1 (extracted from SKEL)
+   user: myhost2 pass: myhost2 home: /home/myhost2 (extracted from SKEL)
+   user: myhost3 pass: myhost3 home: /home/myhost3 (extracted from SKEL)
+   user: myhost4 pass: myhost4 home: /home/myhost4 (extracted from SKEL)
+
+   host: 192.168.0.1 hostname= myhost1
+   host: 192.168.0.2 hostname= myhost2
+   host: 192.168.0.3 hostname= myhost3
+   host: 192.168.0.4 hostname= myhost4
+
+.B --skel=/foo/bar/file.tar.gz
+ This compressed file is used to create users home, with some personalized settings
+ and files, Default is /root/skel.tar.gz, use this option to change path and filename.
+
+.B --help
+ Some usage help about tcos-gdm-autologin
+
+
+.B --debug
+ Show verbose output when running
+
+.SH BUGS
+Contact Mario Izquierdo <mariodebian@gmail.com>
+
+Info about TCOS project: http://soleup.eup.uva.es/mediawiki/index.php/TCOS
+
+.SH SEE ALSO
+tcos-gdm-autologin(1)
+
+.SH AUTHOR
+Mario Izquierdo (mariodebian) <mariodebian@gmail.com>

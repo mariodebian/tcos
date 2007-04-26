@@ -91,7 +91,8 @@ install:
 	install -m 644 images/logo.xpm.gz $(DESTDIR)$(TCOS_CONF)/logo.xpm.gz
 	
 	# gentcos build script
-	install -m 755 bin/gentcos $(DESTDIR)/usr/sbin/gentcos
+	install -m 755 bin/gentcos            $(DESTDIR)/usr/sbin/gentcos
+	install -m 755 bin/tcos-gdm-autologin $(DESTDIR)/usr/sbin/tcos-gdm-autologin
 
 	install -m 755 bin/configurexorg $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/installer.sh $(DESTDIR)/$(TCOS_BINS)/

@@ -3,6 +3,9 @@
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
+# size of vfat partition
+hda1_size=100
+
 
 FDISK=/sbin/fdisk
 
@@ -40,7 +43,6 @@ swap_size=$(awk '/MemTotal/ {print int($2*2/1000)}' /proc/meminfo)
 
 # ext3=rest
 #hda1_size=$(echo "$hda_size $swap_size" | awk '{print int($1-$2)}')
-hda1_size=100
 
 
 # clean MBR
@@ -112,10 +114,11 @@ syslinux /dev/hda1
 
 cat << EOF > /target/syslinux.cfg
 DEFAULT tcos
-TIMEOUT 150
+TIMEOUT 50
 DISPLAY tcos.msg
 F0 tcos.msg
 F1 help.msg
+PROMPT 1
 
 LABEL tcos
         KERNEL vmlinuz
@@ -137,6 +140,14 @@ format_part () {
   #$1 is partition
   mkfs.ext3 "$1"
 }
+
+
+# update local files if "--update" is passed
+if [ "$1" = "--update" ]; then
+    echo "Updating installed system..."
+    install_kernel
+    exit 0
+fi
 
 
 # welcome message
