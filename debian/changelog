@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.56.18) unstable; urgency=low
+
+  * hooks-addons/xorg fix space in if conditional
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 10 Dec 2006 18:31:18 +0100
+
 initramfs-tools-tcos (0.56.17) unstable; urgency=low
 
   * New package: tcos-opengl-libs (force free opengl drivers)
