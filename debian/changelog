@@ -5,8 +5,10 @@ initramfs-tools-tcos (0.61) unstable; urgency=low
   * Not build tcos-discover2 tcos-opengl-libs tcos-esound anymore (no clean, not debian)
   * Change /tftpboot/tcos with /var/lib/tcos/tftp and link it
   * Add UPGRADE.debian info to gentcos package
+  * bin/gentcos:
+     - Fix initramfs name in isolunux cdrom generation
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 Feb 2007 13:28:04 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 20 Feb 2007 11:39:47 +0100
 
 initramfs-tools-tcos (0.60.7) unstable; urgency=low
 

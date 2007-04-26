@@ -2,7 +2,7 @@ Source: initramfs-tools-tcos
 Section: admin
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), libbogl-dev
+Build-Depends: debhelper (>= 4.0.0), usplash, libbogl-dev
 Build-Conflicts: nvidia-glx, nvidia-glx-legacy, fglrx-driver
 Standards-Version: 3.7.2
 
@@ -13,9 +13,9 @@ Recommends: tcos-tcosmonitor, tcosmonitor
 Description: new thin client implementation
  This is a system for generating thin client hosts using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
- thin client terminal.
- TCOS support dhcp, sound (alsa & esound), autofs, ltspfs, Xorg (6.9 or 7.0)
- and much more utils.
+ thin client terminals.
+ TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
+ Xorg (6.9 or 7.0) and much more utils.
  .
  Homepage: http://soleup.eup.uva.es/trac
  
@@ -54,7 +54,8 @@ Description: Image generation scripts, and tftp config for TCOS
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminal.
- TCOS support dhcp, sound (alsa & esound), autofs, ltspfs, Xorg (6.9 or 7.0)
+ TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
+ Xorg (6.9 or 7.0) and much more utils.
  and much more utils.
 
 Package: tcos-server-utils

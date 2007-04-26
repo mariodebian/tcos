@@ -266,6 +266,7 @@ create_isolinux_iso() {
 
  cp ${TFTP_DIR}/pxelinux.cfg/default ${dir}/isolinux/isolinux.cfg
  sed -i s/"vmlinuz-${TCOS_KERNEL}"/"vmlinuz"/g ${dir}/isolinux/isolinux.cfg
+ sed -i s/"initramfs-${TCOS_KERNEL}"/"initramfs"/g ${dir}/isolinux/isolinux.cfg
 
  cp ${TFTP_DIR}/logo.lss ${dir}/isolinux/
  cp ${TFTP_DIR}/tcos.msg ${dir}/isolinux/

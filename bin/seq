@@ -1,5 +1,8 @@
 #!/bin/sh
-
+#
+# This file is part of TCOS
+#
+#  (emulate /bin/seq with a shell script)
 
 MAX=$1
 NUM=1
