@@ -4,14 +4,40 @@
 # that don't need qt libs
 
 if [ ${TCOS_ITALC} ]; then
- italc=$(dpkg -l italc-client|grep -c ^ii)
- if [ ${italc} != 1 ]; then
-   echo "WARNING:"
-   echo ""
-   echo "italc-client not found, install italc-client or disable TCOS_ITALC."
-   echo "    => # apt-get install italc-client"
-   echo ""
- else
+
+ if [ -x /usr/bin/ica ]; then
+  # new italc 1.0.0 version
+  stat_before
+   if [ ! -d /etc/italc/keys/public ]; then
+     echo ""
+     echo "ERROR:"
+     echo "       You must create public/private iTALC keys:"
+     echo ""
+     echo "       # ica -role teacher -createkeypair "
+     echo ""
+   else
+     cpifexists /usr/bin/ica              /usr/bin/
+     mkdir -p $DESTDIR/etc/italc/keys
+     cp -ra /etc/italc/keys/public       $DESTDIR/etc/italc/keys/
+  cat <<EOF > $DESTDIR/sbin/startica
+#!/bin/sh
+# kill
+killall ica >/dev/null 2>&1
+sleep 4
+export DISPLAY=:0
+
+while [ 1 ]; do
+  killall ica
+  ica >/dev/null 2>&1
+done
+
+EOF
+  chmod +x $DESTDIR/sbin/startica
+   fi
+
+  stat_after "iTalc 1.0.0"
+
+ elif [ -x /usr/bin/ivs ]; then
   stat_before
   cpifexists /usr/bin/ivs              /usr/bin/
   cpifexists /usr/bin/demoviewer       /usr/bin/
@@ -77,6 +103,14 @@ exit 0
 EOF
   chmod +x $DESTDIR/sbin/startivs
   stat_after "iTALC"
+
+ else
+   echo "WARNING:"
+   echo ""
+   echo "italc-client not found, install italc-client or disable TCOS_ITALC."
+   echo "    => # apt-get install italc-client"
+   echo ""
  fi
+
 fi #end of TCOS_ITALC
 

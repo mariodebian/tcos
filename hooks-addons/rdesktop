@@ -3,10 +3,10 @@
 if [ ! -e /usr/bin/rdesktop ]; then
   _echo "   * rDesktop not installed"
 else
-
-  cpifexists /usr/bin/rdesktop   /usr/bin/
-  mkdir -p $DESTDIR/usr/share/
-  copydir  /usr/share/rdesktop/  /usr/share/
+  stat_before
+    cpifexists /usr/bin/rdesktop   /usr/bin/
+    mkdir -p $DESTDIR/usr/share/
+    copydir  /usr/share/rdesktop/  /usr/share/
 
 cat << EOF > $DESTDIR/sbin/startrdesktop
 #!/bin/sh
@@ -23,19 +23,25 @@ fi
 
 Xorg \${TCOS_XORG_OPTS}  >> /tmp/initramfs.debug 2>&1 &
 
+sleep 2
+
 # default server
-rdesktop=\$(read_cmdline_var "rdesktop" "\${SERVER}")
+RDESKTOP_SERVER=\$(read_cmdline_var "rdesktop" "\${SERVER}")
+RDESKTOP_CMD="/usr/bin/rdesktop -5 -u \"\" -f -a 16 -k es \${RDESKTOP_SERVER}"
 
 # FIXME spanish keyboard
 # -r sound
+# -u "" # empty username
 # -f -a 16 fullscreen and 16 color bits
 while [ 1 ]; do
-  /usr/bin/rdesktop -5 -f -a 16 -k es -T "Remotedesktop-Client: \${rdesktop}" \${rdesktop}
+  xterm -e "echo Connecting with \" \${RDESKTOP_SERVER}...\" ; sleep 1 ; \${RDESKTOP_CMD} >/dev/null 2>&1; echo \"Connection closed.\"; sleep 2"
 done
 
 EOF
 
 chmod +x $DESTDIR/sbin/startrdesktop
 
-
+# old redesktop cmd
+#/usr/bin/rdesktop -5 -f -a 16 -k es -T "Remotedesktop-Client: \${rdesktop}" \${rdesktop} > /dev/null 2>&1
+stat_after "rDesktop"
 fi

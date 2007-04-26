@@ -238,15 +238,17 @@ killall Xorg 2>/dev/null
 sleep 1
 . /conf/mysettings.conf
 if [ "\${xsession}" = "local" ]; then
-  startlocalx
+  startlocalx &
 elif [ "\${xsession}" = "XDMCP" ]; then
-  startremotex
+  startremotex &
 elif [ "\${xsession}" = "sshX" ]; then
-  startsshx
+  startsshx &
 elif [ "\${xsession}" = "FreeNX" ]; then
-  startnx
+  startnx &
+elif [ "\${xsession}" = "rDesktop" ]; then
+  startrdesktop &
 else
-  startx
+  startx &
 fi
 EOF
 chmod +x $DESTDIR/sbin/restartxorg
@@ -263,11 +265,13 @@ fi
 
 Xorg \${TCOS_XORG_OPTS} >> /tmp/initramfs.debug 2>&1 &
 
+
 #BACKCOLOR="#76848F"
 #xsetroot -cursor_name left_ptr -solid "\$BACKCOLOR"
 #exec sessreg -a -w /var/log/wtmp -u /var/run/utmp -x "/var/lib/gdm/:0.Xservers" -h "" -l ":0" "root"
 xterm  >> /tmp/initramfs.debug 2>&1 &
 twm  >> /tmp/initramfs.debug 2>&1 &
+
 EOF
 chmod +x $DESTDIR/sbin/startlocalx
 
@@ -306,7 +310,9 @@ if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-Xorg \${TCOS_XORG_OPTS} -query \${SERVER}  >> /tmp/initramfs.debug 2>&1
+while [ 1 ]; do
+ Xorg \${TCOS_XORG_OPTS} -query \${SERVER}  >> /tmp/initramfs.debug 2>&1
+done
 EOF
 chmod +x $DESTDIR/sbin/startremotex
 
@@ -333,7 +339,10 @@ remotesshport=\$(read_cmdline_var "sshport" "2022")
 # gnome-session, startkde , startxfce4
 remotesshdesktop=\$(read_cmdline_var "sshdesktop" "startxfce4")
 
-xterm -e "echo \"SSH \${remoteuser}@\${remotesshhost} -p \${remotesshport}...\" ; ssh -X -C -f -l \${remoteuser} \${remotesshhost} -p \${remotesshport} \${remotesshdesktop}"
+while [ 1 ]; do
+ xterm -e "echo \"SSH \${remoteuser}@\${remotesshhost} -p \${remotesshport}...\" ; ssh -X -C -f -l \${remoteuser} \${remotesshhost} -p \${remotesshport} \${remotesshdesktop}"
+done
+
 EOF
 chmod +x $DESTDIR/sbin/startsshx
 

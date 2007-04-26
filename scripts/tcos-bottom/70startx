@@ -124,4 +124,10 @@ elif [ "$startx" = "W"  ] ; then
    startrdesktop &
 fi
 
+
+# start italc if found
+#if [ -e /sbin/startica ]; then
+#  startica &
+#fi
+
 exit 0

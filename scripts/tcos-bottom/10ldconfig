@@ -42,6 +42,10 @@ log_end_msg $?
 mkdir /dev/shm > /dev/null 2>&1
 mount -t tmpfs shmfs /dev/shm >/dev/null 2>&1
 
+# italc 1.0.0 new version
+if [ -x /sbin/startica ]; then
+  ln -s /sbin/startica /sbin/startivs
+fi
 
 # tinylogin
 if [ -x /bin/tinylogin ]; then

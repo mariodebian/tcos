@@ -1,8 +1,9 @@
 initramfs-tools-tcos (0.60.6) unstable; urgency=low
 
   * Add support for rdesktop (tested with Windows BadVista / MalaVista)
+  * Loop some core functions (Xorg, rdesktop...)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 10 Feb 2007 00:46:59 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 13 Feb 2007 09:11:19 +0100
 
 initramfs-tools-tcos (0.60.5) unstable; urgency=low
 
