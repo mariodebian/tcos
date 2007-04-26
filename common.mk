@@ -1,5 +1,7 @@
 #.SILENT:
 
+PACKAGE=initramfs-tools-tcos
+
 MAKE=make -B
 INSTALL=install
 
@@ -10,7 +12,6 @@ ifeq ($(strip $(have_changelog)),)
 VERSION=$(shell head -1 ../debian/changelog 2>/dev/null | awk  '{gsub(/\(/,"",$$2); gsub(/\)/, "" , $$2); print $$2}' )
 endif
 
-#VERSION=$(shell head -1 debian/changelog | awk  '{gsub(/\(/,"",$$2); gsub(/\)/, "" , $$2); print $$2}' )
 
 TCOS_CONFIG_FILE=conf/tcos.conf
 have_config := $(wildcard conf/tcos.conf)
@@ -23,14 +24,12 @@ TFTP_DIR=$(shell awk -F "=" '/TFTP_DIR=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 TCOS_CONF=$(shell awk -F "=" '/TCOS_CONF=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 TCOS_BINS=$(shell awk -F "=" '/TCOS_BINS=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 
-PACKAGE=initramfs-tools-tcos
 
 
 TCOS_XMLRPC_DIR=$(PREFIX)/share/tcosmonitor/xmlrpc/
 DBUS_CONF=/etc/dbus-1/system.d/
 X11_CONF=/etc/X11/Xsession.d/
 
-project=initramfs-tools-tcos
 
 
 # debian or ubuntu ???
