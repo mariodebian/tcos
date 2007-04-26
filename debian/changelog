@@ -1,4 +1,4 @@
-initramfs-tools-tcos (0.60) unstable; urgency=low
+initramfs-tools-tcos (0.60.1) unstable; urgency=low
 
   * Remove PREREQS in init scripts (scripts have numbers, should start in order...)
   * hex2ascii:
@@ -6,7 +6,7 @@ initramfs-tools-tcos (0.60) unstable; urgency=low
   * scripts/tcos-bottom/80shell:
     - more elegant shells (getty) num of ttys defined in tcos.conf
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat,  3 Feb 2007 22:05:41 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat,  3 Feb 2007 22:07:59 +0100
 
 initramfs-tools-tcos (0.59.1) unstable; urgency=low
 
