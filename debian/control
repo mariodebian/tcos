@@ -2,7 +2,7 @@ Source: initramfs-tools-tcos
 Section: admin
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), libgl1-mesa-glx, xserver-xorg-core, libglu1-mesa
+Build-Depends: debhelper (>= 4.0.0), libgl1-mesa-glx | libgl1-mesa , xserver-xorg-core, libglu1-mesa
 Build-Conflicts: nvidia-glx, nvidia-glx-legacy, fglrx-driver
 Standards-Version: 3.7.2
 
