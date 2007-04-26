@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # mount remote devices of thin client
 
 . /etc/tcos/initramfs.conf
