@@ -2,7 +2,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-DISTRIBUTION=$(shell dpkg-parsechangelog | awk '/^Distribution/ {print $2}')
+DISTRIBUTION=$(shell dpkg-parsechangelog | awk '/^Distribution/ {print $$2}')
 
 CFLAGS = -Wall -g
 
@@ -43,8 +43,8 @@ install: build
 
 	dh_link /usr/lib/syslinux/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
 
-	if [ $(DISTRIBUTION) = "unstable" ]; then \
-		sed -i 's/splash/vga=791 splash/g' $(DESTDIR)/etc/tcos/pxelinux.cfg.tpl \
+	if [ "$(DISTRIBUTION)" = "unstable" ]; then \
+		sed -i 's/splash/vga=791 splash/g' $(CURDIR)/debian/tmp/etc/tcos/pxelinux.cfg.tpl; \
 	fi
 
 

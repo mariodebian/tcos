@@ -8,8 +8,10 @@ initramfs-tools-tcos (0.71) unstable; urgency=low
   * Depends on libusplash-dev (only valid with new usplash package)
   * bin/tcos-gdm-autologin:
     - Fix username : displayname compare in /etc/passwd
+  * debian/rules:
+    - Fix typo in version detect.
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 18 Apr 2007 10:37:36 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 18 Apr 2007 10:44:18 +0200
 
 initramfs-tools-tcos (0.70) unstable; urgency=low
 
