@@ -111,11 +111,20 @@ if [ $XORG = 6 ]; then
  mkdir -p  $DESTDIR/usr/X11R6/lib/modules/extensions
  cp -ra /usr/X11R6/lib/modules/extensions/lib*.so $DESTDIR/usr/X11R6/lib/modules/extensions/
  rm -rf $DESTDIR/usr/X11R6/lib/modules/extensions/libGLcore.so
- #cp -ra /usr/X11R6/lib/libGL.so.1.2 $DESTDIR/usr/X11R6/lib/libGL.so.1.2
+
  if [ $TCOS_XORG_OPENGL ]; then
+    _echo "    * OpenGL support IS ENABLED"
+    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 ]; then
+       _echo " ********************************************** "
+       _echo "         WARNING nvidia libs found !!!!!!       "
+       _echo "  OpenGL support will not work on thin clients  "
+       _echo " ********************************************** "
+    fi
     cpifexists /usr/X11R6/lib/modules/extensions/libGLcore.so /usr/X11R6/lib/modules/extensions
     cpifexists /usr/lib/libGL.so.1.2  /usr/lib/
     cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
+ else
+    _echo "    * OpenGL support is not enabled!!"
  fi
 
 else
@@ -135,12 +144,25 @@ else
  mkdir -p  $DESTDIR/usr/lib/xorg/modules/extensions
  cp -ra /usr/lib/xorg/modules/extensions/lib*.so $DESTDIR/usr/lib/xorg/modules/extensions/
  rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
- #cp -ra /usr/lib/libGL.so.1.2 $DESTDIR/usr/lib/libGL.so.1.2
  
  if [ $TCOS_XORG_OPENGL ]; then
+    _echo "    * OpenGL support is ENABLED"
+    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 ]; then
+       _echo " ********************************************** "
+       _echo "         WARNING nvidia libs found !!!!!!       "
+       _echo "  OpenGL support will not work on thin clients  "
+       _echo " ********************************************** "
+
+       #if [ -d /usr/lib/nvidia ]; then
+       #   cpifexists /usr/lib/nvidia/libGL.so.1.2* /usr/lib/libGL.so.1.2
+       #fi
+
+    fi
     cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
     cpifexists /usr/lib/libGL.so.1.2  /usr/lib/
     cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
+ else
+    _echo "    * OpenGL support is not enabled!!"
  fi
  
 fi

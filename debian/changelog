@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.56.16) unstable; urgency=low
+
+  * Enable by default OpenGL support, now screensaver and gcompris must work.
+  * Add message when OpenGL is enabled or disabled.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 10 Dec 2006 14:16:06 +0100
+
 initramfs-tools-tcos (0.56.15) unstable; urgency=low
 
   * bin/tcos-gdm-autologin: Umount all fuse devices before restoring template.
