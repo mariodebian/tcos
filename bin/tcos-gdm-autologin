@@ -37,8 +37,7 @@ Usage:
 
 import os, sys
 import getopt
-#GDM_CONF_FILE="/etc/gdm/gdm.conf"
-GDM_CONF_FILE="./gdm.conf"
+GDM_CONF_FILE="/etc/gdm/gdm.conf"
 HOME_TEMPLATE="/root/skel.tar.gz"
 USER_GROUPS=["fuse"]
 
@@ -108,10 +107,10 @@ for o, a in opts:
 
 def execmd(cmd):
     print_debug(cmd)
-    #try:
-    #    os.system(cmd)
-    #except:
-    #    print("Error while exec: \"%s\"" %(cmd))
+    try:
+        os.system(cmd)
+    except:
+        print("Error while exec: \"%s\"" %(cmd))
 
     
 def show_login():
