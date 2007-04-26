@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.56.13) unstable; urgency=low
+
+  * Fix LC_ALL=C in tcos image date. 
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 29 Nov 2006 18:14:49 +0100
+
 initramfs-tools-tcos (0.56.12) unstable; urgency=low
 
   * Fix some errors in tcos-gdm-autologin and enable execmd() function

@@ -5,7 +5,7 @@ echo "# version of initramfs-tools-tcos" >> ${DESTDIR}/conf/tcos.conf
 echo "TCOS_VERSION=\"${tcos_version}\"" >> ${DESTDIR}/conf/tcos.conf
 echo "" >> ${DESTDIR}/conf/tcos.conf
 
-tcos_date=$(LANG=C date)
+tcos_date=$(LANG=C LC_ALL=C date)
 echo "# date of image" >> ${DESTDIR}/conf/tcos.conf
 echo "TCOS_DATE=\"${tcos_date}\"" >> ${DESTDIR}/conf/tcos.conf
 echo "" >> ${DESTDIR}/conf/tcos.conf
