@@ -57,8 +57,7 @@ install:
 	install -d $(DESTDIR)$(TFTP_DIR)/conf/
 
 	# usplash
-	install -d $(DESTDIR)/usr/lib/usplash/
-	install -m 755 usplash/usplash-tcos.so $(DESTDIR)/usr/lib/usplash/usplash-tcos.so
+	cd usplash && make install DESTDIR=$(DESTDIR)
 
 	install -d $(DESTDIR)$(TCOS_CONF)/hooks
 	for i in `find scripts/ -type d`; do install -d $(DESTDIR)$(TCOS_CONF)/$$i; done
