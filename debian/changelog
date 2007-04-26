@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.56.12) unstable; urgency=low
+
+  * Fix some errors in tcos-gdm-autologin and enable execmd() function
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 28 Nov 2006 15:19:38 +0100
+
 initramfs-tools-tcos (0.56.11) unstable; urgency=low
 
   * hooks-addons/xorg

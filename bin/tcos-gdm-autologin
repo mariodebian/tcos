@@ -107,10 +107,10 @@ for o, a in opts:
 
 def execmd(cmd):
     print_debug(cmd)
-    #try:
-    #    os.system(cmd)
-    #except:
-    #    print("Error while exec: \"%s\"" %(cmd))
+    try:
+        os.system(cmd)
+    except:
+        print("Error while exec: \"%s\"" %(cmd))
 
     
 def show_login():
@@ -135,7 +135,7 @@ def show_login():
             (username, home) = ( line.split(':')[0], line.split(':')[5] )
             
     if not username or not os.path.isdir(home):
-        print "no_username_or_not_home"
+        print "no_username"
         print_debug("ERROR, username=%s or home=%s not set." %(username, home))
         sys.exit(1)
     
@@ -206,6 +206,7 @@ def AddUser(username):
     execmd("useradd -m %s -p%s -s /bin/bash -d /home/%s" %(username, username, username))
     execmd("echo %s:%s | chpasswd" %(username, username))
     execmd("tar -zxf %s -C /home/%s 2>/dev/null" %(HOME_TEMPLATE, username) )
+    execmd("chowm $s:%s /home/%s " %(username, username, username) )
     for group in USER_GROUPS:
         execmd("adduser %s %s" %(username, group))
 
@@ -218,11 +219,12 @@ def AddHost(hostname, ip):
     for line in data:
         line=line.replace('\n','')
         if ip + " " in line or ip + '\t' in line:
+            print ( "IP %s is in /etc/hosts" %(ip) )
             pass
         else:
             try:
                 f=open("/etc/hosts", "a")
-                f.write("%s\t%s" %(ip, hostname) )
+                f.write("%s\t%s\n" %(ip, hostname) )
                 f.close()
             except:
                 pass
