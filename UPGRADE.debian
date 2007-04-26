@@ -70,7 +70,7 @@
 
 ==============================================================================
 
-   Now yoy can delete safelly /opt/tcos and /tftpboot/tcos dirs
+   Now you can delete safelly /opt/tcos and /tftpboot/tcos dirs
 
    Reconfigure gentcos package to make new symlinks:
 
