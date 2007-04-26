@@ -27,7 +27,7 @@ install:
 
 
 0.2-usplash-clean:
-	cd 0.3 && make clean
+	cd 0.2 && make clean
 
 0.3-usplash-clean:
 	cd 0.3 && make clean
@@ -36,7 +36,7 @@ install:
 	cd 0.4 && make clean
 
 0.2-usplash-install:
-	cd 0.3 && make install DESTDIR=$(DESTDIR)
+	cd 0.2 && make install DESTDIR=$(DESTDIR)
 
 0.3-usplash-install:
 	cd 0.3 && make install DESTDIR=$(DESTDIR)

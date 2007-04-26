@@ -2,6 +2,14 @@
 
 # try to search usplash version
 
+if [ ! -f /usr/include/usplash-theme.h ]; then
+  USPLASH_VERSION="0.2"
+  echo "${USPLASH_VERSION}"
+  exit 0
+fi
+
+
+
 THEME_VERSION=$(awk '/^#define THEME_VERSION/ {print $3}'  /usr/include/usplash-theme.h)
 
 USPLASH_VERSION=""
