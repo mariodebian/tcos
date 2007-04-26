@@ -20,7 +20,7 @@ usplash:
 	gcc -shared -Wl,-soname,usplash-tcos.so usplash-tcos.o tcos-usplash-theme.o helvB10.o -o usplash-tcos.so
 
 usplash_dapper:
-	pngtobogl ./usplash-tcos.png > usplash-tcos.c
+	pngtobogl ./usplash-tcos-600x400.png > usplash-tcos.c
 	bdftobogl helvB10.bdf > helvB10.c
 	gcc -Os -g -I/usr/include/bogl -I. -fPIC -c tcos-usplash-theme.c -o tcos-usplash-theme.o
 	gcc -Os -g -I/usr/include/bogl -I. -fPIC -c helvB10.c -o helvB10.o
