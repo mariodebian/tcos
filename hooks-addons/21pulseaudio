@@ -16,6 +16,7 @@ check1=0
 
 check2=0
 [ -e /usr/lib/pulse*/modules/module-esound-protocol-tcp.so ] && check2=1
+[ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib ] && check2=1
 
 if [ $check1 = 0 ]; then
    echo "    WARNING:"
@@ -25,6 +26,11 @@ elif [ $check2 = 0 ]; then
    echo "    WARNING:"
    echo "      pulseaudio-esound-compat is not installed, need some esound modules"
    echo "      install this package or disable PulseAudio in /etc/tcos/tcos.conf"
+   echo "      You can install a cached package with:"
+   echo "      # gentcos -instpkg pulseaudio-esound-compat"
+   echo ""
+   echo "      See /usr/share/doc/gentcos/README.cache"
+   echo ""
 
 else
 
@@ -53,6 +59,11 @@ else
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*pipe*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*tunel*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*volume-restore*
+
+ if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules ]; then
+  _echo "    * PulseAudio copying esound compat [cached] modules..."
+  cp -ra ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/*.so ${DESTDIR}/usr/lib/pulse-0.9/modules/
+ fi
 
 
  #copydir /etc/pulse                   /etc/
@@ -90,7 +101,6 @@ load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(get_server)
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(get_server)
 
 load-module module-esound-protocol-unix
-#load-module module-rescue-streams
 
 .nofail
 FIN

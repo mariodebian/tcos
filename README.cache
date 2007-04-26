@@ -1,0 +1,26 @@
+    ##########################################
+              TCOS packages cache
+    ##########################################
+
+
+  In many distros the package system have conflicts dependencies.
+
+  TCOS need some packages that conflicts, for example esound and pulseaudio-esound-compat.
+
+  To have all files at image build time, I have made a small ugly trick:
+
+    Uncompress debian packages into /var/cache/tcos/packages/PKG_NAME/
+    and copy from this dir to initramfs images. Example:
+
+            # gentcos -instpkg libesd0
+
+  This will download libesd-x-x-x.deb and uncompress into
+  /var/cache/tcos/packages/libesd0/
+
+  For downloading we search URI with apt-get --print-uris install -y -f libesd0
+
+
+  # gentcos -listpkgs will show all cache packages installed.
+
+
+

@@ -396,8 +396,6 @@ for _module in ${NEED_MODULES}; do
    fi
 done
 
-# make a pxelinux.cfg/default with this kernel
-parse_pxelinuxcfg
 
 
 if [ ! -f /etc/X11/fs/config ]; then
@@ -492,9 +490,10 @@ if [ "${TCOS_INST_PKG}" != "" ]; then
     PKG_PROTOCOL=$(echo ${PKG_URI} | awk -F ":" '{print $1}')
     if [ "${PKG_PROTOCOL}" = "http" ] || [ "${PKG_PROTOCOL}" = "ftp" ]; then
       PKG_FILE=/tmp/$(basename $PKG_URI)
+      _echo "  * Downloading ${PKG_URI}"
       wget -q "${PKG_URI}" -O ${PKG_FILE}
     elif [ "${PKG_PROTOCOL}" = "file" ]; then
-      PKG_FILE=$(echo ${PKG_URI} | sed s/"file:\/\/"//g )
+      PKG_FILE=$(echo ${PKG_URI} | sed s/"file:\/"//g )
       echo "Using file:// protocol, package is in ${PKG_FILE} "
     else
       echo "Unknow PKG_URI=${PKG_URI} protocol: ${PKG_PROTOCOL} "
@@ -505,15 +504,17 @@ if [ "${TCOS_INST_PKG}" != "" ]; then
     else
       echo "Extracting $(basename ${PKG_FILE})..."
       rm -rf ${TCOS_PKG_CACHE}/${PKG}
-      mkdir ${TCOS_PKG_CACHE}/${PKG}
+      mkdir -p ${TCOS_PKG_CACHE}/${PKG}
       dpkg --extract "${PKG_FILE}" ${TCOS_PKG_CACHE}/${PKG}
       [ -e /tmp/$(basename $PKG_URI) ] && rm -f /tmp/$(basename $PKG_URI)
     fi
   done
-  echo "Install Package extract all packages."
+  echo "All package installed."
  _exit 0
 fi
 
+# make a pxelinux.cfg/default with this kernel
+parse_pxelinuxcfg
 
 if [ $TCOS_VMLINUZ ]; then
    if [ -f $TCOS_VMLINUZ ] ; then

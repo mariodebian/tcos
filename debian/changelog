@@ -1,3 +1,19 @@
+initramfs-tools-tcos (0.64) unstable; urgency=low
+
+  * Fix 40initsound OSS broken detection
+  * Copy libesd0 (OSS) always if avalaible from cache
+  * Use cached pulseaudio-esound-compat files
+  * Add README.cache to gentcos docs
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat,  3 Mar 2007 16:07:40 +0100
+
+initramfs-tools-tcos (0.63) unstable; urgency=low
+
+  * Fix esound start in OSS compability PulseAudio -> eSound -> OSS
+  * Know to not work (PulseAudio bug ???) PulseAudio -> OSS (/dev/dsp without /proc/asound)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 26 Feb 2007 21:39:47 +0100
+
 initramfs-tools-tcos (0.62) unstable; urgency=low
 
   * Add cache support to gentcos, used to use some non installed packages (esound, libesd0..)

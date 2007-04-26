@@ -2,7 +2,7 @@
 .\"http://gmanedit.sourceforge.net
 .\"Sergio Rua <srua@gpul.org>
 .\"
-.TH gentcos 1 "May 09, 2006" "gentcos man page"
+.TH gentcos 1 "Feb 03, 2007" "gentcos man page"
 
 .SH NAME
 gentcos \- TCOS image boot generator
@@ -120,9 +120,9 @@ To solve this, gentcos can download and extract package files in
 .B
 .IP \-instpkg\ foo
 Exec 
-.B apt-get install -d -y foo
- (download only mode) and extract
-into /var/cache/tcos/packages/foo
+.B apt-get install --print-uris -y -f foo
+ get the package URI and uncompress it
+ into /var/cache/tcos/packages/foo
 
 .PP
 .B List installed packages

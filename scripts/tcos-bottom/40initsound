@@ -84,7 +84,7 @@ log_begin_msg "Setting volume to ${TCOS_VOLUME}"
 log_end_msg
 
 
-if [ -e /dev/dsp ] && [ ! /proc/asound ]; then
+if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
    export TCOS_SOUND_OSS=1
    echo "TCOS_SOUND_OSS=1" >> /conf/tcos.conf
 
