@@ -49,9 +49,9 @@ mnt_usr=${download_dir}/usr.squashfs
 allmodules=${download_dir}/allmodules.squashfs
 
 
-# if file exist link it!!!
+# if file exist rename it!!!
 if [ -f ${download_dir}/usr-$(uname -r).squashfs ]; then
-  ln -s ${download_dir}/usr-$(uname -r).squashfs $mnt_usr
+  mv ${download_dir}/usr-$(uname -r).squashfs $mnt_usr
 fi
 
 if [ ${SQUASHFS_FILE} ]; then

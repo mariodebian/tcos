@@ -122,6 +122,7 @@ install:
 	install -m 644 conf/initramfs.conf $(DESTDIR)$(TCOS_CONF)/initramfs.conf
 	install -m 644 conf/template $(DESTDIR)$(TCOS_CONF)/hacking/template
 	install -m 644 grub/menu.lst-tcos $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos
+	install -m 644 images/logo.xpm.gz $(DESTDIR)$(TCOS_CONF)/logo.xpm.gz
 	
 	# gentcos build script
 	install -m 755 bin/gentcos $(DESTDIR)/usr/sbin/gentcos

@@ -116,8 +116,6 @@ elif [ "$startx" = "F"  ] ; then
 elif [ "$startx" = "S"  ] ; then
    ln -s /sbin/startsshx /sbin/startx
    startsshx &
-else
-   sh
 fi
 
 exit 0

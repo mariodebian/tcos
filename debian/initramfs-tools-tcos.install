@@ -14,6 +14,7 @@ etc/tcos/tcos.conf
 etc/tcos/tcos-modules.conf
 etc/tcos/initramfs.conf
 etc/tcos/menu.lst-tcos
+etc/tcos/logo.xpm.gz
 usr/lib/tcos/configurexorg
 usr/lib/tcos/installer.sh
 usr/lib/tcos/pkgdetails

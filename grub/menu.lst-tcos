@@ -1,22 +1,22 @@
 #splashimage
-#splashimage (hd0,0)/boot/grub/splash.xpm.gz
+#splashimage /boot/grub/logo.xpm.gz
 
 # Font color
-foreground  = CCCCCC
+#foreground  = CCCCCC
 
 # Bar color
-background  = 663399
+#background  = 663399
 
 
 # default num
 default         0
 
 # timeout sec
-timeout         3
+timeout         10
 
 # pretty colours
-color cyan/black white/blue
-
+#color cyan/black white/blue
+color cyan/blue white/blue
 
 #######################################
 ##    Boot TCOS live options         ##
@@ -30,8 +30,20 @@ color cyan/black white/blue
 #
 
 
-title   TCOS Thin Client Operating System
+title   TCOS Thin Client Operating System (normal)
 root    
-kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet
+kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 boot=tcos quiet splash vga=771
+initrd  /boot/initramfs
+boot
+
+title   TCOS Thin Client Operating System (HDD installer)
+root    
+kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet splash vga=771 startx=N installer
+initrd  /boot/initramfs
+boot
+
+title   TCOS Thin Client Operating System (unknow hardware)
+root    
+kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos showmodules discover=1 startx=N
 initrd  /boot/initramfs
 boot

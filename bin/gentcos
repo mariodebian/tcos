@@ -184,7 +184,9 @@ create_grub_iso(){
  dir=/tmp/grub-iso$$
  mkdir -p ${dir}/boot/grub
  install -m 644 /etc/tcos/menu.lst-tcos ${dir}/boot/grub/menu.lst
- install -m 644 /lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
+ install -m 644 /etc/tcos/logo.xpm.gz   ${dir}/boot/grub/logo.xpm.gz
+ [ -f /lib/grub/i386-pc/stage2_eltorito ] && install -m 644 /lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
+ [ -f /usr/lib/grub/i386-pc/stage2_eltorito ] && install -m 644 /usr/lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
  install -m 644 /boot/vmlinuz-${TCOS_KERNEL} ${dir}/boot/vmlinuz
  create_initramfs
  cp ${INITRAMFS} ${dir}/boot/initramfs

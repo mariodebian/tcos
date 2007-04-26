@@ -19,12 +19,36 @@ esac
 quiet=n
 
 . /scripts/functions
+. /conf/tcos-run-functions
 
-clear
-echo "Press enter to activate this console..."
-read enter
-export PS1="($(hostname)-$(whoami)) # "
-#export PS1='($(hostname)) > '
-sh
+
+# try to exec installer
+INSTALLER=$(read_cmdline_var "installer" "0")
+
+if [ "${INSTALLER}" = "1" ]; then
+   # launch installer
+   #clear
+   /sbin/installer.sh
+   echo ""
+   echo "Installer done. You can reboot now or connect server."
+   echo ""
+   echo "    for reboot/poweroff   exec => reboot poweroff"
+   echo "    for connect to server exec => startremotex"
+   echo ""
+   sh
+else
+
+  clear
+  echo ""
+  echo ""  
+  echo "Press enter to activate this console..."
+  read enter
+  export PS1="($(hostname)-$(whoami)) # "
+  #export PS1='($(hostname)) > '
+  sh
+
+fi
+
+
 
 exit 0
