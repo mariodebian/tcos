@@ -114,7 +114,7 @@ if [ $XORG = 6 ]; then
 
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support IS ENABLED"
-    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0]; then
+    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0 ]; then
 
        if [ ! -d /var/lib/tcos/opengl ]; then
           cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/X11R6/lib/modules/extensions
@@ -159,7 +159,7 @@ else
  
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support is ENABLED"
-    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0]; then
+    if [ "$(strings /usr/lib/libGL.so|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so|grep -c -i fgl)" != 0 ]; then
 
        if [ ! -d /var/lib/tcos/opengl ]; then
           cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/lib/xorg/modules/extensions/
