@@ -63,22 +63,12 @@ if [ ! -d /proc/asound  ] && [ ! -e /dev/dsp ] ; then
   exit 0
 fi
 
-if [ -e /dev/dsp ] && [ ! /proc/asound ]; then
-   export TCOS_SOUND_OSS=1
-   echo "TCOS_SOUND_OSS=1" >> /conf/tcos.conf
-fi
-
-
-
-
-
 # DOCUMENTME volume=XX% | set master and pcm volume levels to value passed (0%-100% or integer from 1 to 31)
 TCOS_VOLUME=$(read_cmdline_var "volume" "${TCOS_VOLUME}")
 
 cat <<EOF > /etc/esound/esd.conf
 [esd]
 EOF
-
 
 # setting volumes
 log_begin_msg "Setting volume to ${TCOS_VOLUME}"
@@ -93,9 +83,13 @@ log_begin_msg "Setting volume to ${TCOS_VOLUME}"
   fi
 log_end_msg
 
-if [ "${TCOS_SOUND_OSS}" = "1" ]; then
-  log_begin_msg "Init sound server (eSound)"
-  esd -public -tcp -public -noterminate  &
+
+if [ -e /dev/dsp ] && [ ! /proc/asound ]; then
+   export TCOS_SOUND_OSS=1
+   echo "TCOS_SOUND_OSS=1" >> /conf/tcos.conf
+
+  log_begin_msg "Init sound server OSS (eSound)"
+    esd -public -tcp -public -noterminate  &
   log_end_msg
 fi
 

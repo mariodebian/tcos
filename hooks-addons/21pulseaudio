@@ -71,17 +71,12 @@ else
 # generate conf
 rm -f /etc/pulse/default.pa
 
-if [ \$TCOS_SOUND_OSS ]; then
+if [ "\$(pidof esd)" != "0" ]; then
 cat << FIN > /etc/pulse/default.pa
 #!/usr/bin/pulseaudio -nF
 
-#load-module module-oss device="/dev/dsp" sink_name=output source_name=input
 load-module module-esound-sink server=127.0.0.1
-
-
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(get_server)
-#load-module module-esound-protocol-unix
-#load-module module-esound-protocol-tcp
 
 FIN
 
