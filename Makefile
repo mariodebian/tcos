@@ -33,9 +33,9 @@ config_svn:
 
 ubuntu-conf:
 	if [ "$(DISTRO)" = "ubuntu" ]; then\
-		sed -i 's/"quiet splash"/"splash"/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
-		sed -i 's/"quiet splash"/"splash"/g' $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/default ;\
-		sed -i 's/"quiet splash"/"splash"/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
+		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
+		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/default ;\
+		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
 	fi
 
 
