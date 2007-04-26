@@ -1,11 +1,12 @@
-initramfs-tools-tcos (0.56.18) unstable; urgency=low
+initramfs-tools-tcos (0.56.18+1) unstable; urgency=low
 
   * hooks-addons/xorg:
     - fix space in if conditional
     - fix "! -d /var" => "-d /usr" in opengl conditional
     - delete libglx.so (only needed by nvidia & ati drivers)
+  * Fix minor typo in hooks-addons/xorg
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 10 Dec 2006 18:57:25 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 17 Dec 2006 15:51:45 +0100
 
 initramfs-tools-tcos (0.56.17) unstable; urgency=low
 
