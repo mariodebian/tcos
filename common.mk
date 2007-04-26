@@ -2,6 +2,18 @@
 
 PACKAGE=initramfs-tools-tcos
 
+##################################
+# kernel default versions
+
+KERNEL_dapper="2.6.15-27-386"
+KERNEL_edgy="2.6.17-11-generic"
+KERNEL_feisty="2.6.20-15-generic"
+
+KERNEL_etch="2.6.18-4-486"
+KERNEL_unstable="2.6.18-4-486"
+##################################
+
+
 MAKE=make -B
 INSTALL=install
 
@@ -30,6 +42,11 @@ TCOS_XMLRPC_DIR=$(PREFIX)/share/tcosmonitor/xmlrpc/
 DBUS_CONF=/etc/dbus-1/system.d/
 X11_CONF=/etc/X11/Xsession.d/
 DISABLE_USPLASH=0
+
+DISTRO_VERSION=$(shell dpkg-parsechangelog | awk '/^Distribution/ {print $$2}')
+TCOS_DEFAULT_KERNEL=$(KERNEL_$(DISTRO_VERSION))
+
+
 
 ifeq ($(HAVE_USPLASH),0)
 DISABLE_USPLASH=1
@@ -92,3 +109,6 @@ test:
 	@echo DEB_MIRROR=$(DEB_MIRROR)
 	@echo DISABLE_USPLASH=$(DISABLE_USPLASH)
 	@echo "------------------------------------"
+
+	@echo DISTRO_VERSION=$(DISTRO_VERSION)
+	@echo TCOS_DEFAULT_KERNEL=$(TCOS_DEFAULT_KERNEL)

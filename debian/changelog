@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.73) unstable; urgency=low
+
+  * usplash:
+    - Make usplash from dapper work (pngtobogl must be compiled from sources)
+  * scripts/tcos-premount/35sqmount:
+    - Ubuntu feisty udev (or 2.6.20 kernel) don't create loop devices and need to wait
+  * Put in tcos.conf default distro kernel (during install check for version, see common.mk)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 21 Apr 2007 21:19:38 +0200
+
 initramfs-tools-tcos (0.72) unstable; urgency=low
 
   * hooks/tcosbin:

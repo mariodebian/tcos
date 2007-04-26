@@ -87,6 +87,8 @@ install:
 
 
 	install -m 600 conf/tcos.conf $(DESTDIR)$(TCOS_CONF)/tcos.conf
+	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
+
 	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
 
 	install -m 644 conf/tcos-generation-functions.sh $(DESTDIR)$(TCOS_DIR)/tcos-generation-functions.sh

@@ -36,7 +36,7 @@ force_add_module() {
         # force copy of module modprobe dont show as dependency
         this_module=$(modprobe --set-version="${version}" -l "${1}")
         if [ ! -e "${DESTDIR}/${this_module}" ]; then
-                echo "  WARNING, adding module $(basename ${this_module}), see Debian bug: #384043"
+                #echo "  WARNING, adding module $(basename ${this_module}), see Debian bug: #384043"
                 mkdir -p "${DESTDIR}/$(dirname "${this_module}")"
                 ln -s "${this_module}" "${DESTDIR}/$(dirname "${this_module}")"
         fi
