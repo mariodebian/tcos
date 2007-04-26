@@ -6,11 +6,19 @@ PACKAGE=initramfs-tools-tcos
 # kernel default versions
 
 KERNEL_dapper="2.6.15-27-386"
+USPLASH_dapper="0.2"
+
 KERNEL_edgy="2.6.17-11-generic"
+USPLASH_edgy="0.4"
+
 KERNEL_feisty="2.6.20-15-generic"
+USPLASH_feisty="0.4"
 
 KERNEL_etch="2.6.18-4-486"
+USPLASH_etch="0.3"
+
 KERNEL_unstable="2.6.18-4-486"
+USPLASH_unstable="0.4"
 ##################################
 
 
@@ -44,7 +52,13 @@ X11_CONF=/etc/X11/Xsession.d/
 DISABLE_USPLASH=0
 
 DISTRO_VERSION=$(shell dpkg-parsechangelog | awk '/^Distribution/ {print $$2}')
+have_changelog := $(wildcard debian/changelog)
+ifeq ($(strip $(have_changelog)),)
+DISTRO_VERSION=$(shell dpkg-parsechangelog -l../debian/changelog | awk '/^Distribution/ {print $$2}')
+endif
+
 TCOS_DEFAULT_KERNEL=$(KERNEL_$(DISTRO_VERSION))
+TCOS_USPLASH_VERSION=$(USPLASH_$(DISTRO_VERSION))
 
 
 
@@ -112,3 +126,4 @@ test:
 
 	@echo DISTRO_VERSION=$(DISTRO_VERSION)
 	@echo TCOS_DEFAULT_KERNEL=$(TCOS_DEFAULT_KERNEL)
+	@echo TCOS_USPLASH_VERSION=$(TCOS_USPLASH_VERSION)

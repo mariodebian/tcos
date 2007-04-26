@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.74) unstable; urgency=low
+
+  * Fix conf/tcos.conf kernel double "
+  * Set usplash version with distro version
+  * Delete usplash/test.sh 
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 23 Apr 2007 23:31:50 +0200
+
 initramfs-tools-tcos (0.73) unstable; urgency=low
 
   * usplash:

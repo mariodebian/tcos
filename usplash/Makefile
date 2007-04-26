@@ -4,7 +4,7 @@ all:
 include ../common.mk
 
 
-USPLASH_VERSION=$(shell bash test.sh)
+USPLASH_VERSION=$(TCOS_USPLASH_VERSION)
 
 vars:
 	@echo DISTRO=$(DISTRO)
