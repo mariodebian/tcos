@@ -37,22 +37,13 @@ if [ "${BOOT}" = "tcos" ]; then
 . $TCOS_DIR/tcos-generation-functions.sh
 
 
-# _echo ""
-# _echo "INITRAMFS => BOOT=tcos"
-# _echo ""
 
 # copy internal tcos conf
 cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
 cp $CONFDIR/tcos.conf                $DESTDIR/conf/
 
-# put DNS server
-dns1=$(grep nameserver /etc/resolv.conf | head -1 | awk '{print $2}')
-echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
 
-#[ -d $DESTDIR/sys ]  || mkdir $DESTDIR/sys
-#[ -d $DESTDIR/proc ] || mkdir $DESTDIR/proc
-#[ -d $DESTDIR/tmp ]  || mkdir $DESTDIR/tmp
-
+# make some dirs
 [ -d $DESTDIR/dev ]  || mkdir -m 0755 $DESTDIR/dev
 [ -d $DESTDIR/root ] || mkdir --mode=0700 $DESTDIR/root
 [ -d $DESTDIR/ram ]  || mkdir $DESTDIR/ram
@@ -69,22 +60,6 @@ cpifexists /etc/debian_version  /etc/
 cpifexists ${TCOS_BINS}/seq /bin
 
 
-# needed for swap creation
-cpifexists /sbin/mkswap /sbin/
-
-# fdisk for fstab generation
-cpifexists /sbin/fdisk /sbin/
-
-# to change pass during boot
-copy_exec /usr/sbin/chpasswd /usr/bin/
-cpifexists /etc/login.defs   /etc
-
-# some network stuff
-touch $DESTDIR/etc/hosts.allow
-touch $DESTDIR/etc/hosts.deny
-cpifexists /etc/host.conf        /etc/
-cpifexists /etc/nsswitch.conf    /etc/
-
 # LIBRARIES
 cpifexists /sbin/ldconfig    /sbin/
 [ -f /etc/ld.so.conf ] && cpifexists /etc/ld.so.conf       /etc/
@@ -92,98 +67,6 @@ cpifexists /sbin/ldconfig    /sbin/
 
 cpifexists /etc/localtime        /etc/
 cpifexists /etc/adjtime        /etc/
-
-# server kbmap
-cpifexists /bin/loadkeys /usr/bin
-
-if [ -f /etc/console/boottime.kmap.gz ]; then
-  mkdir -p $DESTDIR/etc/console
-  cpifexists /etc/console/boottime.kmap.gz /etc/console
-fi
-
-# for ubuntu
-if [ -f /etc/console-setup/boottime.kmap.gz ]; then
-  mkdir -p $DESTDIR/etc/console
-  [ ! -f $DESTDIR/etc/console/boottime.kmap.gz ] && cpifexists /etc/console-setup/boottime.kmap.gz /etc/console
-fi
-
-# create /etc/passwd /etc/shadow and /etc/group
-cat << EOF >> $DESTDIR/etc/passwd
-root:x:0:0:root:/root:/bin/sh
-daemon:x:1:1:daemon:/usr/sbin:/bin/sh
-bin:x:2:2:bin:/bin:/bin/sh
-sys:x:3:3:sys:/dev:/bin/sh
-lp:x:7:7:lp:/var/spool/lpd:/bin/sh
-proxy:x:13:13:proxy:/bin:/bin/sh
-nobody:x:65534:65534:nobody:/nonexistent:/bin/sh
-sshd:x:105:65534::/var/run/sshd:/bin/false
-EOF
-
-# default password for root user is "root"
-cat << EOF >> $DESTDIR/etc/shadow
-root:QIO6IpW6SDbVI:13562:0:99999:7:::
-daemon:*:13250:0:99999:7:::
-bin:*:13250:0:99999:7:::
-sys:*:13250:0:99999:7:::
-lp:*:13250:0:99999:7:::
-nobody:*:13250:0:99999:7:::
-sshd:!:13250:0:99999:7:::
-EOF
-
-cat << EOF >> $DESTDIR/etc/group
-root:x:0:
-daemon:x:1:
-bin:x:2:
-sys:x:3:
-adm:x:4:
-tty:x:5:
-disk:x:6:
-lp:x:7:
-kmem:x:15:
-audio:x:29:pulse
-users:x:100:
-ssh:x:109:
-audio:x:29:
-EOF
-
-
-#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/passwd > $DESTDIR/etc/passwd
-#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/group > $DESTDIR/etc/group
-#egrep "root:|bin:|daemon:|sys:|adm:|tty:|disk:|lp:|mem:|kmem:|wheel:|audio|nobody:|users:|telnet|ssh" /etc/shadow > $DESTDIR/etc/shadow
-
-# change shell to /bin/sh
-#sed -i s/bash/sh/g ${DESTDIR}/etc/passwd
-#cat $DESTDIR/etc/passwd | sed s/bash/sh/g > $DESTDIR/etc/passwd~ ; cat $DESTDIR/etc/passwd~ > $DESTDIR/etc/passwd
-#rm $DESTDIR/etc/passwd~
-
-
-# check for a decent version of busybox
-# ubuntu busybox-initramfs don't have some utils
-if [ $DESTDIR/bin/busybox ]; then
-  test1=$($DESTDIR/bin/busybox tftp --help  2>&1 | grep -c -i usage)
-  test2=$($DESTDIR/bin/busybox awk --help   2>&1 | grep -c -i usage)
-  test3=$($DESTDIR/bin/busybox httpd --help 2>&1 | grep -c -i usage)
-
-  if [ $test1 = 0 -o $test2 = 0 -o $test3 = 0 ]; then
-    if [ -x /bin/busybox ]; then
-       _echo "   INFO:  Better busybox found, replacing it..."
-       rm $DESTDIR/bin/busybox
-       cpifexists /bin/busybox /bin/
-    else
-       _echo "ERROR:"
-       _echo ""
-       _echo "     The initramfs busybox version don't have some needed utils."
-       _echo "     Please install other busybox that have awk, tftp and httpd"
-       _echo ""
-       _echo "     This TCOS image will not work."
-       _echo ""
-    fi
-  else
-    _echo "    busybox pass test: OK"
-  fi
-else
-  _echo "busybox not found in initramfs yet..."
-fi
 
 
 

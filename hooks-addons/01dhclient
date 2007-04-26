@@ -1,7 +1,15 @@
 # hook addon DHCLIENT
 # necessary dhcp-client package
 
+# some network stuff
+touch $DESTDIR/etc/hosts.allow
+touch $DESTDIR/etc/hosts.deny
+cpifexists /etc/host.conf        /etc/
+cpifexists /etc/nsswitch.conf    /etc/
 
+# put DNS server
+dns1=$(grep nameserver /etc/resolv.conf 2>/dev/null | head -1 | awk '{print $2}')
+echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
 
 if [ ! -f /sbin/dhclient ]; then
  echo "ERROR"

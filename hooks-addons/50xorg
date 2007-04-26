@@ -319,26 +319,16 @@ if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-
-run_times 3 "Xorg \${TCOS_XORG_OPTS} -query \${SERVER}" "/dev/null"
+counter=1
+while [ \$counter -le 3 ]; do
+ Xorg \${TCOS_XORG_OPTS} -query \${SERVER} > /dev/null 2>&1
+ counter=\$((counter+1))
+done
 
 echo ""
 echo "Error launching Xorg, check /var/log/Xorg.0.log for errors"
 echo ""
 
-#echo 1 > /tmp/xorg.times
-#
-#while [ 1 ]; do
-# times=\$(cat /tmp/xorg.times)
-# if [ \$times -gt 3 ]; then
-#   echo ""
-#   echo "Error launching Xorg, check /var/log/Xorg.0.log for errors"
-#   echo ""
-#   exit 1
-# fi
-# times=\$((times +1))
-# echo \$times > /tmp/xorg.times
-#done
 EOF
 chmod +x $DESTDIR/sbin/startremotex
 

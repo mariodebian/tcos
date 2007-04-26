@@ -1,6 +1,12 @@
 # hooks addon TCOS hdd installer
 # need whiptail, syslinux
 
+# needed for swap creation
+cpifexists /sbin/mkswap /sbin/
+
+# fdisk for fstab generation
+cpifexists /sbin/fdisk /sbin/
+
 if [ $TCOS_INSTALLER ]; then
 
   cpifexists /usr/bin/whiptail /usr/bin

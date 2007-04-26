@@ -1,0 +1,17 @@
+# hook addond for keymap
+
+
+# server kbmap
+cpifexists /bin/loadkeys /usr/bin
+
+if [ -f /etc/console/boottime.kmap.gz ]; then
+  mkdir -p $DESTDIR/etc/console
+  cpifexists /etc/console/boottime.kmap.gz /etc/console
+fi
+
+# for ubuntu
+if [ -f /etc/console-setup/boottime.kmap.gz ]; then
+  mkdir -p $DESTDIR/etc/console
+  [ ! -f $DESTDIR/etc/console/boottime.kmap.gz ] && cpifexists /etc/console-setup/boottime.kmap.gz /etc/console
+fi
+

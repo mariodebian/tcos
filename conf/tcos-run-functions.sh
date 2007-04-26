@@ -20,26 +20,11 @@ while [ ! -$2 $1 ]; do
 done
 }
 
-run_times() {
-# $1 number of times to try exec
-# $2 command
-# $3 is output
-#
-# example:
-#     run_times 3 "Xorg -query tcos_server" "/dev/null"
-#
-times=1
-while [ $times -le $1 ]; do
-  ($2 > $3 2>&1)
-  times=$((times+1))
-  sleep 1
-done
-}
 
 start_usplash() {
   if [ -x /sbin/usplash ]; then
         /sbin/usplash -c &
-        /sbin/usplash_write "TEXT Usplash timeout..."
+        /sbin/usplash_write "TEXT Starting usplash..."
         /sbin/usplash_write "TIMEOUT 180"
         /sbin/usplash_write "SUCCESS ok"
   fi
@@ -62,7 +47,7 @@ kill_xorg() {
 
 kill_all() {
   # FIXME better scan ps output
-  process="ltspfsd pulseaudio ivs dhclient dropbear"
+  process="ltspfsd pulseaudio ivs dhclient esd"
   for proc in ${process}; do
      log_begin_msg "Stopping ${proc}"
        killall $proc >  /dev/null 2>&1
@@ -131,12 +116,12 @@ get_server() {
    return
   fi
   # read server ip address from dhcp
-  if [ ! -e /var/lib/dhcp/dhclient.leases ] ; then
+  if [ ! -e /var/lib/dhcp/dhclient.leases ] || [ $(cat /var/lib/dhcp/dhclient.leases | wc -l) = 0 ]; then
     clear
     panic "Error, network not configured, check your DHCP server conf."
   fi
   SERVER=${TCOS_SERVER}
-  SERVER=$(cat /var/lib/dhcp/dhclient.leases| grep dhcp-server| awk '{print $3}' | awk -F ";" '{print $1}')
+  SERVER=$(grep dhcp-server /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
   # overwrite with cmdline
   # DOCUMENTME server | ip of XDMCP server
   SERVER=$(read_cmdline_var "server" "${SERVER}")
@@ -235,7 +220,7 @@ mount_unionfs() {
   # $1 ramdisk
   # $2 ro filesystem
   # $3 union
-  # $3 contains a mounted filesystema in ro mode (squashfs)
+  # $3 contains a mounted filesystem in ro mode (squashfs)
   ramdisk=$1
   rofs=$2
   rwfs=$3
