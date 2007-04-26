@@ -22,7 +22,7 @@ Description: TCOS is a new thin client implementation
 
 Package: initramfs-tools-tcos
 Architecture: any
-Depends: initramfs-tools (>= 0.40), syslinux, dhcp-client, console-data, libnss-db, iftop, strace, twm, xterm, dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, debootstrap, libltdl3
+Depends: initramfs-tools (>= 0.40), syslinux, dhcp-client | dhcp3-client, console-data, libnss-db, iftop, strace, twm, xterm, dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, debootstrap, libltdl3
 Suggests: unionfs-modules-2.6.16-2-486, squashfs-modules-2.6.16-2-486, tinylogin
 Description: tools for generating a thin client bootable image
  This package contains tools to create and boot an initramfs for prepackaged
