@@ -30,7 +30,7 @@ elif [ -f /sbin/dhclient3 ]; then
  cpifexists /sbin/dhclient         /sbin/
 
 
- [ -e /sbin/dhclient-script ]      && cp /sbin/dhclient-script       /sbin/
+ [ -e /sbin/dhclient-script ]      && cpifexists /sbin/dhclient-script       /sbin/
  [ -e /etc/dhcp3/dhclient-script ] && rm $DESTDIR/etc/dhcp3/dhclient-script && \
 					cp /etc/dhcp3/dhclient-script $DESTDIR/etc/dhcp3/
 
@@ -75,6 +75,7 @@ else
   _echo "    ERROR:"
   _echo "            No dhcp-client package detected"
   _echo "            Please install dhcp-client package"
+  _echo "            thin clients don't work without dhcp-client package"
   _echo ""
   exit 1
 
