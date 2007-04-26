@@ -93,7 +93,9 @@ done
 
 _files=$(ls -1 ${TCOS_CONF}/hacking/ | grep -v -e dpkg -e .svn)
 for hack in $_files ; do 
-  _echo "  LOADING: hack: ${TCOS_CONF}/hacking/${hack}"
+  if [ "{$hack}" != "template" ]; then
+    _echo "  LOADING: hack: ${TCOS_CONF}/hacking/${hack}"
+  fi
  . ${TCOS_CONF}/hacking/${hack} 
 done
 

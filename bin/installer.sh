@@ -115,7 +115,7 @@ log_begin_msg "Downloading startup logos and help"
 log_end_msg
 
 log_begin_msg "Installing syslinux"
-  cat /usr/lib/syslinux/mbr.bin  > /dev/hda
+  #cat /usr/lib/syslinux/mbr.bin  > /dev/hda
   syslinux /dev/hda1
 
 cat << EOF > /target/syslinux.cfg

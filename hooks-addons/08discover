@@ -5,15 +5,14 @@
 
 if [ $TCOS_DISCOVER ] ;then
     
-    # check for tcos-discover2
-    tcos_discover=$(dpkg -l tcos-discover2 2>/dev/null | grep -c ^ii)
-    
     # check if discover is discover or discover1
     discover1=$(dpkg -l discover1|grep -c ^ii 2>/dev/null)
     
-    if [ ${tcos_discover} = 1 ]; then
+    if [ -d ${TCOS_PKG_CACHE}/discover ] && [ -d ${TCOS_PKG_CACHE}/discover-data ] && [ -d ${TCOS_PKG_CACHE}/libdiscover2 ] ; then
         stat_before
-        disco_path=/usr/lib/tcos/discover
+        disco_path=${TCOS_PKG_CACHE}/discover
+        disco_lib=${TCOS_PKG_CACHE}/libdiscover2
+        disco_data=${TCOS_PKG_CACHE}/discover-data
         # Discover
         cpifexists $disco_path/sbin/discover               /usr/bin/
         cpifexists $disco_path/usr/bin/discover-config     /usr/bin
@@ -22,30 +21,26 @@ if [ $TCOS_DISCOVER ] ;then
 
         #copydir $disco_path/lib/discover /lib/
 	# discover files have 2 Mb here put into squashfs and make a link in 05inittcos
-        copydir $disco_path/lib/discover /usr/lib/
+        copydir $disco_data/lib/discover /usr/lib/
 
-        cpifexists $disco_path/usr/lib/libdiscover.so.2 /usr/lib/
+        cpifexists $disco_lib/usr/lib/libdiscover.so.2 /usr/lib/
 
         mkdir -p $DESTDIR/usr/share/discover/dtd/
 
-        copydir $disco_path/usr/share/discover/dtd/ /usr/share/discover/
-        copydir $disco_path/etc/discover.conf.d/    /etc/
+        copydir $disco_lib/usr/share/discover/dtd/ /usr/share/discover/
+        copydir $disco_lib/etc/discover.conf.d/    /etc/
 
-        if [ -d $disco_path/etc/discover.d/ ]; then
-           copydir $disco_path/etc/discover.d/         /etc/
-	    fi
+	mkdir -p $DESTDIR/etc/default
+	cp /etc/default/rcS             ${DESTDIR}/etc/default/
 
-	    mkdir -p $DESTDIR/etc/default
-	    cp /etc/default/rcS             ${DESTDIR}/etc/default/
-
-        stat_after "Tcos Discover2"
+        stat_after "Discover [cached]"
    
     elif [ ${discover1} = 1 ]; then
         echo "WARNING:"
         echo ""
-        echo "discover1 detected, USE discover or tcos-discover2 or disable discover"
+        echo "discover1 detected, USE discover or cache discover package"
         echo "             discover1 is not supported"
-        echo "   => apt-get install tcos-discover2"
+        echo "   => gentcos -instpkg discover libdiscover2 discover-data"
         echo "   => apt-get install discover"
         echo ""
     
@@ -65,12 +60,9 @@ if [ $TCOS_DISCOVER ] ;then
         copydir /usr/share/discover/dtd/ /usr/share/discover/
         copydir /etc/discover.conf.d/    /etc/
 
-        if [ -d /etc/discover.d/ ]; then
-           copydir /etc/discover.d/         /etc/
-	    fi
 
-	    mkdir -p $DESTDIR/etc/default
-	    cp /etc/default/rcS             ${DESTDIR}/etc/default/
+	mkdir -p $DESTDIR/etc/default
+	cp /etc/default/rcS             ${DESTDIR}/etc/default/
 
         stat_after "Discover"
   

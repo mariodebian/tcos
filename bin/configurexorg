@@ -114,11 +114,12 @@ cmdline=$@
 get_myconf() {
 # $1 is var name
 # $2 is default value
-debug "get_myconf() \$1=$1 \$2=\$2"
+debug "get_myconf() varname=$1 default=$2"
 varname=$1
 defvalue=$2
  value=$(grep ^${varname} ${mysettings} | awk -F "=" '{gsub(/\"/,"",$2); print $2}' )
  if [ "${value}" != "" ]; then
+   debug "get_myconf() new value=${value}"
    echo ${value}
  else
    echo ${defvalue}

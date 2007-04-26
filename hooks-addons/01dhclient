@@ -52,7 +52,7 @@ elif [ -f /sbin/dhclient3 ]; then
 	   -e s/"bash"/"sh"/g $DESTDIR/etc/dhcp3/dhclient-script
 
  mkdir -p $DESTDIR/var/lib/dhcp3 $DESTDIR/lib/dhcp3-client
- cpifexists /lib/dhcp3-client/call-dhclient-script /lib/dhcp3-client/
+ touch $DESTDIR/lib/dhcp3-client/call-dhclient-script
 
  # dhclient3 need dhcp user 
  dhcp_user=$(grep -c "dhcp:" /etc/passwd )

@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.70) unstable; urgency=low
+
+  * Extends ConfigObj class to use '=' instead of ' = '
+  * Don't copy /lib/dhcp3-client/call-dhclient-script
+  * Use discover from TCOS cache (for dapper)
+  * Better gentcos.postinst (work with inetd.conf, atftpd, tftpd-hpa)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 03 Apr 2007 14:50:05 +0200
+
 initramfs-tools-tcos (0.69) unstable; urgency=low
 
   * Remove old debian/*lintian* files
