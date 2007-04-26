@@ -1,9 +1,5 @@
-TODO for pxes images
+TODO for TCOS images
 ====================
-
- * Create task that depends squashfs modules (example, try to start samba, 
-   samba binary not found, download samba.squashfs, mount and start)
-   NEED squashfs and unionfs support and remount / with some modules: not checked
 
  * Admin tags in init scripts ( clean hdd , save config files... )
 

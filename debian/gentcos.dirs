@@ -1,3 +1,2 @@
-tftpboot/tcos
 var/lib/tcos/files
-usr/share/lintian/overrides/
+var/lib/tcos/tftp

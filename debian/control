@@ -50,7 +50,7 @@ Architecture: any
 Depends: debconf, grub, syslinux, initramfs-tools-tcos (= ${Source-Version}), 
          squashfs-tools, mknbi, dropbear, discover, ltspfs-client, ltspfs-server
 Recommends: autofs, esound, alsa-utils, links2, dillo, pulseaudio, pulseaudio-utils
-Description: TCOS shell tools generation system.
+Description: Image generation scripts, and tftp config for TCOS
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminal.

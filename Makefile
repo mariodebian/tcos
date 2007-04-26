@@ -37,7 +37,7 @@ config_svn:
 ubuntu-conf:
 	if [ "$(DISTRO)" = "ubuntu" ]; then\
 		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
-		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/default.tpl ;\
+		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl ;\
 		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
 	fi
 
@@ -74,7 +74,10 @@ install:
 	install -m 644 SecurityPolicy $(DESTDIR)/$(TCOS_CONF)
 
 #	install -m 644 tcos/default $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
-	install -m 644 tcos/default.tpl $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
+#	install -m 644 tcos/default.tpl $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg/
+
+	install -m 644 tcos/default.tpl $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl
+
 	install -m 644 tcos/help.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/tcos.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/logo.lss $(DESTDIR)$(TFTP_DIR)/

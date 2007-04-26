@@ -3,8 +3,10 @@ initramfs-tools-tcos (0.61) unstable; urgency=low
   * Change /opt/tcos with /var/lib/tcos (debian correct)
   * Remove debconf message
   * Not build tcos-discover2 tcos-opengl-libs tcos-esound anymore (no clean, not debian)
+  * Change /tftpboot/tcos with /var/lib/tcos/tftp and link it
+  * Add UPGRADE.debian info to gentcos package
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 Feb 2007 00:20:38 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 Feb 2007 13:28:04 +0100
 
 initramfs-tools-tcos (0.60.7) unstable; urgency=low
 

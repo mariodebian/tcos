@@ -49,7 +49,8 @@ install: build
 	# Add here commands to install the package into debian/tmp
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 
-	dh_link /usr/lib/syslinux/pxelinux.0 /tftpboot/tcos/pxelinux.0
+	dh_link /usr/lib/syslinux/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
+#	dh_link /etc/tcos/pxelinux.cfg.tpl /var/lib/tcos/tftp/pxelinux.cfg/default.tpl
 
 	# clean SVN dirs in package
 	for i in `find debian/tmp -type d -name .svn`; do rm -rf $$i; done
