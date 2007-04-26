@@ -43,7 +43,7 @@ cat << EOF >> $DESTDIR/scripts/init-top/usplash
 
 
 if [ "\$SPLASH" = "true" ]; then
-   usplash_write "TEXT Preparing to boot..."
+   usplash_write "TEXT Preparing to boot TCOS..."
    usplash_write "TIMEOUT 180"
    usplash_write "SUCCESS ok"
 fi

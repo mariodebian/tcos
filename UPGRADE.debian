@@ -25,7 +25,7 @@
   Need to edit /etc/exports to change NFS path:
 
   OLD PATH:
-  /opt/ltsp  192.168.0.0/255.255.255.0(ro,no_root_squash,sync,no_subtree_check)
+  /opt/tcos  192.168.0.0/255.255.255.0(ro,no_root_squash,sync,no_subtree_check)
 
   NEW PATH:
   /var/lib/tcos  192.168.0.0/255.255.255.0(ro,no_root_squash,sync,no_subtree_check)
