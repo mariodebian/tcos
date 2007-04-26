@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.56.9) unstable; urgency=low
+
+  * Fix hooks-addons/dhclient dhclient3 path of script
+  * Make package with common.mk
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 16 Nov 2006 22:05:35 +0100
+
 initramfs-tools-tcos (0.56.8) unstable; urgency=low
 
   * join tcos-nfs startup with normal tcos

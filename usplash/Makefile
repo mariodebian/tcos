@@ -4,6 +4,8 @@ all:
 #	gcc -Os -g -I/usr/include/bogl -fPIC -c usplash-artwork.c -o usplash-artwork.o
 #	gcc -shared -Wl,-soname,usplash-artwork.so usplash-artwork.o -o usplash-tcos.so
 
+include ../common.mk
+
 clean:
 #	rm -f usplash-artwork.c usplash-artwork.o usplash-tcos.so
 
@@ -11,4 +13,4 @@ install:
 #	install -m 755 usplash-tcos.so /var/lib/dpkg/alternatives/usplash-artwork.so
 #	install -m 755 usplash-tcos.so /usr/lib/usplash/usplash-artwork.so
 #	install -m 755 usplash-tcos.so /usr/lib/usplash/usplash-default.so
-	install -m 755 usplash-tcos.so /usr/lib/usplash/usplash-tcos.so
+	install -m 755 usplash-tcos.so $(DESTDIR)/usr/lib/usplash/usplash-tcos.so

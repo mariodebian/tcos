@@ -1,8 +1,7 @@
-TCOS_BINS:=/usr/lib/tcos
-DESTDIR:=/
-
 all: compile
 	#none
+
+include ../common.mk
 
 compile:
 	gcc -Wall pkgdetails.c -o pkgdetails
