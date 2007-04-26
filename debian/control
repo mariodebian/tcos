@@ -10,7 +10,7 @@ Package: tcos
 Architecture: any
 Depends: initramfs-tools-tcos (= ${Source-Version}) , gentcos (= ${Source-Version})
 Recommends: tcos-tcosmonitor, tcosmonitor
-Description: TCOS is a new thin client implementation
+Description: new thin client implementation
  This is a system for generating thin client hosts using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminal.
@@ -50,7 +50,7 @@ Architecture: any
 Depends: debconf, grub, syslinux, initramfs-tools-tcos (= ${Source-Version}), 
          squashfs-tools, mknbi, dropbear, discover, ltspfs-client, ltspfs-server
 Recommends: autofs, esound, alsa-utils, links2, dillo, pulseaudio, pulseaudio-utils
-Description: TCOS generation system.
+Description: TCOS shell tools generation system.
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminal.
