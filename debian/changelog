@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.68) unstable; urgency=low
+
+  * bin/tcos-gdm-autologin:
+    - Fix typo chowm => chown
+    - Add fromip var to make a network not starting in number 1
+    - Add --nodelete option to not work in kiosk mode.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 12 Mar 2007 23:52:20 +0100
+
 initramfs-tools-tcos (0.67) unstable; urgency=low
 
   * gentcos depends atftpd | tftpd-hpa and dhcp3-server

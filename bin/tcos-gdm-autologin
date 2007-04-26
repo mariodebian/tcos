@@ -46,6 +46,7 @@ USER_GROUPS=["fuse"]
 debug=False
 configure=False
 add=False
+delete_home=True
 
 # this is the values needed to connect to GDM from thin clients
 TCOS_GDM={
@@ -77,10 +78,11 @@ def usage():
     print "    --configure   (configure gdm with ThinClient values)"
     print "    --skel=/foo/bar/file.tar.gz (skel template, default %s)" %(HOME_TEMPLATE)
     print "    --add         (add users and hostnames to system files)"
+    print "    --nodelete    (NOT delete HOME and uncompress HOME_TEMPLATE)"
 
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["help", "debug", "configure", "skel=", "add"])
+    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["help", "debug", "configure", "skel=", "add", "nodelete"])
 except getopt.error, msg:
     print msg
     print "for command line options use tcos-gdm-autologin --help"
@@ -96,6 +98,9 @@ for o, a in opts:
         
     if o == "--add":
         add=True
+        
+    if o == "--nodelete":
+        delete_home=False
         
     if o == "--skel":
         HOME_TEMPLATE=a
@@ -142,8 +147,11 @@ def show_login():
     
     # kill all user processes
     execmd("pkill -9 -u %s" %(username))
+    if delete_home:
+        restore_home(home, username)
+    else:
+        print_debug("Not restoring home...")
     print username    
-    restore_home(home, username)
 
 def read_exe_output(cmd):
     output=[]
@@ -198,11 +206,14 @@ def SetAutologin():
 def AddUserAndHost():
     hosts=[]
     ips=[]
-    prefix=raw_input("Please say me the common prefix of hosts/users (example host): ")
-    number=int(raw_input("Number of host/users to generate (from 1 to number): "))
-    ipbase=raw_input("Need IP Address of devices (example 192.168.0): ")
+    prefix=raw_input("Please input the common prefix of hosts/users (example host): ")
+    ipbase=raw_input("Need network IP Address of thin clients (example 192.168.0): ")
+    number=int(raw_input("Number of host/users to generate (number): "))
+    fromip=int( raw_input("Start generating from (default 1): ") )
     
-    for i in range(1,number+1):
+    if fromip == "" : fromip = 1
+
+    for i in range(fromip,number+fromip):
         hosts.append("%s%s" %(prefix, i))
         ips.append("%s.%s" %(ipbase, i))
     
@@ -211,12 +222,12 @@ def AddUserAndHost():
     print "with ip adresses from %s to %s" %(ips[0], ips[-1])
     print "and uncompress \"%s\" as HOME_TEMPLATE" %(HOME_TEMPLATE)
     print ""
-    resp=raw_input("are you sure you want this? [y/n] ")
+    resp=raw_input("Are you sure you want this? [y/n] ")
     if resp != "y" and resp != "Y":
         print "cancelled."
         return
     
-    for i in range(1,number+1):
+    for i in range(fromip,number+fromip):
         AddUser( "%s%s" %(prefix, i) )
         AddHost( "%s%s" %(prefix, i) , "%s.%s" %(ipbase, i) )
     
@@ -228,7 +239,7 @@ def AddUser(username):
     execmd("useradd -m %s -p%s -s /bin/bash -d /home/%s" %(username, username, username))
     execmd("echo %s:%s | chpasswd" %(username, username))
     execmd("tar -zxf %s -C /home/%s 2>/dev/null" %(HOME_TEMPLATE, username) )
-    execmd("chowm %s:%s /home/%s " %(username, username, username) )
+    execmd("chown %s:%s /home/%s " %(username, username, username) )
     for group in USER_GROUPS:
         execmd("adduser %s %s" %(username, group))
 
