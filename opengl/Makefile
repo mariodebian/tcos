@@ -15,7 +15,7 @@ LIBGL := $(wildcard /usr/lib/libGL.so.1)
 LIBGL := $(wildcard /usr/lib/libGL.so.1.2)
 
 LIBGLU := $(wildcard /usr/lib/libGLU.so)
-LIBGLU := $(wildcard /usr/lib/libGL.so.1)
+LIBGLU := $(wildcard /usr/lib/libGLU.so.1)
 
 
 testvars:
