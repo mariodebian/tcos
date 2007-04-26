@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.65) unstable; urgency=low
+
+  * scripts/tcos-premount/35sqmount:
+    - Add autodetect support for booting from HD or USB device
+      (mount all ext3 or vfat partitions and search usr.squashfs or usr-$(uname -r).squashfs)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue,  6 Mar 2007 13:12:41 +0100
+
 initramfs-tools-tcos (0.64) unstable; urgency=low
 
   * Fix 40initsound OSS broken detection

@@ -48,16 +48,28 @@ modprobe -q unionfs >> /tmp/initramfs.debug 2>&1
 mnt_usr=${download_dir}/usr.squashfs
 allmodules=${download_dir}/allmodules.squashfs
 
-# check if we are booting from HD
+# check if we are booting from HD / USB
 _INITRD=$(read_cmdline_var "initrd" "")
 if [ "$_INITRD" = "initrd.gz" ]; then
    # booting from hdd, use usr.squashfs from HDD if exists
    mkdir -p /target
-   hda1_fs=$(grep hda1 /etc/fstab | awk '{print $3}')
-   mount -t${hda1_fs} /dev/hda1 /target
-   if [ -f /target/usr.squashfs ]; then
-     mnt_usr=/target/usr.squashfs
-   fi
+
+   for part in $(grep -e ext3 -e vfat /etc/fstab| awk '{print $1":"$3}'); do
+     device=$(echo $part | awk -F":" '{print $1}')
+     fs=$(echo $part | awk -F":" '{print $2}')
+     mount -t${fs} ${device} /target
+     if [ -f /target/usr.squashfs ]; then
+       mnt_usr=/target/usr.squashfs
+       _log "SQMOUNT found usr.squashfs in $device "
+       break
+     elif [ -f /target/usr-$(uname -r).squashfs ]; then
+       mnt_usr=/target/usr-$(uname -r).squashfs
+       _log "SQMOUNT found usr-$(uname -r).squashfs in $device "
+       break
+     else
+       umount /target        
+     fi
+   done
 fi
 
 
@@ -120,12 +132,9 @@ fi
 # Mount squashfs filesystems
 log_begin_msg "Mounting usr filesystem"
  mount -r -o loop -t squashfs ${mnt_usr} /usr >> /tmp/initramfs.debug 2>&1
+ mount_unionfs /mnt/ram /.usr /usr
 log_end_msg $?
 
-
-log_begin_msg "Remounting usr in rw mode"
- mount_unionfs /mnt/ram /.usr /usr
-log_end_msg
 
 
 ###############################################
