@@ -161,7 +161,7 @@ def show_login():
         newdata.append(line.replace('\n', ''))
     data=newdata
     for line in data:
-        if host + ":" in line:
+        if host == line.split(':')[0]:
             (username, home) = ( line.split(':')[0], line.split(':')[5] )
             
     if not username or not os.path.isdir(home):
