@@ -41,11 +41,13 @@
 
   1.- See the content of your dir /tftpboot/tcos/
 
-    1.1.- Perhaps you want to save /tftpboot/tcos/config/* files
+    OPTIONAL
+    1.1.- Perhaps you want to save /tftpboot/tcos/conf/* files
           Move this files to new dir:
       
-        ~# mv /tftpboot/tcos/config/* /var/lib/tcos/tftp/config/
+        ~# mv /tftpboot/tcos/conf/* /var/lib/tcos/tftp/conf/
 
+    OPTIONAL
     1.2.- Perhaps you want to save the pxelinux.0 config files:
 
         ~# mv /tftpboot/tcos/pxelinux.cfg/* /var/lib/tcos/tftp/pxelinux.cfg/
@@ -58,11 +60,13 @@
 
   2.- See the content of /opt/tcos
 
+    OPTIONAL
     2.1.- /opt/tcos/files contain usr-x.x.x.squashfs, you can save old 
           squash into new dir:
 
         ~# mv /opt/tcos/files/* /var/lib/tcos/files/
 
+    OPTIONAL
     2.2 New uncompressed NFS filesystems will be generated in /var/lib/tcos/
         You can save old NFS copying to new:
 
