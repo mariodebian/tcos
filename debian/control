@@ -48,7 +48,8 @@ Description: usplash boot image for TCOS
 Package: gentcos
 Architecture: any
 Depends: debconf, grub, syslinux, initramfs-tools-tcos (= ${Source-Version}), 
-         squashfs-tools, mknbi, dropbear, discover, ltspfs-client, ltspfs-server
+         squashfs-tools, mknbi, dropbear, discover, ltspfs-client, ltspfs-server,
+         atftpd | tftpd-hpa, dhcp3-server
 Recommends: autofs, esound, alsa-utils, links2, dillo, pulseaudio, pulseaudio-utils
 Description: Image generation scripts, and tftp config for TCOS
  This is a system for generating thin client systems using initramfs.

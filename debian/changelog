@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.67) unstable; urgency=low
+
+  * gentcos depends atftpd | tftpd-hpa and dhcp3-server
+  * hooks-addons/*xorg:
+    - fix Xorg path search
+
+ --  <mario@soleup.eup.uva.es>  Fri,  9 Mar 2007 16:41:19 +0100
+
 initramfs-tools-tcos (0.66) unstable; urgency=low
 
   * Add 600 file rights to tcos.conf

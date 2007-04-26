@@ -5,7 +5,7 @@
 if [ $TCOS_XORG ] ; then
 # Xorg stuff
  stat_before
-if [ $(pathof Xorg) = /usr/bin/Xorg ]; then
+if [ "$(pathof Xorg)" = /usr/bin/Xorg ]; then
    XORG=7
    _echo "   USING Xorg 7.X dirs"
    XORG_PATH=/usr/bin
