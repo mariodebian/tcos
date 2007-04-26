@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.56.8) unstable; urgency=low
+
+  * join tcos-nfs startup with normal tcos
+  * autodetect ram < 38 and boot from NFS
+  * fix hooks-addons/alsa amixer path
+  * move fstab from tcos-premount to tcos-top
+  * pxelinux-.cfg/default add vga=771 to force vesa framebuffer start
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed,  8 Nov 2006 22:02:13 +0100
+
 initramfs-tools-tcos (0.56.7) unstable; urgency=low
 
   * Don't use pathof() in hooks, call cpifexists() with abs path.
