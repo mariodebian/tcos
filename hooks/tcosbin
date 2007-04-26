@@ -281,8 +281,8 @@ if [ $TCOS_ALL_MODULES ]; then
   mksquashfs /lib/modules/${version}/ $DESTDIR/mnt/tmp/allmodules-${version}.squashfs > /dev/null 2>&1
   # mksquashfs create files with 700 rights, change to 644
   chmod 644 ${DESTDIR}/mnt/tmp/allmodules-${version}.squashfs
-  _echo "    Moving allmodules-${version}.squashfs to /tftpboot/tcos"
-  mv ${DESTDIR}/mnt/tmp/allmodules-${version}.squashfs /tftpboot/tcos
+  _echo "    Moving allmodules-${version}.squashfs to ${TFTP_DIR}"
+  mv ${DESTDIR}/mnt/tmp/allmodules-${version}.squashfs ${TFTP_DIR}
 fi
 
 

@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.69) unstable; urgency=low
+
+  * Remove old debian/*lintian* files
+  * Move allmodules-x.x.x.squashfs to TFTP_DIR instead of /tftpboot/tcos
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 27 Mar 2007 10:06:48 +0200
+
 initramfs-tools-tcos (0.68) unstable; urgency=low
 
   * bin/tcos-gdm-autologin:
