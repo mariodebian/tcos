@@ -7,16 +7,18 @@ F1 help.msg
 
 label tcos
   kernel vmlinuz-2.6.17-2-486
-  append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet splash
+  append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet vga=771 splash
 
 label nfs
   kernel vmlinuz-2.6.17-2-486
-  append ramdisk_size=32768 initrd=initramfs-2.6.17-2-486-nfs root=/dev/ram0 boot=tcos-nfs quiet splash
+  append ramdisk_size=32768 initrd=initramfs-2.6.17-2-486-nfs root=/dev/ram0 boot=tcos-nfs quiet vga=771 splash
 
-label tcos-low
-  kernel vmlinuz-2.6.17-2-486
-  append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet discover=0 noautofs noltspfs nosound
 
-label tcos-new-pc
-  kernel vmlinuz-2.6.17-2-486
-  append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet showmodules discover=1
+# examples
+#label tcos-low
+#  kernel vmlinuz-2.6.17-2-486
+#  append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet discover=0 noautofs noltspfs nosound
+#
+#label tcos-new-pc
+#  kernel vmlinuz-2.6.17-2-486
+#  append ramdisk_size=65536 initrd=initramfs-2.6.17-2-486 root=/dev/ram0 boot=tcos quiet showmodules discover=1
