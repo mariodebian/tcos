@@ -34,6 +34,7 @@ debian-usplash-clean:
 	
 
 debian-usplash-install:
+	install -d $(DESTDIR)/usr/lib/usplash/
 	install -m 755 usplash-tcos.so $(DESTDIR)/usr/lib/usplash/usplash-tcos.so
 
 ubuntu-usplash-install:

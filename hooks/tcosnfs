@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PREREQ=""
 
@@ -30,7 +30,7 @@ if [ "${TCOS_BOOT}" != "" ]; then
   BOOT=$TCOS_BOOT
 fi
 
-if [ "${BOOT}" == "tcos-nfs" ]; then
+if [ "${BOOT}" = "tcos-nfs" ]; then
 
 . $CONFDIR/tcos.conf
 . $TCOS_DIR/tcos-generation-functions.sh

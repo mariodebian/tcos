@@ -4,7 +4,7 @@
 # Author: Mario Izquierdo (a.k.a mariodebian)
 # Email: mariodebian@gmail.com
 # Creation Date: 2 Feb 2006
-# Version: 0.2
+# Version: 0.58
 #
 #  Generate bootable cdrom to boot from tcos
 #
@@ -194,7 +194,7 @@ create_grub_iso(){
 mkisofs -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b boot/grub/stage2_eltorito\
  -no-emul-boot -boot-load-size 4\
  -boot-info-table -o  ${OUTPUTIMAGE} ${dir}/ >/dev/null 2>&1
-  if [ $? == 0 ]; then
+  if [ $? = 0 ]; then
     echo "Iso image done succesfully: ${OUTPUTIMAGE}"
    else
     echo "Error running mkisofs."
@@ -222,7 +222,7 @@ create_isolinux_iso() {
 mkisofs -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b isolinux/isolinux.bin -c boot.cat \
  -no-emul-boot -boot-load-size 4 -boot-info-table -o  ${OUTPUTIMAGE} ${dir}/ > /dev/null 2>&1
 
-  if [ $? == 0 ]; then
+  if [ $? = 0 ]; then
     echo "Iso image done succesfully: ${OUTPUTIMAGE}"
    else
     echo "Error running mkisofs."

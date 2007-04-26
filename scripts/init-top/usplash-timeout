@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PREREQ="usplash"
+PREREQ=""
 
 prereqs()
 {
@@ -17,7 +17,5 @@ esac
 
 # change timeout in usplash start
 if [ -e /dev/.initramfs/usplash_fifo ]; then
-  log_begin_msg "Change usplash timeout"
-    /sbin/usplash_write "TIMEOUT 180" || true
-  log_end_msg
+    /sbin/usplash_write "TIMEOUT 180" > /dev/null 2>&1 || true
 fi
