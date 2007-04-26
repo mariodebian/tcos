@@ -55,7 +55,7 @@ fi
 #
 #  start thin client with something like this:
 #
-# boot: tcos essid="ESSID" server=xx.xx.xx.xx
+# boot: tcos wifi=1 essid="ESSID" server=xx.xx.xx.xx
 # * server is tftpd and XMDCP host
 # * ESSID is wireless network
 
@@ -80,34 +80,45 @@ if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
 fi
 
 
-# DHCP
-log_begin_msg "Setup network interface $TCOS_NET_ACTIVE"
- 
  if [ $TCOS_NET_WIFI ]; then
     # load kernel modules
-    log_progress_msg "Loading wireless kernel modules"
-    for kmod in $TCOS_WIRELESS_MODS; do
-        modprobe -q $kmod 2>/dev/null
-    done
+    log_begin_msg "Loading wireless kernel modules"
+      for kmod in $TCOS_WIRELESS_MODS; do
+        if [ "$kmod" = "madwifi" ]; then
+          #ath-pci ath-hal wlan_tkip wlan_scan_sta ath-hal
+          modprobe -q ath-pci 2>/dev/null
+          modprobe -q ath-hal 2>/dev/null
+          modprobe -q wlan_tkip 2>/dev/null
+          modprobe -q wlan_scan_sta 2>/dev/null
+	else
+          modprobe -q $kmod 2>/dev/null
+        fi
+      done
+    log_end_msg
+
     ifconfig $TCOS_NET_ACTIVE down
     ifconfig $TCOS_NET_ACTIVE up
  
     # scan wireless
-    log_progress_msg "Scanning wireless networks"
-    iwlist $TCOS_NET_ACTIVE scan | grep ESSID | awk -F ":" '{print $2}' | sed s/\"//g
+    log_begin_msg "Scanning wireless networks"
+      iwlist $TCOS_NET_ACTIVE scan | grep ESSID | awk -F ":" '{print $2}' | sed s/\"//g
+    log_end_msg
 
     # associate if ap cmdline var is set
     if [ "$TCOS_NET_WIFI_ESSID" != "" ]; then
        if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then
-           log_progress_msg "Wireless WPA mode"
-           /sbin/start-wpa.sh "${TCOS_NET_ACTIVE}"
+           log_begin_msg "Wireless WPA mode"
+             /sbin/start-wpa.sh "${TCOS_NET_ACTIVE}"
+           log_end_msg
        fi
        
-       log_progress_msg "Wireless associating with $TCOS_NET_WIFI_ESSID"
-       iwconfig $TCOS_NET_ACTIVE essid "$TCOS_NET_WIFI_ESSID"
+       log_begin_msg "Wireless associating with $TCOS_NET_WIFI_ESSID"
+         iwconfig $TCOS_NET_ACTIVE essid "$TCOS_NET_WIFI_ESSID"
+       log_end_msg
     else
-       log_progress_msg "Wireless associating with any"
-       iwconfig $TCOS_NET_ACTIVE essid any
+       log_begin_msg "Wireless associating with any"
+         iwconfig $TCOS_NET_ACTIVE essid any
+       log_end_msg
     fi
  else
     # wired network
@@ -118,13 +129,13 @@ log_begin_msg "Setup network interface $TCOS_NET_ACTIVE"
  # break for wireless
  maybe_break wireless
  
- _log "DHCLIENT $TCOS_NET_ACTIVE"
- dhclient $TCOS_NET_ACTIVE >> /tmp/initramfs.debug  2>&1
- myip=$(ifconfig $TCOS_NET_ACTIVE | grep "inet addr"| awk '{print $2}' | awk -F ":" '{print $2}')
- dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
- hostname=$(grep 'host-name' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}' | sed s/\"//g)
-
-log_end_msg
+ log_begin_msg "Sending DHCP request"
+  _log "DHCLIENT $TCOS_NET_ACTIVE"
+  dhclient $TCOS_NET_ACTIVE >> /tmp/initramfs.debug  2>&1
+  myip=$(ifconfig $TCOS_NET_ACTIVE | grep "inet addr"| awk '{print $2}' | awk -F ":" '{print $2}')
+  dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
+  hostname=$(grep 'host-name' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}' | sed s/\"//g)
+ log_end_msg
 
 # hack for dhcp3-client
 if [ "$myip" = "" ]; then

@@ -36,6 +36,15 @@ if [ $TCOS_WIRELESS ]; then
       cp -ra /lib/firmware/ipw2100* $DESTDIR/lib/firmware/
     fi
 
+    if [ "$mod" = "madwifi" ]; then
+      _echo "   WIFI: Copying madwifi modules"
+      #ath-pci ath-hal wlan_tkip wlan_scan_sta ath-hal
+      manual_add_modules ath-pci
+      manual_add_modules ath-hal
+      manual_add_modules wlan-tkip
+      manual_add_modules wlan-scan-sta
+    fi
+
     if [ "$mod" = "ndiswrapper" ]; then
       _echo "   WIFI: Copying ndiswrapper"
 
