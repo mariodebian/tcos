@@ -12,8 +12,10 @@ initramfs-tools-tcos (0.74) unstable; urgency=low
     -  parse error in xdriver ( use getsimple with #VARNAME= )
   * bin/installer.sh:
     - make mem test before installing syslinux (NFS need less ramdisk)
+  * debian/control:
+    - fix typo in tcos Recommends
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 28 Apr 2007 17:54:53 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 28 Apr 2007 17:58:34 +0200
 
 initramfs-tools-tcos (0.73) unstable; urgency=low
 
