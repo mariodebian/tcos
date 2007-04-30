@@ -107,7 +107,11 @@ convert_links2files
 
 # usplash support
 mkdir -p $DESTDIR/usr/lib/usplash/
-cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
+  cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+else
+  cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+fi
 
 # read from env vars TCOS_BOOT
 TCOS_ENV_DISABLE_SQUASHFS=$(env| awk -F "=" '/^TCOS_ENV_DISABLE_SQUASHFS=/ {print $2}')
