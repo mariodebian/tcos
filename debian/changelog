@@ -14,8 +14,10 @@ initramfs-tools-tcos (0.74) unstable; urgency=low
     - make mem test before installing syslinux (NFS need less ramdisk)
   * debian/control:
     - fix typo in tcos Recommends
+  * Remove discover hard dependency
+  * Add pulseaudio, aumix, busybox to tcos metapackage dependencies
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 28 Apr 2007 17:58:34 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 28 Apr 2007 18:12:47 +0200
 
 initramfs-tools-tcos (0.73) unstable; urgency=low
 
