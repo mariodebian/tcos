@@ -11,8 +11,8 @@ Architecture: any
 Depends: initramfs-tools-tcos (= ${Source-Version}) , gentcos (= ${Source-Version}),
          tcos-usplash (= ${Source-Version}) , tcos-server-utils (= ${Source-Version}),
          atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcos-tcosmonitor, tcosmonitor, 
-         aumix, pulseaudio, pulseadio-utils, x11vnc, busybox, libasound2-plugins, xfs,
-         libstdc++2.10-glib2.2
+         aumix, pulseaudio, pulseaudio-utils, x11vnc, busybox, libasound2-plugins, xfs,
+         libstdc++2.10-glibc2.2
 Recommends: pulseaudio-esound-compat
 Description: new thin client implementation
  This is a system for generating thin client hosts using initramfs.
