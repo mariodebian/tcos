@@ -18,8 +18,8 @@ if [ $TCOS_INSTALLER ]; then
   cpifexists /sbin/mkfs.vfat /usr/bin
 
   mkdir -p $DESTDIR/usr/lib/syslinux/
-  #cp /usr/lib/syslinux/mbr.bin $DESTDIR/usr/lib/syslinux/
-  cp /usr/lib/syslinux/ldlinux.sys $DESTDIR/usr/lib/syslinux/
+  [ -f /usr/lib/syslinux/mbr.bin ]     && cp /usr/lib/syslinux/mbr.bin $DESTDIR/usr/lib/syslinux/
+  [ -f /usr/lib/syslinux/ldlinux.sys ] && cp /usr/lib/syslinux/ldlinux.sys $DESTDIR/usr/lib/syslinux/
 
   install -m 755 ${TCOS_BINS}/installer.sh ${DESTDIR}/sbin/installer.sh
 

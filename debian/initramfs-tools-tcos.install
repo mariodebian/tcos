@@ -16,6 +16,7 @@ etc/tcos/initramfs.conf
 etc/tcos/menu.lst-tcos
 etc/tcos/logo.xpm.gz
 usr/lib/tcos/configurexorg
+usr/lib/tcos/tryXorg.sh
 usr/lib/tcos/seq
 usr/lib/tcos/hex2ascii
 usr/lib/tcos/installer.sh

@@ -35,16 +35,23 @@ whiptail --title "$MSG_TITLE" "$@" 20 80
 
 
 umount_all () {
-  data=$(grep ^/dev/hda /proc/mounts | awk '{print $1}')
-  for part in $data; do
-    umount -l $part > /dev/null 2>&1
-  done
-  swaps=$(grep ^/dev/hda /proc/swaps | awk '{print $1}')
-  for part in $swaps; do
-    swapoff $part > /dev/null 2>&1
-  done
+  log_begin_msg "Umounting all parts in  /dev/hda"
+    data=$(grep ^/dev/hda /proc/mounts | awk '{print $1}')
+    for part in $data; do
+      umount -l $part > /dev/null 2>&1
+    done
+    swaps=$(grep ^/dev/hda /proc/swaps | awk '{print $1}')
+    for part in $swaps; do
+      swapoff $part > /dev/null 2>&1
+    done
+  log_end_msg
 }
 
+mount_swap () {
+  log_begin_msg "Mount swap /dev/hda2"
+    swapon /dev/hda2 > /dev/null 2>&1
+  log_end_msg
+}
 
 
 make_all_parts () {
@@ -102,13 +109,15 @@ EOF
     mkswap /dev/hda2 >/dev/null 2>&1
   log_end_msg
 
+  mount_swap
+
 }
 
 
 install_kernel () {
   # mount hda1
   mkdir -p /target
-  mount -tvfat /dev/hda1 /target
+  mount -tvfat /dev/hda1 /target > /dev/null 2>&1
 
   if [ $(grep -c /dev/hda1 /proc/mounts) -lt 1 ]; then
      echo ""
@@ -137,14 +146,19 @@ install_kernel () {
   log_end_msg
 
   # check for min ram
-  DEFAULT="tcos"
   memory=$(awk '/^MemTotal/ {print int($2/1000)}' /proc/meminfo)
   if [ $memory -lt $TCOS_MIN_RAM ]; then
-    DEFAULT="nfs"
+    log_begin_msg "Using NFS boot images ($TCOS_MIN_RAM Mb RAM)"
+      DEFAULT="nfs"
+    log_end_msg
+  else
+    log_begin_msg "Using TFTP boot images"
+      DEFAULT="tcos"
+    log_end_msg
   fi
 
   log_begin_msg "Installing syslinux"
-    [-f /usr/lib/syslinux/mbr.bin ] && cat /usr/lib/syslinux/mbr.bin  > /dev/hda
+    [ -f /usr/lib/syslinux/mbr.bin ] && cat /usr/lib/syslinux/mbr.bin  > /dev/hda
     syslinux /dev/hda1
 
 cat << EOF > /target/syslinux.cfg

@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.75) unstable; urgency=low
+
+  * bin/tryXorg.sh:
+    - new method for launching Xorg (3 times in normal mode and -configure
+      if fails.
+  * bin/installer.sh:
+    - Mount swap after parts creation
+    - Add option --oeminstall to part and install syslinux unattended
+  * hooks-addons/03wireless:
+    - Add support of Zydas (zd1211) in wireless hook
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 29 Apr 2007 15:48:27 +0200
+
 initramfs-tools-tcos (0.74) unstable; urgency=low
 
   * Fix conf/tcos.conf kernel double "

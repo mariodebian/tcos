@@ -245,9 +245,11 @@ if [ -d $DESTDIR/lib/tls ]; then
 fi # end of /lib/tls dir exists
 
 
-convert_links2files "lib/i686"
 # clean /lib/i686 if needed
 if [ -d $DESTDIR/lib/i686 ]; then
+   # convert symlinks to files into lib/i686 dir
+   convert_links2files "lib/i686"
+
    for lib in $(find ${DESTDIR}/lib/i686 -type f); do
      i686lib=$lib
      noi686lib=$(echo $lib | sed 's/i686\/cmov//g')

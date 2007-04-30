@@ -46,21 +46,34 @@ if [ $TCOS_WIRELESS ]; then
     fi
 
     if [ "$mod" = "ndiswrapper" ]; then
-      _echo "   WIFI: Copying ndiswrapper"
+      _echo "   WIFI: ndiswrapper not supported (perl based)"
+    fi
 
-      # perl script :(
-      #LATEST_NDIS=$(ls /usr/sbin/ndiswrapper* -1|tail -1)
-      #cpifexists $LATEST_NDIS   /sbin/
+    if [ "$mod" = "zd1211" ]; then
+      _echo "   WIFI: Copying Zydas  modules and firmware"
+       manual_add_modules zd1211rw
+       # firmware
+       mkdir -p $DESTDIR/lib/firmware/
+       cp -ra /lib/firmware/zd1211/ $DESTDIR/lib/firmware/
+       cat << EOF > $DESTDIR/scripts/tcos-top/02zydas_firmware
+#!/bin/sh
 
-      LATEST_LNDIS=$(ls /sbin/loadndisdriver* -1|tail -1)
-      cpifexists $LATEST_LNDIS    /sbin/
-      copydir /etc/ndiswrapper    /etc/
+mkdir -p /usr/lib/hotplug/firmware/
+ln -s /lib/firmware/zd1211/zd1211_ub /usr/lib/hotplug/firmware/zd1211-WS11Ub.fw
+ln -s /lib/firmware/zd1211/zd1211_uph /usr/lib/hotplug/firmware/zd1211-WS11UPh.fw
+ln -s /lib/firmware/zd1211/zd1211_uphm /usr/lib/hotplug/firmware/zd1211-WS11UPhm.fw
+ln -s /lib/firmware/zd1211/zd1211_uphr /usr/lib/hotplug/firmware/zd1211-WS11UPhR.fw
+ln -s /lib/firmware/zd1211/zd1211_ur /usr/lib/hotplug/firmware/zd1211-WS11Ur.fw
+
+EOF
+       chmod +x $DESTDIR/scripts/tcos-top/02zydas_firmware
+
     fi
 
   done
 
    if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
-      _echo "   using WEP, do something? "
+      _echo "  DEBUG: using WEP, do something? "
    fi
 
    if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then
@@ -95,7 +108,7 @@ TCOS_NET_WIFI_ESSID=\$(read_cmdline_var "essid" "")
 
 TCOS_WIRELESS_DEV=\$1
 if [ "\$TCOS_WIRELESS_DEV" = "" ]; then
-   echo "Error, need a wirless network device name"
+   echo "Error, need a wireless network device name"
    echo " example: \$0 ath0"
    echo " example: \$0 wlan0"
 fi
