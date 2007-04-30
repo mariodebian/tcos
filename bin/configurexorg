@@ -492,7 +492,7 @@ save_settings() {
 }
 
 getsimple() {
- value=$(grep "^#$1" ${outputfile} 2>/dev/null | tail -1 | awk -F "=" '{print $2}')
+ value=$(grep "^#$1=" ${outputfile} 2>/dev/null | tail -1 | awk -F "=" '{print $2}')
  if [ "${value}" = "#" ]; then
   value=0
  elif [ "${value}" = "" ]; then
