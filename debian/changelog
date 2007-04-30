@@ -6,10 +6,10 @@ initramfs-tools-tcos (0.74) unstable; urgency=low
   * bin/gentcos:
     - Fix duplicate entries in cache package read uris
   * Set new var TCOS_USPLASH to allow change default thin client usplash theme
-  * Revert manual_add_modules to tcos_manual_add_modules (dapper have debian bug yet)
+  * Backport new manual_add_modules to tcos_manual_add_modules (dapper have debian bug yet)
   * Add more recomends packages.
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 27 Apr 2007 10:12:00 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 27 Apr 2007 12:10:45 +0200
 
 initramfs-tools-tcos (0.73) unstable; urgency=low
 
