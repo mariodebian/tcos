@@ -16,8 +16,14 @@ initramfs-tools-tcos (0.74) unstable; urgency=low
     - fix typo in tcos Recommends
   * Remove discover hard dependency
   * Add pulseaudio, aumix, busybox to tcos metapackage dependencies
+  * Update dapper kernel to 2.6.15-28-386
+  * hooks-addons/99tcos Makefile:
+    - remove dpkg -l call and write TCOS_VERSION during package build => Makefile
+  * hooks-addons/50xorg:
+    - If Xorg don't start after 3 atemps, try to autoconfigure 
+      with Xorg -configure and generate /etc/X11/xorg.conf.auto
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 28 Apr 2007 18:12:47 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 29 Apr 2007 00:02:45 +0200
 
 initramfs-tools-tcos (0.73) unstable; urgency=low
 

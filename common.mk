@@ -5,7 +5,7 @@ PACKAGE=initramfs-tools-tcos
 ##################################
 # kernel default versions
 
-KERNEL_dapper="2.6.15-27-386"
+KERNEL_dapper="2.6.15-28-386"
 USPLASH_dapper="0.2"
 
 KERNEL_edgy="2.6.17-11-generic"

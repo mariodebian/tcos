@@ -325,6 +325,16 @@ while [ \$counter -le 3 ]; do
  counter=\$((counter+1))
 done
 
+# try to autoconfigure Xorg
+new_xorg=\$(Xorg -configure 2>&1|awk '/Your xorg.conf/ {print \$5}')
+
+# add font server
+sed "/modules/i\\
+	FontPath        \"tcp/192.168.0.3:7100\"\\
+" /root/xorg.conf.new > /etc/X11/xorg.conf.auto
+Xorg -config /etc/X11/xorg.conf.auto \${TCOS_XORG_OPTS} -query \${SERVER} > /dev/null 2>&1
+
+echo ""
 echo ""
 echo "Error launching Xorg, check /var/log/Xorg.0.log for errors"
 echo ""
