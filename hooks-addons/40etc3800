@@ -1,7 +1,7 @@
 # hook addon for EPATEC eTC3800
 
 
-if [ $TCOS_ETC3800 ] && [ -f /var/lib/dpkg/info/openchrome.list ] ; then
+if [ $TCOS_ETC3800 ] && [ -d /usr/share/doc/openchrome ] ; then
 stat_before
  
  manual_add_modules drm
@@ -68,7 +68,7 @@ EOF
 
 stat_after "eTC3800 drivers support"
 
-elif [ $TCOS_ETC3800 ] && [ ! -f /var/lib/dpkg/info/openchrome.list ] ; then
+elif [ $TCOS_ETC3800 ] && [ ! -d /usr/share/doc/openchrome ] ; then
   echo ""
   echo "   WARNING: EPATEC 3800 enabled but don't have installed openchrome package"
   echo ""

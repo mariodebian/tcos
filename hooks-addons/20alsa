@@ -3,71 +3,66 @@
 
 
 if [ $TCOS_SOUND ]; then
-sound_error=0
 
-alsa_utils=$(dpkg -l alsa-utils|grep -c ^ii)
-if [ ${alsa_utils} != 1 ]; then
+  if [ ! -d /usr/share/doc/alsa-utils ]; then
         echo "WARNING:"
         echo ""
         echo "alsa-utils not installed, install alsa-utils to have sound support"
         echo "   => apt-get install alsa-utils"
         echo ""
-	sound_error=1
-fi
 
-if [ ${sound_error} = 0 ]; then
-stat_before
- # sound support 
- grep "audio" /etc/passwd >> $DESTDIR/etc/passwd
- grep "audio" /etc/group >> $DESTDIR/etc/group
- grep "audio" /etc/shadow >> $DESTDIR/etc/shadow
+  else
+    stat_before
+    # sound support 
+    grep "audio" /etc/passwd >> $DESTDIR/etc/passwd
+    grep "audio" /etc/group >> $DESTDIR/etc/group
+    grep "audio" /etc/shadow >> $DESTDIR/etc/shadow
 
- # aumix
- if [ -x /usr/bin/aumix ]; then
-    cpifexists /usr/bin/aumix   /usr/bin
- else
-    _echo ""
-    _echo "  WARNING: To have and oss mixer you must install aumix package"
-    _echo "           # apt-get install aumix "
-    _echo ""
- fi
+    # aumix
+    if [ -x /usr/bin/aumix ]; then
+      cpifexists /usr/bin/aumix   /usr/bin
+    else
+      _echo ""
+      _echo "  WARNING: To have and oss mixer you must install aumix package"
+      _echo "           # apt-get install aumix "
+      _echo ""
+    fi
 
- cpifexists /usr/bin/amixer /usr/bin/
+    cpifexists /usr/bin/amixer /usr/bin/
  
- # test for new cpifexists, amixer is in /usr/bin not in /usr/sbin !!!
- #cpifexists /usr/sbin/amixer /usr/bin/
+    # test for new cpifexists, amixer is in /usr/bin not in /usr/sbin !!!
+    #cpifexists /usr/sbin/amixer /usr/bin/
 
- mkdir -p $DESTDIR/usr/share/
- copydir /usr/share/alsa/ /usr/share/
- mkdir -p $DESTDIR/var/run/alsa
+    mkdir -p $DESTDIR/usr/share/
+    copydir /usr/share/alsa/ /usr/share/
+    mkdir -p $DESTDIR/var/run/alsa
 
- mkdir -p $DESTDIR/lib
- if [ -d /lib/alsa ]; then
-  copydir /lib/alsa      /lib/
- fi
+    mkdir -p $DESTDIR/lib
+    if [ -d /lib/alsa ]; then
+     copydir /lib/alsa      /lib/
+    fi
 
- mkdir -p $DESTDIR/etc/init.d/
- cpifexists /etc/init.d/alsa-utils /etc/init.d/
+    mkdir -p $DESTDIR/etc/init.d/
+    cpifexists /etc/init.d/alsa-utils /etc/init.d/
  
- if [ -d /etc/alsa ]; then
-   copydir /etc/alsa/      /etc/
- fi
+    if [ -d /etc/alsa ]; then
+      copydir /etc/alsa/      /etc/
+    fi
 
- if [ -f /etc/modutils/alsa-base ]; then
-   # debian alsa-base
-   mkdir -p $DESTDIR/etc/modutils/
-   cpifexists /etc/modutils/alsa-base /etc/modutils
- fi
+    if [ -f /etc/modutils/alsa-base ]; then
+      # debian alsa-base
+      mkdir -p $DESTDIR/etc/modutils/
+      cpifexists /etc/modutils/alsa-base /etc/modutils
+    fi
 
- if [ -f /etc/modprobe.d/alsa-base ]; then
-   # ubuntu alsa-base
-   mkdir -p $DESTDIR/etc/modprobe.d/
-   cpifexists /etc/modprobe.d/alsa-base /etc/modprobe.d/
- fi
+    if [ -f /etc/modprobe.d/alsa-base ]; then
+      # ubuntu alsa-base
+      mkdir -p $DESTDIR/etc/modprobe.d/
+      cpifexists /etc/modprobe.d/alsa-base /etc/modprobe.d/
+    fi
 
  
- stat_after "Alsa sound support"
-fi # end of sound_error
-unset sound_error
+    stat_after "Alsa sound support"
+  fi # end of alsa-utils
 
 fi # end of TCOS_SOUND

@@ -6,7 +6,6 @@
 if [ $TCOS_DISCOVER ] ;then
     
     # check if discover is discover or discover1
-    discover1=$(dpkg -l discover1|grep -c ^ii 2>/dev/null)
     
     if [ -d ${TCOS_PKG_CACHE}/discover ] && [ -d ${TCOS_PKG_CACHE}/discover-data ] && [ -d ${TCOS_PKG_CACHE}/libdiscover2 ] ; then
         stat_before
@@ -35,7 +34,7 @@ if [ $TCOS_DISCOVER ] ;then
 
         stat_after "Discover [cached]"
    
-    elif [ ${discover1} = 1 ]; then
+    elif [ -d /usr/share/doc/discover1 ]; then
         echo "WARNING:"
         echo ""
         echo "discover1 detected, USE discover or cache discover package"

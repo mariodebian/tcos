@@ -5,8 +5,7 @@
 
 if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
 
- ltspfsd=$(dpkg -l ltspfs-client|grep -c ^ii)
-  if [ ${ltspfsd} = 1 ]; then
+  if [ -d /usr/share/doc/ltspfs-client ]; then
    stat_before
    cpifexists /usr/bin/ltspfsd /usr/bin
    stat_after "LTSPFS"
@@ -26,8 +25,7 @@ fi
 
 
 if [ "$TCOS_AUTOFS" ]; then
- autofs=$(dpkg -l autofs|grep -c ^ii)
-  if [ ${autofs} = 0 ]; then
+  if [ -d /usr/share/doc/autofs ]; then
    echo "ERROR"
    echo ""
    echo "No autofs support, please install autofs package."

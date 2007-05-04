@@ -2,8 +2,7 @@
 # need tinylogin
 
 
-tinylogin=$(dpkg -l tinylogin|grep -c ^ii)
-if [ ${tinylogin} = 0 ]; then
+if [ ! -d /usr/share/doc/tinylogin ]; then
         echo "WARNING"
         echo ""
         echo "   Please install tinylogin package to allow to create"

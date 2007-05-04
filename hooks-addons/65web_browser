@@ -4,8 +4,7 @@
 
 
 if [ "${TCOS_WEB_BROWSER}" = "dillo" ]; then
- dillo=$(dpkg -l dillo|grep -c ^ii)
- if [ ${dillo} = 0 ]; then
+ if [ ! -d /usr/share/doc/dillo ]; then
         echo "WARNING"
         echo ""
         echo "Please install dillo package or disable WEB BROWSER support."
@@ -32,8 +31,7 @@ fi
 
 
 if [ "${TCOS_WEB_BROWSER}" = "links2" ]; then
- links2=$(dpkg -l links2|grep -c ^ii)
- if [ ${links2} = 0 ]; then
+ if [ ! -d /usr/share/doc/links2 ]; then
         echo "WARNING"
         echo ""
         echo "Please install links2 package or disable WEB BROWSER support."

@@ -5,8 +5,7 @@
 
 if [ $TCOS_SSH ] ;then
  stat_before
- dropbear=$(dpkg -l dropbear|grep -c ^ii)
- if [ ${dropbear} = 0 ]; then
+ if [ ! -d /usr/share/doc/dropbear ]; then
         echo "WARNING"
         echo ""
         echo "Please install dropbear package or disable SSH support."
@@ -27,11 +26,6 @@ if [ $TCOS_SSH ] ;then
   cpifexists /usr/bin/dbclient         /usr/bin/   # ssh client ( no have ssh -X support )
   cpifexists /lib/libresolv.so.2        /lib/
   cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
-
-  # FIXME
-  #echo "ssh -X prueba@192.168.0.3 startxfce4" >> $DESTDIR/prueba.sh
-  #chmod +x $DESTDIR/prueba.sh
-
 
   # need to copy this libs to support usernames with busybox
   cpifexists /lib/libnss_compat.so.2        /lib/ 
