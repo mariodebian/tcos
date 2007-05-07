@@ -53,7 +53,7 @@ Section "InputDevice"
 	Option		"CoreKeyboard"
 	Option		"XkbRules"	"xorg"
 	Option		"XkbModel"	"pc105"
-	Option		"XkbLayout"	"es"
+	Option		"XkbLayout"	"__xkbmap__"
 EndSection
 
 Section "InputDevice"
@@ -143,3 +143,4 @@ __dontzap__
 #xfontserver=__xfontserver__
 #xdontzap=__xdontzap__
 #xdriver_via=__xdriver_via__
+#xkbmap=__xkbmap__

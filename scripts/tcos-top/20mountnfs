@@ -56,13 +56,13 @@ fi
 
 
 log_begin_msg "Trying to mount NFS"
-  nfsmount -o $MNTOPT $(get_server):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2>/dev/null
+  nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2>/dev/null
 
 
 # try again
 if [ $? -ne 0 ]; then
   log_begin_msg "Second retry to mount NFS"
-     nfsmount -o $MNTOPT $(get_server):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2> /dev/null
+     nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2> /dev/null
 fi
 
 if [ $? -ne 0 ]; then

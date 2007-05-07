@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.76+pre77) unstable; urgency=low
+
+  * Add mii-tool to check what network interface have link
+  * Add support for different servers (xdmcp-server, font-server, rdesktop-server, etc...)
+  * Try to add xkbmap support
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 06 May 2007 23:56:39 +0200
+
 initramfs-tools-tcos (0.76) unstable; urgency=low
 
   * Remove all dpkg calls

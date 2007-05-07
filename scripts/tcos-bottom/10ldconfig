@@ -93,7 +93,7 @@ else
  # FIXME need more work Xorg 7.0
  mkdir -p /usr/share/X11/
  ln -s /etc/X11/rgb.txt /usr/share/X11/rgb.txt
- ln -s /etc/X11/xkb /usr/share/X11/
+ ln -s /usr/share/X11/ /etc/X11/xkb
  mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
  ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
 fi

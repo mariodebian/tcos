@@ -30,12 +30,12 @@ distclean:
 config_svn:
 	svn propedit svn:ignore .
 
-ubuntu-conf:
-	if [ "$(DISTRO)" = "ubuntu" ]; then\
-		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
-		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl ;\
-		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
-	fi
+#ubuntu-conf:
+#	if [ "$(DISTRO)" = "ubuntu" ]; then\
+#		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
+#		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl ;\
+#		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
+#	fi
 
 
 install:
@@ -101,7 +101,7 @@ install:
 	install -m 644 images/logo.xpm.gz $(DESTDIR)$(TCOS_CONF)/logo.xpm.gz
 
 	# this delete "quiet" for usplash verbose textbox
-	make ubuntu-conf
+	#make ubuntu-conf
 	
 	# gentcos build script
 	install -m 755 bin/gentcos            $(DESTDIR)/usr/sbin/gentcos

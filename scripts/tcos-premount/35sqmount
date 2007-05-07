@@ -107,7 +107,7 @@ if [ -x /sbin/usplash_write ]; then
 fi
 
 
-log_begin_msg "Downloading usr.squashfs from $(get_server)"
+log_begin_msg "Downloading usr.squashfs from $(read_server "tftp-server")"
     _log "SQMOUNT downloading squashfs"
     download_file /tcos/${remote_squashfs} ${mnt_usr}
     sync
@@ -116,7 +116,7 @@ log_end_msg
 
 
   if [ "$(if_is_zero ${mnt_usr})" = "0" ]; then
-   panic "Error downloading extra data from server $(get_server)"
+   panic "Error downloading extra data from server $(read_server "tftp-server")"
    # Just in case
    FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
   fi

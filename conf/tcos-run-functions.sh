@@ -110,6 +110,16 @@ _log () {
   echo "[$(date +'%d/%m/%y %H:%M:%S')] $@" >> /tmp/initramfs.debug
 }
 
+read_server() {
+  # $1 is server hostname
+  nSERVER=$(grep "$1" /etc/hosts | awk '{print $1}' | head -1)
+  if [ "${nSERVER}" = "" ]; then
+    nSERVER=$(get_server)
+  fi
+  echo "${nSERVER}"
+}
+
+
 get_server() {
   if [ ${TCOS_FORCE_SERVER} ]; then
    echo ${TCOS_FORCE_SERVER}
@@ -132,8 +142,8 @@ download_file () {
 # $1 remote file
 # $2 local file
 mkdir $(dirname $2) >/dev/null 2>&1
-_log "tftp -g -r ${1} -l ${2} $(get_server)"
-tftp -g -r ${1} -l ${2} $(get_server) > /dev/null 2> /tmp/download_file.log
+_log "tftp -g -r ${1} -l ${2} "$(read_server "tftp-server")
+tftp -g -r ${1} -l ${2} $(read_server "tftp-server") > /dev/null 2> /tmp/download_file.log
 if [ $? = 0 ] ;then
  _log "download_file() OK"
 else

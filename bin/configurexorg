@@ -469,6 +469,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xhorizsync__"/"${xhorizsync}"/g \
     -e s/"__xvertsync__"/"${xvertsync}"/g \
     -e s/"__xrefresh__"/"${xrefresh}"/g \
+    -e s/"__xkbmap__"/"${TCOS_XORG_XKB}"/g \
     -e s/"__xmousewheel__"/"${xmousewheel}"/g \
     -e s/"__xmousenowheel__"/"${xmousenowheel}"/g \
     -e s/"__xmousedev__"/"${xmousedev2}"/g \
@@ -555,7 +556,7 @@ if [ $(cat ${mysettings} | wc -l) -gt 1 ]; then
 fi
 
 
-SERVER=$(get_server)
+SERVER=$(read_server "font-server")
 # get first one
 for iserver in ${SERVER}; do
  SERVER=${iserver}

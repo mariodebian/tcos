@@ -66,6 +66,16 @@ TCOS_NET_ACTIVE="eth0"
 TCOS_NET_WIFI=
 TCOS_NET_WIFI_ESSID=""
 TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0)
+TCOS_NET_LINK=$(mii-tool 2>/dev/null | awk -F ":" '/link ok/ {print $1}')
+
+# search for network interfaces with link ok status
+for dev in $TCOS_NET_DEVS; do
+    # have link ???
+    if [ $(echo "$TCOS_NET_LINK" |grep -c $dev) = 1 ]; then
+      _log "05NETWORK found \"LINK OK\" in $dev"
+      TCOS_NET_ACTIVE=$dev
+    fi
+done
 
 if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
   #force wireless, read some vars
@@ -77,6 +87,7 @@ if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
       TCOS_NET_ACTIVE=$dev
     fi
   done
+
 fi
 
 
@@ -129,7 +140,7 @@ fi
  # break for wireless
  maybe_break wireless
  
- log_begin_msg "Sending DHCP request"
+ log_begin_msg "Sending DHCP request on $TCOS_NET_ACTIVE"
   _log "DHCLIENT $TCOS_NET_ACTIVE"
   dhclient $TCOS_NET_ACTIVE >> /tmp/initramfs.debug  2>&1
   myip=$(ifconfig $TCOS_NET_ACTIVE | grep "inet addr"| awk '{print $2}' | awk -F ":" '{print $2}')
@@ -169,6 +180,12 @@ if [ "x{$hostname}" = "x" ]; then
   hostname=tcos
 fi
 
+# search for other hosts
+TCOS_TFTP_SERVER=$(read_cmdline_var 'tftpserver' "${dhcpserver}")
+TCOS_XDMCP_SERVER=$(read_cmdline_var 'xserver' "${dhcpserver}")
+TCOS_RDESKTOP_SERVER=$(read_cmdline_var 'rdesktop' "${dhcpserver}")
+TCOS_NFS_SERVER=$(read_cmdline_var 'nfsserver' "${dhcpserver}")
+TCOS_FONT_SERVER=$(read_cmdline_var 'fontserver' "${dhcpserver}")
 
 # Setup the hostname
 log_begin_msg "Setting hostname to ${hostname}"
@@ -179,6 +196,11 @@ log_begin_msg "Setting hostname to ${hostname}"
 127.0.0.1	localhost
 ${myip}		${hostname}
 ${dhcpserver}	tcos-server
+${TCOS_TFTP_SERVER} tftp-server
+${TCOS_XDMCP_SERVER} xdmcp-server
+${TCOS_RDESKTOP_SERVER} rdesktop-server
+${TCOS_NFS_SERVER} nfs-server
+${TCOS_FONT_SERVER} font-server
 EOF
 
 # set dns

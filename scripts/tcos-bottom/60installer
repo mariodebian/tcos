@@ -29,6 +29,7 @@ INSTALLER=$(read_cmdline_var "installer" "0")
 INSTALLER_UPDATE=$(read_cmdline_var "installer-update" "0")
 
 if [ "${INSTALLER}" = "1" ]; then
+   kill_usplash
    # launch installer
    #clear
    /sbin/installer.sh
@@ -40,6 +41,7 @@ if [ "${INSTALLER}" = "1" ]; then
    echo ""
    sh
 elif [ "${INSTALLER_UPDATE}" = "1" ]; then
+   kill_usplash
    # launch installer
    #clear
    /sbin/installer.sh --update

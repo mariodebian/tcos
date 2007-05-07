@@ -55,8 +55,10 @@ if [ "${TCOS_USENFS}" = "nfs" ]; then
   log_begin_msg "Mounting NFS ${download_dir}"
     MOPTS="nolock,ro"
     mount -n -t ramfs none /target
-    #mount -n -o ${MOPTS} $(get_server):${nfs_dir} ${download_dir}
-    nfsmount -o ${MOPTS} $(get_server):${nfs_dir} ${download_dir} 2>&1 > /dev/null || nfsmount -o ${MOPTS} $(get_server):${nfs_dir} ${download_dir} 2>&1 > /dev/null ||  _log "ROOTFS: __ERROR__ can't mount NFS!!!!!"
+    #mount -n -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} ${download_dir}
+    nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} ${download_dir} 2>&1 > /dev/null ||\
+	 nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} ${download_dir} 2>&1 > /dev/null ||\
+	  _log "ROOTFS: __ERROR__ can't mount NFS!!!!!"
   log_end_msg
 
 fi

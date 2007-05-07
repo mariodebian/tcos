@@ -193,15 +193,27 @@ else
 fi
 
 
-# keyboard and keymap FIXME
+# keyboard and keymap FIXME in Xorg 6.x
 if [ $XORG = 6 ]; then
  cp /usr/X11R6/lib/libxk*.so.1 $DESTDIR/usr/X11R6/lib/
  #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
  #mkdir -p $DESTDIR/var/lib/xkb
 else
  cp /usr/lib/libxk*.so.1 $DESTDIR/usr/lib/
- #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
- #mkdir -p $DESTDIR/var/lib/xkb
+
+ mkdir -p $DESTDIR/usr/share/X11/xkb/symbols/
+ mkdir -p $DESTDIR/usr/share/X11/xkb/keymap/
+ cp /usr/share/X11/xkb/keymap/xfree86 $DESTDIR/usr/share/X11/xkb/keymap/
+ ( cd $DESTDIR/usr/share/X11/xkb/keymap && xkbcomp -lhlpR "*" -o ../keymap.dir )
+
+ mkdir -p $DESTDIR/usr/share/X11/xkb/rules
+ cp /usr/share/X11/xkb/rules/base* $DESTDIR/usr/share/X11/xkb/rules/
+ cp /usr/share/X11/xkb/rules/xkb.dtd $DESTDIR/usr/share/X11/xkb/rules/
+
+ for kb in $TCOS_XORG_XKBS; do
+  cp /usr/share/X11/xkb/symbols/$kb $DESTDIR/usr/share/X11/xkb/symbols/ 2>&1 >/dev/null
+ done
+ ( cd $DESTDIR/usr/share/X11/xkb/symbols/ && xkbcomp -lhlpR "*" -o ../symbols.dir )
 fi
 
 # xorg locale
@@ -280,7 +292,8 @@ cat <<EOF > $DESTDIR/sbin/startnx
 #!/bin/sh
 . /conf/tcos.conf
 . /conf/tcos-run-functions
-SERVER=\$(get_server)
+SERVER=\$(read_server "xdmcp-server")
+FONT_SERVER=\$(read_server "font-server")
 export DISPLAY=:0
 export HOME=/root
 export USER_NX_DIR=/root/.nx
@@ -293,7 +306,7 @@ if [ -f $\XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-/sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
+/sbin/tryXorg --fontserver=\${FONT_SERVER} --xorgopts="\${TCOS_XORG_OPTS}" &
 
 # no window manager for freenx
 #twm  >> /tmp/initramfs.debug 2>&1 &
@@ -312,14 +325,15 @@ cat <<EOF > $DESTDIR/sbin/startremotex
 #!/bin/sh
 . /conf/tcos.conf
 . /conf/tcos-run-functions
-SERVER=\$(get_server)
+SERVER=\$(read_server "xdmcp-server")
+FONT_SERVER=\$(read_server "font-server")
 export DISPLAY=:0
 
 if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-/sbin/tryXorg --server=\${SERVER} --xorgopts="\${TCOS_XORG_OPTS} -query \${SERVER}" &
+/sbin/tryXorg --fontserver=\${FONT_SERVER} --server=\${SERVER} --xorgopts="\${TCOS_XORG_OPTS} -query \${SERVER}" &
 
 EOF
 chmod +x $DESTDIR/sbin/startremotex
@@ -331,7 +345,8 @@ cat <<EOF > $DESTDIR/sbin/startsshx
 #!/bin/sh
 . /conf/tcos.conf
 . /conf/tcos-run-functions
-SERVER=\$(get_server)
+SERVER=\$(read_server "xdmcp-server")
+SERVER=\$(read_server "font-server")
 export DISPLAY=:0
 export HOME=/root
 
@@ -339,7 +354,7 @@ if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth $XAUTHORITY"
 fi
 
-/sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
+/sbin/tryXorg --fontserver=\${FONT_SERVER} --xorgopts="\${TCOS_XORG_OPTS}" &
 
 remoteuser=\$(read_cmdline_var "sshuser" "root")
 remotesshhost=\$(read_cmdline_var "sshhost" "\${SERVER}")
