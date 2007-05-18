@@ -2,7 +2,7 @@ Source: initramfs-tools-tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), usplash
+Build-Depends: debhelper (>= 4.0.0), usplash, imagemagick, librsvg2-bin
 Build-Conflicts: nvidia-glx, nvidia-glx-legacy, fglrx-driver
 Standards-Version: 3.7.2
 

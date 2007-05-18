@@ -25,6 +25,9 @@ install:
 0.4-usplash:
 	cd 0.4 && make
 
+0.4.1-usplash:
+	cd 0.4.1 && make
+
 
 0.2-usplash-clean:
 	cd 0.2 && make clean
@@ -35,6 +38,9 @@ install:
 0.4-usplash-clean: 
 	cd 0.4 && make clean
 
+0.4.1-usplash-clean: 
+	cd 0.4.1 && make clean
+
 0.2-usplash-install:
 	cd 0.2 && make install DESTDIR=$(DESTDIR)
 
@@ -43,4 +49,7 @@ install:
 
 0.4-usplash-install:
 	cd 0.4 && make install DESTDIR=$(DESTDIR)
+
+0.4.1-usplash-install:
+	cd 0.4.1 && make install DESTDIR=$(DESTDIR)/usr/lib/usplash/
 

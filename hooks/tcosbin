@@ -138,7 +138,11 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
 
   # usplash support
   mkdir -p $DESTDIR/usr/lib/usplash/
-  cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+  if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
+    cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+  else
+    cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+  fi
 
   # overwrite TCOS_SQUASHFS from shell env var
   # this allow to create cdrom with usr.squashfs embedded

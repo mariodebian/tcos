@@ -1,0 +1,20 @@
+#define PALETTE_BG 0
+#define PALETTE_PROGRESS_FG 0
+#define PALETTE_PROGRESS_BG 0
+#define PALETTE_TEXT_BG 251
+#define PALETTE_TEXT_FG 0
+#define PALETTE_TEXT_SUCCESS 67
+#define PALETTE_TEXT_FAILURE 134
+
+#define TEXT_BORDER_PX 1
+#define TEXT_PADDING_PX 9
+#define TEXT_EXTRA_PX (TEXT_BORDER_PX + TEXT_PADDING_PX)
+#define TEXT_MARGIN 30
+
+/* Horrible hack */
+struct private_hack {
+	struct usplash_pixmap *pixmap;      /* Background image        */
+	struct usplash_pixmap *progress_fg; /* Progress bar foreground */
+	struct usplash_pixmap *progress_bg; /* Progress bar background */
+};
+

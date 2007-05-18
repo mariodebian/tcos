@@ -1,10 +1,13 @@
-initramfs-tools-tcos (0.76+pre77) unstable; urgency=low
+initramfs-tools-tcos (0.77) unstable; urgency=low
 
   * Add mii-tool to check what network interface have link
   * Add support for different servers (xdmcp-server, font-server, rdesktop-server, etc...)
-  * Try to add xkbmap support
+  * Try to add xkbmap support (working on it)
+  * Fix usplash change TCOS_USPLASH not work
+  * Add new and beutifull usplash theme (called 0.4.1) based on usplash-theme-debian sources
+  * New build dependencies: imagemagick and librsvg2-bin
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 06 May 2007 23:56:39 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 18 May 2007 21:38:24 +0200
 
 initramfs-tools-tcos (0.76) unstable; urgency=low
 
