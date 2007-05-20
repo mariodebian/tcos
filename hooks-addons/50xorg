@@ -201,19 +201,24 @@ if [ $XORG = 6 ]; then
 else
  cp /usr/lib/libxk*.so.1 $DESTDIR/usr/lib/
 
- mkdir -p $DESTDIR/usr/share/X11/xkb/symbols/
- mkdir -p $DESTDIR/usr/share/X11/xkb/keymap/
- cp /usr/share/X11/xkb/keymap/xfree86 $DESTDIR/usr/share/X11/xkb/keymap/
- ( cd $DESTDIR/usr/share/X11/xkb/keymap && xkbcomp -lhlpR "*" -o ../keymap.dir )
+ XORG_XKB_DIR=usr/share/X11/xkb/
 
- mkdir -p $DESTDIR/usr/share/X11/xkb/rules
- cp /usr/share/X11/xkb/rules/base* $DESTDIR/usr/share/X11/xkb/rules/
- cp /usr/share/X11/xkb/rules/xkb.dtd $DESTDIR/usr/share/X11/xkb/rules/
+ [ ! -d "${XORG_XKB_DIR}" ] && XORG_SYMBOLS_DIR=/etc/X11/xkb/
+
+ mkdir -p $DESTDIR/${XORG_XKB_DIR}/symbols
+ mkdir -p $DESTDIR/${XORG_XKB_DIR}/keymap
+
+ cp /${XORG_XKB_DIR}/keymap/xfree86 $DESTDIR/${XORG_KEYMAPS_DIR}
+ ( cd $DESTDIR/${XORG_XKB_DIR}/keymap && xkbcomp -lhlpR "*" -o ../keymap.dir )
+
+ mkdir -p $DESTDIR/${XORG_XKB_DIR}/rules
+ cp /${XORG_XKB_DIR}/rules/base*   $DESTDIR/${XORG_XKB_DIR}/rules/
+ cp /${XORG_XKB_DIR}/rules/xkb.dtd $DESTDIR/${XORG_XKB_DIR}/rules/
 
  for kb in $TCOS_XORG_XKBS; do
-  cp /usr/share/X11/xkb/symbols/$kb $DESTDIR/usr/share/X11/xkb/symbols/ 2>&1 >/dev/null
+  cp /${XORG_XKB_DIR}/symbols/$kb $DESTDIR/${XORG_XKB_DIR}/symbols/ 2>&1 >/dev/null
  done
- ( cd $DESTDIR/usr/share/X11/xkb/symbols/ && xkbcomp -lhlpR "*" -o ../symbols.dir )
+ ( cd $DESTDIR/${XORG_XKB_DIR}/symbols/ && xkbcomp -lhlpR "*" -o ../symbols.dir )
 fi
 
 # xorg locale

@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.77a) unstable; urgency=low
+
+  * Fix XKB dir in ubuntu edgy, dapper => /etc/X11/xkb
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 20 May 2007 21:18:08 +0200
+
 initramfs-tools-tcos (0.77) unstable; urgency=low
 
   * Add mii-tool to check what network interface have link
