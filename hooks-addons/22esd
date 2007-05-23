@@ -23,6 +23,7 @@ function copy_libesd0() {
      else
         _echo ""
         _echo "  Warning: libesd0 not found in packages cache dir."
+        _echo "           # gentcos -instpkg libesd0"
         _echo ""
      fi
 }
@@ -47,6 +48,7 @@ if [ $TCOS_SOUND ]; then
         _echo ""
         _echo "  Warning: PulseAudio overwrite /usr/bin/esd"
         _echo "           and cache package not found."
+        _echo "           # gentcos -instpkg esound libesd0"
         _echo ""
      fi
 
@@ -61,6 +63,13 @@ if [ $TCOS_SOUND ]; then
       mkdir -p $DESTDIR/etc/esound
       copy_libesd0
       copy_esd_libs
+      cat << EOF > $DESTDIR/sbin/startesd
+#!/bin/sh
+echo "STARTESD starting esound daemon" >> /tmp/initramfs.debug
+esd -public -tcp -public -noterminate -nobeeps &  >> /tmp/initramfs.debug 2>&1
+EOF
+      chmod +x $DESTDIR/sbin/startesd
+
     stat_after "ESound Daemon (sound server)"
 
   fi # end of sound_error

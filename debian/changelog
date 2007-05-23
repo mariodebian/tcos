@@ -1,8 +1,12 @@
 initramfs-tools-tcos (0.77a) unstable; urgency=low
 
   * Fix XKB dir in ubuntu edgy, dapper => /etc/X11/xkb
+  * hooks-addons/41_snd_cs4236:
+    - Add special support for Crystal Sound
+  * scripts/tcos-bottom/40initsound:
+    - Unmute 'Master Digital' and set to TCOS_VOLUME
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 20 May 2007 21:18:08 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 23 May 2007 16:46:46 +0200
 
 initramfs-tools-tcos (0.77) unstable; urgency=low
 

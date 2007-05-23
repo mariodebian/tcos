@@ -1,0 +1,104 @@
+# hook addon for Crystal Sound snd-4236
+# http://coffeebear.net/archives/2005/11/16/alsa-crystal-4237b-revisited/
+
+
+if [ $TCOS_SOUND_CS4236 ]; then
+stat_before
+
+  manual_add_modules snd-cs4236 
+
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/10cs4236
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+PATH=\$PATH:/usr/bin:/usr/sbin
+export PATH
+
+quiet=n
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# check if we have cs4236 chip
+test1=\$(dmesg| awk -F "'" '/^isapnp: Card/ {print \$2}')
+
+if [ \$(echo "\$test1"|grep -c 4236) = "0" ]; then
+   # chip not found
+   exit 0
+fi
+
+log_begin_msg "Loading Crystal Sound Modules"
+
+error=0
+test2=\$(grep -c "pci=noacpi" /proc/cmdline)
+test3=\$(grep -c "acpi=off" /proc/cmdline)
+
+if [ "\$test2" = 0 ] && [ "\$test3" = 0 ] ; then
+  error=1
+fi
+
+if [ \$error = 1 ]; then
+  log_end_msg 1
+  log_begin_msg "Error loading module, need pci=noacpi or acpi=off in cmdline"
+  log_end_msg 1
+  exit 0
+fi
+
+[ -f /etc/modprobe.d/alsa-base ] && FILE=/etc/modprobe.d/alsa-base
+[ -f /etc/modprobe.d/alsa ] && FILE=/etc/modprobe.d/alsa
+
+
+  cat << FIN > \$FILE
+alias char-major-116 snd
+alias char-major-14 soundcore
+alias snd-card-0 snd-cs4236
+options snd-cs4236 port=0x530 cport=0x210 isapnp=0 dma1=1 dma2=0 irq=5
+alias sound-slot-0 snd-card-0
+alias sound-slot-1 snd-card-1
+
+alias sound-service-0-0 snd-mixer-oss
+alias sound-service-0-1 snd-seq-oss
+alias sound-service-0-3 snd-pcm-oss
+alias sound-service-0-8 snd-seq-oss
+alias sound-service-0-12 snd-pcm-oss
+
+alias /dev/mixer snd-mixer-oss
+alias /dev/dsp snd-pcm-oss
+alias /dev/midi snd-seq-oss
+
+options snd cards_limit=1
+FIN
+
+  #awk '/^snd/||/^sound/&&(\$3==0){system("rmmod " \$1)}' /proc/modules /proc/modules /proc/modules
+
+  _log "CS4236 Unloading and loading snd-cs4236"
+  rmmod snd-cs4236    > /tmp/initramfs.debug 2>&1
+  modprobe snd-cs4236 > /tmp/initramfs.debug 2>&1
+
+
+  # Start esound over OSS
+  /sbin/startesd
+
+log_end_msg
+
+EOF
+  chmod +x ${DESTDIR}/scripts/tcos-bottom/10cs4236
+
+stat_after "Force Crystal Sound cs4236"
+
