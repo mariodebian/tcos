@@ -56,10 +56,9 @@ EOF
 # setting volumes
 log_begin_msg "Setting volume to ${TCOS_VOLUME}"
   _log "INITSOUND Setting volume to ${TCOS_VOLUME}"
-  amixer -c 0 set PCM ${TCOS_VOLUME} > /dev/null 2>&1
-  amixer -c 0 set PCM unmute > /dev/null 2>&1
-  amixer -c 0 set Master ${TCOS_VOLUME} > /dev/null 2>&1
-  amixer -c 0 set Master unmute > /dev/null 2>&1
+  amixer -c 0 set 'PCM' ${TCOS_VOLUME} unmute > /tmp/initramfs.debug 2>&1
+  amixer -c 0 set 'Master' ${TCOS_VOLUME} unmute > /tmp/initramfs.debug 2>&1
+  amixer  set  'Master Digital' \${TCOS_VOLUME} unmute > /tmp/initramfs.debug 2>&1
   if [ -x /usr/bin/aumix ]; then
     aumix -v ${TCOS_VOLUME}
     aumix -w ${TCOS_VOLUME}
