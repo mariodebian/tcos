@@ -19,6 +19,9 @@ USPLASH_etch="0.3"
 
 KERNEL_unstable="2.6.18-4-486"
 USPLASH_unstable="0.4.1"
+
+KERNEL_experimental="2.6.18-4-486"
+USPLASH_experimental="0.4.1"
 ##################################
 
 

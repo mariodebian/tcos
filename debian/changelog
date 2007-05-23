@@ -5,8 +5,9 @@ initramfs-tools-tcos (0.77a) unstable; urgency=low
     - Add special support for Crystal Sound
   * scripts/tcos-bottom/40initsound:
     - Unmute 'Master Digital' and set to TCOS_VOLUME
+  * Add experimental to common.mk defaults
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 23 May 2007 16:46:46 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 23 May 2007 17:09:37 +0200
 
 initramfs-tools-tcos (0.77) unstable; urgency=low
 
