@@ -1,5 +1,6 @@
 all:
-	make $(USPLASH_VERSION)-usplash
+	@echo "    => Compiling usplash $(USPLASH_VERSION)"
+	cd $(USPLASH_VERSION) && make
 
 include ../common.mk
 
@@ -11,45 +12,16 @@ vars:
 	@echo USPLASH_VERSION=$(USPLASH_VERSION)
 
 clean:
-	make $(USPLASH_VERSION)-usplash-clean
+	@echo "    => Cleaning usplash $(USPLASH_VERSION)"
+	@cd $(USPLASH_VERSION) && make clean
 
 install:
-	make $(USPLASH_VERSION)-usplash-install
+	@if [ "$(USPLASH_VERSION)" != "0.4.1" ]; then\
+		echo "    => Installing usplash theme $(USPLASH_VERSION)";\
+		( cd $(USPLASH_VERSION) && make install DESTDIR=$(DESTDIR) ); \
+	fi
 
-0.2-usplash:
-	cd 0.2 && make
-
-0.3-usplash:
-	cd 0.3 && make
-
-0.4-usplash:
-	cd 0.4 && make
-
-0.4.1-usplash:
-	cd 0.4.1 && make
-
-
-0.2-usplash-clean:
-	cd 0.2 && make clean
-
-0.3-usplash-clean:
-	cd 0.3 && make clean
-
-0.4-usplash-clean: 
-	cd 0.4 && make clean
-
-0.4.1-usplash-clean: 
-	cd 0.4.1 && make clean
-
-0.2-usplash-install:
-	cd 0.2 && make install DESTDIR=$(DESTDIR)
-
-0.3-usplash-install:
-	cd 0.3 && make install DESTDIR=$(DESTDIR)
-
-0.4-usplash-install:
-	cd 0.4 && make install DESTDIR=$(DESTDIR)
-
-0.4.1-usplash-install:
-	cd 0.4.1 && make install DESTDIR=$(DESTDIR)/usr/lib/usplash/
-
+	@if [ "$(USPLASH_VERSION)" = "0.4.1" ]; then\
+		echo "    => Installing usplash theme 0.4.1";\
+		( cd $(USPLASH_VERSION) && make install DESTDIR=$(DESTDIR)/usr/lib/usplash/ );\
+	fi

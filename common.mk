@@ -6,22 +6,25 @@ PACKAGE=initramfs-tools-tcos
 # kernel default versions
 
 KERNEL_dapper="2.6.15-28-386"
-USPLASH_dapper="0.2"
+USPLASH_dapper=0.2
 
 KERNEL_edgy="2.6.17-11-generic"
-USPLASH_edgy="0.4.1"
+USPLASH_edgy=0.4.1
 
 KERNEL_feisty="2.6.20-15-generic"
-USPLASH_feisty="0.4.1"
+USPLASH_feisty=0.4.1
 
 KERNEL_etch="2.6.18-4-486"
-USPLASH_etch="0.3"
+USPLASH_etch=0.3
 
 KERNEL_unstable="2.6.18-4-486"
-USPLASH_unstable="0.4.1"
+USPLASH_unstable=0.4.1
 
 KERNEL_experimental="2.6.18-4-486"
-USPLASH_experimental="0.4.1"
+USPLASH_experimental=0.4.1
+
+KERNEL_gutsy="2.6.20-15-generic"
+USPLASH_gutsy=0.4.1
 ##################################
 
 

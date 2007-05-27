@@ -49,7 +49,18 @@ create_links "syslogd"
 create_links "logger"
 
 # start syslogd (busybox embeded)
-syslogd 
+busybox syslogd 2>/dev/null 
+
+if [ $? != 0 ]; then
+  # create a fuck logger
+  rm -f /bin/logger
+  cat << EOF > /bin/logger
+#!/bin/sh
+
+echo "[\$(date +'%d/%m/%y %H:%M:%S')] \$2: \$3" >> /var/log/messages
+EOF
+  chmod +x /bin/logger
+fi
 
 
 # hack for ubuntu udev

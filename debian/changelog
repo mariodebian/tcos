@@ -1,3 +1,19 @@
+initramfs-tools-tcos (0.79) unstable; urgency=low
+
+  * hooks-addons/50xorg:
+    - Fix XKB path
+    - Remove symlinks (xfree86 and xorg)
+  * scripts/tcos-bottom/10ldconfig:
+    - Generate removed symlinks
+  * usplash/Makefile:
+    - More simple file
+  * usplash/0.3/usplash-tcos.png, usplash/0.2/usplash-artwork.png:
+    - New theme
+  * scripts/tcos-bottom/10ldconfig:
+    - Create some needed symlinks
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 27 May 2007 21:12:49 +0200
+
 initramfs-tools-tcos (0.78) unstable; urgency=low
 
   * Delete hooks-addons/41_snd_cs4236 (not needed)

@@ -97,7 +97,26 @@ else
  ln -s /usr/share/X11/xkb /etc/X11/xkb
  mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
  ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
+
  mkdir -p /var/lib/xkb
+ ln -s /var/lib/xkb     /etc/X11/xkb/compiled
+ ln -s /usr/bin/xkbcomp /etc/X11/xkb/xkbcomp
+
+ # make links in keymap rules
+    [ ! -e /usr/share/X11/xkb/rules/xfree86 ] &&\
+	 ln -s /usr/share/X11/xkb/rules/base /usr/share/X11/xkb/rules/xfree86
+    [ ! -e /usr/share/X11/xkb/rules/xfree86.lst ] &&\
+	 ln -s /usr/share/X11/xkb/rules/base.lst /usr/share/X11/xkb/rules/xfree86.lst
+    [ ! -e /usr/share/X11/xkb/rules/xfree86.xml ] &&\
+	 ln -s /usr/share/X11/xkb/rules/base.xml /usr/share/X11/xkb/rules/xfree86.xml
+
+    [ ! -e /usr/share/X11/xkb/rules/xorg ] &&\
+	 ln -s /usr/share/X11/xkb/rules/base /usr/share/X11/xkb/rules/xorg
+    [ ! -e /usr/share/X11/xkb/rules/xorg.lst ] &&\
+	 ln -s /usr/share/X11/xkb/rules/base.lst /usr/share/X11/xkb/rules/xorg.lst
+    [ ! -e /usr/share/X11/xkb/rules/xorg.xml ] &&\
+	 ln -s /usr/share/X11/xkb/rules/base.xml /usr/share/X11/xkb/rules/xorg.xml
+
 fi
 
 update_progress

@@ -200,14 +200,21 @@ if [ $XORG = 6 ]; then
  #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
  #mkdir -p $DESTDIR/var/lib/xkb
 else
- XORG_XKB_DIR=usr/share/X11/xkb/
+ XORG_XKB_DIR=/usr/share/X11/xkb/
 
  [ ! -d "${XORG_XKB_DIR}" ] && XORG_XKB_DIR=/etc/X11/xkb/
 
  mkdir -p ${DESTDIR}/usr/share/X11
- cp -ra /${XORG_XKB_DIR} ${DESTDIR}/usr/share/X11
 
- cpifexists /usr/share/X11/XKeysymDB /usr/share/X11
+ # copy all dir (some files not needed)
+ cp -ra ${XORG_XKB_DIR} ${DESTDIR}/usr/share/X11
+
+ # delete symlinks
+ find ${DESTDIR}/usr/share/X11/ -type l | xargs rm -f --
+
+ # keymap DB
+ cpifexists /usr/share/X11/XKeysymDB /usr/share/X11/
+
 fi
 
 # xorg locale
