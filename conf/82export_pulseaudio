@@ -1,0 +1,18 @@
+# $Id:$
+# Startup script for export_pulseaudio
+#
+
+DISPLAY_HOST=$(echo $DISPLAY| awk -F ":" '{print $1}')
+
+if [ "x${DISPLAY_HOST}" != "x" ]; then
+  # export PulseAudio server
+  export PULSE_SERVER="${DISPLAY_HOST}"
+  export ESPEAKER="${DISPLAY_HOST}"
+
+  # FIXME load spanish kbmap
+  if [ -x /usr/bin/xmodmap ] && [ -e /usr/share/xmodmap/xmodmap.es ] ; then
+   xmodmap /usr/share/xmodmap/xmodmap.es
+  fi
+
+fi
+

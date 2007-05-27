@@ -27,6 +27,20 @@ quiet=n
 . /conf/tcos-run-functions
 
 
+if [ ${TCOS_USB} ]; then
+ MODULES="scsi_mod sd_mod sr_mod isofs vfat floppy usbcore ehci-hcd ohci-hcd uhci-hcd usb-storage"
+ log_begin_msg "Loading usb and floppy modules"
+   for mod in ${MODULES}; do
+     _log "INITTCOS Loading module ${mod}"
+     modprobe -q $mod >> /tmp/initramfs.debug 2>&1 &
+   done
+ log_end_msg
+else
+ _log "INITTCOS usb support disabled"
+fi
+
+
+
 # if break=ltspfs STOP here
 maybe_break ltspfs
 

@@ -34,13 +34,6 @@ modprobe -q mousedev 2>&1 >> /tmp/initramfs.debug
 modprobe -q psmouse  2>&1 >> /tmp/initramfs.debug
 
 
-#keyboard maps
-ln -s /usr/share/X11/xkb/rules/base /usr/share/X11/xkb/rules/xorg
-ln -s /usr/share/X11/xkb/rules/base.lst /usr/share/X11/xkb/rules/xorg.lst
-ln -s /usr/share/X11/xkb/rules/base.xml /usr/share/X11/xkb/rules/xorg.xml
-ln -s /usr/share/X11/xkb/rules/base /usr/share/X11/xkb/rules/xfree86
-ln -s /usr/share/X11/xkb/rules/base.lst /usr/share/X11/xkb/rules/xfree86.lst
-ln -s /usr/share/X11/xkb/rules/base.xml /usr/share/X11/xkb/rules/xfree86.xml
 
 # Create magic cookie
 # http://www.xs4all.nl/~zweije/xauth-6.html

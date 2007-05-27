@@ -49,6 +49,7 @@ install:
 	install -d $(DESTDIR)/$(TCOS_DIR)/inc
 	install -d $(DESTDIR)/$(TFTP_DIR)
 	install -d $(DESTDIR)/$(TCOS_BINS)
+	install -d $(DESTDIR)/$(X11_CONF)
 
 	install -d $(DESTDIR)$(TCOS_CONF)/hacking
 	install -d $(DESTDIR)/usr/sbin
@@ -90,10 +91,14 @@ install:
 	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 	sed -i 's/__TCOS_VERSION__/$(VERSION)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 
+	install -m 644 conf/tcos.conf $(DESTDIR)$(TCOS_DIR)/tcos.conf
+
 	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
 
 	install -m 644 conf/tcos-generation-functions.sh $(DESTDIR)$(TCOS_DIR)/tcos-generation-functions.sh
 	install -m 644 conf/tcos-run-functions.sh        $(DESTDIR)$(TCOS_DIR)/tcos-run-functions.sh
+
+	install -m 644 conf/82export_pulseaudio  $(DESTDIR)$(X11_CONF)/
 
 	install -m 644 conf/initramfs.conf $(DESTDIR)$(TCOS_CONF)/initramfs.conf
 	install -m 644 conf/template $(DESTDIR)$(TCOS_CONF)/hacking/template

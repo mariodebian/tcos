@@ -107,7 +107,8 @@ if_is_zero() {
 
 _log () {
   # print $@ into /tmp/initramfs.debug
-  echo "[$(date +'%d/%m/%y %H:%M:%S')] $@" >> /tmp/initramfs.debug
+  #echo "[$(date +'%d/%m/%y %H:%M:%S')] $@" >> /tmp/initramfs.debug
+  logger -t "$(echo $1| awk '{print $1}')" "$@" >> /tmp/initramfs.debug 2>&1
 }
 
 read_server() {

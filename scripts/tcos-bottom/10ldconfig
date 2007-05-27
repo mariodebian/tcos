@@ -84,6 +84,7 @@ if [ ${XORG_MAYOR} -lt 7 ]; then
  ln -s /etc/X11/xserver /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
  ln -s /etc/X11/xkb /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
  rm -rf /usr/X11R6/lib/X11/compiled  >> /tmp/initramfs.debug 2>&1
+ mkdir -p /var/lib/xkb
  ln -s /var/lib/xkb /usr/X11R6/lib/X11/compiled  >> /tmp/initramfs.debug 2>&1
  ln -s /etc/X11/rgb.txt /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
  mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
@@ -93,9 +94,10 @@ else
  # FIXME need more work Xorg 7.0
  mkdir -p /usr/share/X11/
  ln -s /etc/X11/rgb.txt /usr/share/X11/rgb.txt
- ln -s /usr/share/X11/ /etc/X11/xkb
+ ln -s /usr/share/X11/xkb /etc/X11/xkb
  mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
  ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
+ mkdir -p /var/lib/xkb
 fi
 
 update_progress

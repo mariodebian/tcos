@@ -18,19 +18,13 @@ esac
 
 quiet=n
 
-PATH=$PATH:/usr/bin:/usr/sbin
-export PATH
-
 
 . /scripts/functions
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
 create_links() {
- if [ ! -x /bin/$1 ]; then
-   #_log "BUSYBOX init: linking $1..."
-   ln -s /bin/busybox /bin/$1
- fi
+ [ ! -x /bin/$1 ] && ln -s /bin/busybox /bin/$1
 }
 
 
@@ -51,7 +45,11 @@ create_links "run-parts"
 create_links "killall"
 create_links "which"
 create_links "pidof"
+create_links "syslogd"
+create_links "logger"
 
+# start syslogd (busybox embeded)
+syslogd 
 
 
 # hack for ubuntu udev

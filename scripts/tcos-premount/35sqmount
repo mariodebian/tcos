@@ -182,7 +182,7 @@ if [ "$TCOS_ALL_MODULES" = "1" ]; then
 fi
 
 
-update_progress 4
+update_progress 10
 
 exit 0
 

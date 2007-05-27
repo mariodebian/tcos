@@ -120,7 +120,7 @@ test:
 	@echo TCOS_BINS=$(TCOS_BINS)
 	@echo TCOS_XMLRPC_DIR=$(TCOS_XMLRPC_DIR)
 	@echo DBUS_CONF=$(DBUS_CONF)
-	@echo x11_CONF=$(X11_CONF)
+	@echo X11_CONF=$(X11_CONF)
 	@echo
 	@echo DISTRO=$(DISTRO)
 	@echo DEB_MIRROR=$(DEB_MIRROR)

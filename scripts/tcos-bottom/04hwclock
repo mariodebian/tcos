@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+# fixme, don't work as expected
+exit 0
+
+quiet=n
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+log_begin_msg "Setting clock based on hardware clock"
+  hwclock --localtime --hctosys
+log_end_msg
+
+exit 0

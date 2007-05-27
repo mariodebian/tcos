@@ -30,6 +30,7 @@ cpifexists $XORG_PATH/twm     /usr/bin
 cpifexists $XORG_PATH/xset     /usr/bin
 cpifexists $XORG_PATH/xsetroot /usr/bin
 cpifexists $XORG_PATH/sessreg  /usr/bin
+cpifexists $XORG_PATH/xkbcomp  /usr/bin/
 
 
 mkdir -p $DESTDIR/var/log
@@ -199,26 +200,14 @@ if [ $XORG = 6 ]; then
  #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
  #mkdir -p $DESTDIR/var/lib/xkb
 else
- cp /usr/lib/libxk*.so.1 $DESTDIR/usr/lib/
-
  XORG_XKB_DIR=usr/share/X11/xkb/
 
- [ ! -d "${XORG_XKB_DIR}" ] && XORG_SYMBOLS_DIR=/etc/X11/xkb/
+ [ ! -d "${XORG_XKB_DIR}" ] && XORG_XKB_DIR=/etc/X11/xkb/
 
- mkdir -p $DESTDIR/${XORG_XKB_DIR}/symbols
- mkdir -p $DESTDIR/${XORG_XKB_DIR}/keymap
+ mkdir -p ${DESTDIR}/usr/share/X11
+ cp -ra /${XORG_XKB_DIR} ${DESTDIR}/usr/share/X11
 
- cp /${XORG_XKB_DIR}/keymap/xfree86 $DESTDIR/${XORG_KEYMAPS_DIR}
- ( cd $DESTDIR/${XORG_XKB_DIR}/keymap && xkbcomp -lhlpR "*" -o ../keymap.dir )
-
- mkdir -p $DESTDIR/${XORG_XKB_DIR}/rules
- cp /${XORG_XKB_DIR}/rules/base*   $DESTDIR/${XORG_XKB_DIR}/rules/
- cp /${XORG_XKB_DIR}/rules/xkb.dtd $DESTDIR/${XORG_XKB_DIR}/rules/
-
- for kb in $TCOS_XORG_XKBS; do
-  cp /${XORG_XKB_DIR}/symbols/$kb $DESTDIR/${XORG_XKB_DIR}/symbols/ 2>&1 >/dev/null
- done
- ( cd $DESTDIR/${XORG_XKB_DIR}/symbols/ && xkbcomp -lhlpR "*" -o ../symbols.dir )
+ cpifexists /usr/share/X11/XKeysymDB /usr/share/X11
 fi
 
 # xorg locale
@@ -237,9 +226,6 @@ else
  [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
  #copydir /usr/lib/X11/config/          /usr/lib/X11/
  cpifexists /etc/X11/rgb.txt            /etc/X11/
- #copydir /etc/X11/rstart               /etc/X11/
- #copydir /usr/lib/X11/rstart-X11R7.0-1.0.1 /usr/lib/X11/
- #cpifexists /usr/lib/X11/XKeysymDB      /usr/lib/X11/
 fi
 
 stat_after "Xorg"

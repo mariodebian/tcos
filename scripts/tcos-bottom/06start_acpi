@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+PATH=$PATH:/usr/bin:/usr/sbin
+
+[ -x /sbin/startacpid ] && /sbin/startacpid > /var/log/acpid.log 2>&1
+
+exit 0

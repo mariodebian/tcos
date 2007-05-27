@@ -1,0 +1,82 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+quiet=n
+
+PATH=$PATH:/usr/bin:/usr/sbin
+export PATH
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# if break=inittcos STOP here
+maybe_break services
+
+# DOCUMENTME opentelnet | write some debug entry's to /etc/inetd.conf to allow kill or start X with telnet terminal-ip port
+opentelnet=$(read_cmdline_var "opentelnet")
+
+if [ ${opentelnet} ] ;then
+  echo "INITTCOS opentelnet=1, put some things in /etc/inetd.conf" >> /tmp/initramfs.debug
+  echo "55            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/killX " >> $DESTDIR/etc/inetd.conf
+  echo "56            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/startlocalx " >> $DESTDIR/etc/inetd.conf
+  echo "57            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/startremotex " >> $DESTDIR/etc/inetd.conf
+else
+ _log "INITTCOS not starting opentelnet mode"
+fi
+
+
+if [ "$(which dropbear)" ] ; then
+ # need read from /dev/urandom not /dev/random
+ # http://www.nomis52.net/?section=projects&sect2=netgear&page=dropbear
+ # ugly hack or recompile with #define DROPBEAR_RANDOM_DEV "/dev/urandom"
+ mv /dev/random /dev/random.old
+ ln -s /dev/urandom /dev/random
+
+ _log "INITTCOS starting dropbear ssh daemon"
+ log_begin_msg "Starting dropbear SSH daemon"
+   ln -s /var/run/dropbear /etc/dropbear/superwise >> /tmp/initramfs.debug 2>&1   
+   ln -s /var/log/dropbear /etc/dropbear/log/main >> /tmp/initramfs.debug 2>&1   
+   ln -s /var/run/dropbear.log /etc/dropbear/log/superwise >> /tmp/initramfs.debug 2>&1   
+   dropbear -p 22 -E -d /etc/dropbear/dropbear_dss_host_key -r /etc/dropbear/dropbear_rsa_host_key 2> /tmp/sshd.log
+ log_end_msg
+
+ rm -f /dev/random
+ mv /dev/random.old /dev/random
+
+
+else
+ _log "INITTCOS not starting dropbear ssh server"
+fi
+
+
+update_progress
+
+if [ "$(which inetd)" ] ; then
+ _log "INITTCOS starting inetd daemon"
+ log_begin_msg "Starting inetd"
+   inetd
+ log_end_msg
+else
+ _log "INITTCOS not starting inetd"
+fi
+
+update_progress
+
+exit 0

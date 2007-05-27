@@ -36,7 +36,7 @@ log_begin_msg "Download personalized settings ${MYIP}.conf"
 log_end_msg
 
 
-update_progress
+update_progress 2
 
 
 exit 0

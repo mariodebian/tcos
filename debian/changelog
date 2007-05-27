@@ -1,3 +1,21 @@
+initramfs-tools-tcos (0.78) unstable; urgency=low
+
+  * Delete hooks-addons/41_snd_cs4236 (not needed)
+  * conf/82export_pulseaudio:
+    - Export PulseAudio environment var and load kbmap (Spanish yet)
+  * tcos/logo.lss:
+    - new pxe splash logo based on new usplash
+  * hooks-addons/50xorg:
+    - Working keymap !!!!!!
+  * scripts/tcos-bottom/25startx:
+    - Move startx to medium start (start in 5 seconds less)
+  * conf/tcos-run-functions.sh:
+    - Use busybox syslogd and logger to save log messages => /var/log/messages
+  * scripts/tcos-bottom/05inittcos:
+    - Move some code to scripts/tcos-bottom/35services
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 27 May 2007 00:33:29 +0200
+
 initramfs-tools-tcos (0.77a) unstable; urgency=low
 
   * Fix XKB dir in ubuntu edgy, dapper => /etc/X11/xkb

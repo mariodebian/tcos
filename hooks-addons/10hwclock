@@ -4,36 +4,4 @@ stat_before
 
 cpifexists /sbin/hwclock     /usr/bin/
 
-cat <<EOF > $DESTDIR/scripts/tcos-bottom/04hwclock
-#!/bin/sh
-#
-
-PREREQ=""
-
-prereqs()
-{
-        echo "\$PREREQ"
-}
-
-case \$1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
-
-
-quiet=n
-. /scripts/functions
-. /conf/tcos.conf
-. /conf/tcos-run-functions
-
-log_begin_msg "Setting clock based on hardware clock"
-  hwclock --localtime --hctosys
-log_end_msg
-
-EOF
-chmod +x $DESTDIR/scripts/tcos-bottom/04hwclock
-
 stat_after "HWclock"

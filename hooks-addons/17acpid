@@ -22,30 +22,6 @@ event=button[ /]power
 action=/sbin/poweroff
 EOF
 
-cat << EOF > ${DESTDIR}/scripts/tcos-bottom/40acpid
-#!/bin/sh
-#
-
-PREREQ=""
-
-prereqs()
-{
-        echo "\$PREREQ"
-}
-
-case \$1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
-PATH=\$PATH:/usr/bin:/usr/sbin
-
-[ -x /sbin/startacpid ] && /sbin/startacpid
-EOF
-chmod +x ${DESTDIR}/scripts/tcos-bottom/40acpid
-
  stat_after "ACPI daemon"
 
 fi # end of TCOS_ACPID
