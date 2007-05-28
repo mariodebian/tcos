@@ -91,7 +91,8 @@ install:
 	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 	sed -i 's/__TCOS_VERSION__/$(VERSION)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 
-	install -m 644 conf/tcos.conf $(DESTDIR)$(TCOS_DIR)/tcos.conf
+	# copy tcos.conf to have a default config
+	install -m 644 $(DESTDIR)$(TCOS_CONF)/tcos.conf $(DESTDIR)$(TCOS_DIR)/tcos.conf
 
 	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
 
@@ -105,9 +106,6 @@ install:
 	install -m 644 grub/menu.lst-tcos $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos
 	install -m 644 images/logo.xpm.gz $(DESTDIR)$(TCOS_CONF)/logo.xpm.gz
 
-	# this delete "quiet" for usplash verbose textbox
-	#make ubuntu-conf
-	
 	# gentcos build script
 	install -m 755 bin/gentcos            $(DESTDIR)/usr/sbin/gentcos
 	install -m 755 bin/tcos-gdm-autologin $(DESTDIR)/usr/sbin/tcos-gdm-autologin
