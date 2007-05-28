@@ -5,8 +5,9 @@ initramfs-tools-tcos (0.79.1) unstable; urgency=low
   * Makefile:
     - Copy parsed tcos.conf in TCOS_DIR
   * Add support for reportbug
+  * Change HomePage to http://www.tcosproject.org
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 May 2007 16:12:14 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 May 2007 16:36:23 +0200
 
 initramfs-tools-tcos (0.79) unstable; urgency=low
 

@@ -21,7 +21,7 @@ Description: new thin client implementation
  TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
  Xorg (6.9 or 7.0) and much more utils.
  .
- Homepage: http://cls-tcos.forja.rediris.es
+ Homepage: http://www.tcosproject.org
  
 
 Package: initramfs-tools-tcos
