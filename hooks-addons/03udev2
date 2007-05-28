@@ -6,7 +6,9 @@
 mkdir -p $DESTDIR/lib/udev
 
 [ -f /lib/udev/write_cd_rules ]  && cpifexists /lib/udev/write_cd_rules    /lib/udev
-[ -f /lib/udev/write_net_rules ] && cpifexists /lib/udev/write_net_rules   /lib/udev
+
+# DON'T COPY write_net_rules, it will hang trying to create new persistent rules !!!
+#[ -f /lib/udev/write_net_rules ] && cpifexists /lib/udev/write_net_rules   /lib/udev
 
 [ -f /lib/udev/udev_run_devd ]    && cpifexists /lib/udev/udev_run_devd      /lib/udev
 [ -f /lib/udev/udev_run_hotplugd ] && cpifexists /lib/udev/udev_run_hotplugd   /lib/udev
@@ -16,4 +18,4 @@ mkdir -p $DESTDIR/lib/udev
 # new udev > 111
 [ -f /lib/udev/rule_generator.functions ]  && cpifexists /lib/udev/rule_generator.functions      /lib/udev
 
-[ -f $DESTDIR/etc/udev/rules.d/70-persistent-net.rules ] && rm -f /etc/udev/rules.d/70-persistent-net.rules
+#[ -f $DESTDIR/etc/udev/rules.d/70-persistent-net.rules ] && rm -f /etc/udev/rules.d/70-persistent-net.rules
