@@ -9,7 +9,7 @@ mkdir -p $DESTDIR/lib/udev
 [ -f /lib/udev/write_net_rules ] && cpifexists /lib/udev/write_net_rules   /lib/udev
 
 [ -f /lib/udev/udev_run_devd ]    && cpifexists /lib/udev/udev_run_devd      /lib/udev
-[ -f /lib/udev/udev_run_hotplug ] && cpifexists /lib/udev/udev_run_hotplug   /lib/udev
+[ -f /lib/udev/udev_run_hotplugd ] && cpifexists /lib/udev/udev_run_hotplugd   /lib/udev
 [ -f /lib/udev/logger.agent ]     && cpifexists /lib/udev/logger.agent       /lib/udev
 
 

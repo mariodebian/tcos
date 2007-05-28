@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.79.2) unstable; urgency=high
+
+  * hooks-addons/03udev2:
+    - Important bugfix 
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 May 2007 17:39:47 +0200
+
 initramfs-tools-tcos (0.79.1) unstable; urgency=low
 
   * hooks-addons/03udev2:
