@@ -11,7 +11,7 @@ USPLASH_dapper=0.2
 KERNEL_edgy="2.6.17-11-generic"
 USPLASH_edgy=0.4.1
 
-KERNEL_feisty="2.6.20-15-generic"
+KERNEL_feisty="2.6.20-16-generic"
 USPLASH_feisty=0.4.1
 
 KERNEL_etch="2.6.18-4-486"

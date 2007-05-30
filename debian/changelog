@@ -2,8 +2,9 @@ initramfs-tools-tcos (0.79.3) unstable; urgency=low
 
   * common.mk:
     - Set default kernel in debian unstable to 2.6.21-1-486
+    - Update Ubuntu feisty kernel to 2.6.20-16-generic
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 30 May 2007 11:11:58 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 30 May 2007 22:37:31 +0200
 
 initramfs-tools-tcos (0.79.2) unstable; urgency=high
 
