@@ -2,12 +2,13 @@
 
 set -e
 
-#DEBHELPER#
 
-
+# remove alternative
 case "$1" in
   remove)
     update-alternatives --remove usplash-artwork.so \
 	 /usr/lib/usplash/usplash-tcos.so
     ;;
 esac
+
+#DEBHELPER#

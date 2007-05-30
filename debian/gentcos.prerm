@@ -1,8 +1,0 @@
-#!/bin/bash
-set -e
-
-if [ "$1" = "purge" ]; then
-  rm -rf /var/lib/tcos/tftp
-fi
-
-#DEBHELPER#

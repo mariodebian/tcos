@@ -1,3 +1,0 @@
-usr/sbin/gentcos
-var/lib/tcos/*
-etc/tcos/pxelinux.cfg.tpl

@@ -1,5 +1,10 @@
-#! /bin/bash
-
+#!/bin/bash
 set -e
+
+# delete all generated files and dirs
+
+if [ "$1" = "purge" ]; then
+  rm -rf /var/lib/tcos/tftp
+fi
 
 #DEBHELPER#

@@ -23,3 +23,6 @@ usr/lib/tcos/seq
 usr/lib/tcos/hex2ascii
 usr/lib/tcos/installer.sh
 usr/lib/tcos/pkgdetails
+usr/sbin/gentcos
+var/lib/tcos/*
+etc/tcos/pxelinux.cfg.tpl

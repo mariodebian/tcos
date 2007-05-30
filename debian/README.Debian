@@ -1,7 +1,21 @@
 initramfs-tools-tcos for Debian
 -------------------------
 
-Patch to boot an initramfs image from network
+   * Postinstall process:
+
+     - Configure a DHCP server:
+       - Edit /etc/dhcp3/dhcpd.conf or use example files from gentcos package
+
+     - Configure hostnames and users:
+       - Can use tcos-gdm-autologin script to create users and configure GDM
+         ( see man tcos-gdm-autologin )
+       - Can add hosts and user in manual mode.
+
+     - Generate network images:
+       - Can use gentcos (see man gentcos or gentcos --help)
+       - Can use tcosconfig wizard
+
+     - Boot thin clients with PXE support or use an Etherboot floppy
 
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>, Sat, 18 Jan 2006 10:24:07 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 30 May 2007 23:48:46 +0200
