@@ -1,15 +1,34 @@
-This package was debianized by Mario Izquierdo (mariodebian) <mariodebian@gmail.com> on
-Sat, 14 Oct 2005 10:24:07 +0200.
+This package was debianized by Mario Izquierdo (mariodebian)
+<mariodebian@gmail.com> on Sat, 14 Oct 2005 10:24:07 +0200.
 
-  TCOS is a GPL project.
+It was downloaded from:
+  http://www.tcosproject.org/sources/initramfs-tools-tcos/
+
+Author: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+
+Copyright: 2005 - 2007 Mario Izquierdo
 
 Homepage:
-
      http://www.tcosproject.org
-
 
 License:
 
-On Debian GNU/Linux systems, the text of the GPL can be found in
-/usr/share/common-licenses/GPL.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License with
+  the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
+  if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+
+On Debian systems, the complete text of the GNU General Public
+License, version 2, can be found in /usr/share/common-licenses/GPL-2.
+
+The Debian packaging is (C) 2005, Mario Izquierdo (mariodebian) 
+<mariodebian@gmail.com> and is licensed under the GPL, see above.
 

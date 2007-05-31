@@ -78,7 +78,8 @@ else
 
   #elif [ -L ${TFTPBOOT}/tcos ]; then
   #  echo "gentcos: INFO: ${TFTPBOOT}/tcos is a symbolic link, all seems OK."
-  #fi
+  
+  fi
 fi 
 
 

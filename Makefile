@@ -140,3 +140,22 @@ tcos: clean
 	debuild -us -uc; true
 	sudo dpkg -i ../initramfs-tools-tcos*deb ../gentcos*deb ../tcos-server-utils*deb ../tcos-usplash*deb ../tcos_*deb
 
+patch_dapper:
+	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu DAPPER
+	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control	
+
+patch_edgy:
+	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu EDGY
+	sed -i '/^Build/s/libusplash-dev/usplash-dev, libbogl-dev/g' debian/control	
+
+patch_feisty:
+	# nothing to patch
+
+patch_etch:
+	# PATCHING INITRAMFS_TOOLS_TCOS in Debian etch
+	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control
+
+patch_unstable:
+	# nothing to patch
+
+

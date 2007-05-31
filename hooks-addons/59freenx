@@ -52,8 +52,11 @@ if [ ${TCOS_FREENX} ]; then
  copydir /usr/NX/share/images /usr/NX/share/
 
  cpifexists /lib/libpthread.so.0 /lib/
- cpifexists /usr/lib/libstdc++-libc6.2-2.so.3 /usr/lib/
-
+ if [ ! -d /usr/share/doc/libstdc++2.10-glibc2.2/ ]; then
+  _echo " ** ERROR: need to install libstdc++2.10-glibc2.2 package for FreeNX"
+ else
+   cpifexists /usr/lib/libstdc++-libc6.2-2.so.3 /usr/lib/
+ fi
  cpifexists /usr/NX/lib/libcrypto.so   /usr/NX/lib/
  cpifexists /usr/NX/lib/libjpeg.so     /usr/NX/lib/
  cpifexists /usr/NX/lib/libpng12.so    /usr/NX/lib/

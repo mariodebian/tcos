@@ -3,8 +3,14 @@ initramfs-tools-tcos (0.79.3) unstable; urgency=low
   * common.mk:
     - Set default kernel in debian unstable to 2.6.21-1-486
     - Update Ubuntu feisty kernel to 2.6.20-16-generic
+  * Makefile:
+    - Add patch targets
+  * debian/copyright:
+    - Add more info
+  * hooks-addons/59freenx:
+    - Warn about missing depends of libstdc++2.10-glibc2.2 package
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 30 May 2007 22:37:31 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 31 May 2007 19:40:25 +0200
 
 initramfs-tools-tcos (0.79.2) unstable; urgency=high
 
