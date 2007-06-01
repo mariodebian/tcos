@@ -34,7 +34,7 @@ if [ ${uselocal} = 0 ]; then
   exit 0
 fi
 
-
+mkdir -p /dev/pts
 
 # To avoid fsck
 #touch ${rootmnt}/fastboot
@@ -45,9 +45,11 @@ cat <<EOF > /etc/fstab
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 proc            /proc           proc    defaults        0       0
 sys             /sys            sysfs   defaults        0       0
+none		/dev/pts	devpts	gid=5,mode=620	0	0
 EOF
 
-
+_log "FSTAB Mount /dev/pts"
+mount /dev/pts >> /tmp/initramfs.debug 2>&1
 
 #
 # Search local disks partitions

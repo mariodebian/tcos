@@ -10,9 +10,9 @@ if [ "x${DISPLAY_HOST}" != "x" ]; then
   export ESPEAKER="${DISPLAY_HOST}"
 
   # FIXME load spanish kbmap
-  if [ -x /usr/bin/xmodmap ] && [ -e /usr/share/xmodmap/xmodmap.es ] ; then
-   xmodmap /usr/share/xmodmap/xmodmap.es
-  fi
+  #if [ -x /usr/bin/xmodmap ] && [ -e /usr/share/xmodmap/xmodmap.es ] ; then
+  # xmodmap /usr/share/xmodmap/xmodmap.es
+  #fi
 
 fi
 

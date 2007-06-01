@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.79.4) unstable; urgency=low
+
+  * scripts/tcos-top/50fstab:
+    - Add /dev/pts to /etc/fstab and mount it (dropbear need it for kernel 2.6.20).
+  * conf/82export_pulseaudio:
+    - Remove xmodmap keymap hack
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 01 Jun 2007 12:54:39 +0200
+
 initramfs-tools-tcos (0.79.3) unstable; urgency=low
 
   * common.mk:
