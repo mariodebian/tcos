@@ -79,6 +79,10 @@ else
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
+
+# check lib link
+[ -e /usr/lib/libpulsecore.so.3 ] && ln -s /usr/lib/libpulsecore.so.3 /usr/lib/libpulsecore.so.2
+
 # generate conf
 rm -f /etc/pulse/default.pa
 

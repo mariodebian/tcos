@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.79.5) unstable; urgency=low
+
+  * hooks-addons/21pulseaudio:
+    - Create symlink of libpulsecore.so.0.3 to so.0.2
+  * Change in all files default Homepage to http://www.tcosproject.org
+  * Change /tftpboot dir in doc files to /var/lib/tcos/tftp
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 03 Jun 2007 23:27:41 +0200
+
 initramfs-tools-tcos (0.79.4) unstable; urgency=low
 
   * scripts/tcos-top/50fstab:

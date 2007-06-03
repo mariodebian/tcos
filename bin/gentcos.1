@@ -44,7 +44,7 @@ Print size of uncompressed initramfs ram disk
 
 .B
 .IP \-allmodules
-Generate allmodules.squashfs and copy to /tftpboot/tcos
+Generate allmodules.squashfs and copy to /var/lib/tcos/tftp
 
 Then thin client must start with allmodules cmdline to download it
 
@@ -54,15 +54,15 @@ Then thin client must start with allmodules cmdline to download it
 .B PXE like method
 .B
 .IP \-tftp 
-Create initramfs-x.x.x (and usr-x.x.x.squashfs) and copy to /tftpboot/tcos
+Create initramfs-x.x.x (and usr-x.x.x.squashfs) and copy to /var/lib/tcos/tftp
 
-\-o=initramfs-pc1    output filename (in /tftpboot/tcos)
+\-o=initramfs-pc1    output filename (in /var/lib/tcos/tftp)
 
 .PP
 .B NFS (LTSP like) method
 .B
 .IP \-nfs
-Create initramfs-x.x.x-nfs  and copy to /tftpboot/tcos
+Create initramfs-x.x.x-nfs  and copy to /var/lib/tcos/tftp
 .B
 .IP \-rootfs
 Creates an complete TCOS and uncompress in /var/lib/tcos/fs-x.x.x
@@ -78,10 +78,10 @@ NOTE:  Need a NFS server (apt-get install nfs-kernel-server) and this line in /e
 .B
 .IP \-nbi
 Create initramfs (and usr.squashfs) an join with kernel
-in a nbi file then copy to /tftpboot/tcos
+in a nbi file then copy to /var/lib/tcos/tftp
 
 .IP \-nbi-output=linux-pc1.nbi
-output filename (in /tftpboot/tcos)
+output filename (in /var/lib/tcos/tftp)
 
 .PP
 .B CDROM method
@@ -133,7 +133,7 @@ Show all packages installed.
 .SH BUGS
 Contact Mario Izquierdo <mariodebian@gmail.com>
 
-Info about TCOS project: http://cls-tcos.forja.rediris.es
+Info about TCOS project: http://www.tcosproject.org
 
 .SH SEE ALSO
 tcos.conf(5)

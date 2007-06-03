@@ -35,7 +35,7 @@ TCOS_WIRELESS_ENC="enc"
  Then copy the following files into hdd of wireless thin client:
 
   vmlinuz-x.x.x (same version of compiled with tcos)
-  /tftpboot/tcos/initramfs-x.x.x
+  /var/lib/tcos/tftp/initramfs-x.x.x
 
   And add the following to grub menu.lst:
 
@@ -43,7 +43,7 @@ TCOS_WIRELESS_ENC="enc"
 title           TCOS, kernel 2.6.17-10-generic
 root            (hd0,0)
 kernel          /boot/vmlinuz-2.6.17-10-generic ramdisk_size=65536 root=/dev/ram0 quiet boot=tcos wifi=1 essid=ESSID server=192.168.0.254
-initrd          /tftpboot/tcos/initramfs-2.6.17-10-generic
+initrd          /var/lib/tcos/tftp/initramfs-2.6.17-10-generic
 boot
 
 

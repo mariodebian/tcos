@@ -27,8 +27,7 @@ INDEX:
     # PXE boot
     hardware ethernet       00:04:75:ff:b6:aa; # mac address
     fixed-address           192.168.0.10;      # ip address
-    filename                "/tftpboot/tcos/pxelinux.0";
-    option vendor-encapsulated-options 09:0f:80:00:0c:4e:65:74:77:6f:72:6b:20:62:6f:6f:74:0a:07:00:50:72:6f:6d:70:74:06:01:02:08:03:80:00:00:47:04:80:00:00:00:ff;
+    filename                "/tcos/pxelinux.0";
     }
 
    4.- Restart dhcp server and boot terminal.
@@ -92,7 +91,7 @@ INDEX:
       hardware ethernet       00:04:75:ff:b8:31;
       fixed-address           192.168.0.30;
       # nbi generated file with: gentcos -nbi
-      filename                "/tftpboot/tcos/linux.nbi";
+      filename                "/tcos/linux.nbi";
      }
 
  4.- Restart dhcp server, boot terminal from floppy and enjoy.
@@ -234,7 +233,7 @@ Things to do, to decrease RAM requirements
   2.- Second method is to start terminal 
      with cmdline:
            tcos allmodules startx=N
-  ( you need allmodules.squashfs in /tftpboot/tcos/ generated with
+  ( you need allmodules.squashfs in /var/lib/tcos/tftp generated with
     gentcos -allmodules [other options] )
 
     -allmodules requires at least 14-15 Mb of extra RAM.
