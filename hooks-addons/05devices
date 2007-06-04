@@ -5,14 +5,14 @@
 
 if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
 
-  if [ -d /usr/share/doc/ltspfs-client ]; then
+  if [ -e /usr/bin/ltspfsd ]; then
    stat_before
    cpifexists /usr/bin/ltspfsd /usr/bin
    stat_after "LTSPFS"
   else
    echo "ERROR:"
    echo ""
-   echo "Not LTSPFS support, please install ltspfs-client to build image."
+   echo "Not LTSPFS support, please install ltspfsd or ltspfs-client to build image."
    echo ""
    echo ""
   fi
