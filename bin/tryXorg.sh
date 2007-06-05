@@ -20,7 +20,8 @@ done
 
 counter=1
 while [ $counter -le $MAX_XORG_RETRY ]; do
- Xorg ${TCOS_XORG_OPTS} > /dev/null 2>&1
+ # start Xorg at tty7 to avoid getty keyboard conflicts
+ Xorg tty7 ${TCOS_XORG_OPTS} > /dev/null 2>&1
  counter=$((counter+1))
 done
 
@@ -35,7 +36,8 @@ fi
 sed "/modules/i\
         FontPath        \"tcp/${FONT_SERVER}:7100\"\
 " $new_xorg > /etc/X11/xorg.conf.auto
-Xorg -config /etc/X11/xorg.conf.auto ${TCOS_XORG_OPTS}  > /dev/null 2>&1
+# start Xorg at tty7 to avoid getty keyboard conflicts
+Xorg tty7 -config /etc/X11/xorg.conf.auto ${TCOS_XORG_OPTS}  > /dev/null 2>&1
 
 echo ""
 echo ""

@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.79.7) unstable; urgency=low
+
+  * bin/tryXorg.sh:
+    - Start Xorg at tty7 to avoid getty keyboards conflicts
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 05 Jun 2007 14:32:53 +0200
+
 initramfs-tools-tcos (0.79.6) unstable; urgency=low
 
   * Use debian ltspfs and ltspfsd packages
