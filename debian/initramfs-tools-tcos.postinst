@@ -13,10 +13,18 @@ function read_inetd() {
     # read tftpboot dir from inetd.conf
     if [ -f /etc/inetd.conf ]; then
       # get last word of tftp file
+
+      grep ^tftp /etc/inetd.conf |grep -q "-s" 2>/dev/null
+
+      if [ $? = 0 ]; then
+         echo "initramfs-tools-tcos:"
+         echo "  WARNING: You must delete \"-s\"  param in tftp line of /etc/inetd.conf"
+         echo ""
+      fi
+
       tmp=$(grep ^tftp /etc/inetd.conf | awk '{print $NF}')
         if [ -d "${tmp}" ]; then 
          TFTPBOOT=${tmp}
-         #echo "gentcos: Found TFTPBOOT dir at $TFTPBOOT (inetd.conf)"
         fi
     fi
 }
@@ -27,7 +35,6 @@ function read_from_conf() {
       for txt in $(grep OPTIONS "$1" ); do 
         if [ $(echo $txt |grep -c "/" ) = 1 ]; then 
          TFTPBOOT=$(echo $txt| sed s/"\""/""/g)
-         #echo "gentcos: Found TFTPBOOT dir at $TFTPBOOT ($1)"
         fi
       done
     fi
@@ -40,6 +47,10 @@ read_inetd
 if [ -z "$TFTPBOOT" ]; then
     # try with conf files
     read_from_conf "/etc/default/atftpd"
+fi
+
+if [ -z "$TFTPBOOT" ]; then
+    # try with other conf file
     read_from_conf "/etc/default/tftpd-hpa"
 fi
 
@@ -47,22 +58,18 @@ fi
 
 if [ -z "${TFTPBOOT}" ]; then
 
-   cat << EOF
-***********************************************************
-gentcos: ERROR: can't read TFTPBOOT dir, please, install 
-         atftp or tftpd-hpa package first.
-
-***********************************************************
-EOF
+  echo "***********************************************************"
+  echo "gentcos: ERROR: can't read TFTPBOOT dir, please, install"
+  echo "         atftp or tftpd-hpa package first."
+  echo ""
+  echo "***********************************************************"
 
 elif [ ! -d ${TFTPBOOT} ]; then
 
-   cat << EOF
-***********************************************************
-gentcos: ERROR: your configured TFTPD dir 
-        "${TFTPBOOT}" not exits, please create first.
-***********************************************************
-EOF
+  echo "***********************************************************"
+  echo "gentcos: ERROR: your configured TFTPD dir "
+  echo "        "${TFTPBOOT}" not exits, please create first."
+  echo "***********************************************************"
 
 else
   # make symlinks
@@ -73,7 +80,6 @@ else
     echo ""
 
   elif [ ! -e ${TFTPBOOT}/tcos ]; then
-    #echo "gentcos: INFO: Creating TFTPBOOT link..."
     ln -s /var/lib/tcos/tftp ${TFTPBOOT}/tcos
 
   #elif [ -L ${TFTPBOOT}/tcos ]; then

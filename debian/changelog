@@ -1,9 +1,10 @@
 initramfs-tools-tcos (0.79.8) unstable; urgency=low
 
-  * Move TCOS_VERSION and TCOS_DISTRO to version.conf 
+  * Move TCOS_VERSION and TCOS_DISTRO to version.conf
     (avoid to update tcos.conf in every package update)
+  * Fix some cat commands in postinst
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Jun 2007 22:25:12 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 08 Jun 2007 22:47:30 +0200
 
 initramfs-tools-tcos (0.79.7) unstable; urgency=low
 
