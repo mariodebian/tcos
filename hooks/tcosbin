@@ -34,6 +34,7 @@ fi
 if [ "${BOOT}" = "tcos" ]; then
 
 . $CONFDIR/tcos.conf
+[ -f $CONFDIR/version.conf ] && . $CONFDIR/version.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
 

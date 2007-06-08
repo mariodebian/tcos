@@ -11,6 +11,7 @@ etc/tcos/hooks/*
 etc/tcos/SecurityPolicy
 etc/tcos/xorg.conf.tpl
 etc/tcos/tcos.conf
+etc/tcos/version.conf
 etc/tcos/tcos-modules.conf
 etc/tcos/initramfs.conf
 etc/tcos/menu.lst-tcos

@@ -89,7 +89,10 @@ install:
 
 	install -m 600 conf/tcos.conf $(DESTDIR)$(TCOS_CONF)/tcos.conf
 	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
-	sed -i 's/__TCOS_VERSION__/$(VERSION)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
+
+	install -m 644 conf/version.conf $(DESTDIR)$(TCOS_CONF)/version.conf
+	sed -i 's/__TCOS_VERSION__/$(VERSION)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
+	sed -i 's/__TCOS_DISTRO__/$(DISTRO_VERSION)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
 
 	# copy tcos.conf to have a default config
 	install -m 644 $(DESTDIR)$(TCOS_CONF)/tcos.conf $(DESTDIR)$(TCOS_DIR)/tcos.conf

@@ -1,5 +1,8 @@
 # save generated date and version into tcos.conf
 
+if [ -f /etc/tcos/version.conf ]; then
+  cat /etc/tcos/version.conf >> ${DESTDIR}/conf/tcos.conf
+fi
 
 tcos_date=$(LANG=C LC_ALL=C date)
 echo "# date of image" >> ${DESTDIR}/conf/tcos.conf
