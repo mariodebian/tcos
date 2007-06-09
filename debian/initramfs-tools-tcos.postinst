@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 
 # make sure that tcos.conf is not all readable
 chmod 600 /etc/tcos/tcos.conf
@@ -14,9 +14,9 @@ function read_inetd() {
     if [ -f /etc/inetd.conf ]; then
       # get last word of tftp file
 
-      grep ^tftp /etc/inetd.conf |grep -q "-s" 2>/dev/null
+      value=$(grep ^tftp /etc/inetd.conf |grep -c " -s" 2>/dev/null)
 
-      if [ $? = 0 ]; then
+      if [ "$value" = "1" ]; then
          echo "initramfs-tools-tcos:"
          echo "  WARNING: You must delete \"-s\"  param in tftp line of /etc/inetd.conf"
          echo ""
