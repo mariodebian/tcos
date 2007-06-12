@@ -470,6 +470,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xvertsync__"/"${xvertsync}"/g \
     -e s/"__xrefresh__"/"${xrefresh}"/g \
     -e s/"__xkbmap__"/"${TCOS_XORG_XKB}"/g \
+    -e s/"__xkbmodel__"/"${TCOS_XORG_XKBMODEL}"/g \
     -e s/"__xmousewheel__"/"${xmousewheel}"/g \
     -e s/"__xmousenowheel__"/"${xmousenowheel}"/g \
     -e s/"__xmousedev__"/"${xmousedev2}"/g \

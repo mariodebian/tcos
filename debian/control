@@ -11,7 +11,7 @@ Depends: initramfs-tools-tcos (= ${Source-Version}) , tcos-usplash (= ${Source-V
 	 tcos-server-utils (= ${Source-Version}), ${misc:Depends}, ${shlibs:Depends}
          atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcos-tcosmonitor, tcosmonitor, 
          aumix, pulseaudio, pulseaudio-utils, x11vnc, busybox, libasound2-plugins, xfs,
-Recommends: pulseaudio-esound-compat
+Recommends: pulseaudio-esound-compat, ltspfsd, ltspfs
 Conflicts: nvidia-glx, nvidia-glx-legacy, fglrx-driver
 Description: new thin client implementation
  This is a system for generating thin client hosts using initramfs.
@@ -32,12 +32,11 @@ Depends: initramfs-tools (>= 0.40), dhcp-client | dhcp3-client,
          console-data, libnss-db, iftop, strace, twm, xterm, 
          dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, 
          debootstrap, libltdl3, tinylogin, 
-         ltspfs | ltspfs-client, ltspfsd | ltspfs-server,
 	 debconf, grub, syslinux, squashfs-tools, mknbi, dropbear, 
 	 ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-tcosmonitor (<= 0.0.17), gentcos (<= 0.79.2)
 Replaces: gentcos (<= 0.79.2)
-Recommends: esound, alsa-utils, links2, dillo, pulseaudio, pulseaudio-utils
+Recommends: esound, alsa-utils, links2, dillo, pulseaudio, pulseaudio-utils, ltspfsd, ltspfs
 Suggests: unionfs-modules-2.6-486, squashfs-modules-2.6-486
 Description: tools for generating a thin client bootable image: TCOS
  This package contains tools to create and boot an initramfs for prepackaged

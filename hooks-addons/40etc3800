@@ -14,7 +14,7 @@ stat_before
  mkdir -p ${DESTDIR}/usr/lib/dri
  cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
 
-cat << EOF > ${DESTDIR}/scripts/tcos-bottom/30etc3800
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/15etc3800
 #!/bin/sh
 #
 
@@ -64,7 +64,7 @@ log_begin_msg "Loading eTC 3800 modules"
 log_end_msg
 
 EOF
-  chmod +x ${DESTDIR}/scripts/tcos-bottom/30etc3800
+  chmod +x ${DESTDIR}/scripts/tcos-bottom/15etc3800
 
 stat_after "eTC3800 drivers support"
 

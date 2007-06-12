@@ -1,3 +1,24 @@
+initramfs-tools-tcos (0.80.1) unstable; urgency=low
+
+  * conf/xorg.conf.tpl:
+    - Disable via VBEModes, VBEREstore (not work with last Mesa)
+    - Add __xkbmodel__ var (pc104 with us keyboard and pc105 in some cases)
+  * debian/control:
+    - Remove as hard depends: ltspfsd | ltspfs-client
+  * conf/tcos.conf:
+    - New var TCOS_XORG_XKBMODEL
+  * hooks-addons/40etc3800:
+    - Move startup script from 30 to 15 (startx is at 25)
+  * bin/configurexorg:
+    - Add __xkbmodel__ in sed replace
+  * bin/tryXorg.sh:
+    - Change tty7 => vt7
+    - Use TCOS kbd info in new xorg.conf.auto file
+  * hooks-addons/05devices:
+    - Enable cache for ltspfsd: gentcos -instpkg ltspfsd
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 12 Jun 2007 20:40:34 +0200
+
 initramfs-tools-tcos (0.79.11) unstable; urgency=low
 
   * debian/tcos-usplash.postinst:

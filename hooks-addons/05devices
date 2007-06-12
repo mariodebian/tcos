@@ -5,14 +5,22 @@
 
 if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
 
-  if [ -e /usr/bin/ltspfsd ]; then
+
+  if [ -d ${TCOS_PKG_CACHE}/ltspfsd/ ]; then
+   stat_before
+    cpifexists ${TCOS_PKG_CACHE}/ltspfsd/usr/bin/ltspfsd /usr/bin
+   stat_after "ltspfsd [cached]"
+
+  elif [ -e /usr/bin/ltspfsd ]; then
    stat_before
    cpifexists /usr/bin/ltspfsd /usr/bin
-   stat_after "LTSPFS"
+   stat_after "ltspfsd"
+
   else
    echo "ERROR:"
    echo ""
-   echo "Not LTSPFS support, please install ltspfsd or ltspfs-client to build image."
+   echo "Not LTSPFS support, please install ltspfsd or cache it."
+   echo "    # gentcos -instpkg ltspfsd"
    echo ""
    echo ""
   fi

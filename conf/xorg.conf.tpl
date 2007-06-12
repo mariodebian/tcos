@@ -52,7 +52,7 @@ Section "InputDevice"
 	Driver		"keyboard"
 	Option		"CoreKeyboard"
 	Option		"XkbRules"	"xorg"
-	Option		"XkbModel"	"pc105"
+	Option		"XkbModel"	"__xkbmodel__"
 	Option		"XkbLayout"	"__xkbmap__"
 EndSection
 
@@ -90,8 +90,8 @@ Section "Device"
 	Driver		"__xdriver__"
 __xdriver_via__        Option          "EnableAGPDMA"
 __xdriver_via__        Option          "DisableIRQ"
-__xdriver_via__        Option          "VBEModes" "true"
-__xdriver_via__        Option          "VBERestore"    "true"
+__xdriver_via__        #Option          "VBEModes" "true"
+__xdriver_via__        #Option          "VBERestore"    "true"
 
 EndSection
 
@@ -144,3 +144,4 @@ __dontzap__
 #xdontzap=__xdontzap__
 #xdriver_via=__xdriver_via__
 #xkbmap=__xkbmap__
+#xkbmodel=__xkbmodel__
