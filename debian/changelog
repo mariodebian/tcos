@@ -16,8 +16,10 @@ initramfs-tools-tcos (0.80.1) unstable; urgency=low
     - Use TCOS kbd info in new xorg.conf.auto file
   * hooks-addons/05devices:
     - Enable cache for ltspfsd: gentcos -instpkg ltspfsd
+  * common.mk, Makefile:
+    - Add Ubuntu gutsy info.
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 12 Jun 2007 20:40:34 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 12 Jun 2007 20:46:14 +0200
 
 initramfs-tools-tcos (0.79.11) unstable; urgency=low
 

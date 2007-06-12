@@ -154,6 +154,9 @@ patch_edgy:
 patch_feisty:
 	# nothing to patch
 
+patch_gutsy:
+	# nothing to patch
+
 patch_etch:
 	# PATCHING INITRAMFS_TOOLS_TCOS in Debian etch
 	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control
