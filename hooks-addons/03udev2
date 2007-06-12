@@ -5,17 +5,35 @@
 
 mkdir -p $DESTDIR/lib/udev
 
-[ -f /lib/udev/write_cd_rules ]  && cpifexists /lib/udev/write_cd_rules    /lib/udev
+
+cpudev() {
+  if [ ! -e "$1" ]; then
+    # don't copy, orig file not exists
+    return
+  fi
+  if [ ! -e "$DESTDIR/$1" ]; then
+    # check if other script have put this file in $DESTDIR
+    cpifexists "$1" "$2"
+  fi
+}
+
+
+cpudev /lib/udev/write_cd_rules      /lib/udev
 
 # DON'T COPY write_net_rules, it will hang trying to create new persistent rules !!!
-#[ -f /lib/udev/write_net_rules ] && cpifexists /lib/udev/write_net_rules   /lib/udev
+#cpudev /lib/udev/write_net_rules    /lib/udev
 
-[ -f /lib/udev/udev_run_devd ]    && cpifexists /lib/udev/udev_run_devd      /lib/udev
-[ -f /lib/udev/udev_run_hotplugd ] && cpifexists /lib/udev/udev_run_hotplugd   /lib/udev
-[ -f /lib/udev/logger.agent ]     && cpifexists /lib/udev/logger.agent       /lib/udev
+cpudev /lib/udev/udev_run_devd       /lib/udev
+cpudev /lib/udev/udev_run_hotplugd   /lib/udev
+cpudev /lib/udev/logger.agent        /lib/udev
 
 
 # new udev > 111
-[ -f /lib/udev/rule_generator.functions ]  && cpifexists /lib/udev/rule_generator.functions      /lib/udev
+cpudev /lib/udev/rule_generator.functions      /lib/udev
 
-#[ -f $DESTDIR/etc/udev/rules.d/70-persistent-net.rules ] && rm -f /etc/udev/rules.d/70-persistent-net.rules
+# SATA cdroms (thanks to vidal_joshur at gva dot es for patch )
+cpudev /lib/udev/cdrom_id       /lib/udev
+cpudev /lib/udev/scsi_id        /lib/udev
+cpudev /etc/udev/rules.d/60-symlinks.rules    /etc/udev/rules.d/
+
+

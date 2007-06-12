@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.79.11) unstable; urgency=low
+
+  * debian/tcos-usplash.postinst:
+    - Change priority from 30 to 5 to not overwrite ubuntu default usplash theme
+  * hooks-addons/03udev2:
+    - Copy some more files to make work SATA cdrom.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 12 Jun 2007 12:16:36 +0200
+
 initramfs-tools-tcos (0.79.10) unstable; urgency=low
 
   * conf/tcos.conf:
