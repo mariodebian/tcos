@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.80.2) unstable; urgency=low
+
+  * bin/tryXorg.sh:
+    - Xorg log is Xorg.0.log, not Xorg.log
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 13 Jun 2007 12:32:14 +0200
+
 initramfs-tools-tcos (0.80.1) unstable; urgency=low
 
   * conf/xorg.conf.tpl:

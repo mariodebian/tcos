@@ -25,7 +25,7 @@ while [ $counter -le $MAX_XORG_RETRY ]; do
  # start Xorg at vt7 to avoid getty keyboard conflicts
  Xorg vt7 ${TCOS_XORG_OPTS} > /dev/null 2>&1
  counter=$((counter+1))
- [ -f /var/log/Xorg.log ] && mv /var/log/Xorg.log /var/log/Xorg.log.fail.${counter}
+ [ -f /var/log/Xorg.0.log ] && mv /var/log/Xorg.0.log /var/log/Xorg.log.fail.${counter}
 done
 
 # try to autoconfigure Xorg
