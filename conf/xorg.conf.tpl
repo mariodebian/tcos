@@ -49,7 +49,7 @@ EndSection
 
 Section "InputDevice"
 	Identifier	"Generic Keyboard"
-	Driver		"keyboard"
+	Driver		"kbd"
 	Option		"CoreKeyboard"
 	Option		"XkbRules"	"xorg"
 	Option		"XkbModel"	"__xkbmodel__"
