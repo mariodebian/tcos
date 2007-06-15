@@ -60,9 +60,11 @@ echo "Error launching Xorg, check /var/log/Xorg.0.log for errors"
 echo ""
 echo "   Is font server (xfs) running at ${FONT_SERVER}?"
 echo ""
-echo "This is the last lines of Xorg.0.log"
+echo "   These are the lasts lines of Xorg.0.log"
 echo ""
 tail /var/log/Xorg.0.log
+echo "---------------------------------------------------"
+grep EE /var/log/Xorg.0.log
 echo ""
 
 exit 1

@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.80.4) unstable; urgency=low
+
+  * bin/tryXorg.sh:
+    - Fix typo this => these...
+  * conf/xorg-tcos.conf:
+    - Remove this obsolete file
+  * Add HACKING.en, close ticket #1 (thanks to Andres Jimenez gandresin at gmail)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 15 Jun 2007 12:45:15 +0200
+
 initramfs-tools-tcos (0.80.3) unstable; urgency=low
 
   * conf/xorg.conf.tpl:

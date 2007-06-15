@@ -1,0 +1,85 @@
+###############################################
+
+   Adding extra software to TCOS initramfs
+
+###############################################
+
+ TCOS is a set of scripts that copies binaries and 
+ libraries in a boot image file. It is posible to
+ add more utilities as they are needed.
+
+ Use /etc/tcos/hacking/template as a template
+ 
+ HOW-TO add specific applications to the generate 
+ image:
+
+ Add display (image viewer => ImageMagick)
+
+ Create a file in /etc/tcos/hacking/
+
+ ####### /etc/tcos/hacking/display ##############
+ # TCOS script for display command
+ 
+ cpifexists /usr/bin/display /usr/bin
+
+ ##############################################
+
+ Helpers that can be used:
+
+ * cpifexits [BINARY] [PATH_DESTINATION]
+
+ Ayudantes que podemos usar:
+
+ * cpifexits [BINARY] [PATH_DESTINATION]
+
+    It copies a BINARY designated by its full path 
+    in PATH_DESTINATION inside the initramfs 
+
+    This function also copies any  dependent library.
+    
+    Example:
+      cpifexists /sbin/fdisk /sbin/
+
+   Internally it runs:
+   $ ldd /sbin/fdisk
+        linux-gate.so.1 =>  (0xffffe000)
+        libc.so.6 => /lib/tls/libc.so.6 (0xb7e3e000)
+        /lib/ld-linux.so.2 (0xb7f8f000)
+
+  And the linked libraries are copied.
+ NOTE: It will try NOT copying any library related to /lib/tls/
+
+ Regular files can be copied too:
+      cpifexists /etc/hosts.allow /etc/
+ 
+
+ * copydir [DIR]  [PATH_DESTINATION]
+    
+    It copies a whole directory in the initramfs file,
+    being equivalent to run cp -ra DIR $INITRAMFS/$DESTINATION
+    
+    Example:
+       copydir /etc/dropbear/ /etc/
+
+ * stat_before
+
+     It calculates the initramfs file's size for state_after 
+     function 
+
+ * stat_after "TEXT"
+
+    It calculates the difference between the current initramfs 
+    file's size and the one state_before calculated and prints
+    that difference on screen.
+
+    Full example:
+
+       stat_before
+       cpifexists /usr/bin/display /usr/bin/
+       stat_after "ImageMagick display"
+
+     This copies the BIANRY (and linked libraries) in the 
+     initramfs and calculates the added size, printing on
+     screen:
+
+     => Package ImageMagick display get XXX Kb.
