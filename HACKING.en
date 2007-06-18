@@ -10,12 +10,12 @@
 
  Use /etc/tcos/hacking/template as a template
  
- HOW-TO add specific applications to the generate 
+ HOW-TO add specific applications to the generated 
  image:
 
  Add display (image viewer => ImageMagick)
 
- Create a file in /etc/tcos/hacking/
+ Create a file in /etc/tcos/hacking/ containing this:
 
  ####### /etc/tcos/hacking/display ##############
  # TCOS script for display command
@@ -78,8 +78,8 @@
        cpifexists /usr/bin/display /usr/bin/
        stat_after "ImageMagick display"
 
-     This copies the BIANRY (and linked libraries) in the 
+     This copies the BINARY (and linked libraries) in the 
      initramfs and calculates the added size, printing on
      screen:
 
-     => Package ImageMagick display get XXX Kb.
+     => Package ImageMagick display got XXX Kb.

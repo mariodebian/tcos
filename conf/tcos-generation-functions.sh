@@ -50,7 +50,7 @@ stat_after () {
   #diff_size=$(echo $((size2 -size1)) )
   diff_size=$(echo $size2 $size1 | awk '{print $1 - $2}' )
   if [ ${TCOS_DEBUG} ]; then
-     _echo "  Package $1 get ${diff_size} Kb."
+     _echo "  Package $1 got ${diff_size} Kb."
   fi
 }
 
