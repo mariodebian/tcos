@@ -7,10 +7,13 @@ cpifexists /sbin/mkswap /sbin/
 # fdisk for fstab generation
 cpifexists /sbin/fdisk /sbin/
 
+# disktype detection (for fstab too)
+[ -x /usr/bin/disktype ] && cpifexists /usr/bin/disktype /usr/bin/
+
+
 if [ $TCOS_INSTALLER ]; then
 
   cpifexists /usr/bin/whiptail /usr/bin
-  #cpifexists /usr/bin/extlinux /usr/bin
   cpifexists /usr/bin/syslinux /usr/bin
   cpifexists /usr/bin/mcopy /usr/bin
   cpifexists /usr/bin/mattrib /usr/bin

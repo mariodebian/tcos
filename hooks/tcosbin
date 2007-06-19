@@ -70,17 +70,15 @@ cpifexists /etc/localtime        /etc/
 cpifexists /etc/adjtime        /etc/
 
 
-#for addon in $(find ${TCOS_DIR}/hooks-addons/ -type f | grep -v ".svn" | grep -v "dpkg" | sort) ; do
 
 # load hooks-addons (small files with group of packages inside)
-_files=$(ls -1 ${TCOS_DIR}/hooks-addons/ | grep -v -e dpkg -e .svn)
+_files=$(ls -1 ${TCOS_DIR}/hooks-addons/ | grep -v -e .dpkg -e .svn)
 for addon in $_files ; do
   #_echo "  LOADING: system addon: ${TCOS_DIR}/hooks-addons/${addon}"
   . ${TCOS_DIR}/hooks-addons/${addon}
 done
 
 # load hooks-addons (small files with group of packages inside)
-#for addon in $(find ${TCOS_CONF}/hooks-addons/ -type f | grep -v ".svn" | grep -v "dpkg" | sort) ; do
 
 _files=$(ls -1 ${TCOS_CONF}/hooks-addons/ | grep -v -e dpkg -e .svn)
 for addon in $_files ; do
@@ -90,7 +88,6 @@ done
 
 
 # read all files in ${TCOS_CONF}/hacking/ and load it ( personal files )
-#for hack in $(find ${TCOS_CONF}/hacking/ -type f | grep -v ".svn" | grep -v "dpkg" | sort) ; do 
 
 _files=$(ls -1 ${TCOS_CONF}/hacking/ | grep -v -e dpkg -e .svn)
 for hack in $_files ; do 
@@ -108,6 +105,11 @@ convert_links2files
 
 # usplash support
 mkdir -p $DESTDIR/usr/lib/usplash/
+
+# delete theme if exists
+[ -e $DESTDIR/usr/lib/usplash/usplash-artwork.so ] && \
+    rm -f $DESTDIR/usr/lib/usplash/usplash-artwork.so
+
 if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
   cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
 else
@@ -139,6 +141,11 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
 
   # usplash support
   mkdir -p $DESTDIR/usr/lib/usplash/
+
+  # delete theme if exists
+  [ -e $DESTDIR/usr/lib/usplash/usplash-artwork.so ] && \
+      rm -f $DESTDIR/usr/lib/usplash/usplash-artwork.so
+
   if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
     cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
   else

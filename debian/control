@@ -31,7 +31,7 @@ Architecture: any
 Depends: initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
          console-data, libnss-db, iftop, strace, twm, xterm, 
          dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, 
-         debootstrap, libltdl3, tinylogin, 
+         debootstrap, libltdl3, tinylogin, disktype, 
 	 debconf, grub, syslinux, squashfs-tools, mknbi, dropbear, 
 	 ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-tcosmonitor (<= 0.0.17), gentcos (<= 0.79.2)

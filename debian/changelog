@@ -1,3 +1,17 @@
+initramfs-tools-tcos (0.80.6) unstable; urgency=low
+
+  * User disktype to create a better /etc/fstab
+  * conf/tcos-run-functions.sh:
+    - Move get_filesystem() to this include
+  * scripts/tcos-bottom/05inittcos:
+    - Create fstab again with disktype info (disktype is in squashfs)
+  * scripts/tcos-top/50fstab:
+    - Clean and delete get_filesystem()
+  * hooks-addons/18tcos_hdd_installer:
+    - Add /usr/bin/disktype
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 19 Jun 2007 12:44:49 +0200
+
 initramfs-tools-tcos (0.80.5) unstable; urgency=low
 
   * Fix more typos, close ticket #2

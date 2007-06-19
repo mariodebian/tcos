@@ -17,8 +17,6 @@ prereqs)
 esac
 
 
-touch /etc/fstab
-
 quiet=n
 . /scripts/functions
 # if break=fstab STOP here
@@ -34,7 +32,6 @@ if [ ${uselocal} = 0 ]; then
   exit 0
 fi
 
-mkdir -p /dev/pts
 
 # To avoid fsck
 #touch ${rootmnt}/fastboot
@@ -48,8 +45,11 @@ sys             /sys            sysfs   defaults        0       0
 none		/dev/pts	devpts	gid=5,mode=620	0	0
 EOF
 
-_log "FSTAB Mount /dev/pts"
-mount /dev/pts >> /tmp/initramfs.debug 2>&1
+if [ ! -d /dev/pts ]; then
+  _log "FSTAB Mount /dev/pts"
+  mkdir -p /dev/pts
+  mount /dev/pts >> /tmp/initramfs.debug 2>&1
+fi
 
 #
 # Search local disks partitions
@@ -59,49 +59,6 @@ get_partitions ()
 	echo $(ls /dev/[sh]d[a-z]?* 2>/dev/null)
 }
 
-#
-# Check filesystem
-#
-get_filesystem ()
-{
-linea=$(/sbin/fdisk -l |grep $1 | sed s/*/XX/g)
-if [ "$(echo ${linea} | awk '{print $2}')" = "XX" ] ; then
- tipo=$(echo ${linea}| awk '{print $6}')
-else
- tipo=$(echo ${linea}| awk '{print $5}')
-fi
-# guadalinex use this, but in busybox don't work
-#disk=${1:0:8}
-#partition=${1:8}
-#tipo=$(sfdisk -c $disk $partition)
-case "$tipo" in
-  *83*)
-	echo "$1 ext3"
-	;;
-  82)
-	echo "$1 swap"
-	;;
-  b)
-	echo "$1 vfat"
-	;;
-  c)
-	echo "$1 vfat"
-	;;
-  e)
-	echo "$1 vfat"
-	;;
-  f)
-	echo "$1 extended"
-	;;
-  7)
-	echo "$1 ntfs"
-	;;
-  *)
-	echo "$1 auto"	
-	;;
-esac
-
-}
 
 #
 # Search for CD/DVDs
@@ -123,6 +80,7 @@ create_fstab ()
 	fi
 	partitions=$(get_partitions)
 	for part in $partitions; do
+	    # get_filesystem function is in /conf/tcos-run-functions.sh
 		entry=$(get_filesystem $part)
 		dev=$(echo $entry | cut -d ' ' -f 1 )
 		fs=$(echo $entry | cut -d ' ' -f 2 )
@@ -132,7 +90,7 @@ create_fstab ()
 			# extended partition
 			continue
 		else
-			mntpoint="/media/${dev#/dev/}"
+			mntpoint="/mnt/${dev#/dev/}"
 			mkdir -p $mntpoint
 			if [ "$fs" = "ntfs" ]; then
 				defaults="    defaults,ro,noauto,users,gid=disk        0       2"
@@ -144,32 +102,22 @@ create_fstab ()
 	num=0
 	cdroms=$(get_cdroms)
 	for cd in $cdroms; do
-		entry="/dev/${cd}        /media/cdrom${num}   udf,iso9660 ro,user,noauto  0       0"
-		mkdir -p /media/cdrom${num} >> /var/log/initramfs.debug 2>&1
+		entry="/dev/${cd}        /mnt/cdrom${num}   udf,iso9660 ro,user,noauto  0       0"
+		mkdir -p /mnt/cdrom${num} >> /var/log/initramfs.debug 2>&1
 		let num=num+1
 		echo $entry >> /etc/fstab
 	done
 	
 }
 
-get_device ()
-{
-	dev=$(grep /.dirs/dev /proc/mounts | cut -d " " -f 1)
-	echo $dev
-}
 
-log_begin_msg "Searching local disks (fstab)"
-create_fstab
-rm -f /etc/mtab
-cat /proc/mounts > /etc/mtab
-#mount -a  >> /tmp/initramfs.debug 2>&1
-swapon -a >> /tmp/initramfs.debug 2>&1
-#device=$(get_device)
-#mount $device >> /var/log/initramfs.debug 2>&1
-
-_log "FSTAB done"
-
-log_end_msg
+[ "$NO_MSG" = "" ] && log_begin_msg "Searching local disks (fstab)"
+  create_fstab
+  rm -f /etc/mtab
+  cat /proc/mounts > /etc/mtab
+  swapon -a >> /tmp/initramfs.debug 2>&1
+  _log "FSTAB done"
+[ "$NO_MSG" = "" ] && log_end_msg
 
 update_progress
 

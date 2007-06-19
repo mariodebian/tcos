@@ -254,3 +254,73 @@ mount_unionfs() {
    mount -t unionfs -o dirs=${ramdisk}=rw:${rofs}=ro unionfs ${rwfs} >> /tmp/initramfs.debug 2>&1
 }
 
+
+get_filesystem ()
+{
+line=$(/sbin/fdisk -l |grep $1 | sed s/*/XX/g)
+if [ "$(echo ${line} | awk '{print $2}')" = "XX" ] ; then
+ type=$(echo ${line}| awk '{print $6}')
+else
+ type=$(echo ${line}| awk '{print $5}')
+fi
+
+case "$type" in
+  *83*)
+     if [ -x /usr/bin/disktype ]; then
+         type2=$(disktype $1 2>/dev/null | grep "file system")
+         case "$type2" in
+           *ReiserFS*)
+    	        echo "$1 reiserfs"
+    	        ;;
+    	   *XFS*)
+    	        echo "$1 xfs"
+    	        ;;
+    	   *Ext3*)
+    	        echo "$1 ext3"
+    	        ;;
+    	   *Ext2*)
+    	        echo "$1 ext2"
+    	        ;;
+    	   *HFS*)
+    	        echo "$1 hfs"
+    	        ;;
+    	   *NTFS*)
+    	        echo "$1 ntfs"
+    	        ;;
+    	   *FAT*)
+    	        echo "$1 vfat"
+    	        ;;
+    	   *)
+    	        echo "$1 ext3"
+    	   ;;
+    	esac
+     else
+         echo "$1 ext3"
+     fi
+	;;
+  82)
+	echo "$1 swap"
+	;;
+  b)
+	echo "$1 vfat"
+	;;
+  c)
+	echo "$1 vfat"
+	;;
+  e)
+	echo "$1 vfat"
+	;;
+  f)
+	echo "$1 extended"
+	;;
+  7)
+	echo "$1 ntfs"
+	;;
+  *)
+	echo "$1 auto"
+	;;
+esac
+
+}
+
+
