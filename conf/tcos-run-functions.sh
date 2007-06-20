@@ -255,7 +255,55 @@ mount_unionfs() {
 }
 
 
-get_filesystem ()
+get_filesystem() {
+if [ -x /usr/bin/disktype ]; then
+    get_filesystem1 $1
+else
+    get_filesystem2 $1
+fi
+}
+
+get_filesystem1 ()
+{
+  type=$(disktype $1 2>/dev/null | grep "file system")
+  case "$type" in
+   *ReiserFS*)
+        echo "$1 reiserfs"
+        ;;
+   *XFS*)
+        echo "$1 xfs"
+        ;;
+   *Ext3*)
+        echo "$1 ext3"
+        ;;
+   *Ext2*)
+        echo "$1 ext2"
+        ;;
+   *HFS*)
+        echo "$1 hfs"
+        ;;
+   *NTFS*)
+        if [ -x /sbin/mount.ntfs-3g ]; then
+            echo "$1 ntfs-3g"
+        else
+          echo "$1 ntfs"
+        fi
+        ;;
+   *FAT16*)
+        echo "$1 vfat"
+        ;;     
+   *FAT*)
+        echo "$1 vfat"
+        ;;
+   *)
+        # retry with old method
+        get_filesystem2 $1
+   ;;
+esac
+}
+
+
+get_filesystem2 ()
 {
 line=$(/sbin/fdisk -l |grep $1 | sed s/*/XX/g)
 if [ "$(echo ${line} | awk '{print $2}')" = "XX" ] ; then
@@ -266,41 +314,7 @@ fi
 
 case "$type" in
   *83*)
-     if [ -x /usr/bin/disktype ]; then
-         type2=$(disktype $1 2>/dev/null | grep "file system")
-         case "$type2" in
-           *ReiserFS*)
-    	        echo "$1 reiserfs"
-    	        ;;
-    	   *XFS*)
-    	        echo "$1 xfs"
-    	        ;;
-    	   *Ext3*)
-    	        echo "$1 ext3"
-    	        ;;
-    	   *Ext2*)
-    	        echo "$1 ext2"
-    	        ;;
-    	   *HFS*)
-    	        echo "$1 hfs"
-    	        ;;
-    	   *NTFS*)
-                if [ -x /sbin/mount.ntfs-3g ]; then
-                  echo "$1 ntfs-3g"
-                else
-    	          echo "$1 ntfs"
-                fi
-    	        ;;
-    	   *FAT*)
-    	        echo "$1 vfat"
-    	        ;;
-    	   *)
-    	        echo "$1 ext3"
-    	   ;;
-    	esac
-     else
-         echo "$1 ext3"
-     fi
+     echo "$1 ext3"
 	;;
   82)
 	echo "$1 swap"
@@ -321,11 +335,11 @@ case "$type" in
 	echo "$1 extended"
 	;;
   7)
-        if [ -x /sbin/mount.ntfs-3g ]; then
-          echo "$1 ntfs-3g"
-        else
-          echo "$1 ntfs"
-        fi
+    if [ -x /sbin/mount.ntfs-3g ]; then
+        echo "$1 ntfs-3g"
+    else
+        echo "$1 ntfs"
+    fi
 	;;
   *)
 	echo "$1 auto"
