@@ -8,7 +8,7 @@ else
     mkdir -p $DESTDIR/usr/share/
     copydir  /usr/share/rdesktop/  /usr/share/
 
-    if [ -n ${TCOS_PULSEAUDIO} ] && [ -n ${TCOS_SOUND} ]; then
+    if [  ${TCOS_PULSEAUDIO} ] && [ ${TCOS_SOUND} ]; then
        # padsp pulseaudio support
        cpifexists /usr/bin/padsp            /usr/bin/
        cpifexists /usr/lib/libpulsedsp.so   /usr/lib/

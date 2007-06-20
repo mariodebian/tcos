@@ -6,6 +6,7 @@
 all:
 	if [ $(DISABLE_USPLASH) = 0 ]; then cd usplash && make; fi
 	cd debootstrap && make
+	cd daemonize   && make
 	cd hex2ascii   && make
 
 include common.mk
@@ -16,6 +17,7 @@ clean:
 	rm -f build-stamp configure-stamp
 	cd usplash && make clean
 	cd debootstrap && make clean
+	cd daemonize   && make clean
 	cd hex2ascii   && make clean
 
 gedit:
@@ -126,6 +128,7 @@ install:
 	install -m 644 bin/shfscommon.sh $(DESTDIR)$(TCOS_DIR)/inc/shfscommon.sh
 
 	cd debootstrap && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
+	cd daemonize   && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
 
 

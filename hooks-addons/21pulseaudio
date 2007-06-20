@@ -8,7 +8,7 @@
 #     or
 #  using this env var PULSE_SERVER="thin_client_hostname"
 
-if [ -n ${TCOS_PULSEAUDIO} ] && [ -n ${TCOS_SOUND} ]; then
+if [ ${TCOS_PULSEAUDIO} ] && [  ${TCOS_SOUND} ]; then
 
 # check for apps
 check1=0

@@ -73,12 +73,9 @@ get_cdroms ()
 #
 create_fstab ()
 {
-	if [ $(cat /proc/cmdline |grep rw| wc -l) = 0 ] ; then
-		defaults="    defaults,users,auto        0       2"
-	else
-		defaults="    ro,users,auto        0       2"
-	fi
-	partitions=$(get_partitions)
+        defaults="    defaults,noauto        0       2"
+	
+        partitions=$(get_partitions)
 	for part in $partitions; do
 	    # get_filesystem function is in /conf/tcos-run-functions.sh
 		entry=$(get_filesystem $part)
@@ -93,7 +90,7 @@ create_fstab ()
 			mntpoint="/mnt/${dev#/dev/}"
 			mkdir -p $mntpoint
 			if [ "$fs" = "ntfs" ]; then
-				defaults="    defaults,ro,noauto,users,gid=disk        0       2"
+				defaults="    defaults,ro,noauto        0       2"
 			fi
 			entry="${dev}	${mntpoint}	${fs}	${defaults}"
 		fi
@@ -102,7 +99,7 @@ create_fstab ()
 	num=0
 	cdroms=$(get_cdroms)
 	for cd in $cdroms; do
-		entry="/dev/${cd}        /mnt/cdrom${num}   udf,iso9660 ro,user,noauto  0       0"
+		entry="/dev/${cd}        /mnt/cdrom${num}   udf,iso9660 ro,noauto  0       0"
 		mkdir -p /mnt/cdrom${num} >> /var/log/initramfs.debug 2>&1
 		let num=num+1
 		echo $entry >> /etc/fstab

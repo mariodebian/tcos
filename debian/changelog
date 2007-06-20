@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.80.7) unstable; urgency=low
+
+  * hooks-addons/56rdesktop and hooks-addons/21pulseaudio:
+    - Fix TCOS_SOUND disable
+  * scripts/tcos-top/50fstab:
+    - Remove some old code, and mount all in /mnt/$DEVICE
+  * conf/tcos-run-functions.sh:
+    - If /sbin/mount.ntfs-3g is found return ntfs-3g filesystem
+  * daemonize:
+    - Wrapper to daemonize a process
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 20 Jun 2007 15:10:38 +0200
+
 initramfs-tools-tcos (0.80.6) unstable; urgency=low
 
   * User disktype to create a better /etc/fstab

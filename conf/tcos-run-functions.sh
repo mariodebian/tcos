@@ -285,7 +285,11 @@ case "$type" in
     	        echo "$1 hfs"
     	        ;;
     	   *NTFS*)
-    	        echo "$1 ntfs"
+                if [ -x /sbin/mount.ntfs-3g ]; then
+                  echo "$1 ntfs-3g"
+                else
+    	          echo "$1 ntfs"
+                fi
     	        ;;
     	   *FAT*)
     	        echo "$1 vfat"
@@ -313,8 +317,15 @@ case "$type" in
   f)
 	echo "$1 extended"
 	;;
+  5)
+	echo "$1 extended"
+	;;
   7)
-	echo "$1 ntfs"
+        if [ -x /sbin/mount.ntfs-3g ]; then
+          echo "$1 ntfs-3g"
+        else
+          echo "$1 ntfs"
+        fi
 	;;
   *)
 	echo "$1 auto"
