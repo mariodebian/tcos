@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.81.1) unstable; urgency=low
+
+  * New script get_filesystem wit 3 modes of work:
+    - udev vol_id
+    - disktype
+    - fdisk
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 27 Jun 2007 20:08:17 +0200
+
 initramfs-tools-tcos (0.80.8) unstable; urgency=low
 
   * conf/tcos-run-functions.sh:

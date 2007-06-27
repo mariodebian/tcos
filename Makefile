@@ -115,10 +115,11 @@ install:
 	install -m 755 bin/gentcos            $(DESTDIR)/usr/sbin/gentcos
 	install -m 755 bin/tcos-gdm-autologin $(DESTDIR)/usr/sbin/tcos-gdm-autologin
 
-	install -m 755 bin/configurexorg $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 bin/seq           $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 bin/installer.sh  $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 bin/tryXorg.sh    $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/configurexorg   $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/seq             $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/get_filesystem  $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/installer.sh    $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/tryXorg.sh      $(DESTDIR)/$(TCOS_BINS)/
 
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 

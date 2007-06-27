@@ -185,7 +185,7 @@ update_progress() {
   sum=${1}
   if [ "${sum}" = "" ]; then
     # increase progressbar step
-    sum=2
+    sum=3
   fi
   # /tmp/progress is created in scripts/tcos-top/10foo with value=5
   old=$(cat /tmp/progress)
@@ -252,100 +252,6 @@ mount_unionfs() {
    _log "UNIONFS Mount with unionfs ${rofs} and ${ramdisk} to create ${rwfs} in rw mode"
    # mount union
    mount -t unionfs -o dirs=${ramdisk}=rw:${rofs}=ro unionfs ${rwfs} >> /tmp/initramfs.debug 2>&1
-}
-
-
-get_filesystem() {
-if [ -x /usr/bin/disktype ]; then
-    get_filesystem1 $1
-else
-    get_filesystem2 $1
-fi
-}
-
-get_filesystem1 ()
-{
-  type=$(disktype $1 2>/dev/null | grep "file system")
-  case "$type" in
-   *ReiserFS*)
-        echo "$1 reiserfs"
-        ;;
-   *XFS*)
-        echo "$1 xfs"
-        ;;
-   *Ext3*)
-        echo "$1 ext3"
-        ;;
-   *Ext2*)
-        echo "$1 ext2"
-        ;;
-   *HFS*)
-        echo "$1 hfs"
-        ;;
-   *NTFS*)
-        if [ -x /sbin/mount.ntfs-3g ]; then
-            echo "$1 ntfs-3g"
-        else
-          echo "$1 ntfs"
-        fi
-        ;;
-   *FAT16*)
-        echo "$1 vfat"
-        ;;     
-   *FAT*)
-        echo "$1 vfat"
-        ;;
-   *)
-        # retry with old method
-        get_filesystem2 $1
-   ;;
-esac
-}
-
-
-get_filesystem2 ()
-{
-line=$(/sbin/fdisk -l |grep $1 | sed s/*/XX/g)
-if [ "$(echo ${line} | awk '{print $2}')" = "XX" ] ; then
- type=$(echo ${line}| awk '{print $6}')
-else
- type=$(echo ${line}| awk '{print $5}')
-fi
-
-case "$type" in
-  *83*)
-     echo "$1 ext3"
-	;;
-  82)
-	echo "$1 swap"
-	;;
-  b)
-	echo "$1 vfat"
-	;;
-  c)
-	echo "$1 vfat"
-	;;
-  e)
-	echo "$1 vfat"
-	;;
-  f)
-	echo "$1 extended"
-	;;
-  5)
-	echo "$1 extended"
-	;;
-  7)
-    if [ -x /sbin/mount.ntfs-3g ]; then
-        echo "$1 ntfs-3g"
-    else
-        echo "$1 ntfs"
-    fi
-	;;
-  *)
-	echo "$1 auto"
-	;;
-esac
-
 }
 
 

@@ -77,7 +77,7 @@ create_fstab ()
 	
         partitions=$(get_partitions)
 	for part in $partitions; do
-	    # get_filesystem function is in /conf/tcos-run-functions.sh
+	    # get_filesystem is a script in /bin
 		entry=$(get_filesystem $part)
 		dev=$(echo $entry | cut -d ' ' -f 1 )
 		fs=$(echo $entry | cut -d ' ' -f 2 )

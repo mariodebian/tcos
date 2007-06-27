@@ -60,14 +60,16 @@ cpifexists /etc/debian_version  /etc/
 # seq script
 cpifexists ${TCOS_BINS}/seq /bin
 
+# get_filesystem
+cpifexists ${TCOS_BINS}/get_filesystem /bin
 
 # LIBRARIES
 cpifexists /sbin/ldconfig    /sbin/
-[ -f /etc/ld.so.conf ] && cpifexists /etc/ld.so.conf       /etc/
+[ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/
 [ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
 
-cpifexists /etc/localtime        /etc/
-cpifexists /etc/adjtime        /etc/
+cpifexists /etc/localtime  /etc/
+cpifexists /etc/adjtime    /etc/
 
 
 
