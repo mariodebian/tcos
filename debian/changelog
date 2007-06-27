@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.81.2) unstable; urgency=low
+
+  * Install get_filesystem in initramfs-tools-tcos package
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 27 Jun 2007 22:39:22 +0200
+
 initramfs-tools-tcos (0.81.1) unstable; urgency=low
 
   * New script get_filesystem wit 3 modes of work:

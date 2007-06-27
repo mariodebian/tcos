@@ -21,6 +21,7 @@ usr/share/initramfs-tools-tcos/tcos.conf
 usr/lib/tcos/configurexorg
 usr/lib/tcos/tryXorg.sh
 usr/lib/tcos/seq
+usr/lib/tcos/get_filesystem
 usr/lib/tcos/hex2ascii
 usr/lib/tcos/installer.sh
 usr/lib/tcos/pkgdetails

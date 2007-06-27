@@ -11,6 +11,7 @@ Depends: initramfs-tools-tcos (= ${Source-Version}) , tcos-usplash (= ${Source-V
 	 tcos-server-utils (= ${Source-Version}), ${misc:Depends}, ${shlibs:Depends}
          atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcos-tcosmonitor, tcosmonitor, 
          aumix, pulseaudio, pulseaudio-utils, x11vnc, busybox, libasound2-plugins, xfs,
+         mtools
 Recommends: pulseaudio-esound-compat, ltspfsd, ltspfs
 Conflicts: nvidia-glx, nvidia-glx-legacy, fglrx-driver
 Description: new thin client implementation
