@@ -44,7 +44,7 @@ if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
    echo "root:${TCOS_ROOT_PASSWD}" | chpasswd  2>&1 >/dev/null
  log_end_msg
 else
- _log "INITTCOS not updating root passwd, ussing generation root passwd"
+ _log "INITTCOS not updating root passwd, using generation root passwd"
 fi
 
 ###############################################################

@@ -32,7 +32,6 @@ if [ "$(cat /tmp/less_ram)" = "0" ]; then
   exit 0
 fi
 
-modprobe -q unionfs 2>&1 >> /tmp/initramfs.debug
 
 
 # if use NFS try to mount:

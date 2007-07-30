@@ -246,22 +246,9 @@ chmod +x $DESTDIR/sbin/killX
 
 cat <<EOF > $DESTDIR/sbin/restartxorg
 #!/bin/sh
+
 killall Xorg 2>/dev/null
-sleep 1
-. /conf/mysettings.conf
-if [ "\${xsession}" = "local" ]; then
-  startlocalx &
-elif [ "\${xsession}" = "XDMCP" ]; then
-  startremotex &
-elif [ "\${xsession}" = "sshX" ]; then
-  startsshx &
-elif [ "\${xsession}" = "FreeNX" ]; then
-  startnx &
-elif [ "\${xsession}" = "rDesktop" ]; then
-  startrdesktop &
-else
-  startx &
-fi
+
 EOF
 chmod +x $DESTDIR/sbin/restartxorg
 

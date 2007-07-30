@@ -44,7 +44,7 @@ Description: tools for generating a thin client bootable image: TCOS
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
  unpacks that archive into ram, mounts and uses it as initial root file system.
  From there thin client configure some hardware, download extra tools 
- ( /usr dir ) and connect to remote server ussing XMDCP, SSH -X, FreeNX, 
+ ( /usr dir ) and connect to remote server using XMDCP, SSH -X, FreeNX, 
  rDesktop...
  .
  TCOS Thin client support for initramfs-tools.

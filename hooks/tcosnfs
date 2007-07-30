@@ -108,5 +108,6 @@ EOF
 
 
 manual_add_modules unionfs
+manual_add_modules aufs
 
 fi

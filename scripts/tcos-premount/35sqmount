@@ -39,11 +39,6 @@ if [ ! -z $TCOS_DISABLE_SQUASHFS ]; then
 fi
 
 
-# load modules
-modprobe -q loop >> /tmp/initramfs.debug 2>&1
-modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
-modprobe -q unionfs >> /tmp/initramfs.debug 2>&1
-
 
 mnt_usr=${download_dir}/usr.squashfs
 allmodules=${download_dir}/allmodules.squashfs
@@ -129,10 +124,15 @@ fi
 ##############################################
 
 
+if [ ! -e /dev/loop0 ] && [ ! -e /dev/loop1 ]; then
+  for NUM in $(seq 0 8) ; do 
+    mknod /dev/loop$NUM b 7 $NUM 
+  done
+fi
 # wait for /dev/loop* devices creation (ubuntu is too slow)
-while [ ! -e /dev/loop0 ] && [ ! -e /dev/loop1 ]; do
-     sleep 1
-done
+#while [ ! -e /dev/loop0 ] && [ ! -e /dev/loop1 ]; do
+#     sleep 1
+#done
 
 
 

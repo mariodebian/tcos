@@ -1,7 +1,7 @@
 all: usplash
 
 clean:
-	rm -f *.o *.so usplash-tcos.so usplash-artwork.so usplash-artwork.c pngtobogl
+	rm -f *.o *.so *.lo usplash-tcos.so usplash-artwork.so usplash-artwork.c pngtobogl 
 
 
 usplash:

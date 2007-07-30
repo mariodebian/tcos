@@ -26,6 +26,7 @@ usr/lib/tcos/hex2ascii
 usr/lib/tcos/installer.sh
 usr/lib/tcos/pkgdetails
 usr/lib/tcos/daemonize
+usr/lib/tcos/print_server
 usr/sbin/gentcos
 var/lib/tcos/*
 etc/tcos/pxelinux.cfg.tpl

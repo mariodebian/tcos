@@ -28,7 +28,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-	-$(MAKE) clean
+	$(MAKE) clean
 
 	dh_clean 
 
@@ -45,6 +45,7 @@ install: build
 	install -m 644 debian/bug-control $(CURDIR)/debian/tmp/usr/share/bug/tcos/control
 
 	dh_link /usr/lib/syslinux/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
+	find $(CURDIR)/debian/tmp -type d -name ".svn" | xargs rm -rf --
 
 
 

@@ -124,6 +124,9 @@ if [ "${TCOS_ENV_DISABLE_SQUASHFS}" != "" ]; then
   TCOS_DISABLE_SQUASHFS=$TCOS_ENV_DISABLE_SQUASHFS
 fi
 
+MKSQUASHFS=mksquashfs
+[ -x /usr/bin/mksquashfs ]  && MKSQUASHFS=/usr/bin/mksquashfs
+[ -x /usr/sbin/mksquashfs ] && MKSQUASHFS=/usr/sbin/mksquashfs
 
 
 if [ -z $TCOS_DISABLE_SQUASHFS ]; then
@@ -135,7 +138,7 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
   SQUASHFS_FILE="usr${TCOS_SUFFIX}-${version}.squashfs"
   _echo "     Creating ${SQUASHFS_FILE} of /usr"
   mkdir -p $DESTDIR/mnt/tmp
-  /usr/sbin/mksquashfs $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /dev/null 2>&1
+  $MKSQUASHFS $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /dev/null 2>&1
   
   # mksquashfs create files with 700 rights, change to 644
   chmod 644 $DESTDIR/mnt/tmp/${SQUASHFS_FILE}
@@ -318,7 +321,7 @@ if [ $TCOS_ALL_MODULES ]; then
   depmod -ae ${version}
   _echo "     Creating allmodules-${version}.squashfs file"
   mkdir -p $DESTDIR/mnt/tmp > /dev/null 2>&1
-  mksquashfs /lib/modules/${version}/ $DESTDIR/mnt/tmp/allmodules-${version}.squashfs > /dev/null 2>&1
+  $MKSQUASHFS /lib/modules/${version}/ $DESTDIR/mnt/tmp/allmodules-${version}.squashfs > /dev/null 2>&1
   # mksquashfs create files with 700 rights, change to 644
   chmod 644 ${DESTDIR}/mnt/tmp/allmodules-${version}.squashfs
   _echo "    Moving allmodules-${version}.squashfs to ${TFTP_DIR}"

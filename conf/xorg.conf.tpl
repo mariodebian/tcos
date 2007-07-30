@@ -126,6 +126,15 @@ Section "DRI"
 	Mode	0666
 EndSection
 
+#Section "ServerFlags"
+#    Option      "blank time"    "0"
+#
+#     # DPMS options
+#     Option      "standby time"  "5"
+#     Option      "suspend time"  "10"
+#     Option      "off time"      "0"
+#EndSection
+
 __dontzap__
 
 #xdriver=__xdriver__

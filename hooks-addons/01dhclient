@@ -26,12 +26,11 @@ if [ ! -f /sbin/dhclient ]; then
 
 elif [ -f /sbin/dhclient3 ]; then
 
- _echo ""
- _echo "    WARNING: dhcp3-client package support is very bad,"
- _echo "             please use dhcp-client instead"
- _echo ""
-
-# exit 1
+ #_echo ""
+ #_echo "    WARNING: dhcp3-client package support is very bad,"
+ #_echo "             please use dhcp-client instead"
+ #_echo ""
+ # exit 1
 
 
  copydir /etc/dhcp3                /etc/

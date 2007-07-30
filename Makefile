@@ -7,6 +7,7 @@ all:
 	if [ $(DISABLE_USPLASH) = 0 ]; then cd usplash && make; fi
 	cd debootstrap && make
 	cd daemonize   && make
+	cd printer     && make
 	cd hex2ascii   && make
 
 include common.mk
@@ -18,6 +19,7 @@ clean:
 	cd usplash && make clean
 	cd debootstrap && make clean
 	cd daemonize   && make clean
+	cd printer     && make clean
 	cd hex2ascii   && make clean
 
 gedit:
@@ -130,6 +132,7 @@ install:
 
 	cd debootstrap && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd daemonize   && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
+	cd printer     && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
 
 

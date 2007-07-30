@@ -6,28 +6,108 @@ It was downloaded from:
 
 Author: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
 
-Copyright: 2005 - 2007 Mario Izquierdo
-
 Homepage:
      http://www.tcosproject.org
 
-License:
+Licenses:
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License.
+    All files except next exceptions are GPL:
+         2005 - 2007 Mario Izquierdo <mariodebian@gmail.com>
+         
+         This program is free software; you can redistribute it and/or modify
+         it under the terms of the GNU General Public License as published by
+         the Free Software Foundation; either version 2 of the License.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+         This program is distributed in the hope that it will be useful,
+         but WITHOUT ANY WARRANTY; without even the implied warranty of
+         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+         GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License with
-  the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
-  if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+         You should have received a copy of the GNU General Public License with
+         the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
+         if not, write to the Free Software Foundation, Inc., 59 Temple Place,
+       
+    debootstrap/pkgdetails.c:
+    
+        Copyright (c) 2001-2005 Anthony Towns
+
+        Permission is hereby granted, free of charge, to any person obtaining
+        a copy of this software and associated documentation files (the
+        "Software"), to deal in the Software without restriction, including
+        without limitation the rights to use, copy, modify, merge, publish,
+        distribute, sublicense, and/or sell copies of the Software, and to
+        permit persons to whom the Software is furnished to do so, subject to
+        the following conditions:
+
+        The above copyright notice and this permission notice shall be
+        included in all copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+        EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+        MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+        IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+        CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+        TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+        SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    
+    bogl bdf font file have the following licence:
+    
+        Copyright 1984-1989, 1994 Adobe Systems Incorporated.
+        Copyright 1988, 1994 Digital Equipment Corporation.
+        
+        Adobe is a trademark of Adobe Systems Incorporated which may be
+        registered in certain jurisdictions.
+        Permission to use these trademarks is hereby granted only in
+        association with the images described in this file.
+        
+        Permission to use, copy, modify, distribute and sell this software
+        and its documentation for any purpose and without fee is hereby
+        granted, provided that the above copyright notices appear in all
+        copies and that both those copyright notices and this permission
+        notice appear in supporting documentation, and that the names of
+        Adobe Systems and Digital Equipment Corporation not be used in
+        advertising or publicity pertaining to distribution of the software
+        without specific, written prior permission.  Adobe Systems and
+        Digital Equipment Corporation make no representations about the
+        suitability of this software for any purpose.  It is provided "as
+        is" without express or implied warranty.
+
+
+
+    usplash/0.2/bogl.h and usplash/0.2/pngtobogl.c:
+        BOGL - Ben's Own Graphics Library.
+        Written by Ben Pfaff <pfaffben@debian.org>
+        GNU GPL
+
+    usplash/0.2/usplash-theme.h usplash/0.3/usplash-theme.h:
+        Copyright © 2006 Canonical Ltd.
+        Copyright © 2006 Dennis Kaarsemaker <dennis@kaarsemaker.net>     
+
+
+    usplash/0.3/tcos-usplash-theme.c:
+        Based on work of:
+        Copyright (c) 2006 Petter Reinholdtsen
+
+    usplash/0.4/usplash-tcos.c
+        usplash-tcos.c based on eft-theme.c
+        Copyright © 2006 Dennis Kaarsemaker <dennis@kaarsemaker.net>
+        Copyright © 2007 Mario Izquierdo (mariodebian) mariodebian dot gmail
+
+
+    usplash/0.4.1/*:
+        The build system, and theme code was written by:
+        David Härdeman <david@hardeman.nu>
+
+        Theme code based on the example-theme from the upstream usplash package by:
+        Dennis Kaarsemaker <dennis@kaarsemaker.net>
+
+        The art was based on:
+        Andre L.R. Ferreira <andrelrf@gmail.com>
+
+
 
 On Debian systems, the complete text of the GNU General Public
-License, version 2, can be found in /usr/share/common-licenses/GPL-2.
+License, version 2, can be found in /usr/share/common-licenses/GPL.
 
 The Debian packaging is (C) 2005, Mario Izquierdo (mariodebian) 
 <mariodebian@gmail.com> and is licensed under the GPL, see above.

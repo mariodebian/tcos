@@ -215,6 +215,29 @@ stat_after () {
   fi
 }
 
+mount_aufs() {
+  ramdisk=$1
+  rofs=$2
+  rwfs=$3
+  #
+  # example:
+  # mount_aufs /mnt/ram /.usr /usr
+  #               RAM      RO    RW
+  #
+  _log "AUFS Creating ramdisk ${ramdisk} of 2 Mb"
+   mkdir -p ${ramdisk} >> /tmp/initramfs.debug 2>&1
+   mount -t tmpfs -o "size=2m" tmpfs ${ramdisk} >> /tmp/initramfs.debug 2>&1
+
+   _log "AUFS Moving ${rwfs} squashfs to ${rofs}"
+   # move /usr
+   mkdir -p ${rofs} >> /tmp/initramfs.debug 2>&1
+   mount -o move ${rwfs} ${rofs}
+
+   _log "AUFS Mount with aufs ${rofs} and ${ramdisk} to create ${rwfs} in rw mode"
+   # mount aufs
+   mount -t aufs -o br:${ramdisk}:${rofs} none ${rwfs} >> /tmp/initramfs.debug 2>&1
+}
+
 mount_unionfs() {
   # DOCUMENTME nounionfs | disable unionfs from /usr mount point
   nounionfs=$(read_cmdline_var "nounionfs" "0")
@@ -224,6 +247,11 @@ mount_unionfs() {
   fi
   # if module not loaded exit :(
   if [ $(grep unionfs /proc/modules| wc -l) = 0 ]; then
+    if [ $(grep aufs /proc/modules| wc -l) != 0 ]; then
+      mount_aufs $1 $2 $3
+      return
+    fi
+    _log "UNIONFS ERROR mounting unionfs or aufs in rw mode"
     return
   fi
   # mount_unionfs()
@@ -242,6 +270,7 @@ mount_unionfs() {
   #
   _log "UNIONFS Creating ramdisk ${ramdisk} of 2 Mb"
    mkdir -p ${ramdisk} >> /tmp/initramfs.debug 2>&1
+   # not needed because / is a big ramdisk
    mount -t tmpfs -o "size=2m" tmpfs ${ramdisk} >> /tmp/initramfs.debug 2>&1
 
    _log "UNIONFS Moving ${rwfs} squashfs to ${rofs}"

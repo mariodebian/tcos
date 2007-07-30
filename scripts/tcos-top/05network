@@ -43,11 +43,11 @@ if [ -d /var/lib/dhcp3 ]; then
   # link to work with dhcp-client or dhcp3-client
   ln -s /var/lib/dhcp3 /var/lib/dhcp
 
-  chown root:dhcp /lib/dhcp3-client
+  chown root:dhcp /lib/dhcp3-client 2>/dev/null
   chown 775 /lib/dhcp3-client
   chmod 4744 /lib/dhcp3-client/call-dhclient-script
 
-  chown root:dhcp /etc/resolv.conf
+  chown root:dhcp /etc/resolv.conf 2>/dev/null
   chmod 644 /etc/resolv.conf
 fi
 

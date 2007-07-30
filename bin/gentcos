@@ -379,22 +379,40 @@ if [ $UID != 0 ]; then
  _exit 1
 fi
 
-NEED_MODULES="unionfs squashfs"
-
-for _module in ${NEED_MODULES}; do
-   have_module=$(modprobe --set-version="${TCOS_KERNEL}" -l ${_module} | wc -l)
-   if [ ${have_module} = 0 ] ; then
+alert_need_module() {
+       _mod=$1
       echo "ERROR:"
-      echo "    to build usable TCOS initramfs images need this kernel module: \"${_module}\""
+      echo "    to build usable TCOS initramfs images need this kernel module: \"${_mod}\""
       echo "    You can easy build it with next command as root:"
       echo ""
-      echo "   # apt-get install module-assistant linux-headers-${TCOS_KERNEL} ${_module}-source"
-      echo "   # m-a -k /usr/src/linux-headers-${TCOS_KERNEL} a-i ${_module}"
+      echo "   # apt-get install module-assistant linux-headers-${TCOS_KERNEL} ${_mod}-source"
+      echo "   # m-a -k /usr/src/linux-headers-${TCOS_KERNEL} a-i ${_mod}"
       echo ""
-      echo "   You can install ${_module}-modules-${TCOS_KERNEL} if package exists."
+      echo "   You can install ${_mod}-modules-${TCOS_KERNEL} if package exists."
 
       echo ""
       echo "NOTE: You can change kernel version in ${TCOS_CONF}/tcos.conf file"
+}
+
+NEED_MODULES="unionfs|aufs squashfs"
+
+for _module in ${NEED_MODULES}; do
+   have_module=0
+   if [ $(echo $_module | awk '{ if ($1 ~ "|") print "1" }') = "1" ]; then
+     for _mod in $(echo $_module | sed 's/|/ /g'); do
+       #_echo "searching for module $_mod"
+       have_one_module=$(modprobe --set-version="${TCOS_KERNEL}" -l ${_mod} | wc -l)
+       if [ ${have_one_module} != 0 ]; then
+          #_echo "have $_mod !!!"
+          have_module=1
+       fi
+     done
+   else
+     have_module=$(modprobe --set-version="${TCOS_KERNEL}" -l ${_module} | wc -l)
+   fi
+
+   if [ ${have_module} = 0 ] ; then
+      alert_need_module $_module
       _exit 1
    fi
 done

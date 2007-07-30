@@ -71,6 +71,16 @@ while [ ! -d /sys/class/net/eth0 ]; do
      sleep 1
 done
 
+modprobe -q loop     >> /tmp/initramfs.debug 2>&1
+modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
+
+if [ "$(read_cmdline_var "aufs" "0")" = "1" ] && [ $(modprobe aufs -q ; echo $?) != 1  ]; then
+  _log "BUSYBOX loaded aufs module"
+  modprobe -q aufs     >> /tmp/initramfs.debug 2>&1
+else
+  _log "BUSYBOX loaded unionfs module"
+  modprobe -q unionfs  >> /tmp/initramfs.debug 2>&1
+fi
 
 
 exit 0

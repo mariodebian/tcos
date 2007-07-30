@@ -1,0 +1,36 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+. /conf/tcos.conf
+. /scripts/functions
+. /conf/tcos-run-functions
+
+if [ $TCOS_PRINTER ]; then
+
+  [ -e /dev/lp0 ] && LP=/dev/lp0
+  [ -e /dev/lp1 ] && LP=/dev/lp1
+  [ -e /dev/usblp0 ] && LP=/dev/usblp0
+
+  # start print_server
+  /usr/bin/print_server $LP > /var/log/print_server.log 2>&1 &
+
+fi
+
+exit 0

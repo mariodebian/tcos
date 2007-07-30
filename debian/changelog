@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.82.1) unstable; urgency=low
+
+  * Add printer support TCOS_PRINT
+  * Add initial NBD support (don't work fully yet)
+  * Add support for using aufs module instead of unionfs
+  * mksquashfs go from /usr/sbin to /usr/bin in debian unstable, search for it...
+  * Try to put all copyright authors in debian/copyright
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 30 Jul 2007 17:31:24 +0200
+
 initramfs-tools-tcos (0.81.2) unstable; urgency=low
 
   * Install get_filesystem in initramfs-tools-tcos package

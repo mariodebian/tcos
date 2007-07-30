@@ -4,6 +4,8 @@
 # make sure that tcos.conf is not all readable
 chmod 600 /etc/tcos/tcos.conf
 
+# create file
+touch /etc/tcos/modules
 
 TFTPBOOT_DEFAULT=/var/lib/tftpboot
 TFTPBOOT=
