@@ -1,6 +1,12 @@
 # hooks addon SOUND support
 # need esound
 
+cat << EOF > $DESTDIR/sbin/startesd
+#!/bin/sh
+echo "STARTESD starting esound daemon" >> /tmp/initramfs.debug
+esd -public -tcp -public -noterminate -nobeeps &  >> /tmp/initramfs.debug 2>&1
+EOF
+chmod +x $DESTDIR/sbin/startesd
 
 function copy_esd_libs() {
     # esound libs
@@ -63,12 +69,6 @@ if [ $TCOS_SOUND ]; then
       mkdir -p $DESTDIR/etc/esound
       copy_libesd0
       copy_esd_libs
-      cat << EOF > $DESTDIR/sbin/startesd
-#!/bin/sh
-echo "STARTESD starting esound daemon" >> /tmp/initramfs.debug
-esd -public -tcp -public -noterminate -nobeeps &  >> /tmp/initramfs.debug 2>&1
-EOF
-      chmod +x $DESTDIR/sbin/startesd
 
     stat_after "ESound Daemon (sound server)"
 

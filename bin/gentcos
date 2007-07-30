@@ -398,7 +398,7 @@ NEED_MODULES="unionfs|aufs squashfs"
 
 for _module in ${NEED_MODULES}; do
    have_module=0
-   if [ $(echo $_module | awk '{ if ($1 ~ "|") print "1" }') = "1" ]; then
+   if [ "$(echo $_module | awk -F "|" '{print $2}')" != "" ]; then
      for _mod in $(echo $_module | sed 's/|/ /g'); do
        #_echo "searching for module $_mod"
        have_one_module=$(modprobe --set-version="${TCOS_KERNEL}" -l ${_mod} | wc -l)

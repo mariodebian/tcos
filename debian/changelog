@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.82.2) unstable; urgency=low
+
+  * Fix new gentcos test about unionfs|aufs module (crash without awk)
+  * Create /sbin/startesd always not only with cached esound
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 30 Jul 2007 23:39:09 +0200
+
 initramfs-tools-tcos (0.82.1) unstable; urgency=low
 
   * Add printer support TCOS_PRINT
