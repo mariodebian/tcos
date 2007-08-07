@@ -8,7 +8,7 @@ PACKAGE=initramfs-tools-tcos
 KERNEL_dapper="2.6.15-28-386"
 USPLASH_dapper=0.2
 
-KERNEL_edgy="2.6.17-11-generic"
+KERNEL_edgy="2.6.17-12-generic"
 USPLASH_edgy=0.4.1
 
 KERNEL_feisty="2.6.20-16-generic"
@@ -23,7 +23,7 @@ USPLASH_unstable=0.4.1
 KERNEL_experimental="2.6.22-1-486"
 USPLASH_experimental=0.4.1
 
-KERNEL_gutsy="2.6.22-6-generic"
+KERNEL_gutsy="2.6.22-9-generic"
 USPLASH_gutsy=0.4.1
 ##################################
 

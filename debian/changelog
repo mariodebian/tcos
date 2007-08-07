@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.82.3) unstable; urgency=low
+
+  * Update kernel versions (enable update && security mirrors in pbuilder)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 07 Aug 2007 13:32:34 +0200
+
 initramfs-tools-tcos (0.82.2) unstable; urgency=low
 
   * Fix new gentcos test about unionfs|aufs module (crash without awk)
