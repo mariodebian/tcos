@@ -72,18 +72,18 @@ int main(int argc, char **argv)
 			perror("accept");
 			continue;
 		}
-		printf("print_server: got connection from %s\n",inet_ntoa(their_addr.sin_addr));
-		FILE *dev;
+        printf("print_server: got connection from %s\n",inet_ntoa(their_addr.sin_addr));
+        FILE *dev;
         dev = fopen( argv[1] ,"wb");
 
-		while(1){
+        while(1){
             n_bytes=recv(new_fd, buf, BUFSIZE, 0);
             /*printf("nbytes=%d buf=%s\n", n_bytes, buf);*/
             if(n_bytes>0){
                 n_bytes=recv(new_fd, buf, n_bytes, 0);
                 fwrite(buf, n_bytes, 1, dev);
             }
-            
+
             /*if (n_bytes == 1 ) {
                 printf("catch EOF\n");
                 break;
@@ -94,9 +94,8 @@ int main(int argc, char **argv)
             }
             if(n_bytes==-1) printf("print_server error in recv: %d => %s",errno, strerror(errno));
         }
-		fclose(dev);
-
-		close(new_fd);
+        fclose(dev);
+        close(new_fd);
 	}
 
 	return 0;

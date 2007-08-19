@@ -221,7 +221,7 @@ mount_aufs() {
   rwfs=$3
   #
   # example:
-  # mount_aufs /mnt/ram /.usr /usr
+  # mount_aufs /mnt/ram   /.usr /usr
   #               RAM      RO    RW
   #
   _log "AUFS Creating ramdisk ${ramdisk} of 2 Mb"
@@ -245,7 +245,7 @@ mount_unionfs() {
      _log "UNIONFS disabled from cmdline"
      return
   fi
-  # if module not loaded exit :(
+  # if module not loaded try with aufs or exit :(
   if [ $(grep unionfs /proc/modules| wc -l) = 0 ]; then
     if [ $(grep aufs /proc/modules| wc -l) != 0 ]; then
       mount_aufs $1 $2 $3

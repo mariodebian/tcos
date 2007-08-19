@@ -11,9 +11,13 @@ function add_lp_modules() {
 
 if [ $TCOS_PRINTER ] ;then
     
-     stat_before
+    stat_before
 
+    if [ -e /usr/bin/lp_server ]; then
+       cpifexists /usr/bin/lp_server         /usr/bin/
+    else
        cpifexists ${TCOS_BINS}/print_server  /usr/bin/
+    fi
        add_lp_modules
 
     stat_after "Print server"

@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.82.4) unstable; urgency=low
+
+  * Add support for lp_server (if avalaible)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 12 Aug 2007 20:15:06 +0200
+
 initramfs-tools-tcos (0.82.3) unstable; urgency=low
 
   * Update kernel versions (enable update && security mirrors in pbuilder)

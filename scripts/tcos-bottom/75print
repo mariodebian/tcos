@@ -28,8 +28,16 @@ if [ $TCOS_PRINTER ]; then
   [ -e /dev/lp1 ] && LP=/dev/lp1
   [ -e /dev/usblp0 ] && LP=/dev/usblp0
 
-  # start print_server
-  /usr/bin/print_server $LP > /var/log/print_server.log 2>&1 &
+  if [ -e /usr/bin/lp_server ]; then
+
+     /usr/bin/lp_server -d $LP -r tcos-server > /var/log/lp_server.log 2>&1 &
+
+  elif [ -e /usr/bin/print_server ]; then
+
+     /usr/bin/print_server $LP > /var/log/print_server.log 2>&1 &
+
+  fi
+
 
 fi
 
