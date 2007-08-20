@@ -203,9 +203,9 @@ ramdisk_size () {
   rm initrd
   ramdisk_size=$(du -s . | awk '{print $1}')
   if [ -L ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs ]; then
-    squashfs_size=$(du -s ${TCOS_VAR}/files/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs | awk '{print $1}')
+    squashfs_size=$(du -s ${TCOS_VAR}/files/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs 2> /dev/null | awk '{print $1}')
   else
-    squashfs_size=$(du -s ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs | awk '{print $1}')
+    squashfs_size=$(du -s ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs 2> /dev/null | awk '{print $1}')
   fi
   echo "RAMDISK=${ramdisk_size}"
   echo "EXTERNAL_SQUASHFS=${squashfs_size}"

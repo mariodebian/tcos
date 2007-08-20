@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.82.5) unstable; urgency=low
+
+  * Add Subversion repository URL to debian/control.
+  * bin/gentcos:
+    - Ignore errors in ramdisk size
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 20 Aug 2007 18:28:27 +0200
+
 initramfs-tools-tcos (0.82.4) unstable; urgency=low
 
   * Add support for lp_server (if avalaible)
