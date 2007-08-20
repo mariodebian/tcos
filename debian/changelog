@@ -1,8 +1,9 @@
 initramfs-tools-tcos (0.82.4) unstable; urgency=low
 
   * Add support for lp_server (if avalaible)
+  * Change Debian etch kernel version to 2.6.18-5-486
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 12 Aug 2007 20:15:06 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 20 Aug 2007 11:08:59 +0200
 
 initramfs-tools-tcos (0.82.3) unstable; urgency=low
 

@@ -14,7 +14,7 @@ USPLASH_edgy=0.4.1
 KERNEL_feisty="2.6.20-16-generic"
 USPLASH_feisty=0.4.1
 
-KERNEL_etch="2.6.18-4-486"
+KERNEL_etch="2.6.18-5-486"
 USPLASH_etch=0.3
 
 KERNEL_unstable="2.6.22-1-486"
