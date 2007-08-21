@@ -1,7 +1,3 @@
-.\"Created with GNOME Manpages Editor Wizard
-.\"http://gmanedit.sourceforge.net
-.\"Sergio Rua <srua@gpul.org>
-.\"
 .TH tcos-gdm-autologin 1 "Nov 19, 2006" "tcos-gdm-autologin man page"
 
 .SH NAME
@@ -22,17 +18,17 @@ put in ip hostname pairs.
 
 .B --configure
   Set this vars in /etc/gdm/gdm.conf:
- [daemon]
- TimedLoginEnable=true
- TimedLogin=/usr/sbin/tcos-gdm-autologin|
- TimedLoginDelay=10
+     [daemon]
+     TimedLoginEnable=true
+     TimedLogin=/usr/sbin/tcos-gdm-autologin|
+     TimedLoginDelay=10
 
- [security]
- AllowRemoteAutoLogin=true
- DisallowTCP=false
- 
- [xdmcp]
- Enable=true
+     [security]
+     AllowRemoteAutoLogin=true
+     DisallowTCP=false
+     
+     [xdmcp]
+     Enable=true
 
 .B --add
  This option will ask for user/host names prefix to add to system config.
@@ -57,9 +53,18 @@ put in ip hostname pairs.
  This compressed file is used to create users home, with some personalized settings
  and files, Default is /root/skel.tar.gz, use this option to change path and filename.
 
+.B --nodelete
+ Not uncompress SKEL, put in gdm.conf something like this:
+
+     TimedLogin=/usr/sbin/tcos-gdm-autologin --nodelete|
+
+
 .B --help
  Some usage help about tcos-gdm-autologin
 
+.B --noaction
+ Not perform any action (for debug proposes only)
+ This option enables debug, too.
 
 .B --debug
  Show verbose output when running

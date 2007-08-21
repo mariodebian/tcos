@@ -40,24 +40,25 @@ kill_usplash() {
 
 kill_xorg() {
   log_begin_msg "Killing Xorg"
-    killall Xorg >/dev/null 2>&1
+    killall tryXorg >/dev/null 2>&1
+    killall Xorg    >/dev/null 2>&1
   log_end_msg
   update_progress "-5"
 }
 
 kill_all() {
   # FIXME better scan ps output
-  process="ltspfsd pulseaudio ivs dhclient esd"
+  process="ltspfsd print_server lp_server pulseaudio ivs dhclient esd"
   for proc in ${process}; do
      log_begin_msg "Stopping ${proc}"
-       killall $proc >  /dev/null 2>&1
+       killall $proc >  /dev/null 2>&1 &
      log_end_msg
      update_progress "-5"
   done
   # kill all with -9
   for proc in ${process}; do
      log_begin_msg "Force kill ${proc}"
-       killall -9 $proc >  /dev/null 2>&1
+       killall -9 $proc >  /dev/null 2>&1 &
      log_end_msg
      update_progress "-5"
   done
@@ -65,7 +66,7 @@ kill_all() {
 
 umount_swap() {
  log_begin_msg "Disable swap"
- swapoff -a
+   swapoff -a
  log_end_msg
  update_progress "-5"
 }

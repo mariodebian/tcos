@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.82.6) unstable; urgency=low
+
+  * bin/tcos-gdm-autologin:
+    - New option (--noaction) for debug proposes only
+    - If DISPLAY contains IP address instead of hostname try to convert using gethostbyaddr
+    - If /etc/gd/gdm.conf-custom exists use it.
+    - Update man page
+  * conf/tcos-run-functions.sh:
+    - Kill tryXorg too in kill_xorg()
+    - Kill process in background
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 21 Aug 2007 23:10:18 +0200
+
 initramfs-tools-tcos (0.82.5) unstable; urgency=low
 
   * Add Subversion repository URL to debian/control.

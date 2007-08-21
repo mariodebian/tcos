@@ -15,12 +15,14 @@ if [ $TCOS_PRINTER ] ;then
 
     if [ -e /usr/bin/lp_server ]; then
        cpifexists /usr/bin/lp_server         /usr/bin/
+       stat_after "Print server [lp_server]"
     else
        cpifexists ${TCOS_BINS}/print_server  /usr/bin/
+       stat_after "Print server [print_server]"
     fi
-       add_lp_modules
 
-    stat_after "Print server"
+    add_lp_modules
+
     
 fi
 # end of TCOS_PRINTER

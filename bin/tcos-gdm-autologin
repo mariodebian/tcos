@@ -38,6 +38,8 @@ Usage:
 import os, sys
 import getopt
 import popen2
+from socket import gethostbyaddr as gethostname
+
 GDM_CONF_FILE="/etc/gdm/gdm.conf"
 HOME_TEMPLATE="/root/skel.tar.gz"
 USER_GROUPS=["fuse"]
@@ -47,6 +49,7 @@ debug=False
 configure=False
 add=False
 delete_home=True
+noaction=False
 
 # this is the values needed to connect to GDM from thin clients
 TCOS_GDM={
@@ -79,10 +82,12 @@ def usage():
     print "    --skel=/foo/bar/file.tar.gz (skel template, default %s)" %(HOME_TEMPLATE)
     print "    --add         (add users and hostnames to system files)"
     print "    --nodelete    (NOT delete HOME and uncompress HOME_TEMPLATE)"
+    print "    --noaction    (NOT perform any action, enable debug)"
 
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["help", "debug", "configure", "skel=", "add", "nodelete"])
+    opts, args = getopt.getopt(sys.argv[1:], ":hd", 
+        ["help", "debug", "configure", "skel=", "add", "nodelete", "noaction"])
 except getopt.error, msg:
     print msg
     print "for command line options use tcos-gdm-autologin --help"
@@ -101,6 +106,10 @@ for o, a in opts:
         
     if o == "--nodelete":
         delete_home=False
+
+    if o == "--noaction":
+        noaction=True
+        debug=True
         
     if o == "--skel":
         HOME_TEMPLATE=a
@@ -136,12 +145,25 @@ class MyConfigObj (ConfigObj):
 ######## some functions #############
 
 def execmd(cmd):
-    print_debug(cmd)
+    if not noaction:
+        print_debug(cmd)
     try:
-        os.system(cmd)
+        if not noaction:
+            os.system(cmd)
+        else:
+            print_debug("NOACTION: execmd() cmd=%s" %(cmd) )
     except:
-        print("Error while exec: \"%s\"" %(cmd))
+        print("Error while exec: \"%s\"" %(cmd) )
 
+
+def is_ip(host):
+    try:
+        if len( host.split('.') ) == 4:
+            print_debug("is_ip: host=%s seems to be an IP address" %(host) )
+            return True
+        return False
+    except:
+        return False
     
 def show_login():
     username=None
@@ -152,6 +174,13 @@ def show_login():
     if host == "":
         print_debug ( "localdisplay no have username" )
         sys.exit(1)
+    if is_ip(host):
+        try:
+            host=gethostname(host)[0]
+            print_debug("show_login() convert IP to hostname host=%s" %(host))
+        except:
+            print_debug("show_login() error converting IP to hostname")
+    
     # read home for hostname:user
     f=open("/etc/passwd", "r")
     data=f.readlines()
@@ -165,8 +194,8 @@ def show_login():
             (username, home) = ( line.split(':')[0], line.split(':')[5] )
             
     if not username or not os.path.isdir(home):
-        print "no_username"
-        print_debug("ERROR, username=%s or home=%s not set." %(username, home))
+        print "no_username_configured_for_host_%s" %(host)
+        print_debug("ERROR, username=%s or home=%s not set or not found in /etc/passwd." %(username, home))
         sys.exit(1)
     
     # kill all user processes
@@ -179,6 +208,9 @@ def show_login():
 
 def read_exe_output(cmd):
     output=[]
+    if noaction:
+        print_debug("NOACTION: read_exe_output() cmd=%s" %(cmd) )
+        return output
     (stdout, stdin) = popen2.popen2(cmd)
     stdin.close()
     for line in stdout:
@@ -189,6 +221,10 @@ def read_exe_output(cmd):
 
 
 def restore_home(home, username):
+    if noaction:
+        print_debug("NOACTION: restore_home() home=%s username=%s" %(home,username) )
+        return
+    
     if not os.path.isfile(HOME_TEMPLATE):
         print_debug ( "skel don't exists: %s" %(HOME_TEMPLATE) )
         return
@@ -210,13 +246,23 @@ def restore_home(home, username):
     
     
 def SetVar(section, key, value):
-    config=MyConfigObj( os.path.realpath(GDM_CONF_FILE) )
+    GDMCONF=GDM_CONF_FILE
+    # try to edit correct file (Ubuntu use -custom file)
+    if os.path.isfile(GDM_CONF_FILE + "-custom"):
+        GDMCONF=GDM_CONF_FILE+"-custom"
+
+    if noaction:
+        print_debug("NOACTION: SetVar() gdm.conf=%s section=%s key=%s value=%s" 
+                    %(GDMCONF, section,key,value) )
+        return
+        
+    config=MyConfigObj( os.path.realpath(GDMCONF) )
     print_debug("setting section=[%s] key=%s value=%s" %(section, key, value) )
     config[section][key] = value
     try:
         config.write()
     except:
-        print "Error, can't write in %s" %(GDM_CONF_FILE)
+        print "Error, can't write in %s" %(GDMCONF)
 
 def SetAutologin():
     for section in TCOS_GDM:
@@ -224,6 +270,7 @@ def SetAutologin():
             for key in var:
                 value=var[key]
                 SetVar(section, key, value)
+    print ("gdm config file edited")
     return
 
 def AddUserAndHost():
@@ -243,9 +290,13 @@ def AddUserAndHost():
     print ""
     print "I will generate users and hostnames from \"%s\" to \"%s\"" %(hosts[0], hosts[-1])
     print "with ip adresses from %s to %s" %(ips[0], ips[-1])
-    print "and uncompress \"%s\" as HOME_TEMPLATE" %(HOME_TEMPLATE)
+    if os.path.isfile(HOME_TEMPLATE):
+        print "and uncompress \"%s\" as HOME_TEMPLATE" %(HOME_TEMPLATE)
+    else:
+        print "and **** I'M NOT USING ANY HOME TEMPLATE ****"
+        print "Cancel now and create %s using a template user" %(HOME_TEMPLATE)
     print ""
-    resp=raw_input("Are you sure you want this? [y/n] ")
+    resp=raw_input("Are you sure to continue? [y/n] ")
     if resp != "y" and resp != "Y":
         print "cancelled."
         return
@@ -267,7 +318,6 @@ def AddUser(username):
         execmd("adduser %s %s" %(username, group))
 
 def AddHost(hostname, ip):
-    #print ( "Adding host: %s %s" %(ip, hostname) )
     # check if exists
     f=open("/etc/hosts", "r")
     data=f.readlines()
@@ -279,9 +329,12 @@ def AddHost(hostname, ip):
             return
     try:
         print ("Adding %s %s" %(ip, hostname) )
-        f=open("/etc/hosts", "a")
-        f.write("%s\t%s\n" %(ip, hostname) )
-        f.close()
+        if noaction:
+            print_debug("NOACTION: AddHost() hostname=%s, ip=%s" %(hostname,ip) )
+        else:
+            f=open("/etc/hosts", "a")
+            f.write("%s\t%s\n" %(ip, hostname) )
+            f.close()
     except:
         print "Error editting /etc/hosts, are you root?"
         pass
