@@ -6,6 +6,10 @@ FSTYPE="unknow"
 NTFS_mode="ntfs"
 [ -x /sbin/mount.ntfs-3g ] && NTFS_mode="ntfs-3g"
 
+KLIBC_FSTYPE=/usr/lib/klibc/bin/fstype
+[ -x /bin/fstype ] && KLIBC_FSTYPE=/bin/fstype
+[ ! -x $KLIBC_FSTYPE ] && KLIBC_FSTYPE=/bin/not_found
+
 ONLY_FS=0
 if [ "$2" = "--only" ]; then
   ONLY_FS=1
@@ -49,42 +53,64 @@ if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] 
 fi
 
 
-# 2.- Try with disktype
-  type=$(disktype $DEVICE 2>/dev/null | grep "file system")
-  case "$type" in
-   *ReiserFS*)
-        FSTYPE="reiserfs"
-        ;;
-   *XFS*)
-        FSTYPE="xfs"
-        ;;
-   *Ext3*)
-        FSTYPE="ext3"
-        ;;
-   *Ext2*)
-        FSTYPE="ext2"
-        ;;
-   *HFS*)
-        FSTYPE="hfs"
-        ;;
+# 2.- Try with fstype
+if [ -x $KLIBC_FSTYPE ]; then
+FSTYPE=$($KLIBC_FSTYPE $DEVICE 2>&1 | awk -F "=" '/^FSTYPE/ {print $2}')
+ case $FSTYPE in
+  *unknow*)
+     FSTYPE="unknow"
+     ;;
+   *ntfs*)
+     FSTYPE=$NTFS_mode
+     ;;
    *NTFS*)
-        FSTYPE=$NTFS_mode
-        ;;
-   *FAT16*)
-        FSTYPE="vfat"
-        ;;     
-   *FAT*)
-        FSTYPE="vfat"
-        ;;
-   *)
-        FSTYPE="unknow"
-        ;;
-esac
+     FSTYPE=$NTFS_mode
+     ;;
+ esac   
 
-if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] ; then
-   echo_fs "$FSTYPE"
-   exit 0
+  if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] ; then
+    echo_fs "$FSTYPE"
+    exit 0
+  fi
+
 fi
+
+# 3.- Try with disktype
+#  type=$(disktype $DEVICE 2>/dev/null | grep "file system")
+#  case "$type" in
+#   *ReiserFS*)
+#        FSTYPE="reiserfs"
+#        ;;
+#   *XFS*)
+#        FSTYPE="xfs"
+#        ;;
+#   *Ext3*)
+#        FSTYPE="ext3"
+#        ;;
+#   *Ext2*)
+#        FSTYPE="ext2"
+#        ;;
+#   *HFS*)
+#        FSTYPE="hfs"
+#        ;;
+#   *NTFS*)
+#        FSTYPE=$NTFS_mode
+#        ;;
+#   *FAT16*)
+#        FSTYPE="vfat"
+#        ;;     
+#   *FAT*)
+#        FSTYPE="vfat"
+#        ;;
+#   *)
+#        FSTYPE="unknow"
+#        ;;
+#esac
+
+#if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] ; then
+#   echo_fs "$FSTYPE"
+#   exit 0
+#fi
 
 # 3.- Try with fdisk
 
@@ -97,33 +123,38 @@ fi
 
 case "$type" in
   *83*)
-        echo "$1 ext3"
+        FSTYPE="ext3"
 	;;
   82)
-	echo "$1 swap"
+	FSTYPE="swap"
 	;;
   b)
-	echo "$1 vfat"
+	FSTYPE="vfat"
 	;;
   c)
-	echo "$1 vfat"
+	FSTYPE="vfat"
 	;;
   e)
-	echo "$1 vfat"
+	FSTYPE="vfat"
 	;;
   f)
-	echo "$1 extended"
+	FSTYPE="extended"
 	;;
   5)
-	echo "$1 extended"
+	FSTYPE="extended"
 	;;
   7)
-        echo "$1 $NTFS_mode"
+        FSTYPE="$NTFS_mode"
 	;;
   *)
-	echo "$1 auto"
+	FSTYPE="auto"
 	;;
 esac
 
 
+if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] ; then
+   echo_fs "$FSTYPE"
+   exit 0
+fi
 
+exit 1

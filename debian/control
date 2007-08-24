@@ -11,9 +11,9 @@ Package: tcos
 Architecture: any
 Depends: initramfs-tools-tcos (= ${Source-Version}) , tcos-usplash (= ${Source-Version}),
 	 tcos-server-utils (= ${Source-Version}), ${misc:Depends}, ${shlibs:Depends}
-         atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcos-tcosmonitor, tcosmonitor, 
+         atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcosmonitor, 
          aumix, pulseaudio, pulseaudio-utils, x11vnc, busybox, libasound2-plugins, xfs,
-         mtools
+         mtools, ltspfs-client, ltspfs-server
 Recommends: pulseaudio-esound-compat, ltspfsd, ltspfs
 Conflicts: nvidia-glx, nvidia-glx-legacy, fglrx-driver
 Description: new thin client implementation
@@ -34,7 +34,7 @@ Architecture: any
 Depends: initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
          console-data, libnss-db, iftop, strace, twm, xterm, 
          dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, 
-         debootstrap, libltdl3, tinylogin, disktype, 
+         debootstrap, libltdl3, tinylogin, 
 	 debconf, grub, syslinux, squashfs-tools, mknbi, dropbear, 
 	 ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-tcosmonitor (<= 0.0.17), gentcos (<= 0.79.2)
