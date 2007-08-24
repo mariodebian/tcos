@@ -3,8 +3,9 @@ initramfs-tools-tcos (0.82.7) unstable; urgency=low
   * bin/get_filesystem:
     - Remove disktype
     - Add fstype (new klibc)
+  * Update Ubuntu gutsy kernel version
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 24 Aug 2007 15:31:04 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 24 Aug 2007 17:59:18 +0200
 
 initramfs-tools-tcos (0.82.6) unstable; urgency=low
 
