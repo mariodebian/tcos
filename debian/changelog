@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.82.8) unstable; urgency=low
+
+  * Add support for cdaudio (using cdfs + cdparanoia to detect)
+  * Update dapper kernel 2.6.15-29-386
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 01 Sep 2007 13:18:30 +0200
+
 initramfs-tools-tcos (0.82.7) unstable; urgency=low
 
   * bin/get_filesystem:

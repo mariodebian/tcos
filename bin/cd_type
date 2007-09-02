@@ -1,0 +1,15 @@
+#!/bin/sh
+
+CDROM=$1
+CDPARANOIA=/usr/bin/cdparanoia
+
+
+type=$($CDPARANOIA -d "$CDROM" -Q 2>&1 |grep ^Table |grep -c audio)
+
+if [ "$type" != 0 ]; then
+  echo "cdfs"
+  exit 0
+fi
+
+echo "iso9660"
+exit 0

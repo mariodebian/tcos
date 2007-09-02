@@ -225,7 +225,7 @@ create_nbi() {
  _echo "Creating nbi image with ${TCOS_KERNEL} kernel"
  # TCOS_APPEND add more append with -extra-append 
  echo "Building NBI image with this append:"
-   echo -e "   ${GREEN} ${TCOS_APPEND} ${EXTRA_APPEND} ${NORMAL}"
+   echo -e "    ${TCOS_APPEND} ${EXTRA_APPEND}"
  if [ "${EXTRA_APPEND}" = "" ]; then
    echo " Please add option -extra-append=\"your_modifiers\" "
  fi
@@ -383,12 +383,13 @@ alert_need_module() {
        _mod=$1
       echo "ERROR:"
       echo "    to build usable TCOS initramfs images need this kernel module: \"${_mod}\""
-      echo "    You can easy build it with next command as root:"
+      echo ""
+      echo "    Perhaps we have compiled for you, try installing tcos-extra-modules-${TCOS_KERNEL}"
+      echo "    if package don't exist you can try to build it"
       echo ""
       echo "   # apt-get install module-assistant linux-headers-${TCOS_KERNEL} ${_mod}-source"
       echo "   # m-a -k /usr/src/linux-headers-${TCOS_KERNEL} a-i ${_mod}"
       echo ""
-      echo "   You can install ${_mod}-modules-${TCOS_KERNEL} if package exists."
 
       echo ""
       echo "NOTE: You can change kernel version in ${TCOS_CONF}/tcos.conf file"

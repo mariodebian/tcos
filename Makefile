@@ -120,6 +120,7 @@ install:
 	install -m 755 bin/configurexorg   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/seq             $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/get_filesystem  $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/cd_type         $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/installer.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/tryXorg.sh      $(DESTDIR)/$(TCOS_BINS)/
 
