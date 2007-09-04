@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.82.9) unstable; urgency=low
+
+  * bin/gentcos, hooks-addons/50xorg:
+    - Add -fix-nvidia-ati option to cache xserver-xorg-core and libgl1-mesa-glx
+    - Reorganize bin/gentcos with simpler code
+  * bin/tcos-gdm-autologin:
+    - Remove wrong licence line (thanks to Quiran to alert me)
+  * daemonize/daemon.c, daemonize/Makefile:
+    - Make work daemonize with double fork.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 04 Sep 2007 11:10:17 +0200
+
 initramfs-tools-tcos (0.82.8) unstable; urgency=low
 
   * Add support for cdaudio (using cdfs + cdparanoia to detect)

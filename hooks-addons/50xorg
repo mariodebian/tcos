@@ -118,18 +118,21 @@ if [ $XORG = 6 ]; then
 
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support IS ENABLED"
-    if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
+    if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
+       [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
 
-       if [ -d /usr/lib/tcos/opengl ]; then
-          cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/X11R6/lib/modules/extensions
-          cpifexists /usr/lib/tcos/opengl/libGL.so.*  /usr/lib/
-          cp -ra     /usr/lib/tcos/opengl/libGLU.so.1.* $DESTDIR/usr/lib/
+       if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/X11R6/lib/modules/extensions
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/X11R6/lib/modules/extensions
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
+          #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
+          _echo "       * OpenGL use cached fix-nvidia-ati libs"
        else
           _echo " ********************************************** "
           _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
           _echo "                                                "
-          _echo "      Please install tcos-opengl-libs or        "
-          _echo "         uninstall nvidia/ati drivers           "
+          _echo "      Please fix with: gentcos -fix-nvidia-ati  "
+          _echo "         or uninstall nvidia/ati drivers        "
           _echo "                                                "
           _echo "  OpenGL support will not work on thin clients  "
           _echo " ********************************************** "
@@ -165,18 +168,21 @@ else
  
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support is ENABLED"
-    if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 -o "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
+    if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
+       [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
 
-       if [ -d /usr/lib/tcos/opengl ]; then
-          cpifexists /usr/lib/tcos/opengl/libGLcore.so /usr/lib/xorg/modules/extensions/
-          cpifexists /usr/lib/tcos/opengl/libGL.so.*  /usr/lib/
-          cp -ra     /usr/lib/tcos/opengl/libGLU.so.1.* $DESTDIR/usr/lib/
+       if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
+          #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
+          _echo "       * OpenGL use cached fix-nvidia-ati libs"
        else
           _echo " ********************************************** "
           _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
           _echo "                                                "
-          _echo "      Please install tcos-opengl-libs or        "
-          _echo "         uninstall nvidia/ati drivers           "
+          _echo "      Please fix with: gentcos -fix-nvidia-ati  "
+          _echo "         or uninstall nvidia/ati drivers        "
           _echo "                                                "
           _echo "  OpenGL support will not work on thin clients  "
           _echo " ********************************************** "

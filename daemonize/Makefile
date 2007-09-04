@@ -1,13 +1,13 @@
 all: compile
-	#none
+
 
 include ../common.mk
 
 compile:
-	gcc -Wall daemonize.c -o daemonize
+	gcc -Wall daemon.c -o daemonize
 
 clean:
-	rm -f daemonize *~
+	rm -f daemonize daemon *~
 
 install:
 	install -d $(DESTDIR)/$(TCOS_BINS)

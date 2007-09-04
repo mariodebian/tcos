@@ -1,13 +1,9 @@
 TODO for TCOS images
 ====================
 
- * Admin tags in init scripts ( clean hdd , save config files... )
- 
  * Make better help screens (using pxelinux or isolinux)
 
  * Configure personalized boot options with ip, cmdline, dhcp or both.
-
- * Study CLUSTER support => openssi 
 
  * IMPORTANT Network swaping for thin clients < 40 Mb RAM
 
