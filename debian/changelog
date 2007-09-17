@@ -1,3 +1,28 @@
+initramfs-tools-tcos (0.83.1) unstable; urgency=low
+
+  * scripts/tcos-bottom/05inittcos, conf/tcos.conf
+    - limit MAX_MEM used for thin clients with ulimit (default 95%)
+  * Remove PATH definition in all scripts
+  * conf/tcos-run-functions.sh:
+    - Disable change vt in kill_usplash
+  * scripts/tcos-top/50fstab:
+    - Add option to force not use swap
+    - Replace cut with awk
+  * scripts/tcos-bottom/10ldconfig, hooks/tcosbins:
+    - Move ldconfig to /usr/sbin
+  * bin/gentcos:
+    - Fix typo in inst_pkg function
+  * hooks-addons/08discover:
+    - Move discover /lib files to squashed /usr/lib (less ram)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 14 Sep 2007 21:32:49 +0200
+
+initramfs-tools-tcos (0.82.11) unstable; urgency=low
+
+  * Add USB/IP experimental support
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Sep 2007 23:06:21 +0200
+
 initramfs-tools-tcos (0.82.10) unstable; urgency=low
 
   * Update debian unstable kernel version 2.6.22-2-486

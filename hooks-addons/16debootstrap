@@ -48,7 +48,6 @@ cat << EOF > $DESTDIR/sbin/install-system.sh
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
-export PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 # some vars
 mirror=http://192.168.0.3

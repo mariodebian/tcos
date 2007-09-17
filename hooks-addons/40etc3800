@@ -32,8 +32,6 @@ prereqs)
         exit 0
         ;;
 esac
-PATH=\$PATH:/usr/bin:/usr/sbin
-export PATH
 
 quiet=n
 

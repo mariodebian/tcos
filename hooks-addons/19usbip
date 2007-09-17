@@ -1,0 +1,61 @@
+# hooks addon to export USB devices with USB/IP
+# need usbip-tools and modules
+
+
+if [ -x /usr/bin/usbipd ]; then
+
+   stat_before
+
+    cpifexists /usr/bin/usbipd        /usr/bin
+    cpifexists /usr/bin/bind_driver   /usr/bin
+
+    mkdir -p $DESTDIR/usr/share/
+    cp -ra /usr/share/usbip $DESTDIR/usr/share/
+
+    manual_add_modules usbip_common_mod
+    manual_add_modules usbip
+
+
+   cat << EOF > $DESTDIR/scripts/tcos-bottom/70usbip
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+
+quiet=n
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+log_begin_msg "Starting USB/IP"
+  mkdir -p /usr/share/hwdata
+  ln -s /usr/share/usbip/usb.ids /usr/share/hwdata 2>/dev/null
+
+  modprobe usbip_common_mod
+  modprobe usbip
+
+  usbipd -D > /var/log/usbipd.log 2>&1
+log_end_msg
+
+exit 0
+EOF
+   chmod +x $DESTDIR/scripts/tcos-bottom/70usbip 
+
+   stat_after "USB/IP export support"
+
+fi
+

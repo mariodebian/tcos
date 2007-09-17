@@ -27,9 +27,6 @@ quiet=n
 maybe_break startx
 
 
-PATH=$PATH:/usr/bin:/usr/sbin
-export PATH
-
 modprobe -q mousedev 2>&1 >> /tmp/initramfs.debug
 modprobe -q psmouse  2>&1 >> /tmp/initramfs.debug
 

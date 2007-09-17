@@ -51,7 +51,9 @@ if [ $TCOS_DISCOVER ] ;then
         cpifexists /sbin/discover-modprobe   /usr/bin
         cpifexists /etc/discover-modprobe.conf /etc/
 
-        copydir /lib/discover /lib/
+	# discover files have 2 Mb here put into squashfs and make a link in 05inittcos
+        copydir /lib/discover /usr/lib/
+
         cpifexists /usr/lib/libdiscover.so.2 /usr/lib/
 
         mkdir -p $DESTDIR/usr/share/discover/dtd/

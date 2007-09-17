@@ -18,8 +18,6 @@ esac
 
 quiet=n
 
-PATH=$PATH:/usr/bin:/usr/sbin
-export PATH
 
 
 . /scripts/functions

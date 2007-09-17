@@ -79,8 +79,8 @@ create_fstab ()
 	for part in $partitions; do
 	    # get_filesystem is a script in /bin
 		entry=$(get_filesystem $part)
-		dev=$(echo $entry | cut -d ' ' -f 1 )
-		fs=$(echo $entry | cut -d ' ' -f 2 )
+		dev=$(echo $entry | awk '{print $1}' )
+		fs=$(echo $entry  | awk '{print $2}' )
 		if [ "$fs" = "swap" ] ; then
 			entry="${dev}	none	swap    sw              0       0"
 		elif [ "$fs" = "extended" ] ; then
@@ -112,7 +112,12 @@ create_fstab ()
   create_fstab
   rm -f /etc/mtab
   cat /proc/mounts > /etc/mtab
-  swapon -a >> /tmp/initramfs.debug 2>&1
+
+  # force boot without swap
+  if [ "$(read_cmdline_var 'noswap' '0')" = 0 ]; then
+    swapon -a >> /tmp/initramfs.debug 2>&1
+  fi
+
   _log "FSTAB done"
 [ "$NO_MSG" = "" ] && log_end_msg
 

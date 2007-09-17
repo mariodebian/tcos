@@ -64,7 +64,7 @@ cpifexists ${TCOS_BINS}/seq /bin
 cpifexists ${TCOS_BINS}/get_filesystem /bin
 
 # LIBRARIES
-cpifexists /sbin/ldconfig    /sbin/
+cpifexists /sbin/ldconfig    /usr/sbin/
 [ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/
 [ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
 

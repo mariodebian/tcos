@@ -10,21 +10,24 @@ target=/tmp/inittmp
 rm -rf $target
 mkdir $target
 cd $target
-cp /tftpboot/tcos/initramfs ./initrd.gz
+cp /tftpboot/tcos/initramfs-2.6.22-2-486 ./initrd.gz
 gunzip initrd.gz
 cpio -i < initrd
 rm -f initrd
-cp /tftpboot/tcos/usr.squashfs .
-mount -o loop -t squashfs usr.squashfs usr/
-mkdir proc
-mount -t proc none proc/
-chroot . /bin/sh
+mount -o loop -t squashfs /tftpboot/tcos/usr-2.6.22-2-486.squashfs usr/
+
+echo "Exit or Ctrl + d to quit"
+bash
+
+#mkdir proc
+#mount -t proc none proc/
+#chroot . /bin/sh
 
 # exit
 echo ""
 echo -n "Cleaning mount point..."
 umount usr/
-umount proc/
+#umount proc/
 cd ..
 rm -rf $target
 echo " Done."

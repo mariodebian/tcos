@@ -491,8 +491,8 @@ list_pkg() {
 
 tcos_inst_pkg() {
   error=0
-  echo "Install PKG \"$1\""
-  for PKG in ${1}; do
+  echo "Install PKG \"$@\""
+  for PKG in ${@}; do
     PKG_URI=$(apt-get install -qq --print-uris --reinstall ${PKG}| egrep 'file|http|ftp' \
 	 | grep "/${PKG}_" | awk '{print $1}'| tr -d "'")
 

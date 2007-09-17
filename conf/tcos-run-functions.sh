@@ -34,7 +34,7 @@ kill_usplash() {
   if [ -x /sbin/usplash ]; then
     usplash_write QUIT  2> /dev/null
     killall usplash     2> /dev/null
-    chvt 1              2> /dev/null
+    #chvt 1              2> /dev/null # this cause some problems :(
   fi 
 }
 

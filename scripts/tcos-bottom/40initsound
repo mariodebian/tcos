@@ -16,9 +16,6 @@ prereqs)
 	;;
 esac
 
-PATH=$PATH:/usr/bin:/usr/sbin
-export PATH
-
 quiet=n
 
 

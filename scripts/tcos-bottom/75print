@@ -24,9 +24,12 @@ quiet=n
 
 if [ $TCOS_PRINTER ]; then
 
+  LP=""
   [ -e /dev/lp0 ] && LP=/dev/lp0
   [ -e /dev/lp1 ] && LP=/dev/lp1
   [ -e /dev/usblp0 ] && LP=/dev/usblp0
+
+  if [ "${LP}" = "" ]; then exit 0; fi
 
   if [ -e /usr/bin/lp_server ]; then
 
