@@ -438,7 +438,7 @@ if [ "$xdriver" = "auto" ] || [ $autodetect_xdriver = 1 ]; then
    fi
 fi
 
-if [ "$xdriver" = "via" ]; then
+if [ "$xdriver" = "via" ] || [ "$xdriver" = "openchrome" ]; then
   xdriver_via=""
 fi
 

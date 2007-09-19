@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.83.2) unstable; urgency=low
+
+  * bin/configurexorg, hooks-addons/40etc3800:
+    - Support new openchrome driver
+  * scripts/tcos-top/20mountnfs:
+    - Mount NFS without nfsro (deprecated in new unionfs)
+  * scripts/tcos-top/50fstab:
+    - Call udevtrigger and udevsettle to create ide/block devices
+  * scripts/tcos-premount/25nbd_filesystem:
+    - Create only 2 nbd devices and wait for /dev/nbd0
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 19 Sep 2007 22:41:27 +0200
+
 initramfs-tools-tcos (0.83.1) unstable; urgency=low
 
   * scripts/tcos-bottom/05inittcos, conf/tcos.conf

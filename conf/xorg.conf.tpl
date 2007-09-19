@@ -61,7 +61,7 @@ Section "InputDevice"
 	Driver		"mouse"
 	Option		"SendCoreEvents"
 	Option		"Device"		"/dev/ttyS0"
-	Option		"Protocol"		"auto"
+	Option		"Protocol"		"Microsoft"
 	Option		"Emulate3Buttons"	"true" 
 EndSection
 
@@ -70,7 +70,7 @@ Section "InputDevice"
 	Driver		"mouse"
 	Option		"SendCoreEvents"
 	Option		"Device"		"/dev/ttyS1"
-	Option		"Protocol"		"auto"
+	Option		"Protocol"		"Microsoft"
 	Option		"Emulate3Buttons"	"true" 
 EndSection
 

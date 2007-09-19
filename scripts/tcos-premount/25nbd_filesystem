@@ -37,7 +37,13 @@ if [ "$TCOS_ENABLE_NBD" != "0" ]; then
 
     NBD_PORT=$(read_cmdline_var "nbdport" "2000")
 
-    modprobe -k nbd
+    # load 2 nbd devices
+    modprobe nbd nbds_max=2
+
+    # wait for device
+    while [ ! -e /dev/nbd0 ]; do
+      sleep 1
+    done
 
     nbd-client tcos-server $NBD_PORT /dev/nbd0
     sleep 1
