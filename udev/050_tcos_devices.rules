@@ -1,0 +1,5 @@
+# This rule exec a script to save some udev env vars in a tmp file
+#
+
+SUBSYSTEM=="block",                    RUN+="/sbin/tcos-udevd.sh"
+

@@ -442,6 +442,10 @@ if [ "$xdriver" = "via" ] || [ "$xdriver" = "openchrome" ]; then
   xdriver_via=""
 fi
 
+disablesync=""
+if [ "$xdisablesync" = "disable" ]; then
+  disablesync="#"
+fi
 
 if [ "${xdontzap}" = "0" ] || [ "$xdontzap" = "#" ]; then
   # enable Ctrl Alt <===
@@ -469,6 +473,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xhorizsync__"/"${xhorizsync}"/g \
     -e s/"__xvertsync__"/"${xvertsync}"/g \
     -e s/"__xrefresh__"/"${xrefresh}"/g \
+    -e s/"__disablesync__"/"${disablesync}"/g \
     -e s/"__xkbmap__"/"${TCOS_XORG_XKB}"/g \
     -e s/"__xkbmodel__"/"${TCOS_XORG_XKBMODEL}"/g \
     -e s/"__xmousewheel__"/"${xmousewheel}"/g \
@@ -523,6 +528,7 @@ get_settings() {
  getsimple "xmouseprotocol"
  #getsimple "xmousenowheel"
  getsimple "xdontzap"
+ getsimple "xdisablesync"
 }
 
 load_settings() {
@@ -537,6 +543,7 @@ load_settings() {
   xmousewheel=$(getvalue "xmousewheel")
 xmousenowheel=$(getvalue "xmousenowheel")
      xdontzap=$(getvalue "xdontzap")
+ xdisablesync=$(getvalue "xdisablesync")
 
 }
 
@@ -554,6 +561,7 @@ if [ $(cat ${mysettings} | wc -l) -gt 1 ]; then
  xdpms=$(get_mybool "xdpms")
  xmousewheel=$(get_mybool "xmousewheel")
  xdontzap=$(get_mybool "xdontzap")
+ xdisablesync=$(get_myconf "xdisablesync")
 fi
 
 

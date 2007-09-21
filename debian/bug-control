@@ -1,2 +1,2 @@
 Send-To: cls-tcos-users@forja.rediris.es
-report-with: gentcos initramfs-tools-tcos tcos-server-utils tcos-usplash
+report-with: gentcos initramfs-tools-tcos tcos-server-utils tcos-usplash tcosmonitor

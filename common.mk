@@ -49,10 +49,10 @@ TCOS_DIR=$(shell awk -F "=" '/TCOS_DIR=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 TFTP_DIR=$(shell awk -F "=" '/TFTP_DIR=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 TCOS_CONF=$(shell awk -F "=" '/TCOS_CONF=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 TCOS_BINS=$(shell awk -F "=" '/TCOS_BINS=/ {print $$2}' $(TCOS_CONFIG_FILE) )
+TCOS_STANDALONE_DIR=/var/lib/tcos/standalone
 
 
-
-TCOS_XMLRPC_DIR=$(PREFIX)/share/tcosmonitor/xmlrpc/
+TCOS_XMLRPC_DIR=$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
 DBUS_CONF=/etc/dbus-1/system.d/
 X11_CONF=/etc/X11/Xsession.d/
 DISABLE_USPLASH=0
@@ -62,6 +62,9 @@ have_changelog := $(wildcard debian/changelog)
 ifeq ($(strip $(have_changelog)),)
 DISTRO_VERSION=$(shell dpkg-parsechangelog -l../debian/changelog | awk '/^Distribution/ {print $$2}')
 endif
+
+TCOS_ARCH=$(shell dpkg-architecture  | awk -F"=" '/^DEB_BUILD_ARCH=/ {print $$2}')
+
 
 TCOS_DEFAULT_KERNEL=$(KERNEL_$(DISTRO_VERSION))
 TCOS_USPLASH_VERSION=$(USPLASH_$(DISTRO_VERSION))
@@ -91,20 +94,6 @@ ifeq ($(strip $(DISTRO)),)
 DISTRO=debian
 endif
 
-ifeq ($(DISTRO),debian) 
-#DEB_MIRROR=http://ftp.uk.debian.org/debian/
-DEB_MIRROR=http://192.168.0.3/mirror/debian/
-endif
-
-ifeq ($(DISTRO),ubuntu)
-#DEB_MIRROR=http://archive.ubuntu.com/ubuntu/
-DEB_MIRROR=http://192.168.0.3/mirror/ubuntu/
-endif
-
-
-
-
-
 
 PREFIX:=/usr
 
@@ -113,6 +102,8 @@ test:
 	@echo "------------------------------------"
 	@echo VERSION=$(VERSION)
 	@echo PACKAGE=$(PACKAGE)
+	@echo 
+	@echo TCOS_ARCH=$(TCOS_ARCH)
 	@echo 
 	@echo PREFIX=$(PREFIX)
 	@echo DESTDIR=$(DESTDIR)
@@ -126,7 +117,6 @@ test:
 	@echo X11_CONF=$(X11_CONF)
 	@echo
 	@echo DISTRO=$(DISTRO)
-	@echo DEB_MIRROR=$(DEB_MIRROR)
 	@echo DISABLE_USPLASH=$(DISABLE_USPLASH)
 	@echo "------------------------------------"
 

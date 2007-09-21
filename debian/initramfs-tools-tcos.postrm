@@ -2,5 +2,11 @@
 
 set -e
 
+if [ "x${1}" = "xpurge" ]; then
+  update-rc.d tcos-standalone remove >/dev/null
+fi
+
+
+
 #DEBHELPER#
 

@@ -16,7 +16,7 @@ gentcos \- TCOS image boot generator
 
 This manpage show options for 
 .B gentcos
-boot image generator. See gentcos -h to better descriptions.
+boot image generator. See gentcos \-h to better descriptions.
 
 .B You must exec this app as root user.
 
@@ -98,16 +98,16 @@ Iso image is saved in /var/lib/tcos/isos/
 
 .SH EXAMPLES
 .B   PXE like boot (>=64 MB)
-     # gentcos -tftp -suffix=-pc1
+     # gentcos \-tftp \-suffix=\-pc1
 
 .B   NFS (LTSP like) boot (28-64 MB)
-     # gentcos -nfs -rootfs
+     # gentcos \-nfs \-rootfs
 
 .B   CDROM boot
-     # gentcos -cdrom -type=grub
+     # gentcos \-cdrom \-type=grub
 
 .B   Floppy boot
-     # gentcos -nbi -extra-append="splash vga=791 uselocal"
+     # gentcos \-nbi \-extra-append="splash vga=791 uselocal"
 
 .SH Package cache
 

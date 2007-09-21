@@ -1,0 +1,224 @@
+# this file copies tcosxmlrpc server into initramfs
+# and adds startup scripts of tcosxmlrpc server
+
+stat_before
+
+# EJECT for mount/umount cdrom
+copy_exec /usr/bin/eject /usr/bin/
+
+
+# SCROT package
+copy_exec /usr/bin/scrot /usr/bin/
+mkdir -p $DESTDIR/usr/lib/imlib2/filters/
+mkdir -p $DESTDIR/usr/lib/imlib2/loaders/
+cpifexists /usr/lib/imlib2/loaders/png.so        /usr/lib/imlib2/loaders/
+cpifexists /usr/lib/imlib2/loaders/gif.so        /usr/lib/imlib2/loaders/
+
+# screenshot script and webserver
+cpifexists ${TCOS_BINS}/screenshot.sh     /sbin/
+cpifexists ${TCOS_BINS}/useallmodules.sh  /sbin/
+cpifexists ${TCOS_BINS}/devicesctl.sh  /sbin/
+
+cpifexists ${TCOS_BINS}/soundctl.sh /sbin/
+
+cpifexists ${TCOS_BINS}/starthttpd.sh        /sbin/
+cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/httpd2.conf       /etc/
+
+# udev process
+cpifexists ${TCOS_BINS}/tcos-udevd.sh           /sbin/
+mkdir -p ${DESTDIR}/etc/udev/rules.d/
+cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/050_tcos_devices.rules  /etc/udev/rules.d/
+
+# with new kernels (>= 2.6.22) need mount/umount events
+cpifexists ${TCOS_BINS}/mount-listener           /usr/sbin/
+cpifexists ${TCOS_BINS}/listener-daemon.sh       /usr/sbin/
+
+cat << EOF >> $DESTDIR/scripts/tcos-bottom/10mount_listener
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+quiet=n
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+if [ -x /sbin/listener-daemon.sh ]; then
+   _log "MOUNT-listener trying to start"
+   /usr/sbin/listener-daemon.sh > /var/log/listener-daemon.log 2>&1 &
+fi
+
+exit 0
+EOF
+chmod +x $DESTDIR/scripts/tcos-bottom/10mount_listener
+
+
+
+# tcosxmlrpc utils
+cpifexists ${TCOS_BINS}/tcosxmlrpc  /usr/bin/
+cpifexists ${TCOS_BINS}/lockscreen  /usr/bin/
+
+# copy locked image
+mkdir -p ${DESTDIR}/usr/share/initramfs-tools-tcos/xmlrpc/
+cp /usr/share/initramfs-tools-tcos/xmlrpc/lockscreen.png ${DESTDIR}/usr/share/initramfs-tools-tcos/xmlrpc/
+
+
+copy_exec /sbin/start-stop-daemon  /sbin/
+cpifexists ${TCOS_BINS}/getinfo.sh       /sbin/
+chmod +x $DESTDIR/sbin/getinfo.sh
+
+# fixed in initramfs-tools-tcos 0.60
+#copy_exec /usr/bin/seq             /bin/
+
+
+
+cat << EOF >  $DESTDIR/sbin/restartx
+#!/bin/sh
+
+restartxorg &
+exit 0
+EOF
+chmod +x $DESTDIR/sbin/restartx
+
+
+# pci database
+copy_exec /usr/bin/lspci /usr/bin/
+mkdir -p $DESTDIR/usr/share/misc/
+cpifexists /usr/share/misc/pci.ids /usr/share/misc/
+
+
+
+cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/abyss.conf     /etc/
+cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/mime.types     /etc/
+
+# configure /etc/abyss.conf
+# abs path of mime.types
+sed -i s/"etc"/"\/etc"/g ${DESTDIR}/etc/abyss.conf
+
+# configure user
+sed -i s/"nobody"/"root"/g ${DESTDIR}/etc/abyss.conf
+
+mkdir -p $DESTDIR/var/log
+mkdir -p $DESTDIR/var/www
+
+# add launcher
+cat << EOF > $DESTDIR/sbin/startxmlrpc
+#!/bin/sh
+cd /
+/usr/bin/tcosxmlrpc /etc/abyss.conf >> /var/log/tcosxmlrpc.log 2>&1
+exit 0
+EOF
+chmod +x $DESTDIR/sbin/startxmlrpc
+
+# add init process
+cat << EOF > $DESTDIR/scripts/tcos-bottom/45startxmlrpc
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+quiet=n
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+# if break=xmlrpc STOP here
+maybe_break xmlrpc
+
+# DOCUMENTME noxmlrpc | disable tcosxmlrpc daemon
+noxmlrpc=\$(read_cmdline_var "noxmlrpc" "0")
+if [ \${noxmlrpc} = 1 ]; then
+  _log "START-XMLR-PC xmlrpc disabled from cmdline"
+  exit 0
+fi
+
+
+
+# start daemon
+log_begin_msg "Starting tcosxmlrpc server"
+  _log "START-XML-RC starting startxmlrpc...."
+  startxmlrpc &
+log_end_msg
+exit 0
+
+EOF
+chmod +x $DESTDIR/scripts/tcos-bottom/45startxmlrpc
+
+
+cat << EOF > $DESTDIR/scripts/tcos-bottom/46starthttpd
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+quiet=n
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+# if break=httpd STOP here
+maybe_break httpd
+
+# DOCUMENTME nohttpd | disable httpd daemon
+nohttpd=\$(read_cmdline_var "nohttpd" "0")
+if [ \${nohttpd} = 1 ]; then
+  _log "START-HTTPD disabled from cmdline"
+  exit 0
+fi
+
+
+# start daemon
+log_begin_msg "Starting httpd server"
+  _log "HTTPD starting starthttpd...."
+  starthttpd.sh &
+log_end_msg
+
+EOF
+chmod +x $DESTDIR/scripts/tcos-bottom/46starthttpd
+
+chmod +x $DESTDIR/sbin/*.sh
+
+stat_after "TcosMonitor"

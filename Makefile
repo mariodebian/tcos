@@ -9,6 +9,9 @@ all:
 	cd daemonize   && make
 	cd printer     && make
 	cd hex2ascii   && make
+	cd xmlrpc      && make
+	cd udev        && make
+	cd lockscreen  && make
 
 include common.mk
 
@@ -21,6 +24,9 @@ clean:
 	cd daemonize   && make clean
 	cd printer     && make clean
 	cd hex2ascii   && make clean
+	cd xmlrpc      && make clean
+	cd udev        && make clean
+	cd lockscreen  && make clean
 
 gedit:
 	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
@@ -95,8 +101,10 @@ install:
 	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 
 	install -m 644 conf/version.conf $(DESTDIR)$(TCOS_CONF)/version.conf
-	sed -i 's/__TCOS_VERSION__/$(VERSION)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
+	sed -i 's/__TCOS_VERSION__/$(VERSION)/g'       $(DESTDIR)$(TCOS_CONF)/version.conf
 	sed -i 's/__TCOS_DISTRO__/$(DISTRO_VERSION)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
+	sed -i 's/__DISTRIBUTION__/$(DISTRO)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
+	sed -i 's/__TCOS_ARCH__/$(TCOS_ARCH)/g'        $(DESTDIR)$(TCOS_CONF)/version.conf
 
 	# copy tcos.conf to have a default config
 	install -m 644 $(DESTDIR)$(TCOS_CONF)/tcos.conf $(DESTDIR)$(TCOS_DIR)/tcos.conf
@@ -115,6 +123,7 @@ install:
 
 	# gentcos build script
 	install -m 755 bin/gentcos            $(DESTDIR)/usr/sbin/gentcos
+	install -m 755 bin/tcos-buildchroot   $(DESTDIR)/usr/sbin/tcos-buildchroot
 	install -m 755 bin/tcos-gdm-autologin $(DESTDIR)/usr/sbin/tcos-gdm-autologin
 
 	install -m 755 bin/configurexorg   $(DESTDIR)/$(TCOS_BINS)/
@@ -135,6 +144,15 @@ install:
 	cd daemonize   && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd printer     && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
+
+	# xmlrpc
+	cd xmlrpc && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+
+	# udev
+	cd udev && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS)
+
+	# lockscreen
+	cd lockscreen && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
 
 
 targz: clean

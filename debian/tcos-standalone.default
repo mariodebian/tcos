@@ -1,0 +1,8 @@
+#
+#  put 1 to start tcosxmlrpc-standalone
+#
+
+# before starting standalone mode please read
+# /usr/share/doc/tcosmonitor/README.standalone
+
+TCOS_STANDALONE_START=0

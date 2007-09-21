@@ -2,45 +2,21 @@ Source: initramfs-tools-tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin
+Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, libxmlrpc-c3-dev,
+               libxau-dev, libxaw-headers, libxaw7-dev, imlib11-dev,
 Standards-Version: 3.7.2
 XS-Vcs-Browser: http://trac.tcosproject.org/browser/trunk/initramfs-tools-tcos
 XS-Vcs-Svn: https://forja.rediris.es/svn/cls-tcos/trunk/initramfs-tools-tcos
 
-Package: tcos
-Architecture: any
-Depends: initramfs-tools-tcos (= ${Source-Version}) , tcos-usplash (= ${Source-Version}),
-	 tcos-server-utils (= ${Source-Version}), ${misc:Depends}, ${shlibs:Depends}
-         atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcosmonitor, 
-         aumix, pulseaudio, pulseaudio-utils, x11vnc, busybox, libasound2-plugins, xfs,
-         mtools, ltspfs-client, ltspfs-server
-Recommends: pulseaudio-esound-compat, ltspfsd, ltspfs
-Conflicts: nvidia-glx, nvidia-glx-legacy, fglrx-driver
-Description: new thin client implementation
- This is a system for generating thin client hosts using initramfs.
- TCOS is a set of build tools to prepare an initramfs image to boot
- thin client terminals.
- TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
- Xorg (6.9 or 7.0) and more utils.
- .
- This metapackage will install all required packages to make a 
- thin client server.
- .
-  Homepage: http://www.tcosproject.org
- 
-
 Package: initramfs-tools-tcos
 Architecture: any
 Depends: initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
-         console-data, libnss-db, iftop, strace, twm, xterm, 
-         dosfstools, netkit-inetd | inetutils-inetd | openbsd-inetd, 
-         debootstrap, libltdl3, tinylogin, cdparanoia, 
-	 debconf, grub, syslinux, squashfs-tools, mknbi, dropbear, 
-	 ${misc:Depends}, ${shlibs:Depends}
-Conflicts: tcos-tcosmonitor (<= 0.0.17), gentcos (<= 0.79.2)
-Replaces: gentcos (<= 0.79.2)
-Recommends: esound, alsa-utils, links2, dillo, pulseaudio, pulseaudio-utils, ltspfsd, ltspfs
-Suggests: unionfs-modules-2.6-486, squashfs-modules-2.6-486
+         console-data, libnss-db, iftop, strace, twm, xterm, x11vnc, 
+         dosfstools, debootstrap, libltdl3, tinylogin, cdparanoia, scrot, eject, 
+	 debconf, grub, syslinux, squashfs-tools, mknbi, dropbear, ltspfs-client,
+	 python,  python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
+Conflicts: tcosmonitor (<= 0.1.22.3)
+Recommends: pulseaudio, pulseaudio-utils
 Description: tools for generating a thin client bootable image: TCOS
  This package contains tools to create and boot an initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
@@ -53,7 +29,7 @@ Description: tools for generating a thin client bootable image: TCOS
 
 Package: tcos-usplash
 Architecture: any
-Depends: initramfs-tools-tcos (= ${Source-Version}), usplash, 
+Depends: initramfs-tools-tcos (= ${source:Version}), usplash, 
 	 ${misc:Depends}, ${shlibs:Depends}
 Description: usplash boot image for TCOS
  This package contains usplash artwork for TCOS.
@@ -62,7 +38,7 @@ Description: usplash boot image for TCOS
 Package: tcos-server-utils
 Architecture: any
 Depends: shfs-utils, python, python-configobj, 
-         initramfs-tools-tcos (= ${Source-Version}), fuse-utils
+         initramfs-tools-tcos (= ${source:Version}), fuse-utils
 Description: TCOS server utils (gdm autologin or sshfs mount)
  This is a system for generating thin client systems using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
@@ -71,3 +47,24 @@ Description: TCOS server utils (gdm autologin or sshfs mount)
  thin client devices with server users.
  .
  TCOS Thin client usesfull utils to work with TCOS.
+
+Package: tcos
+Architecture: all
+Depends: initramfs-tools-tcos (= ${source:Version}) [i386], tcos-usplash (= ${source:Version}) [i386],
+	 tcos-server-utils (= ${source:Version}), ${misc:Depends}, ${shlibs:Depends}
+         atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcosmonitor, 
+         openbsd-inetd | netkit-inetd | inetutils-inetd,
+         aumix, pulseaudio, pulseaudio-utils, x11vnc, libasound2-plugins, xfs,
+         mtools, ltspfs-server, esound, alsa-utils, cdebootstrap [!i386]
+Recommends: pulseaudio-esound-compat
+Description: new thin client implementation
+ This is a system for generating thin client hosts using initramfs.
+ TCOS is a set of build tools to prepare an initramfs image to boot
+ thin client terminals.
+ TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
+ Xorg (6.9 or 7.0) and more utils.
+ .
+ This metapackage will install all required packages to make a 
+ thin client server.
+ .
+  Homepage: http://www.tcosproject.org

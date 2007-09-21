@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.84.1) unstable; urgency=low
+
+  * Important move of code, some of tcosmonitor stuff move here:
+    - udev
+    - xmlrpc
+    - lockscreen
+    - hooks-addons
+  * bin/tcos-buidchroot:
+    - Script to build a (32bit) chroot to build tcos images
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 21 Sep 2007 23:32:14 +0200
+
 initramfs-tools-tcos (0.83.2) unstable; urgency=low
 
   * bin/configurexorg, hooks-addons/40etc3800:

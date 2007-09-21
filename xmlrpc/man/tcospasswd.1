@@ -1,0 +1,45 @@
+.TH tcosmd5 1 "Jun 21, 2006" "tcosmd5 man page"
+
+.SH NAME
+tcospasswd \- TCOS util to generate crytp TCOS passwords
+
+.SH SYNOPSIS
+.B tcospasswd
+.RI [ options ]
+.br
+
+.SH DESCRIPTION
+
+This manpage show options for 
+.B tcospasswd
+app.
+
+.PP
+\fBtcospasswd\fP is a small C app that create TCOS crypt 
+of an string passed from cmdline.
+
+.SH OPTIONS
+.B
+.IP clear_password
+string to crypt (to shell scripts)
+
+.B
+.IP [NO_ARGUMENTS]
+interactive mode
+
+.SH EXAMPLES
+.B
+$ tcospasswd my_password
+
+$ tcospasswd 
+
+.SH BUGS
+Contact Mario Izquierdo <mariodebian@gmail.com>
+
+Homepage: http://www.tcosproject.org
+
+.SH SEE ALSO
+tcos.conf(5)
+
+.SH AUTHOR
+Mario Izquierdo (mariodebian) <mariodebian@gmail.com>

@@ -98,8 +98,8 @@ EndSection
 Section "Monitor"
 	Identifier	"Generic Monitor"
 __xdpms__	Option		"DPMS"
-	HorizSync	__xhorizsync__
-	VertRefresh	__xvertsync__
+__disablesync__	HorizSync	__xhorizsync__
+__disablesync__	VertRefresh	__xvertsync__
 EndSection
 
 Section "Screen"
@@ -142,6 +142,7 @@ __dontzap__
 #xdepth=__xdepth__
 #xhorizsync=__xhorizsync__
 #xvertsync=__xvertsync__
+#disablesync=__disablesync__
 #xrefresh=__xrefresh__
 #xmousedev=__xmousedev__
 #xmouseprotocol=__xmouseprotocol__
