@@ -23,7 +23,7 @@ USPLASH_unstable=0.4.1
 KERNEL_experimental="2.6.22-2-486"
 USPLASH_experimental=0.4.1
 
-KERNEL_gutsy="2.6.22-10-generic"
+KERNEL_gutsy="2.6.22-12-generic"
 USPLASH_gutsy=0.4.1
 ##################################
 

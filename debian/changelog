@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.84.2) unstable; urgency=low
+
+  * bin/tcos-buildroot:
+    - Fix typo in TCOS_CHROOT var
+    - Add --gentcos option to build images with other params
+  * Update Ubuntu gutsy kernel version
+  * debian/control:
+    - Replace source:version depends with 0.84.1
+    - Fix some descriptions 
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 22 Sep 2007 18:52:55 +0200
+
 initramfs-tools-tcos (0.84.1) unstable; urgency=low
 
   * Important move of code, some of tcosmonitor stuff move here:

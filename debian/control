@@ -31,8 +31,8 @@ Package: tcos-usplash
 Architecture: any
 Depends: initramfs-tools-tcos (= ${source:Version}), usplash, 
 	 ${misc:Depends}, ${shlibs:Depends}
-Description: usplash boot image for TCOS
- This package contains usplash artwork for TCOS.
+Description: usplash artwork TCOS
+ This package contains usplash boot image for TCOS.
 
 
 Package: tcos-server-utils
@@ -40,9 +40,6 @@ Architecture: any
 Depends: shfs-utils, python, python-configobj, 
          initramfs-tools-tcos (= ${source:Version}), fuse-utils
 Description: TCOS server utils (gdm autologin or sshfs mount)
- This is a system for generating thin client systems using initramfs.
- TCOS is a set of build tools to prepare an initramfs image to boot
- thin client terminal.
  This package contain some utils (scripts) to mount or connect
  thin client devices with server users.
  .
@@ -50,19 +47,19 @@ Description: TCOS server utils (gdm autologin or sshfs mount)
 
 Package: tcos
 Architecture: all
-Depends: initramfs-tools-tcos (= ${source:Version}) [i386], tcos-usplash (= ${source:Version}) [i386],
-	 tcos-server-utils (= ${source:Version}), ${misc:Depends}, ${shlibs:Depends}
+Depends: initramfs-tools-tcos (>= 0.84.1) , tcos-usplash (>= 0.84.1) [i386],
+	 tcos-server-utils (>= 0.84.1), ${misc:Depends}, ${shlibs:Depends}
          atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd,
          aumix, pulseaudio, pulseaudio-utils, x11vnc, libasound2-plugins, xfs,
-         mtools, ltspfs-server, esound, alsa-utils, cdebootstrap [!i386]
+         mtools, ltspfs-server, esound, alsa-utils, cdebootstrap
 Recommends: pulseaudio-esound-compat
 Description: new thin client implementation
  This is a system for generating thin client hosts using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminals.
  TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
- Xorg (6.9 or 7.0) and more utils.
+ Xorg (6.9 or 7.x) and more utils.
  .
  This metapackage will install all required packages to make a 
  thin client server.
