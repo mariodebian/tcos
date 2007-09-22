@@ -29,7 +29,7 @@ Description: tools for generating a thin client bootable image: TCOS
 
 Package: tcos-usplash
 Architecture: any
-Depends: initramfs-tools-tcos (= ${source:Version}), usplash, 
+Depends: initramfs-tools-tcos (= ${Source-Version}), usplash, 
 	 ${misc:Depends}, ${shlibs:Depends}
 Description: usplash artwork TCOS
  This package contains usplash boot image for TCOS.
@@ -38,7 +38,7 @@ Description: usplash artwork TCOS
 Package: tcos-server-utils
 Architecture: any
 Depends: shfs-utils, python, python-configobj, 
-         initramfs-tools-tcos (= ${source:Version}), fuse-utils
+         initramfs-tools-tcos (= ${Source-Version}), fuse-utils
 Description: TCOS server utils (gdm autologin or sshfs mount)
  This package contain some utils (scripts) to mount or connect
  thin client devices with server users.
