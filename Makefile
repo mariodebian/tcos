@@ -172,6 +172,7 @@ tcos: clean
 patch_dapper:
 	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu DAPPER
 	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control	
+	sed -i 's/source:Version/Source-Version/g' debian/control	
 
 patch_edgy:
 	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu EDGY
