@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.84.4) unstable; urgency=low
+
+  * Make TCOS_EXTRA_MODULES new var in tcos.conf
+  * gentcos:
+    - Remove export TCOS_EXTRA_MODULES
+    - Fix read -extramodules cmdline to allow more modules
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 23 Sep 2007 21:55:26 +0200
+
 initramfs-tools-tcos (0.84.3) unstable; urgency=low
 
   * Only depend on mknbi on i386 arch

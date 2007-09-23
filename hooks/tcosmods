@@ -68,20 +68,9 @@ if [ "${BOOT}" = "tcos" ]; then
 TCOS_USB=$(read_env_var "TCOS_USB" "$TCOS_USB")
 TCOS_XORG=$(read_env_var "TCOS_XORG" "$TCOS_XORG")
 TCOS_SOUND=$(read_env_var "TCOS_SOUND" "$TCOS_SOUND")
-TCOS_EXTRA_MODULES=$(read_env_var "TCOS_EXTRA_MODULES" "$TCOS_EXTRA_MODULES")
 TCOS_DISABLE_USB=$(read_env_var "TCOS_DISABLE_USB" "$TCOS_DISABLE_USB")
 TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
 
-#_echo "DEBUG:"
-#_echo ""
-#_echo "TCOS_USB=$TCOS_USB"
-#_echo "TCOS_XORG=$TCOS_XORG"
-#_echo "TCOS_SOUND=$TCOS_SOUND"
-#_echo "TCOS_EXTRA_MODULES=$TCOS_EXTRA_MODULES"
-#_echo "TCOS_DISABLE_USB=$TCOS_DISABLE_USB"
-#_echo "TCOS_DISABLE_IDE=$TCOS_DISABLE_IDE"
-#_echo ""
-#_echo "end of debug"
 
 
     if [ "$TCOS_USB" != "1" ] ;then
@@ -122,7 +111,7 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
     if [ "$TCOS_EXTRA_MODULES" != "" ]; then
        TCOS_EXTRA_MODULES=$(echo ${TCOS_EXTRA_MODULES} | sed s/","/" "/g)
        for module in ${TCOS_EXTRA_MODULES}; do
-         _echo "   TCOS_EXTRA_MODULES: adding ${module}"
+         _echo "   TCOS extra module: adding ${module}"
          tcos_manual_add_modules ${module}
        done
     fi

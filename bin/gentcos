@@ -79,7 +79,7 @@ if [ -d /opt/tcos ]; then
 fi
 
 # ugly hack to avoid edit /etc/tcos/tcos.conf file
-rm -f ${TCOS_CONF}/tcos.conf.dpkg* >/dev/null 2>&1
+#rm -f ${TCOS_CONF}/tcos.conf.dpkg* >/dev/null 2>&1
 cp ${TCOS_CONF}/tcos.conf ${TCOS_CONF}/tcos.conf.orig > /dev/null 2>&1
 # TCOS-Config save file before or after call gentcos
 
@@ -87,7 +87,6 @@ cp ${TCOS_CONF}/tcos.conf ${TCOS_CONF}/tcos.conf.orig > /dev/null 2>&1
 _exit () {
  unset TCOS_SQUASHFS
  unset TCOS_ALL_MODULES
- unset EXTRA_MODULES
  unset TCOS_SUFFIX
  rm -f ${TMPNBI}
  rm -f ${INITRAMFS}
@@ -593,7 +592,7 @@ for opt in $@ ; do
             ;;
         -allmodules) TCOS_ALL_MODULES=1
             ;;
-        -extramodules=*) TCOS_EXTRA_MODULES=${opt#-extramodules=}
+        -extramodules=*) TCOS_EXTRA_MODULES="${TCOS_EXTRA_MODULES},"${opt#-extramodules=}
             ;;
         -rootfs)
             TCOS_ROOTFS=1
@@ -605,7 +604,7 @@ for opt in $@ ; do
         -fix-nvidia-ati) fix_nvidia_ati
             ;;
         --*)
-            echo "Double -- is not accepted as comand line parameter."
+            echo "Double -- is not accepted as command line parameter."
             echo "See $0 -help to know about usage"
             _exit 1
             ;;
@@ -651,11 +650,6 @@ fi
 # generate allmodules.squashfs to teast all hardware in terminal
 if [ $TCOS_ALL_MODULES ]; then
   export TCOS_ALL_MODULES
-fi
-
-# add extra modules
-if [ $TCOS_EXTRA_MODULES ]; then
-  export TCOS_EXTRA_MODULES
 fi
 
 
