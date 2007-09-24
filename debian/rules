@@ -71,6 +71,7 @@ binary-arch: build install
 	dh_install --sourcedir=$(CURDIR)/debian/tmp --list-missing
 	dh_installman
 	dh_installinit
+	dh_pysupport
 	dh_link
 	dh_strip
 	dh_compress

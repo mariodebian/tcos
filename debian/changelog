@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.84.5) unstable; urgency=low
+
+  * Remove tcos-server-utils package (now contents are in tcos package)
+  * Remove obsolete opengl dir
+  * Remove obsolete discover dir
+  * Remove obsolete esound dir
+  * Remove old dir
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 24 Sep 2007 13:10:18 +0200
+
 initramfs-tools-tcos (0.84.4) unstable; urgency=low
 
   * Make TCOS_EXTRA_MODULES new var in tcos.conf
@@ -5,7 +15,7 @@ initramfs-tools-tcos (0.84.4) unstable; urgency=low
     - Remove export TCOS_EXTRA_MODULES
     - Fix read -extramodules cmdline to allow more modules
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 23 Sep 2007 21:55:26 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 24 Sep 2007 13:07:23 +0200
 
 initramfs-tools-tcos (0.84.3) unstable; urgency=low
 

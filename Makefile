@@ -12,6 +12,7 @@ all:
 	cd xmlrpc      && make
 	cd udev        && make
 	cd lockscreen  && make
+	cd dbus        && make
 
 include common.mk
 
@@ -27,6 +28,7 @@ clean:
 	cd xmlrpc      && make clean
 	cd udev        && make clean
 	cd lockscreen  && make clean
+	cd dbus        && make clean
 
 gedit:
 	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
@@ -154,6 +156,8 @@ install:
 	# lockscreen
 	cd lockscreen && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
 
+	# dbus conf file
+	cd dbus && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 targz: clean
 	rm -rf ../tmp 2> /dev/null
@@ -172,7 +176,10 @@ tcos: clean
 patch_dapper:
 	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu DAPPER
 	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control	
-	sed -i 's/source:Version/Source-Version/g' debian/control	
+	sed -i 's/source:Version/Source-Version/g' debian/control
+	sed -i '/^Build/s/5.0.37.2/5.0.7ubuntu13/g' debian/control
+	sed -i '/python-support/s/0.3/0.1.1ubuntu1/g' debian/control
+	sed -i '/dh_pysupport/s/dh_pysupport/dh_python/g' debian/rules
 
 patch_edgy:
 	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu EDGY

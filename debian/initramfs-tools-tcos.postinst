@@ -61,7 +61,7 @@ fi
 if [ -z "${TFTPBOOT}" ]; then
 
   echo "***********************************************************"
-  echo "gentcos: ERROR: can't read TFTPBOOT dir, please, install"
+  echo "initramfs-tools-tcos: ERROR: can't read TFTPBOOT dir, please, install"
   echo "         atftp or tftpd-hpa package first."
   echo ""
   echo "***********************************************************"
@@ -69,7 +69,7 @@ if [ -z "${TFTPBOOT}" ]; then
 elif [ ! -d ${TFTPBOOT} ]; then
 
   echo "***********************************************************"
-  echo "gentcos: ERROR: your configured TFTPD dir "
+  echo "initramfs-tools-tcos: ERROR: your configured TFTPD dir "
   echo "        "${TFTPBOOT}" not exits, please create first."
   echo "***********************************************************"
 
@@ -85,7 +85,7 @@ else
     ln -s /var/lib/tcos/tftp ${TFTPBOOT}/tcos
 
   #elif [ -L ${TFTPBOOT}/tcos ]; then
-  #  echo "gentcos: INFO: ${TFTPBOOT}/tcos is a symbolic link, all seems OK."
+  #  echo "initramfs-tools-tcos: INFO: ${TFTPBOOT}/tcos is a symbolic link, all seems OK."
   
   fi
 fi 
@@ -106,6 +106,26 @@ if [ -x "/etc/init.d/tcos-standalone" ]; then
 
 fi
 
+# tcosmonitor dbus
+case "$1" in
+    configure|reconfigure)
+        if [ -x "/etc/init.d/dbus" ]; then
+            if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+                invoke-rc.d dbus reload || true
+            else
+                /etc/init.d/dbus reload || true
+            fi
+        fi
+    ;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+
+esac
 
 
 #DEBHELPER#

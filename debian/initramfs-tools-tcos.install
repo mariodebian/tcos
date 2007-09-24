@@ -17,3 +17,4 @@ usr/share/initramfs-tools-tcos/tcos-run-functions.sh
 usr/share/initramfs-tools/*
 etc/default/tcos-standalone
 etc/init.d/tcos-standalone
+etc/dbus-1/system.d/tcosmonitor.conf

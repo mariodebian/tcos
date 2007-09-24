@@ -29,6 +29,7 @@ STANDALONE=0
 if [ ! -e ${TCOS_CONF} ]; then
  TCOS_CONF=/var/lib/tcos/standalone/etc/tcos.conf
  STANDALONE=1
+ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
 fi
 
 usage() {

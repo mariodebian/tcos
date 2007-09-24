@@ -3,8 +3,9 @@ Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
 Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, libxmlrpc-c3-dev,
-               libxau-dev, libxaw-headers, libxaw7-dev, imlib11-dev
+               libxau-dev, libxaw-headers, libxaw7-dev, imlib11-dev, python, python-support (>= 0.3)
 Standards-Version: 3.7.2
+XS-Python-Version: >= 2.4
 XS-Vcs-Browser: http://trac.tcosproject.org/browser/trunk/initramfs-tools-tcos
 XS-Vcs-Svn: https://forja.rediris.es/svn/cls-tcos/trunk/initramfs-tools-tcos
 
@@ -15,8 +16,9 @@ Depends: initramfs-tools (>= 0.40), dhcp-client | dhcp3-client,
          dosfstools, debootstrap, libltdl3, tinylogin, cdparanoia, scrot, eject, 
 	 debconf, grub, syslinux, squashfs-tools, mknbi [i386], dropbear, ltspfs-client,
 	 python,  python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
-Conflicts: tcosmonitor (<= 0.1.22.3)
+Conflicts: tcosmonitor (<< 0.1.23.2)
 Recommends: pulseaudio, pulseaudio-utils
+XB-Python-Version: ${python:Versions}
 Description: tools for generating a thin client bootable image: TCOS
  This package contains tools to create and boot an initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
@@ -29,31 +31,25 @@ Description: tools for generating a thin client bootable image: TCOS
 
 Package: tcos-usplash
 Architecture: any
-Depends: initramfs-tools-tcos (= ${Source-Version}), usplash, 
+Depends: initramfs-tools-tcos (>= 0.84.5), usplash, 
 	 ${misc:Depends}, ${shlibs:Depends}
 Description: usplash artwork TCOS
  This package contains usplash boot image for TCOS.
 
 
-Package: tcos-server-utils
-Architecture: any
-Depends: shfs-utils, python, python-configobj, 
-         initramfs-tools-tcos (= ${Source-Version}), fuse-utils
-Description: TCOS server utils (gdm autologin or sshfs mount)
- This package contain some utils (scripts) to mount or connect
- thin client devices with server users.
- .
- TCOS Thin client usesfull utils to work with TCOS.
-
 Package: tcos
 Architecture: all
-Depends: initramfs-tools-tcos (>= 0.84.1) , tcos-usplash (>= 0.84.1) [i386],
-	 tcos-server-utils (>= 0.84.1), ${misc:Depends}, ${shlibs:Depends}
+Depends: initramfs-tools-tcos (>= 0.84.5) , tcos-usplash (>= 0.84.5) [i386],
+	 ${misc:Depends}, ${shlibs:Depends},
          atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd,
          aumix, pulseaudio, pulseaudio-utils, x11vnc, libasound2-plugins, xfs,
-         mtools, ltspfs-server, esound, alsa-utils, cdebootstrap
+         mtools, ltspfs-server, esound, alsa-utils, cdebootstrap,
+         shfs-utils, python, python-configobj, fuse-utils
 Recommends: pulseaudio-esound-compat
+Provides: tcos-server-utils
+Replaces: tcos-server-utils
+XB-Python-Version: ${python:Versions}
 Description: new thin client implementation
  This is a system for generating thin client hosts using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot

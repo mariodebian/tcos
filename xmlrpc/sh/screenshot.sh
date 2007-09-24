@@ -31,6 +31,7 @@ else
   user=$(who | awk '{ if ($2 == ":0") print $1 }')
   if [ "$user" = "root" ]; then echo "error: root not allowed"; exit 1; fi
   export XAUTHORITY=/home/$user/.Xauthority
+  export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
 fi
 
 [ -d $_www ]  && rm -f $_www/*.png

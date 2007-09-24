@@ -26,6 +26,10 @@ if [ ! -e /conf/tcos.conf ]; then
    exit 1
 fi
 
+[ -f /tmp/allmodules_done ] && echo "OK"; exit 0
+
+touch /tmp/allmodules_done
+
 . /scripts/functions
 
 . /conf/tcos.conf
@@ -48,7 +52,7 @@ mount_unionfs /mnt/.ram-modules /mnt/.modules /lib/modules/$(uname -r)
 
 # reload modules....
 if [ -x /usr/bin/discover-modprobe ]; then
-  discover-modprobe -nv 2>/dev/null >/dev/null
+  discover-modprobe -nv >/dev/null 2>&1
 fi
 
 echo "OK"

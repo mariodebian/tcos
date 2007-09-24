@@ -16,7 +16,7 @@
 # Do NOT "set -e"
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
-PATH=/usr/lib/tcos:/sbin:/usr/sbin:/bin:/usr/bin
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/lib/tcos
 
 DESC="TcosXMLRPC standalone"
 NAME=tcosxmlrpc-standalone
@@ -71,7 +71,7 @@ do_stop()
         # kill busybox httpd
         kill $(ps aux|grep "busybox httpd" |grep -v grep | awk '{print $2}') 2>/dev/null
 
-        killall $(basename $DAEMON) 2> /dev/null
+        kill $(cat /var/lib/tcos/standalone/log/abyss.pid) 2> /dev/null
         # clean www data
         rm -f ${DAEMON_WWW}/*
 	return 0

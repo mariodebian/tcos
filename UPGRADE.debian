@@ -7,7 +7,7 @@
 
   Old versions of TCOS use more strange dirs that don't are in 
   FHS (Filesystem Hierarchy Standard), because of it, I have moved a
-  lot of files and dirs to more standar dirs.
+  lot of files and dirs to more standard dirs.
 
 
   1.- TFTP
