@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.84.7) unstable; urgency=low
+
+  * Fix upgrade scripts
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 30 Sep 2007 12:06:59 +0200
+
 initramfs-tools-tcos (0.84.6) unstable; urgency=low
 
   * bin/tcos-buildchroot:

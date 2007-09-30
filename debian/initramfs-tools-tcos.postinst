@@ -117,7 +117,7 @@ case "$1" in
             fi
         fi
     ;;
-    abort-upgrade|abort-remove|abort-deconfigure)
+    upgrade|failed-upgrade|abort-upgrade|abort-remove|abort-deconfigure)
     ;;
 
     *)
