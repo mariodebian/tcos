@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.84.6) unstable; urgency=low
+
+  * bin/tcos-buildchroot:
+    - Add rdesktop as tcos package
+  * hooks-addons/25tcosmonitor:
+    - Search for /sbin/start-stop-daemon.REAL (cdebootstrap hack)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 30 Sep 2007 11:44:43 +0200
+
 initramfs-tools-tcos (0.84.5) unstable; urgency=low
 
   * Remove tcos-server-utils package (now contents are in tcos package)

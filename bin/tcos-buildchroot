@@ -22,7 +22,8 @@ DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mes
 libnss-db iftop strace twm xterm x11vnc wget dosfstools debootstrap libltdl3 
 cdparanoia scrot eject debconf grub syslinux squashfs-tools mknbi dhcp3-client 
 dropbear python python-dbus aumix alsa-base libkrb53 acpid console-tools console-data
-mtools alsa-utils discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils esound"
+mtools alsa-utils discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils 
+esound rdesktop"
 
 TCOS_PACKAGES="initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server"
 
@@ -94,6 +95,7 @@ apt-get update
 DEBCONF_FRONTEND='noninteractive' apt-get install -y cdebootstrap
 dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
 apt-get -y upgrade
+apt-get install -y ${TMP2} ${TCOS_PACKAGES}
 dpkg --remove cdebootstrap-helper-diverts
 EOC
 }

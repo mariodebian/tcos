@@ -77,8 +77,15 @@ cpifexists ${TCOS_BINS}/lockscreen  /usr/bin/
 mkdir -p ${DESTDIR}/usr/share/initramfs-tools-tcos/xmlrpc/
 cp /usr/share/initramfs-tools-tcos/xmlrpc/lockscreen.png ${DESTDIR}/usr/share/initramfs-tools-tcos/xmlrpc/
 
+if [ -e /sbin/start-stop-daemon.REAL ]; then
+  # cdebootstrap diverts to .REAL this file
+  copy_exec /sbin/start-stop-daemon.REAL  /sbin/
+  rm -f $DESTDIR/sbin/start-stop-daemon.REAL
+  cp -a /sbin/start-stop-daemon.REAL $DESTDIR/sbin/start-stop-daemon
+else
+  copy_exec /sbin/start-stop-daemon  /sbin/
+fi
 
-copy_exec /sbin/start-stop-daemon  /sbin/
 cpifexists ${TCOS_BINS}/getinfo.sh       /sbin/
 chmod +x $DESTDIR/sbin/getinfo.sh
 
