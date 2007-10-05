@@ -1,21 +1,15 @@
 all: server standalone tcospasswd
+#all: server
 
 
 include ../common.mk
 
-OLD_XMLRPC= $(wildcard /usr/include/xmlrpc_abyss.h)
-NEW_XMLRPC= $(wildcard /usr/include/xmlrpc_server_abyss.h)
-ifneq ($(OLD_XMLRPC),)
-	XMLRPC_INC="<xmlrpc_abyss.h>"
-endif
-ifneq ($(NEW_XMLRPC),)
-	XMLRPC_INC="<xmlrpc_server_abyss.h>"
-endif
 
-XMLRPC_VERSION=$(shell xmlrpc-c-config --version | awk -F"." '{print $$1"-"$$2}')
+XMLRPC_VERSION_MAYOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$1}')
+XMLRPC_VERSION_MINOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$2$$3}'| cut -c-4| bc)
 CFLAGS=-Wall -O2 -ansi -pedantic `xmlrpc-c-config abyss-server --cflags`
 LIBS=`xmlrpc-c-config abyss-server --libs` -lcrypt -lX11
-DEFINES= -DBSIZE=512 -DVERSION=\"$(VERSION)\" -DXMLRPC_INC=$(XMLRPC_INC)
+DEFINES= -DBSIZE=512 -DVERSION=\"$(VERSION)\" -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
 TEST_DEFINES=-DDEBUG -DVERSION=\"$(VERSION)\" -DBSIZE=512 -DVISIBLE_PASSWD -DXMLRPC_INC=$(XMLRPC_INC)
 GCC=gcc
 SERVER=tcosxmlrpc
@@ -26,6 +20,8 @@ test2:
 	@echo OLD_XMLRPC=$(OLD_XMLRPC)
 	@echo NEW_XMLRPC=$(NEW_XMLRPC)
 	@echo XMLRPC_INC=$(XMLRPC_INC)
+	@echo XMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR)
+	@echo XMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
 
 server:
 	$(GCC) $(DEFINES) -o $(SERVER) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"/sbin\"

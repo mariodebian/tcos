@@ -24,11 +24,12 @@
 
 
 
-
-static xmlrpc_value *
-tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_login(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
  {
-/*  FILE *fp;*/
   char *login_ok;
   char *user;
   char *pass;
@@ -37,10 +38,6 @@ tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
 
   dbgtcos("tcosxmlrpc::tcos_login() user=\"%s\" pass=\"******\"\n");
-
-  /*fprintf(stderr, "tcosxmlrpc::tcos_login() user=\"%s\" pass=\"%s\"\n", user, pass);*/
-
-
 
   login_ok=validate_login(user, pass);
 
@@ -68,11 +65,13 @@ tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 }
 
 
-
-static xmlrpc_value *
-tcos_logout(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_logout(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_logout(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
 {
-/*   return xmlrpc_build_value(env, "s", tcos_logout_helper() );*/
+   /* dummy method */
    return xmlrpc_build_value(env, "s", 1 );
 }
 

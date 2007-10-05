@@ -24,13 +24,6 @@ handle_xauth( char *cookie , char *servername)
 
   dbgtcos("tcosxmlrpc::handle_auth() cookie=%s server=%s\n" ,cookie, servername);
 
-    /*
-    if ( strcmp (servername, "") == 0 )
-       gethostname(hostname, BSIZE);
-    else
-       snprintf(hostname, BSIZE, "%s" ,servername);
-    */
-
     /* read my hostname */
     gethostname(hostname, BSIZE);
     dbgtcos("tcosxmlrpc::handle_xauth() gethostname=%s\n", hostname);
@@ -81,9 +74,11 @@ handle_xauth( char *cookie , char *servername)
 }
 
 
-
-static xmlrpc_value *
-tcos_xauth(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_xauth(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_xauth(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
  {
   char *cookie;
   char *hostname;
@@ -106,17 +101,3 @@ tcos_xauth(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
 
 
-
-
-/*
-int main( int argc, char **argv ) {
-  if(argc != 3) {
-    printf( "Need 2 arguments, first cookie, last hostname to connect.\n" );
-    return(1);
-  }
-  printf ( "main() argv=%s\n" , argv[1] );
-  printf( "handle_auth()  cookie=%s hostname=%s\n" , argv[1] , argv[2] );
-  handle_xauth( argv[1] , argv[2] );
-  return(0);
-}
-*/

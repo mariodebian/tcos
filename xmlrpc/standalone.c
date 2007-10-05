@@ -20,9 +20,11 @@
 
 #include "standalone.h"
 
-
-static xmlrpc_value *
-tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_standalone(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
  {
   FILE *fp;
   char line[BIG_BUFFER];
@@ -62,8 +64,11 @@ tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 }
 
 
-static xmlrpc_value *
-tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_dbus(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
  {
   FILE *fp;
   char cmd[BIG_BUFFER];

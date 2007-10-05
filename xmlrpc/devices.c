@@ -21,8 +21,11 @@
 #include "devices.h"
 #include "xauth.h"
 
-static xmlrpc_value *
-tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_devices(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
  {
   FILE *fp;
   char line[BSIZE];
@@ -32,8 +35,6 @@ tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *cookie;
   char *hostname;
   int xauth_ok;
-
-  /*char *login_ok;*/
 
   dbgtcos("tcosxmlrpc::tcos_devices() Init \n");
 
@@ -72,9 +73,6 @@ tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    pclose(fp);
    return xmlrpc_build_value(env, "s", line );
 
-
-  /* never here */
-  return xmlrpc_build_value(env, "s", DEVICES_UNKNOW_ERROR );
 }
 
 

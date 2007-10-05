@@ -22,9 +22,11 @@
 #include "xorg.h"
 
 
-
-static xmlrpc_value *
-tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_xorg(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
  {
   FILE *fp;
   char line[BSIZE];
@@ -111,11 +113,6 @@ tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 	return xmlrpc_build_value(env, "s", XORG_UNKNOW_OPTION );
   }
 
-
-
-
-  /* never here */
-  return xmlrpc_build_value(env, "s", XORG_UNKNOW_OPTION );
 }
 
 

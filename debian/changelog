@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.85.0) unstable; urgency=low
+
+  * xmlrpc/*
+    - Adopt new libxmlrpc API (> 1.06) and use conditionals adding methods
+    - Move echo, version and status method outside main file
+  * debian/initramfs-tools-tcos.[postint|postrm]
+    - Remove error with unknow argument
+    - Purge tcos-standalone script with '|| true' (thanks Vidal)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 06 Oct 2007 00:49:04 +0200
+
 initramfs-tools-tcos (0.84.7) unstable; urgency=low
 
   * Fix upgrade scripts

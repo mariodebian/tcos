@@ -30,21 +30,31 @@ http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=2032
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <xmlrpc.h>
-
-#ifdef XMLRPC_INC
-  #include XMLRPC_INC
-#endif
-
 #include <unistd.h>
 
-/*#define VERSION "0.0.15"*/
+#include <xmlrpc.h>
+#include <xmlrpc_abyss.h>
+
+#define OLD_VERSION_MAYOR 0
+#define OLD_VERSION_MINOR 920
+
+#if XMLRPC_VERSION_MAYOR > OLD_VERSION_MAYOR || ( (XMLRPC_VERSION_MAYOR == OLD_VERSION_MAYOR) && (XMLRPC_VERSION_MINOR > OLD_VERSION_MINOR) )
+    #warning "########### WARNING ######### NEWAPI > 0.9.20 not good tested ###########"
+    #define NEWAPI 1
+    #include <xmlrpc_server.h>
+#endif
+
+
+
+
+
 #define BUFF_SIZE 1000
 #define HAVE_MAIN
 
 /* My TCOS includes */
 
 #include "debug.c"
+
 
 #include "login.c"
 #include "xauth.c"
@@ -58,115 +68,94 @@ http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=2032
 #include "devices.c"
 #include "lockscreen.c"
 
-static xmlrpc_value *
-tcos_version(xmlrpc_env *env, xmlrpc_value *in, void *ud)
- {
 
-    dbgtcos("tcosxmlrpc::tcos_version() %s\n", VERSION);
-    return xmlrpc_build_value(env, "s", VERSION);
- }
-
-static xmlrpc_value *
-tcos_echo(xmlrpc_env *env, xmlrpc_value *in, void *ud)
- {
-   char *s;
-   size_t *len;
-
-   
-   xmlrpc_parse_value(env, in, "(s#)", &s, &len);
-
-   dbgtcos("tcosxmlrpc::tcos_echo() %s\n", s);
-
-   return xmlrpc_build_value(env, "s", s);
- }
+#include "simple-methods.c"
 
 
 
-static xmlrpc_value *
-tcos_status (xmlrpc_env *env, xmlrpc_value *param_array, void *user_data)
-{
-   FILE *fp=NULL;
-   char *app=NULL;
-   /*char *login_ok;
-   char *user;
-   char *pass;*/
-   char cmd[BUFF_SIZE];
-   char ret[BUFF_SIZE];
 
-
-   dbgtcos("tcosxmlrpc::tcos_status() Init \n");
-
-   /* Parse app string */
-   xmlrpc_parse_value(env, param_array, "(s)", &app);
-
-/*   xmlrpc_parse_value(env, param_array, "(sss)", &app, &user, &pass); */
-   if (env->fault_occurred)
-	return xmlrpc_build_value(env, "s", "params error");
-
-   /* need login first */
-  /* login_ok=validate_login(user,pass);
-  if( strcmp(login_ok,  LOGIN_OK ) != 0 )
-    return xmlrpc_build_value(env, "s", login_ok );
-  */
-
-   dbgtcos("tcosxmlrpc::tcos_status() pidof %s\n", app);
-   
-
-   snprintf( (char*) &cmd, BUFF_SIZE, "pidof %s| grep [1234567890] | wc -l" ,app);
-
-   dbgtcos("tcosxmlrpc::tcos_status() exec cmd=\"%s\"\n", cmd);
-
-   fp=(FILE*)popen(cmd, "r");
-   if (env->fault_occurred)
-	return xmlrpc_build_value(env, "s", "exec error");;
-
-   dbgtcos("tcosxmlrpc::tcos_status() reading from fp pointer\n");
-
-   fscanf(fp, "%s", ret);
-
-   dbgtcos( "tcosxmlrpc::tcos_status() ret value=%s\n", ret);
-   
-   pclose(fp);
-
-   if (ret != NULL)   
-       return xmlrpc_build_value(env, "s", ret);
-   else
-       return xmlrpc_build_value(env, "s", "error");
-
-}
 
 
 int main (int argc, char **argv)
 {
+#ifdef NEWAPI
+    xmlrpc_server_abyss_parms serverparm;
+    xmlrpc_registry * registryP;
+    xmlrpc_env envP;
+#endif
+
     /* check command line config file */
     if (argc != 2) {
 	fprintf(stderr, "Usage:\n\t tcosxmlrpc /path/of/abyss.conf\n");
 	return(1);
     }
 
+    /* initialize server */
 
+#ifdef NEWAPI
+    xmlrpc_env_init(&envP);
+    registryP = xmlrpc_registry_new(&envP);
+#else
     xmlrpc_server_abyss_init(XMLRPC_SERVER_ABYSS_NO_FLAGS, argv[1]);
+#endif
+
 
     /* add methods */
 
-    xmlrpc_server_abyss_add_method_w_doc("tcos.login", &tcos_login, NULL,
-    "ss:s", "Tcos, Basic auth system.");
 
-    xmlrpc_server_abyss_add_method_w_doc("tcos.logout", &tcos_logout, NULL,
-    ":s", "Tcos, Basic auth system.");
-
+#ifdef NEWAPI
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.version", &tcos_version, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.echo", &tcos_echo, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.status", &tcos_status, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.login", &tcos_login, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.logout", &tcos_logout, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.xauth", &tcos_xauth, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.standalone", &tcos_standalone, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.dbus", &tcos_dbus, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.pci", &tcos_pci, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.exe", &tcos_exe, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.kill", &tcos_kill, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.screenshot", &tcos_screenshot, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.xorg", &tcos_xorg, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.sound", &tcos_sound, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.devices", &tcos_devices, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.lockscreen", &tcos_lockscreen, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockscreen", &tcos_unlockscreen, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.info", &tcos_info, NULL);
+#else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
-
-    xmlrpc_server_abyss_add_method_w_doc("tcos.exe", &tcos_exe, NULL,
-    "sss:s", "Tcos, Exec a command passed as string. (need login first)");
-
-    xmlrpc_server_abyss_add_method_w_doc("tcos.kill", &tcos_kill, NULL,
-    "sss:s", "Tcos, killall command passed as string. (need login first)");
-
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.echo", &tcos_echo, NULL,
+    "s:s", "Tcos, debug class, returns string passed. (no auth needed)");
+    
     xmlrpc_server_abyss_add_method_w_doc("tcos.status", &tcos_status, NULL,
     "s:s", "Tcos, returns 1 if app running 0 if not or error string. (no auth needed)");
-
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.login", &tcos_login, NULL,
+    "ss:s", "Tcos, Basic auth system.");
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.logout", &tcos_logout, NULL,
+    ":s", "Tcos, Basic auth system.");
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.xauth", &tcos_xauth, NULL,
+    "ss:s", "Tcos, authenticate with X cookies.");
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.standalone", &tcos_standalone, NULL,
+    "s:s", "Tcos, Standalone. Return standalone values (no auth needed)");
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.dbus", &tcos_dbus, NULL,
+    "s:s", "Tcos, DBus. Exe with a wrapper some dbus events (auth needed)");
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.pci", &tcos_pci, NULL,
+    "s:s", "Tcos, PCI data stuff. Send pci_all to get pci bus ids. (no auth needed)");
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.exe", &tcos_exe, NULL,
+    "sss:s", "Tcos, Exec a command passed as string. (need login first)");
+    
+    xmlrpc_server_abyss_add_method_w_doc("tcos.kill", &tcos_kill, NULL,
+    "sss:s", "Tcos, killall command passed as string. (need login first)");
+    
     xmlrpc_server_abyss_add_method_w_doc("tcos.screenshot", &tcos_screenshot, NULL,
     "ss:s", "Tcos, make a screenshot and return files. (need login first)");
 
@@ -175,12 +164,9 @@ int main (int argc, char **argv)
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.sound", &tcos_sound, NULL,
     "ssss:s", "Tcos, configure, change or get sound settings.");
-
+    
     xmlrpc_server_abyss_add_method_w_doc("tcos.devices", &tcos_devices, NULL,
     "ssss:s", "Tcos, configure, change or get devices settings.");
-
-    xmlrpc_server_abyss_add_method_w_doc("tcos.xauth", &tcos_xauth, NULL,
-    "ss:s", "Tcos, authenticate with X cookies.");
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.lockscreen", &tcos_lockscreen, NULL,
     "ss:s", "Tcos, exec lockscreen to block thin client.");
@@ -188,14 +174,6 @@ int main (int argc, char **argv)
     xmlrpc_server_abyss_add_method_w_doc("tcos.unlockscreen", &tcos_unlockscreen, NULL,
     "ss:s", "Tcos, kill lockscreen to unblock thin client.");
 
-/* DEPRECATED METHOD
-    xmlrpc_server_abyss_add_method_w_doc("tcos.update_system_info", &tcos_update_system_info, NULL,
-    ":i", "Exec \"WEBSERVER_SCRIPT update\" (need login first).");
-*/
-    xmlrpc_server_abyss_add_method_w_doc("tcos.echo", &tcos_echo, NULL,
-    "s:s", "Tcos, debug class, returns string passed. (no auth needed)");
-
-    /* Info method */
     xmlrpc_server_abyss_add_method_w_doc("tcos.info", &tcos_info, NULL,
     "s:s", "Tcos, return passed info string. (no auth needed)\n\
 Info methods:\n\
@@ -220,19 +198,21 @@ Info methods:\n\
 * network_rx\n\
 * network_tx\n\
 * modules_loaded");
+#endif
 
-    xmlrpc_server_abyss_add_method_w_doc("tcos.standalone", &tcos_standalone, NULL,
-    "s:s", "Tcos, Standalone. Return standalone values (no auth needed)");
+    /*  end of add methods */
 
-    xmlrpc_server_abyss_add_method_w_doc("tcos.dbus", &tcos_dbus, NULL,
-    "s:s", "Tcos, DBus. Exe with a wrapper some dbus events (auth needed)");
-
-    xmlrpc_server_abyss_add_method_w_doc("tcos.pci", &tcos_pci, NULL,
-    "s:s", "Tcos, PCI data stuff. Send pci_all to get pci bus ids. (no auth needed)");
 
     dbgtcos("tcosxmlrpc::main() switching to background.\n");
 
+
+#ifdef NEWAPI
+    serverparm.config_file_name = argv[1];
+    serverparm.registryP = registryP;
+    xmlrpc_server_abyss(&envP, &serverparm, XMLRPC_APSIZE(registryP));
+#else
     xmlrpc_server_abyss_run();
+#endif
 
     /* We never reach this point. */
     return 0;

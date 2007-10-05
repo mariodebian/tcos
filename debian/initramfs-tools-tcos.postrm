@@ -19,16 +19,10 @@ case "$1" in
     configure|reconfigure)
       reload_dbus
     ;;
-    upgrade|failed-upgrade|abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
     purge)
-       update-rc.d tcos-standalone remove >/dev/null
+       update-rc.d -f tcos-standalone remove >/dev/null ||true
        rm -f /etc/dbus/system.d/tcosmonitor.conf
        reload_dbus
-    ;;
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
     ;;
 
 esac

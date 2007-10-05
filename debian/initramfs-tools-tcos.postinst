@@ -97,7 +97,7 @@ echo "TCOS_VERSION=$2"                          >> /var/lib/tcos/standalone/etc/
 
 
 if [ -x "/etc/init.d/tcos-standalone" ]; then
-        update-rc.d tcos-standalone defaults >/dev/null
+        update-rc.d tcos-standalone defaults  || true
         if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
                 invoke-rc.d tcos-standalone restart
         else
@@ -117,14 +117,6 @@ case "$1" in
             fi
         fi
     ;;
-    upgrade|failed-upgrade|abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
-
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-
 esac
 
 

@@ -104,9 +104,11 @@ kill_exe( char *cmd )
 }
 
 
-
-static xmlrpc_value *
-tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_exe(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
 {
      char *s;
      char *user;
@@ -132,9 +134,11 @@ tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   return xmlrpc_build_value(env, "s", s);
 }
 
-
-static xmlrpc_value *
-tcos_kill(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#if NEWAPI
+static xmlrpc_value *tcos_kill(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+#else
+static xmlrpc_value *tcos_kill(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+#endif
 {
      char *s;
      char *user;
