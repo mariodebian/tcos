@@ -1,7 +1,5 @@
 etc/tcos/*
-etc/X11/Xsession.d/82export_pulseaudio
-usr/lib/tcos/*
-var/lib/tcos/*
+var/lib/tcos/tftp/*
 usr/sbin/gentcos
 usr/sbin/update-tcospasswd
 usr/sbin/tcospasswd
@@ -15,6 +13,3 @@ usr/share/initramfs-tools-tcos/xmlrpc/*
 usr/share/initramfs-tools-tcos/tcos-generation-functions.sh
 usr/share/initramfs-tools-tcos/tcos-run-functions.sh
 usr/share/initramfs-tools/*
-etc/default/tcos-standalone
-etc/init.d/tcos-standalone
-etc/dbus-1/system.d/tcosmonitor.conf

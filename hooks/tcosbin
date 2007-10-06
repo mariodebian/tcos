@@ -63,6 +63,10 @@ cpifexists ${TCOS_BINS}/seq /bin
 # get_filesystem
 cpifexists ${TCOS_BINS}/get_filesystem /bin
 
+# limits
+cpifexists ${TCOS_BINS}/set-limits     /bin
+
+
 # LIBRARIES
 cpifexists /sbin/ldconfig    /usr/sbin/
 [ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/

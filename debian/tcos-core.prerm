@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+
+if [ "$1" = "purge" ]; then
+
+  # stop tcos-standalone script
+  if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+     invoke-rc.d tcos-standalone stop
+  else
+    /etc/init.d/tcos-standalone stop
+  fi
+
+fi
+
+
+
+#DEBHELPER#

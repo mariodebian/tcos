@@ -33,40 +33,8 @@ cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/050_tcos_devices.rules  /etc/u
 cpifexists ${TCOS_BINS}/mount-listener           /usr/sbin/
 cpifexists ${TCOS_BINS}/listener-daemon.sh       /usr/sbin/
 
-cat << EOF >> $DESTDIR/scripts/tcos-bottom/10mount_listener
-#!/bin/sh
-#
-
-PREREQ=""
-
-prereqs()
-{
-        echo "\$PREREQ"
-}
-
-case \$1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
-
-quiet=n
-. /scripts/functions
-. /conf/tcos.conf
-. /conf/tcos-run-functions
-
-
-if [ -x /sbin/listener-daemon.sh ]; then
-   _log "MOUNT-listener trying to start"
-   /usr/sbin/listener-daemon.sh > /var/log/listener-daemon.log 2>&1 &
-fi
-
-exit 0
-EOF
-chmod +x $DESTDIR/scripts/tcos-bottom/10mount_listener
-
+# need udevinfo in listener-daemon.sh
+cpifexists /usr/bin/udevinfo                     /usr/bin/
 
 
 # tcosxmlrpc utils
@@ -132,100 +100,5 @@ exit 0
 EOF
 chmod +x $DESTDIR/sbin/startxmlrpc
 
-# add init process
-cat << EOF > $DESTDIR/scripts/tcos-bottom/45startxmlrpc
-#!/bin/sh
-#
-
-PREREQ=""
-
-prereqs()
-{
-        echo "\$PREREQ"
-}
-
-case \$1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
-
-quiet=n
-. /scripts/functions
-. /conf/tcos.conf
-. /conf/tcos-run-functions
-
-
-# if break=xmlrpc STOP here
-maybe_break xmlrpc
-
-# DOCUMENTME noxmlrpc | disable tcosxmlrpc daemon
-noxmlrpc=\$(read_cmdline_var "noxmlrpc" "0")
-if [ \${noxmlrpc} = 1 ]; then
-  _log "START-XMLR-PC xmlrpc disabled from cmdline"
-  exit 0
-fi
-
-
-
-# start daemon
-log_begin_msg "Starting tcosxmlrpc server"
-  _log "START-XML-RC starting startxmlrpc...."
-  startxmlrpc &
-log_end_msg
-exit 0
-
-EOF
-chmod +x $DESTDIR/scripts/tcos-bottom/45startxmlrpc
-
-
-cat << EOF > $DESTDIR/scripts/tcos-bottom/46starthttpd
-#!/bin/sh
-#
-
-PREREQ=""
-
-prereqs()
-{
-        echo "\$PREREQ"
-}
-
-case \$1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
-
-quiet=n
-. /scripts/functions
-. /conf/tcos.conf
-. /conf/tcos-run-functions
-
-
-# if break=httpd STOP here
-maybe_break httpd
-
-# DOCUMENTME nohttpd | disable httpd daemon
-nohttpd=\$(read_cmdline_var "nohttpd" "0")
-if [ \${nohttpd} = 1 ]; then
-  _log "START-HTTPD disabled from cmdline"
-  exit 0
-fi
-
-
-# start daemon
-log_begin_msg "Starting httpd server"
-  _log "HTTPD starting starthttpd...."
-  starthttpd.sh &
-log_end_msg
-
-EOF
-chmod +x $DESTDIR/scripts/tcos-bottom/46starthttpd
-
-chmod +x $DESTDIR/sbin/*.sh
 
 stat_after "TcosMonitor"

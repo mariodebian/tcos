@@ -23,6 +23,8 @@ quiet=n
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
+. /bin/set-limits
+
 # if break=initsound STOP here
 maybe_break initsound
 

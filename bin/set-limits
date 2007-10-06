@@ -1,0 +1,26 @@
+
+
+# not set shell this script may be sourced
+
+. /conf/tcos.conf
+
+
+# limit ram
+if [ "$TCOS_MAX_MEM" = "" ]; then
+  TCOS_MAX_MEM=95
+fi
+
+if [ "$TCOS_MAX_MEM" != "0" ]; then
+  MEM=0
+  for size in $(grep -e Inactive -e SwapFree /proc/meminfo | awk '{print $2}'); do
+    MEM=$(($MEM+$size))
+  done
+  MAX_MEM=$(($MEM*$TCOS_MAX_MEM/100))
+
+
+  echo "set limit in $0 to $MAX_MEM Kb" >> /tmp/initramfs.debug
+  ulimit -m $MAX_MEM >> /tmp/initramfs.debug 2>&1
+  ulimit -v $MAX_MEM >> /tmp/initramfs.debug 2>&1
+else
+  echo "unlimited memory in $0" >> /tmp/initramfs.debug
+fi

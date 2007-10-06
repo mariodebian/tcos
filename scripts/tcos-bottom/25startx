@@ -23,6 +23,10 @@ quiet=n
 . /conf/tcos-run-functions
 . /conf/tcos-modules.conf
 
+# set limits in memory
+. /bin/set-limits
+
+
 # if break=startx STOP here
 maybe_break startx
 

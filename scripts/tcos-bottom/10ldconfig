@@ -71,7 +71,6 @@ fi
 
 
 if [ -d /usr/lib/xorg/modules/ ]; then
-  XORG_VERSION="7.0.0"
   XORG_MAYOR=7
 fi
 
@@ -87,8 +86,7 @@ if [ ${XORG_MAYOR} -lt 7 ]; then
  mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
  ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
 else
- _log "LDCONFIG Updating links in Xorg 7.0 mode"
- # FIXME need more work Xorg 7.0
+ _log "LDCONFIG Updating links in Xorg 7.x mode"
  mkdir -p /usr/share/X11/
  ln -s /etc/X11/rgb.txt /usr/share/X11/rgb.txt
  ln -s /usr/share/X11/xkb /etc/X11/xkb

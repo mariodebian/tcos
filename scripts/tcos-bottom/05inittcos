@@ -136,23 +136,5 @@ fi
 update_progress 2
 
 
-# limit ram
-
-if [ "$TCOS_MAX_MEM" = "" ]; then
-  TCOS_MAX_MEM=95
-fi
-
-MEM=0
-for size in $(grep -e MemFree -e SwapFree /proc/meminfo | awk '{print $2}'); do
-  MEM=$(($MEM+$size))
-done
-MAX_MEM=$(($MEM*$TCOS_MAX_MEM/100))
-
-_log "BUSYBOX limit MAX_MEM=$MAX_MEM  ($TCOS_MAX_MEM%)"
-
-ulimit -m $MAX_MEM >> /tmp/initramfs.debug 2>&1
-ulimit -v $MAX_MEM >> /tmp/initramfs.debug 2>&1
-
-
 
 exit 0

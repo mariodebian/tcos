@@ -35,7 +35,7 @@ handle_xauth( char *cookie , char *servername)
        return(XAUTH_ERROR);
     }
 
-    snprintf ( (char*) cmd, BSIZE, "xauth -q -f /tmp/.tmpxauth add %s:0 MIT-MAGIC-COOKIE-1 %s", hostname, cookie);
+    snprintf ( (char*) cmd, BSIZE, "xauth -q -f /tmp/.tmpxauth add %s:0 MIT-MAGIC-COOKIE-1 %s >/dev/null 2>&1", hostname, cookie);
 
     dbgtcos("tcosxmlrpc::handle_xauth() cmd=\"%s\"\n", cmd);
 

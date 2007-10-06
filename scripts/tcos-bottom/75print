@@ -22,6 +22,8 @@ quiet=n
 . /scripts/functions
 . /conf/tcos-run-functions
 
+. /bin/set-limits
+
 if [ $TCOS_PRINTER ]; then
 
   LP=""

@@ -1,0 +1,36 @@
+#!/bin/bash
+#set -e
+
+
+
+# tcos-standalone
+echo "TCOS_DATE=$(LC_ALL=C LC_MESSSAGES=C date)" > /var/lib/tcos/standalone/etc/tcos.conf
+echo "TCOS_VERSION=$2"                          >> /var/lib/tcos/standalone/etc/tcos.conf
+
+
+if [ -x "/etc/init.d/tcos-standalone" ]; then
+        update-rc.d tcos-standalone defaults  || true
+        if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+                invoke-rc.d tcos-standalone restart
+        else
+                /etc/init.d/tcos-standalone restart
+        fi
+
+fi
+
+# tcosmonitor dbus
+case "$1" in
+    configure|reconfigure)
+        if [ -x "/etc/init.d/dbus" ]; then
+            if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+                invoke-rc.d dbus reload || true
+            else
+                /etc/init.d/dbus reload || true
+            fi
+        fi
+    ;;
+esac
+
+
+#DEBHELPER#
+

@@ -2,7 +2,7 @@ Source: initramfs-tools-tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, libxmlrpc-c3-dev,
+Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, libxmlrpc-c3-dev, bc, 
                libxau-dev, libxaw-headers, libxaw7-dev, imlib11-dev, python, python-support (>= 0.3)
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.4
@@ -11,14 +11,12 @@ XS-Vcs-Svn: https://forja.rediris.es/svn/cls-tcos/trunk/initramfs-tools-tcos
 
 Package: initramfs-tools-tcos
 Architecture: any
-Depends: initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
-         console-data, libnss-db, iftop, strace, twm, xterm, x11vnc, 
-         dosfstools, debootstrap, libltdl3, tinylogin, cdparanoia, scrot, eject, 
+Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
+         console-data, libnss-db, iftop, strace, twm, debootstrap, libltdl3, tinylogin,  
 	 debconf, grub, syslinux, squashfs-tools, mknbi [i386], dropbear, ltspfs-client,
-	 python,  python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
+	 ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2)
 Recommends: pulseaudio, pulseaudio-utils
-XB-Python-Version: ${python:Versions}
 Description: tools for generating a thin client bootable image: TCOS
  This package contains tools to create and boot an initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
@@ -29,12 +27,25 @@ Description: tools for generating a thin client bootable image: TCOS
  .
  TCOS Thin client support for initramfs-tools.
 
+Package: tcos-core
+Architecture: any
+Depends: xterm, x11vnc, dosfstools, cdparanoia, scrot, eject, python, python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
+Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.85.0)
+XB-Python-Version: ${python:Versions}
+Description: common script and bins for generating a thin client bootable image: TCOS
+ This package contain common scripts, libs , bins and dependencies to
+ generate network images or be used in standalone hosts.
+ .
+  Homepage: http://www.tcosproject.org
+
 Package: tcos-usplash
 Architecture: any
 Depends: initramfs-tools-tcos (>= 0.84.5), usplash, 
 	 ${misc:Depends}, ${shlibs:Depends}
-Description: usplash artwork TCOS
+Description: usplash artwork for TCOS
  This package contains usplash boot image for TCOS.
+ .
+  Homepage: http://www.tcosproject.org
 
 
 Package: tcos

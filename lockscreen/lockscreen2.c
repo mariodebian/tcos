@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <X11/StringDefs.h>
 #include <X11/IntrinsicP.h>
 #include <X11/Shell.h>
@@ -69,6 +70,8 @@ int file_exists (char * fileName)
 /* TODO: don't use X-Athena-Widgets (xaw)*/
 
 int main (int argc, char **argv) {
+
+	setenv("XLIB_SKIP_ARGB_VISUALS", "1", 1);
 
 	XtResource desktopBackingStoreResources[] = { { XtNbackingStore, XtCBackingStore, XtRBackingStore, sizeof(int), 0, XtRImmediate, (XtPointer) Always, }, };
 
