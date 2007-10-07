@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.85.2) unstable; urgency=low
+
+  * Move lockscreen.png to tcos-core package => /usr/share/tcos-core/
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 07 Oct 2007 20:55:12 +0200
+
 initramfs-tools-tcos (0.85.1) unstable; urgency=low
 
   * xmlrpc/*

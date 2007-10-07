@@ -1,6 +1,6 @@
 PROGRAMS = lockscreen
 SOURCES = lockscreen2.c
-LOCKSCREEN_FILE=/usr/share/initramfs-tools-tcos/xmlrpc/lockscreen.png
+LOCKSCREEN_FILE=/usr/share/tcos-core/lockscreen.png
 LIBS=$(shell imlib-config --libs)
 CFLAGS=$(shell imlib-config --cflags)
 LDADD = -Wall -DLOCKSCREEN_IMAGE=\"$(LOCKSCREEN_FILE)\" -lXaw $(LIBS) $(CFLAGS)
@@ -22,7 +22,7 @@ debug: clean
 
 install:
 	mkdir -p $(DESTDIR)/$(TCOS_BINS)
-	mkdir -p $(DESTDIR)/$(PREFIX)/share/$(PACKAGE)/xmlrpc/
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/tcos-core/
 
 	install -m 755 lockscreen $(DESTDIR)/$(TCOS_BINS)/lockscreen
-	install -m 644 lockscreen.png $(DESTDIR)/$(PREFIX)/share/$(PACKAGE)/xmlrpc/lockscreen.png
+	install -m 644 lockscreen.png $(DESTDIR)/$(PREFIX)/share/tcos-core/lockscreen.png

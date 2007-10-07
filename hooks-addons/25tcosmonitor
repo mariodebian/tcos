@@ -43,7 +43,7 @@ cpifexists ${TCOS_BINS}/lockscreen  /usr/bin/
 
 # copy locked image
 mkdir -p ${DESTDIR}/usr/share/initramfs-tools-tcos/xmlrpc/
-cp /usr/share/initramfs-tools-tcos/xmlrpc/lockscreen.png ${DESTDIR}/usr/share/initramfs-tools-tcos/xmlrpc/
+cp /usr/share/tcos-core/lockscreen.png ${DESTDIR}/usr/share/tcos-core/
 
 if [ -e /sbin/start-stop-daemon.REAL ]; then
   # cdebootstrap diverts to .REAL this file
