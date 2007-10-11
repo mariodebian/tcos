@@ -42,7 +42,7 @@ cpifexists ${TCOS_BINS}/tcosxmlrpc  /usr/bin/
 cpifexists ${TCOS_BINS}/lockscreen  /usr/bin/
 
 # copy locked image
-mkdir -p ${DESTDIR}/usr/share/initramfs-tools-tcos/xmlrpc/
+mkdir -p ${DESTDIR}/usr/share/tcos-core/
 cp /usr/share/tcos-core/lockscreen.png ${DESTDIR}/usr/share/tcos-core/
 
 if [ -e /sbin/start-stop-daemon.REAL ]; then

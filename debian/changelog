@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.85.3) unstable; urgency=low
+
+  * hooks-addons/25tcosmonitor:
+    - Create dir before copying png lock image (ups !!!)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 11 Oct 2007 11:17:28 +0200
+
 initramfs-tools-tcos (0.85.2) unstable; urgency=low
 
   * Move lockscreen.png to tcos-core package => /usr/share/tcos-core/
