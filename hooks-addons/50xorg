@@ -138,15 +138,16 @@ if [ $XORG = 6 ]; then
           _echo " ********************************************** "
        fi
 
+    else
+       cpifexists /usr/X11R6/lib/modules/extensions/libGLcore.so /usr/X11R6/lib/modules/extensions
+       cpifexists /usr/lib/libGL.so.1  /usr/lib/
+       cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
     fi
-    cpifexists /usr/X11R6/lib/modules/extensions/libGLcore.so /usr/X11R6/lib/modules/extensions
-    cpifexists /usr/lib/libGL.so.1  /usr/lib/
-    cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
  else
     _echo "    * OpenGL support is not enabled!!"
  fi
 
-else
+else # Xorg 7.x
  mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
  # essential xorg drivers
  cp -ra /usr/lib/xorg/modules/drivers/vesa* $DESTDIR/usr/lib/xorg/modules/drivers/
@@ -172,6 +173,7 @@ else
        [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
 
        if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
+          rm -rf $DESTDIR/usr/lib/libGL.so*
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
@@ -188,11 +190,14 @@ else
           _echo " ********************************************** "
        fi
 
+    else
+      cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
+      cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
+      cpifexists /usr/lib/libGL.so.1  /usr/lib/
+      cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
+      # delete linked nvidia driver (10Mb)
+      rm -f $DESTDIR/usr/lib/libGLcore.so*
     fi
-    cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
-    cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
-    cpifexists /usr/lib/libGL.so.1  /usr/lib/
-    cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
  else
     _echo "    * OpenGL support is not enabled!!"
  fi

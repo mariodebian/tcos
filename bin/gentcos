@@ -482,11 +482,22 @@ link_vmlinuz() {
 
 
 list_pkg() {
-      echo "Installed cached packages are:"
+      echo "  Installed cached packages are:"
       ls -1 ${TCOS_PKG_CACHE} 2>/dev/null
      _exit 0
 }
 
+get_pkg_uri() {
+  PKG_MIRROR=$(basename $(rgrep "/$1_" /var/lib/apt/ 2>/dev/null| awk -F":" '{print $1}'| head -1) 2>/dev/null)
+  if [ $? != 0 ]; then
+    return 1
+  fi
+  MIRROR=$(echo $PKG_MIRROR | sed 's|_|/|g' | awk -F"/dists" '{print $1}')
+  COMPLETE_MIRROR=$(grep "$MIRROR " /etc/apt/sources.list | grep -v "^#" |awk '{print $2}')
+  PKG_FILE=$(rgrep "/$1_" /var/lib/apt/ 2>/dev/null| awk '{print $2}'| head -1)
+
+  echo ${COMPLETE_MIRROR}/${PKG_FILE}
+}
 
 tcos_inst_pkg() {
   error=0
@@ -494,6 +505,10 @@ tcos_inst_pkg() {
   for PKG in ${@}; do
     PKG_URI=$(apt-get install -qq --print-uris --reinstall ${PKG}| egrep 'file|http|ftp' \
 	 | grep "/${PKG}_" | awk '{print $1}'| tr -d "'")
+
+    if [ "${PKG_URI}" = "" ]; then
+      PKG_URI=$(get_pkg_uri ${PKG})
+    fi
 
     PKG_PROTOCOL=$(echo ${PKG_URI} | awk -F ":" '{print $1}')
     if [ "${PKG_PROTOCOL}" = "http" ] || [ "${PKG_PROTOCOL}" = "ftp" ]; then

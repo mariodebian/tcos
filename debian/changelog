@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.86.0.1) unstable; urgency=low
+
+  * Fix some nvidia issues, delete /usr/lib/libGLcore.so (10 Mb)
+  * bin/gentcos:
+    - Add another method to get packages uri (-instpkg)
+  * bin/tcos-buildchroot:
+    - Only make links if exists into chroot and not exits outside
+    - Call apt with nointeractive frontend
+  * hooks-addons/55vnc:
+    - Add auth to x11vnc server
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 24 Oct 2007 09:33:23 +0200
+
 initramfs-tools-tcos (0.85.3) unstable; urgency=low
 
   * hooks-addons/25tcosmonitor:

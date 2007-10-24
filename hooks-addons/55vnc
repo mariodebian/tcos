@@ -19,7 +19,7 @@ if [ ${TCOS_X11VNC} ]; then
 # kill all x11vnc process
 killall x11vnc >/dev/null 2>&1
 sleep 1
-DISPLAY=:0 x11vnc -o /tmp/vnc.log -forever -shared -noshm
+DISPLAY=:0 x11vnc -o /tmp/vnc.log -forever -shared -noshm -rfbauth /tmp/.tcosvnc
 #FIXME (daemonize ??)
 EOF
   chmod +x $DESTDIR/sbin/startvnc
