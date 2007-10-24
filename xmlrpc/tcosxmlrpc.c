@@ -39,7 +39,7 @@ http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=2032
 #define OLD_VERSION_MINOR 920
 
 #if XMLRPC_VERSION_MAYOR > OLD_VERSION_MAYOR || ( (XMLRPC_VERSION_MAYOR == OLD_VERSION_MAYOR) && (XMLRPC_VERSION_MINOR > OLD_VERSION_MINOR) )
-    #warning "########### WARNING ######### NEWAPI > 0.9.20 not good tested ###########"
+    /*#warning "########### WARNING ######### NEWAPI > 0.9.20 not good tested ###########"*/
     #define NEWAPI 1
     #include <xmlrpc_server.h>
 #endif
@@ -67,6 +67,7 @@ http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=2032
 #include "sound.c"
 #include "devices.c"
 #include "lockscreen.c"
+#include "vnc.c"
 
 
 #include "simple-methods.c"
@@ -122,6 +123,7 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.lockscreen", &tcos_lockscreen, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockscreen", &tcos_unlockscreen, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.info", &tcos_info, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.vnc", &tcos_vnc, NULL);
 #else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
@@ -198,6 +200,9 @@ Info methods:\n\
 * network_rx\n\
 * network_tx\n\
 * modules_loaded");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.vnc", &tcos_vnc, NULL,
+    "ssss:s", "Tcos, manage vnc server and client.");
 #endif
 
     /*  end of add methods */

@@ -18,6 +18,7 @@ cpifexists /usr/lib/imlib2/loaders/gif.so        /usr/lib/imlib2/loaders/
 cpifexists ${TCOS_BINS}/screenshot.sh     /sbin/
 cpifexists ${TCOS_BINS}/useallmodules.sh  /sbin/
 cpifexists ${TCOS_BINS}/devicesctl.sh  /sbin/
+cpifexists ${TCOS_BINS}/vnc-controller.sh  /sbin/
 
 cpifexists ${TCOS_BINS}/soundctl.sh /sbin/
 
@@ -94,6 +95,7 @@ mkdir -p $DESTDIR/var/www
 # add launcher
 cat << EOF > $DESTDIR/sbin/startxmlrpc
 #!/bin/sh
+killall tcosxmlrpc
 cd /
 /usr/bin/tcosxmlrpc /etc/abyss.conf >> /var/log/tcosxmlrpc.log 2>&1
 exit 0

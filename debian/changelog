@@ -8,8 +8,10 @@ initramfs-tools-tcos (0.86.0.1) unstable; urgency=low
     - Call apt with nointeractive frontend
   * hooks-addons/55vnc:
     - Add auth to x11vnc server
+  * xmlrpc/*
+    - New method (in alpha state) tcos.vnc
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 24 Oct 2007 09:33:23 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 24 Oct 2007 22:19:20 +0200
 
 initramfs-tools-tcos (0.85.3) unstable; urgency=low
 

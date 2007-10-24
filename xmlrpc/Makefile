@@ -74,6 +74,7 @@ install:
 	install -m 755 sh/useallmodules.sh $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/devicesctl.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/tcos-dbus.py     $(DESTDIR)/$(TCOS_BINS)/tcos-dbus-helper
+	install -m 755 sh/sh/vnc-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
 
 	install -m 644 var/etc/httpd2.conf $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
 	install -m 644 var/etc/mime.types  $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
