@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.86.2) unstable; urgency=low
+
+  * Revert (semi) last change who => w:
+    - Old versions use column 2, new versions use column 3
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 28 Oct 2007 00:47:25 +0200
+
 initramfs-tools-tcos (0.86.1) unstable; urgency=low
 
   * Fix some nvidia issues, delete /usr/lib/libGLcore.so (10 Mb)

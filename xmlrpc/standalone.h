@@ -20,7 +20,7 @@
 
 /* xmlrpc methods to export thin client info */
 
-#define STANDALONE_USER    "w | awk '{ if ($3 == \":0\") print $1 }'"
+#define STANDALONE_USER    "w | awk '{ if ($3 == \":0\" || $2 == \":0\") print $1 }' |head -1"
 #define STANDALONE_PROCESS "ps aux |grep -c \"^$("STANDALONE_USER") \""
 #define STANDALONE_SERVER  "tail -1 /var/lib/tcos/standalone/log/access.log | awk '{print $1}'"
 

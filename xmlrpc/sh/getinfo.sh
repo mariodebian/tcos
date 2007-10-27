@@ -109,7 +109,7 @@ echo $(head -$1 /tmp/ps.aux | tail -1)
 
 get_process() {
 if [ "$STANDALONE" = "1" ]; then
-  user=$(w | awk '{ if ($3 == ":0") print $1 }')
+  user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
   if [ "$user" = "root" ]; then
     echo "PID COMMAND" > /tmp/ps.aux
     echo "66000 User root not allowed to show process" >> /tmp/ps.aux

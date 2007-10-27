@@ -26,7 +26,7 @@ if [ -e /conf/tcos-run-functions ]; then
 else
   . /etc/tcos/tcos.conf
   STANDALONE=1
-  STANDALONE_USER=$(w | awk '{ if ($3 == ":0") print $1 }' |tail -1)
+  STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
   if [ "${STANDALONE_USER}" = "" ]; then echo "error: no standalone user connected"; exit 1; fi
   DBUS_HANDLER="${TCOS_BINS}/tcos-dbus-helper --username=${STANDALONE_USER} "
 fi
@@ -37,20 +37,21 @@ for arg in $1; do
      startserver)
         cmd=" -shared -noshm -forever -rfbauth $2"
         if [ $STANDALONE = 0 ]; then
+             killall x11vnc
             /sbin/daemonize.sh "/usr/bin/x11vnc" "$cmd"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting vnc server"; fi
         else
+            $DBUS_HANDLER --auth=$2 --type=exec --text="killall x11vnc"
             # this returns ok if can send dbus msg, no need to parse
             $DBUS_HANDLER --auth=$3 --type=exec --text="x11vnc $cmd"
         fi
      ;;
      stopserver)
-        cmd="killall x11vnc"
         if [ $STANDALONE = 0 ]; then
-           $cmd
+           killall x11vnc
            if [ $? = 0 ]; then echo "ok"; else echo "error: killing vnc server"; fi
         else
-           $DBUS_HANDLER "--auth=$2 --type=exec --text='$cmd'"
+           $DBUS_HANDLER --auth=$2 --type=exec --text="killall x11vnc"
         fi
         
      ;;
