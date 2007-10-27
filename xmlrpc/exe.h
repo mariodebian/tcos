@@ -20,18 +20,18 @@
 
 #ifdef IS_STANDALONE
  #define DISPLAY "DISPLAY=:0 XAUTHORITY=/home/$("STANDALONE_USER")/.Xauthority"
+ #define CMD_WRAPPER DISPLAY" /usr/lib/tcos/daemonize.sh "
 #else
  #define DISPLAY "DISPLAY=:0"
+ #define CMD_WRAPPER DISPLAY" /sbin/daemonize.sh "
 #endif
-/*
-#define CMD_WRAPPER DISPLAY" /sbin/start-stop-daemon --start --quiet --background --exec "
-*/
 
+
+
+/*#define CMD_WRAPPER DISPLAY" /sbin/start-stop-daemon --start --quiet --background --exec "*/
 /* #define CMD_WRAPPER DISPLAY" nohup " */
 /* #define CMD_WRAPPER DISPLAY" busybox-static start-stop-daemon -S -b -x " */
-
-#define CMD_WRAPPER DISPLAY" /sbin/start-stop-daemon -q -S -b -x "
-
+/*#define CMD_WRAPPER DISPLAY" /sbin/start-stop-daemon -q -S -b -x "*/
 /*#define CMD_WRAPPER DISPLAY" /bin/daemonize "*/
 
 

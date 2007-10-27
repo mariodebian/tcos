@@ -1,4 +1,4 @@
-initramfs-tools-tcos (0.86.0.1) unstable; urgency=low
+initramfs-tools-tcos (0.86.1) unstable; urgency=low
 
   * Fix some nvidia issues, delete /usr/lib/libGLcore.so (10 Mb)
   * bin/gentcos:
@@ -9,9 +9,12 @@ initramfs-tools-tcos (0.86.0.1) unstable; urgency=low
   * hooks-addons/55vnc:
     - Add auth to x11vnc server
   * xmlrpc/*
-    - New method (in alpha state) tcos.vnc
+    - New method tcos.vnc use a new wrapper: vnc-controller.sh
+  * Update Debian unstable (2.6.22-3-486) and Ubuntu gutsy (2.6.22-14-generic) kernels
+  * bin/daemonize.sh:
+    - wrap start-stop-daemon in a simple script
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 24 Oct 2007 22:19:20 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 27 Oct 2007 23:31:17 +0200
 
 initramfs-tools-tcos (0.85.3) unstable; urgency=low
 

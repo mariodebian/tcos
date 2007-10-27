@@ -633,6 +633,11 @@ done
 
 ################# START APP here ############################
 
+if [ ! -d /lib/modules/${TCOS_KERNEL} ]; then
+   echo "Error: kernel ${TCOS_KERNEL} not found."
+   _exit 1
+fi
+
 # link vmlinuz in TFTP_DIR
 link_vmlinuz
 

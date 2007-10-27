@@ -5,7 +5,7 @@ if [ -f /etc/tcos/version.conf ]; then
 fi
 
 # exec and daemonize 
-cpifexists ${TCOS_BINS}/daemonize /bin
+cpifexists ${TCOS_BINS}/daemonize.sh /sbin
 
 tcos_date=$(LANG=C LC_ALL=C date)
 echo "# date of image" >> ${DESTDIR}/conf/tcos.conf

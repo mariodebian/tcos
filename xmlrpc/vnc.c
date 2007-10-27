@@ -33,12 +33,11 @@ static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *user;
   char *pass;
   char *login_ok;
-  char *cmd;
-  cmd="";
+  char cmd[BIG_BUFFER];
   
 
   /* read what info search */
-  xmlrpc_parse_value(env, in, "(sss)", &action, &args, &user, &pass);
+  xmlrpc_parse_value(env, in, "(ssss)", &action, &args, &user, &pass);
   if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", "params error");
 
@@ -47,15 +46,23 @@ static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )
     return xmlrpc_build_value(env, "s", login_ok );
 
+  dbgtcos("tcosxmlrpc::tcos_vnc() login ok, action=%s, args=%s, user=%s, pass=**notshow**\n", action, args, user);
+
   /* prepare action */
 #ifndef IS_STANDALONE
+  dbgtcos("tcosxmlrpc::tcos_vnc() standalone\n");
   sprintf( cmd , "%s %s %s", VNC_CONTROLLER, action, args );
 #else
+  dbgtcos("tcosxmlrpc::tcos_vnc() thin client\n");
   sprintf( cmd , "%s %s %s %s:%s", VNC_CONTROLLER, action, args, user, pass );
 #endif
 
-  fp=(FILE*)popen(cmd, "r");
+  dbgtcos("tcosxmlrpc::tcos_vnc() cmd=\"%s\"\n", cmd);
   
+  fp=(FILE*)popen(cmd, "r");
+
+  /* put error in line */
+  sprintf(line , "%s", VNC_ERROR);  
   
   fgets( line, sizeof line, fp);
   dbgtcos("tcosxmlrpc::tcos_vnc() line=\"%s\"", line);

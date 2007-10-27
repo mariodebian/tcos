@@ -15,10 +15,11 @@ cpifexists /usr/lib/imlib2/loaders/png.so        /usr/lib/imlib2/loaders/
 cpifexists /usr/lib/imlib2/loaders/gif.so        /usr/lib/imlib2/loaders/
 
 # screenshot script and webserver
-cpifexists ${TCOS_BINS}/screenshot.sh     /sbin/
-cpifexists ${TCOS_BINS}/useallmodules.sh  /sbin/
-cpifexists ${TCOS_BINS}/devicesctl.sh  /sbin/
+cpifexists ${TCOS_BINS}/screenshot.sh      /sbin/
+cpifexists ${TCOS_BINS}/useallmodules.sh   /sbin/
+cpifexists ${TCOS_BINS}/devicesctl.sh      /sbin/
 cpifexists ${TCOS_BINS}/vnc-controller.sh  /sbin/
+cpifexists /usr/bin/vncviewer              /usr/bin/
 
 cpifexists ${TCOS_BINS}/soundctl.sh /sbin/
 

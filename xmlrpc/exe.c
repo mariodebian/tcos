@@ -19,72 +19,22 @@
 */
 
 #include <stdio.h>
-/*int snprintf(char *str, size_t size, const char *format, ...);*/
-
 #include "exe.h"
 
 
-char full_path[BSIZE];
 
-
-char 
-*get_full_path(char *bin)
-{
-  FILE *fp;
-  int i;
-  char line[BSIZE];
-  char cmd[BSIZE];
-  /* clear string */
-  strncpy(full_path, "", BSIZE);
-  snprintf( cmd, BSIZE, "which %s", bin);
-  fp =(FILE*) popen(cmd, "r");
-  if(fp == NULL)
-  {
-     fprintf(stderr, "tcosxmlrpc::get_full_path(%s), error opening pointer\n", bin);
-     return(full_path);
-  }	
-  fgets(line, sizeof line, fp);
-
-  dbgtcos("tcosxmlrpc::get_full_path(\"%s\") result of which=%s\n", bin, line);
-
-  for (i = 0; i < strlen(line)-1; i++)
-   {
-     sprintf( full_path , "%s%c", full_path, line[i] );
-   }
-
-  dbgtcos("tcosxmlrpc::get_full_path(%s)=%s\n", bin, full_path);
-
-  pclose(fp);
-  return(full_path);
-}
 
 void 
 job_exe( char *cmd )
 {
   FILE *fp; 
-  char job[BUFF_SIZE];
 
-  if ( cmd[0] == '/' ) {
-    dbgtcos("tcosxmlrpc::job_exe() found /, not searching full path.\n");
-    snprintf( (char*) &job, BUFF_SIZE, "%s %s", CMD_WRAPPER, cmd );
-  }
-  else {
-    dbgtcos("tcosxmlrpc::job_exe() NOT found /, searching full path of command.\n");
-    snprintf( (char*) &job, BUFF_SIZE, "%s %s", CMD_WRAPPER, get_full_path(cmd) );
-  }
-
-/* using daemonize don't work yet */
-/*  snprintf( (char*) &job, BUFF_SIZE, "%s '%s'", CMD_WRAPPER, cmd );*/
-
-  dbgtcos("tcosxmlrpc::job_exe() exec=> \"%s\"\n", job);
+  dbgtcos("tcosxmlrpc::job_exe() exec=> \"%s\"\n", cmd);
 
 
-    fp=(FILE*)popen(job, "r");
+    fp=(FILE*)popen(cmd, "r");
     pclose(fp);
-/*
-  if ( system(job) == -1 )
-	fprintf(stderr, "xmlrpc::job_exe() ERROR !!!\n");
-*/
+
     dbgtcos("tcosxmlrpc::job_exe() EXEC !!!\n");
     return;
 }
@@ -99,8 +49,8 @@ kill_exe( char *cmd )
 
   dbgtcos("tcosxmlrpc::kill_exe() exec=> \"%s\"\n", job);
 
-    fp=(FILE*)popen(job, "r");
-    pclose(fp);
+  fp=(FILE*)popen(job, "r");
+  pclose(fp);
 }
 
 
