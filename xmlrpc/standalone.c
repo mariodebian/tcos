@@ -45,6 +45,9 @@ static xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud
   else if ( strcmp(info, "get_server") == 0 )
       fp=(FILE*)popen(STANDALONE_SERVER, "r");
 
+  else if ( strcmp(info, "get_time") == 0 )
+      fp=(FILE*)popen(STANDALONE_TIME, "r");
+
   /* default method = error */
   else
       return xmlrpc_build_value(env, "s", STANDALONE_UNKNOW );
