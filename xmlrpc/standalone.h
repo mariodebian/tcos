@@ -22,7 +22,7 @@
 
 #define STANDALONE_USER    "w | awk '{ if ($3 == \":0\" || $2 == \":0\") print $1 }' |head -1"
 #define STANDALONE_PROCESS "ps aux |grep -c \"^$("STANDALONE_USER") \""
-#define STANDALONE_TIME    "LC_ALL=C LC_MESSAGES=C last| grep \":0\" |grep \"still\"| tail -1 | awk '{print $5\" \"$6\" \"$7}'"
+#define STANDALONE_TIME    "LC_ALL=C LC_MESSAGES=C last| grep -e \":0\" -e \"still\"| tail -1 | awk '{print $5\" \"$6\" \"$7}'"
 #define STANDALONE_SERVER  "tail -1 /var/lib/tcos/standalone/log/access.log | awk '{print $1}'"
 
 
