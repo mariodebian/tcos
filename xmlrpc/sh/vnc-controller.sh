@@ -38,7 +38,7 @@ for arg in $1; do
         cmd=" -shared -noshm -forever -rfbauth $2"
         if [ $STANDALONE = 0 ]; then
              killall x11vnc
-            /sbin/daemonize.sh "/usr/bin/x11vnc" "$cmd"
+            /sbin/daemonize.sh "x11vnc" "$cmd"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting vnc server"; fi
         else
             $DBUS_HANDLER --auth=$2 --type=exec --text="killall x11vnc"
@@ -62,21 +62,33 @@ for arg in $1; do
         # check vncviewer version
         
         VNC_NEW_VERSION=$(vncviewer --version 2>&1| grep built |grep -c "4.1")
-        if [ $VNC_NEW_VERSION = 1 ]; then
-           /sbin/daemonize.sh "/usr/bin/vncviewer" "$2 -ViewOnly -FullScreen -passwd $3"
-           if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
+        if [ $STANDALONE = 0 ]; then
+            if [ $VNC_NEW_VERSION = 1 ]; then
+               /sbin/daemonize.sh "vncviewer" "$2 -ViewOnly -FullScreen -passwd $3"
+               if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
+            else
+               /sbin/daemonize.sh "vncviewer" "$2 -viewonly -fullscreen -passwd $3"
+               if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
+            fi
         else
-           /sbin/daemonize.sh "/usr/bin/vncviewer" "$2 -viewonly -fullscreen -passwd $3"
-           if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
+            if [ $VNC_NEW_VERSION = 1 ]; then
+               $DBUS_HANDLER --auth=$3 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -passwd $3"
+            else
+               $DBUS_HANDLER --auth=$3 --type=exec --text="vncviewer $2 -viewonly -fullscreen -passwd $3"
+            fi
         fi
      ;;
      stopclient)
-        killall vncviewer
-        if [ $? = 0 ]; then echo "ok"; else echo "error: killing vncviewer"; fi
+        if [ $STANDALONE = 0 ]; then
+            killall vncviewer
+            if [ $? = 0 ]; then echo "ok"; else echo "error: killing vncviewer"; fi
+        else
+            $DBUS_HANDLER --auth=$3 --type=exec --text="killall vncviewer"
+        fi
      ;;
      genpass)
         # create passwd file
-        /usr/bin/x11vnc -storepasswd "$2" "$3" > /dev/null 2>&1
+        x11vnc -storepasswd "$2" "$3" > /dev/null 2>&1
         if [ $? = 0 ]; then echo "ok"; else echo "error"; fi
         # set read to all
         chmod go+r "$3"

@@ -1,3 +1,18 @@
+initramfs-tools-tcos (0.86.4) unstable; urgency=low
+
+  * xmlrpc/exe.c:
+    - call daemonize from job_exe
+  * Makefile:
+    - Install daemonize with 755 not 644
+  * xmlrpc/standalone.h:
+    - Change STANDALONE_TIME define to work with old and new clients
+  * xmlrpc/sh/vnc-controller.sh:
+    - Remove abspath and add dbus call to startclient
+  * bin/daemonize.sh:
+    - Fix remove first arg sed command
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 01 Nov 2007 19:13:00 +0100
+
 initramfs-tools-tcos (0.86.3) unstable; urgency=low
 
   * xmlrpc/standalone.[ch]

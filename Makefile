@@ -135,7 +135,7 @@ install:
 	install -m 755 bin/installer.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/tryXorg.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 644 bin/set-limits      $(DESTDIR)/$(TCOS_BINS)/
-	install -m 644 bin/daemonize.sh    $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/daemonize.sh    $(DESTDIR)/$(TCOS_BINS)/
 
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 

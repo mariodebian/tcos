@@ -22,9 +22,13 @@
 
 #define STANDALONE_USER    "w | awk '{ if ($3 == \":0\" || $2 == \":0\") print $1 }' |head -1"
 #define STANDALONE_PROCESS "ps aux |grep -c \"^$("STANDALONE_USER") \""
-#define STANDALONE_TIME    "LC_ALL=C LC_MESSAGES=C last| grep -e \":0\" -e \"still\"| tail -1 | awk '{print $5\" \"$6\" \"$7}'"
-#define STANDALONE_SERVER  "tail -1 /var/lib/tcos/standalone/log/access.log | awk '{print $1}'"
+#define STANDALONE_TIME    "LC_ALL=C LC_MESSAGES=C last| grep \"[[:blank:]]:0[[:blank:]].*still\" | awk '{print $(NF-5)\" \"$(NF-4)\" \"$(NF-3)}'"
 
+#ifdef IS_STANDALONE
+  #define STANDALONE_SERVER  "tail -1 /var/lib/tcos/standalone/log/access.log | awk '{print $1}'"
+#else
+  #define STANDALONE_SERVER  "tail -1 /var/log/access.log | awk '{print $1}'"
+#endif
 
 /* messages */
 #define STANDALONE_UNKNOW "error: Unknow user"

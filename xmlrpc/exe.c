@@ -28,15 +28,17 @@ void
 job_exe( char *cmd )
 {
   FILE *fp; 
+  char job[BUFF_SIZE];
 
   dbgtcos("tcosxmlrpc::job_exe() exec=> \"%s\"\n", cmd);
 
+  snprintf( (char*) &job, BUFF_SIZE, "%s %s", CMD_WRAPPER, cmd );
 
-    fp=(FILE*)popen(cmd, "r");
-    pclose(fp);
+  fp=(FILE*)popen(job, "r");
+  pclose(fp);
 
-    dbgtcos("tcosxmlrpc::job_exe() EXEC !!!\n");
-    return;
+  dbgtcos("tcosxmlrpc::job_exe() EXEC !!!\n");
+  return;
 }
 
 void 
