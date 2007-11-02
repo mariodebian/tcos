@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.86.5) unstable; urgency=low
+
+  * xmlrpc/sh/tcos-dbus.py:
+    - Stop if bad username:passwd string
+  * xmlrpc/sh/screenshot.sh
+    - export XAUTHORITY in thin client case
+  * xmlrpc/Makefile
+    - Clean temp *~ files
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 02 Nov 2007 17:05:29 +0100
+
 initramfs-tools-tcos (0.86.4) unstable; urgency=low
 
   * xmlrpc/exe.c:

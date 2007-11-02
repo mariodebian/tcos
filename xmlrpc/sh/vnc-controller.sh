@@ -24,11 +24,10 @@ if [ -e /conf/tcos-run-functions ]; then
   STANDALONE=0
   export XAUTHORITY=/root/.Xauthority
 else
-  . /etc/tcos/tcos.conf
   STANDALONE=1
   STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
   if [ "${STANDALONE_USER}" = "" ]; then echo "error: no standalone user connected"; exit 1; fi
-  DBUS_HANDLER="${TCOS_BINS}/tcos-dbus-helper --username=${STANDALONE_USER} "
+  DBUS_HANDLER="/usr/lib/tcos/tcos-dbus-helper --username=${STANDALONE_USER} "
 fi
 
 
@@ -41,7 +40,7 @@ for arg in $1; do
             /sbin/daemonize.sh "x11vnc" "$cmd"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting vnc server"; fi
         else
-            $DBUS_HANDLER --auth=$2 --type=exec --text="killall x11vnc"
+            $DBUS_HANDLER --auth=$3 --type=exec --text="killall x11vnc" 2>/dev/null
             # this returns ok if can send dbus msg, no need to parse
             $DBUS_HANDLER --auth=$3 --type=exec --text="x11vnc $cmd"
         fi
@@ -72,9 +71,9 @@ for arg in $1; do
             fi
         else
             if [ $VNC_NEW_VERSION = 1 ]; then
-               $DBUS_HANDLER --auth=$3 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -passwd $3"
+               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -passwd $3"
             else
-               $DBUS_HANDLER --auth=$3 --type=exec --text="vncviewer $2 -viewonly -fullscreen -passwd $3"
+               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -viewonly -fullscreen -passwd $3"
             fi
         fi
      ;;

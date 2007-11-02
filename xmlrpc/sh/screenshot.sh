@@ -26,6 +26,7 @@ export DISPLAY=:0
 
 if [ -e /conf/tcos-run-functions ]; then
   _www=/var/www
+  export XAUTHORITY=/root/.Xauthority
 else
   _www=/var/lib/tcos/standalone/www
   user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
@@ -70,7 +71,6 @@ cat << EOF > $_www/index.html
 <br><br>
 EOF
 for _file in $_files; do
- #echo "<a href=\"$_file\">  <img src=\"$_file\">  </a><br>" >> $_www/index.html
  echo "<a href=\"$_file\">$_file</a><br>" >> $_www/index.html
 done
 

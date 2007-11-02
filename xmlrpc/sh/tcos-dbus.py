@@ -30,7 +30,6 @@ try:
     opts, args = getopt.getopt(sys.argv[1:], ":hd", ["help", "debug", "auth=", "username=", "type=", "text="])
 except getopt.error, msg:
     print msg
-    print "for command line options use tcos-dbus --help"
     sys.exit(2)
 
 username=None
@@ -46,7 +45,11 @@ for o, a in opts:
     if o == "--text":
         text = a
     if o == "--auth":
-        admin, passwd = a.split(":")
+        try:
+            admin, passwd = a.split(":")
+        except:
+            print "error: bad username or password"
+            sys.exit(1)
 
 
 if  username and (type in ["mess", "exec", "kill", "killall"]) and text :

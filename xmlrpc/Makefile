@@ -43,6 +43,7 @@ tcospasswd:
 clean:
 #	cd md5 && make clean
 	rm -f $(SERVER) $(STANDALONE) tcosmd5 prueba prueba2 prueba3 validate-tcos validate-passwd tcospasswd var/log.txt var/log/* *~
+	rm -f sh/*~
 
 run:
 	./$(SERVER) var/etc/abyss.conf
