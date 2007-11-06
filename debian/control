@@ -50,7 +50,7 @@ Description: usplash artwork for TCOS
 
 Package: tcos
 Architecture: all
-Depends: initramfs-tools-tcos (>= 0.84.5) , tcos-usplash (>= 0.84.5) [i386],
+Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5) , tcos-usplash (>= 0.84.5) [i386],
 	 ${misc:Depends}, ${shlibs:Depends},
          atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd,

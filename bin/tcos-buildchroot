@@ -12,8 +12,10 @@ TCOS_ARCH=i386
 TCOS_FLAVOUR=standard
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
   TCOS_MIRROR=http://archive.ubuntu.com/ubuntu
+  MIRROR_EXTRAS="universe multiverse restricted"
 else
   TCOS_MIRROR=http://ftp.de.debian.org/debian
+  MIRROR_EXTRAS=""
 fi
 ACTION=
 GENTCOS_OPTS="-tftp"
@@ -25,7 +27,7 @@ dropbear python python-dbus aumix alsa-base libkrb53 acpid console-tools console
 mtools alsa-utils discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils 
 esound rdesktop"
 
-TCOS_PACKAGES="initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server"
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server"
 
 usage() {
   cat << EOF
@@ -67,18 +69,22 @@ chrootcreate() {
   # Add TCOS mirror
   echo "deb http://www.tcosproject.org $TCOS_DISTRO main" >> ${TCOS_CHROOT}/etc/apt/sources.list
 
+  # add extras (universe and multiverse repos)
+  if [ "${MIRROR_EXTRAS}" != "" ]; then
+    echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO} ${MIRROR_EXTRAS}" >> >> ${TCOS_CHROOT}/etc/apt/sources.list
+  fi
+
   # add GPG key
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
-wget http://www.tcosproject.org/mariodebian-pub.key
-apt-key add mariodebian-pub.key
-rm mariodebian-pub.key
 apt-get update
 DEBCONF_FRONTEND='noninteractive' apt-get install -y ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
 apt-get clean
 EOC
 }
+
+
 
 chrootupdate() {
   cat << EOC | chroot ${TCOS_CHROOT}

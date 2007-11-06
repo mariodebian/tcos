@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.86.6) unstable; urgency=low
+
+  * xmlrpc/vnc.c:
+    - Fix typo in IS_STANDALONE condition (not needed)
+  * bin/tcos-buildchroot
+    - Add EXTRA mirror to Ubuntu (universe and multiverse)
+    - Add new tcos-keyring package
+    - Remove download key with wget
+  * debian/control:
+    - Add new package depends tcos-keyring
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 06 Nov 2007 23:20:21 +0100
+
 initramfs-tools-tcos (0.86.5) unstable; urgency=low
 
   * xmlrpc/sh/tcos-dbus.py:

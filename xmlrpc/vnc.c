@@ -48,14 +48,14 @@ static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
   dbgtcos("tcosxmlrpc::tcos_vnc() login ok, action=%s, args=%s, user=%s, pass=**notshow**\n", action, args, user);
 
-  /* prepare action */
-#ifndef IS_STANDALONE
+#ifdef IS_STANDALONE
   dbgtcos("tcosxmlrpc::tcos_vnc() standalone\n");
-  sprintf( cmd , "%s %s %s", VNC_CONTROLLER, action, args );
 #else
   dbgtcos("tcosxmlrpc::tcos_vnc() thin client\n");
-  sprintf( cmd , "%s %s %s %s:%s", VNC_CONTROLLER, action, args, user, pass );
 #endif
+
+  /* prepare action */
+  sprintf( cmd , "%s %s %s %s:%s", VNC_CONTROLLER, action, args, user, pass );
 
   dbgtcos("tcosxmlrpc::tcos_vnc() cmd=\"%s\"\n", cmd);
   
