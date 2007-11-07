@@ -1,0 +1,122 @@
+# hook addon for INTEL DOT STATION alias Paquito
+
+PAQUITO_MODULES="intel-agp agpgart i2c-i810 intelfb i810fb vfb video"
+
+
+make_launcher() {
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/16paquito
+#!/bin/sh
+#
+
+PREREQ=""
+
+prereqs()
+{
+        echo "\$PREREQ"
+}
+
+case \$1 in
+# get pre-requisites
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+quiet=n
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+# check if we are in paquito machine
+test1=0
+test1=\$(lspci | grep -c "PCTel Inc HSP MicroModem 56" )
+
+test2=0
+test2=\$(lspci|grep -c "Intel Corporation 82810 CGC")
+
+if [ "\$test1" = "0" ] || [ "\$test2" = "0" ] ; then
+   # not in paquito, exit now
+   exit 0
+fi
+
+log_begin_msg "Loading Intel Dot Station (Paquito) modules"
+
+  PAQUITO_MODULES=${PAQUITO_MODULES}
+  _log "PAQUITO loading modules: \${PAQUITO_MODULES}"
+
+  for mod in \${PAQUITO_MODULES); do
+    modprobe  \$mod >> /tmp/initramfs.debug 2>&1
+  done
+
+  # test if we have intel-drv or i810
+  if [ -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
+    configurexorg --newsettings --xdriver=intel --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
+  else
+    configurexorg --newsettings --xdriver=i810 --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
+  fi
+  
+
+log_end_msg
+
+EOF
+chmod +x ${DESTDIR}/scripts/tcos-bottom/16paquito
+
+}
+
+# test if we have intel-drv or i810
+if [ -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
+  intel_driver=intel
+else
+  intel_driver=i810
+fi
+
+
+if [ $TCOS_PAQUITO ] && [ "$intel_driver" = "i810" ] ; then
+  stat_before
+ 
+    for mod in ${PAQUITO_MODULES}; do
+      manual_add_modules $mod
+    done
+
+    cpifexists /usr/lib/libI810XvMC.so.1 /usr/lib
+
+    mkdir -p ${DESTDIR}/usr/lib/dri
+    cpifexists /usr/lib/dri/i810_dri.so /usr/lib/dri
+
+    if [ ! -e $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so ]; then
+       cpifexists /usr/lib/xorg/modules/drivers/i810_drv.so /usr/lib/xorg/modules/drivers
+    fi
+    make_launcher
+
+  stat_after "Intel Dot Station (Paquito) drivers support [i810]"
+
+elif [ $TCOS_PAQUITO ] && [ "$intel_driver" = "intel" ] ; then
+  stat_before
+
+    for mod in ${PAQUITO_MODULES}; do
+      manual_add_modules $mod
+    done
+
+    cpifexists /usr/lib/libI810XvMC.so.1 /usr/lib
+
+    mkdir -p ${DESTDIR}/usr/lib/dri
+    cpifexists /usr/lib/dri/i810_dri.so /usr/lib/dri
+    if [ ! -e $DESTDIR/usr/lib/xorg/modules/drivers/intel_drv.so ]; then
+       cpifexists /usr/lib/xorg/modules/drivers/intel_drv.so /usr/lib/xorg/modules/drivers
+    fi
+    make_launcher
+
+  stat_after "Intel Dot Station (Paquito) drivers support [intel]"
+
+
+elif [ $TCOS_PAQUITO ] && [ "$intel_driver" != "i810" ] && [ "$intel_driver" != "intel" ]; then
+  echo ""
+  echo "   WARNING: Intel Dot Station (Paquito) enabled but don't have installed i810/intel video driver package"
+  echo ""
+  echo "            Please install xserver-xorg-driver-i810 or xserver-xorg-video-intel"
+  echo ""
+fi
+

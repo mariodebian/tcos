@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.86.7) unstable; urgency=low
+
+  * Add support to Intel Dot Station (alias Paquito):
+    - Add hook-addon and test if modem and graphic card.
+    - Force load some optional modules
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 08 Nov 2007 00:06:51 +0100
+
 initramfs-tools-tcos (0.86.6) unstable; urgency=low
 
   * xmlrpc/vnc.c:

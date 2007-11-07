@@ -74,6 +74,9 @@ chrootcreate() {
     echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO} ${MIRROR_EXTRAS}" >> >> ${TCOS_CHROOT}/etc/apt/sources.list
   fi
 
+  # add /etc/resolv.conf (soime versions of cdebootstrap don't create it)
+  cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
+
   # add GPG key
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
@@ -87,9 +90,11 @@ EOC
 
 
 chrootupdate() {
+  cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
+
 [ ! -e /sbin/start-stop-daemon ] && cat << CMD > /sbin/start-stop-daemon
 #!/bin/sh
 CMD
@@ -107,6 +112,7 @@ EOC
 }
 
 chrootinstallpkg() {
+  cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
@@ -126,6 +132,7 @@ EOC
 }
 
 chrootupdateimages() {
+cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
 TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/tcos.conf | sed 's/"//g')
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
