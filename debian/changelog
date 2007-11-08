@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.86.8) unstable; urgency=low
+
+  * hooks/tcosnfs
+    - Add 00users 01busybox 02udev2 hooks-addons (ubuntu busybox awk bug)
+  * Remove not needed code
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 08 Nov 2007 22:21:45 +0100
+
 initramfs-tools-tcos (0.86.7) unstable; urgency=low
 
   * Add support to Intel Dot Station (alias Paquito):
