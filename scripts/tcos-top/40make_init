@@ -42,6 +42,8 @@ cat << EOF > /root/sbin/init
 quiet=n
 
 
+/scripts/tcos-top/01busybox >/dev/null 2>&1
+
 # start udev again
 log_begin_msg "Re-Discovering hardware"
 .  /scripts/init-premount/udev

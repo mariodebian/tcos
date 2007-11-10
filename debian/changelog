@@ -1,3 +1,23 @@
+initramfs-tools-tcos (0.87.1) unstable; urgency=low
+
+  * scripts/tcos-top/*
+    - Add new cmdline force nfs to force mount nfs in host with more TCOS_MIN_RAM
+  * debian/*install debian/*manpages:
+    - Move update-tcospasswd and tcospasswd to tcos-core package
+  * debian/control:
+    - Add depends xvnc4viewer|xvncviewer
+    - Remove tftpd-hpa depends (force to install atftpd)
+  * debian/tcos-standalone.init:
+    - Include vars.sh file only if exists (not critical)
+  * hooks/tcosnfs:
+    - Make some dirs in initramfs before calling other hooks-addons
+  * scripts/tcos-top/40make_init:
+    - Create again busybox links in NFS init
+  * bin/tcos-buildchroot:
+    - Link NFS files and dirs in update images (if exists)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 10 Nov 2007 11:22:05 +0100
+
 initramfs-tools-tcos (0.86.8) unstable; urgency=low
 
   * hooks/tcosnfs

@@ -42,5 +42,12 @@ if [ $FORCE_NO_NFS = 1 ]; then
   echo 0 > /tmp/less_ram
 fi
 
+# force boot nfs
+FORCE_NFS=$(read_cmdline_var 'forcenfs' '0')
+
+if [ $FORCE_NFS = 1 ]; then
+  echo 1 > /tmp/less_ram
+fi
+
 
 exit 0

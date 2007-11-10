@@ -29,8 +29,8 @@ Description: tools for generating a thin client bootable image: TCOS
 
 Package: tcos-core
 Architecture: any
-Depends: xterm, x11vnc, dosfstools, cdparanoia, scrot, eject, python, python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
-Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.85.0)
+Depends: xterm, x11vnc, xvnc4viewer | xvncviewer, dosfstools, cdparanoia, scrot, eject, python, python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
+Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.86.8)
 XB-Python-Version: ${python:Versions}
 Description: common script and bins for generating a thin client bootable image: TCOS
  This package contain common scripts, libs , bins and dependencies to
@@ -52,7 +52,7 @@ Package: tcos
 Architecture: all
 Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5) , tcos-usplash (>= 0.84.5) [i386],
 	 ${misc:Depends}, ${shlibs:Depends},
-         atftpd | tftpd-hpa, dhcp3-server | dhcp-server, tcosmonitor, 
+         atftpd, dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd,
          aumix, pulseaudio, pulseaudio-utils, x11vnc, libasound2-plugins, xfs,
          mtools, ltspfs-server, esound, alsa-utils, cdebootstrap,

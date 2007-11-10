@@ -5,3 +5,5 @@ etc/default/tcos-standalone
 usr/lib/tcos/*
 var/lib/tcos/standalone/*
 usr/share/tcos-core/lockscreen.png
+usr/sbin/update-tcospasswd
+usr/sbin/tcospasswd

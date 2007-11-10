@@ -1,5 +1,3 @@
 bin/gentcos.1
 bin/tcos-buildchroot.1
-xmlrpc/man/tcospasswd.1
-xmlrpc/man/update-tcospasswd.1
 xmlrpc/man/tcosxmlrpc.1

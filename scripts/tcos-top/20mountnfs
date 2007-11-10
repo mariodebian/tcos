@@ -74,7 +74,7 @@ log_begin_msg "Remounting NFS root in RW mode"
   mkdir -p /root/ram
   mount -t tmpfs -o size=5m tmpfs /root/ram
 
-  if [ $(grep unionfs /proc/modules| wc -l) = 0 ] && [ $(grep aufs /proc/modules| wc -l) != 0 ]; then
+  if [ $(grep -c unionfs /proc/modules) = 0 ] && [ $(grep -c aufs /proc/modules) != 0 ]; then
        mount -t aufs -o br:/root/ram:/root/nfs none /root >> /tmp/initramfs.debug 2>&1
   else
 
