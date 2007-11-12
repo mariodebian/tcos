@@ -1,3 +1,2 @@
-tcos/conf-example.conf
 tcos/dhcpd.conf
 tcos/dhcpd-without-mac.conf
