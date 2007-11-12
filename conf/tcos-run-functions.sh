@@ -4,7 +4,7 @@
 download_dir=/mnt/tmp
 
 # NFS server dir
-nfs_dir=${TCOS_VAR}/files
+nfs_dir=${TCOS_VAR}/tftp
 
 
 ###########################################

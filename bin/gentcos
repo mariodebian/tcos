@@ -39,7 +39,7 @@ OUTINITRAMFS=initramfs
 OUTNBI=linux.nbi
 
 OUTROOTFS_TMP=/tmp/rootfs-${TCOS_KERNEL}-$$
-OUTROOTFS_END=${TCOS_VAR}/files/rootfs-${TCOS_KERNEL}.squashfs
+OUTROOTFS_END=${TFTP_DIR}/rootfs-${TCOS_KERNEL}.squashfs
 
 # temp vars
 INITRAMFS=/tmp/initramfs-$$
@@ -205,9 +205,7 @@ ramdisk_size () {
   cpio -i < initrd >/dev/null 2>&1
   rm initrd
   ramdisk_size=$(du -s . | awk '{print $1}')
-  if [ -L ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs ]; then
-    squashfs_size=$(du -s ${TCOS_VAR}/files/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs 2> /dev/null | awk '{print $1}')
-  else
+  if [ -e ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs ]; then
     squashfs_size=$(du -s ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs 2> /dev/null | awk '{print $1}')
   fi
   echo "RAMDISK=${ramdisk_size}"

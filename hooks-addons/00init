@@ -1,0 +1,74 @@
+# create reboot && poweroff scripts 
+
+if [ "${TCOS_INCLUDE_INIT}" = "1" ]; then
+
+    # now copy reboot and poweroff in /usr/sbin outside of
+    # usr.squashfs, because reboot -f is exec after umount /usr
+
+    stat_before
+    mkdir -p $DESTDIR/usr/sbin >/dev/null 2>&1
+    # init reboot poweroff
+    cpifexists /sbin/reboot       /usr/sbin/
+    cpifexists /sbin/poweroff     /usr/sbin/
+
+    rm -f $DESTDIR/bin/reboot
+    rm -f $DESTDIR/bin/poweroff
+    rm -f $DESTDIR/bin/halt
+
+    ###
+    ### add usplash support to reboot and poweroff scripts
+    ###
+
+    # reboot script
+    cat <<EOF > ${DESTDIR}/sbin/reboot
+#!/bin/sh
+# reboot wrapper
+. /scripts/functions
+. /conf/tcos-run-functions
+
+kill_xorg
+
+clear
+start_usplash
+
+    log_begin_msg "Rebooting"
+    log_end_msg
+
+kill_all
+
+umount_swap
+
+umount_all
+
+/usr/sbin/reboot -f
+EOF
+    chmod +x ${DESTDIR}/sbin/reboot
+
+    # poweroff script
+    cat <<EOF > ${DESTDIR}/sbin/poweroff
+#!/bin/sh
+# poweroff wrapper
+. /scripts/functions
+. /conf/tcos-run-functions
+
+kill_xorg
+clear
+start_usplash
+
+    log_begin_msg "Poweroff system"
+    log_end_msg
+
+kill_all
+
+umount_swap
+
+umount_all
+
+/usr/sbin/poweroff -f
+EOF
+    chmod +x $DESTDIR/sbin/poweroff
+
+    stat_after "Init binaries"
+
+fi
+

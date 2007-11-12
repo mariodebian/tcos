@@ -5,7 +5,7 @@
 
 # SIZE of some files
 echo "Size of images:" >&3
-du /var/lib/tcos/tftp/initramfs-* /var/lib/tcos/files/usr-* >&3
+du /var/lib/tcos/tftp/initramfs-* /var/lib/tcos/tftp/usr-* >&3
 echo -e "\n" >&3
 
 

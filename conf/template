@@ -24,4 +24,14 @@
 #   # $DESTDIR is where initramfs root dir 
 #
 #
+#  To copy kernel modules (copy module depends to image too):
+#
+#    tcos_manual_add_modules   module_name
+#
+#  If you want to be loaded at startup:
+#
+#    echo "module_name" >> $DESTDIR/etc/modules
+#
+#
 #  Some info in /usr/share/doc/initramfs-tools-tcos/HACKING
+#

@@ -130,3 +130,34 @@ else
   echo $tmpvar
 fi
 }
+
+# ubuntu dapper have very old manual_add_modules that don't work correctly
+tcos_manual_add_modules()
+{
+	for mam_x in $(modprobe --set-version="${version}" --ignore-install \
+	--show-depends "${1}" 2>/dev/null | awk '/^insmod/ { print $2 }'); do
+		# Prune duplicates
+		if [ -e "${DESTDIR}/${mam_x}" ]; then
+			continue
+		fi
+
+		mkdir -p "${DESTDIR}/$(dirname "${mam_x}")"
+		ln -s "${mam_x}" "${DESTDIR}/$(dirname "${mam_x}")"
+		if [ -n "${verbose}" ] && [ "${verbose}" = "y" ]; then
+			echo "Adding module ${mam_x}"
+		fi
+	done
+}
+
+
+force_add_module() {
+        # force copy of module modprobe dont show as dependency
+        this_module=$(modprobe --set-version="${version}" -l "${1}")
+        if [ ! -e "${DESTDIR}/${this_module}" ]; then
+                #echo "  WARNING, adding module $(basename ${this_module}), see Debian bug: #384043"
+                mkdir -p "${DESTDIR}/$(dirname "${this_module}")"
+                ln -s "${this_module}" "${DESTDIR}/$(dirname "${this_module}")"
+        fi
+        # end of force copy
+}
+

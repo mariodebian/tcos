@@ -1,3 +1,21 @@
+initramfs-tools-tcos (0.87.2) unstable; urgency=low
+
+  * Move usr-x.x.x.squashfs file to TFTP_DIR, files dir is obsolete from now
+  * scripts/tcos-bottom/50freespace bin/clear-logs:
+    - New script, empty logs files bigger than 256 kb
+  * scripts/tcos-bottom/35services:
+    - Only start inetd if /etc/inetd.conf exists
+  * tcos/tcos.msg tcos/help.msg tcos/help2.msg tcos/default.tpl
+    - Update some command line options and add new page F2
+  * hooks/tcosmods conf/tcos-generation-functions.sh:
+    - Export tcos_manual_add_modules and force_add_module functions in tcos-generation-functions
+  * hoos/tcosbin hooks/tcosnfs:
+    - Move some common code to new hooks-addons: 00main 00init 90usplash
+  * hooks-addons/50xorg:
+    - Remove nvidia_drv.so from image (not work, no needed)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 11 Nov 2007 15:25:48 +0100
+
 initramfs-tools-tcos (0.87.1) unstable; urgency=low
 
   * scripts/tcos-top/*

@@ -85,6 +85,7 @@ install:
 	install -m 644 tcos/default.tpl $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl
 
 	install -m 644 tcos/help.msg $(DESTDIR)$(TFTP_DIR)/
+	install -m 644 tcos/help2.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/tcos.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/logo.lss $(DESTDIR)$(TFTP_DIR)/
 

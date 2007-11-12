@@ -108,6 +108,7 @@ if [ $XORG = 6 ]; then
    driver_dir=/usr/X11R6/lib/modules/drivers
    _echo "    xorg: installing all drivers...."
    cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
+   rm -f $DESTDIR/${driver_dir}/nvidia_drv.so
  fi
 
  mkdir -p  $DESTDIR/usr/X11R6/lib/modules/extensions
@@ -159,6 +160,7 @@ else # Xorg 7.x
    driver_dir=/usr/lib/xorg/modules/drivers
    _echo "    xorg: installing all drivers...."
    cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
+   rm -f $DESTDIR/${driver_dir}/nvidia_drv.so
  fi
 
  mkdir -p  $DESTDIR/usr/lib/xorg/modules/extensions

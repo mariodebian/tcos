@@ -9,6 +9,5 @@
 /etc/tcos/hooks
 /etc/tcos/hooks-addons
 /var/cache/tcos/packages
-/var/lib/tcos/files
 /var/lib/tcos/tftp
 /usr/sbin/

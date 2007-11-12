@@ -1,0 +1,15 @@
+# hook-addond for usplash support
+
+
+# usplash support
+mkdir -p $DESTDIR/usr/lib/usplash/
+
+# delete theme if exists
+[ -e $DESTDIR/usr/lib/usplash/usplash-artwork.so ] && \
+    rm -f $DESTDIR/usr/lib/usplash/usplash-artwork.so
+
+if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
+  cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+else
+  cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+fi

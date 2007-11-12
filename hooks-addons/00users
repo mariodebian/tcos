@@ -2,8 +2,8 @@
 
 
 # to change pass during boot
-copy_exec /usr/sbin/chpasswd /usr/bin/
-cpifexists /etc/login.defs   /etc
+cpifexists /usr/sbin/chpasswd /bin/
+cpifexists /etc/login.defs    /etc
 
 
 # create /etc/passwd /etc/shadow and /etc/group
@@ -43,7 +43,6 @@ kmem:x:15:
 audio:x:29:pulse
 users:x:100:
 ssh:x:109:
-audio:x:29:
 EOF
 
 

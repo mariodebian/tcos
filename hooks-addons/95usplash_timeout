@@ -24,7 +24,10 @@ esac
 # kill usplash if cmdline have "nousplash" or "nosplash"
 for x in \$(cat /proc/cmdline); do
         case \$x in
-        no*splash)
+        nosplash)
+		KILL_USPLASH=true
+                ;;
+        nousplash)
 		KILL_USPLASH=true
                 ;;
         esac

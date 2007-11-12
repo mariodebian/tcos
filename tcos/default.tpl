@@ -4,6 +4,7 @@ timeout 200
 display tcos.msg
 F0 tcos.msg
 F1 help.msg
+F2 help2.msg
 
 label tcos
   kernel vmlinuz-__TCOS_KERNEL__

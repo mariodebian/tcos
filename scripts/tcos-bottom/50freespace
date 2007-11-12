@@ -18,8 +18,7 @@ esac
 
 quiet=n
 
-#FIXME 
-exit 0
+
 
 
 quiet=n
@@ -27,8 +26,14 @@ quiet=n
 . /scripts/functions
 . /conf/tcos.conf
 . /conf/tcos-run-functions
-. /conf/tcos-modules.conf
 
+
+# clear logs is a script to empty log files bigger than xxx Kb
+[ -x /bin/clear-logs ] && /bin/clear-logs >> /tmp/initramfs.debug 2>&1 &
+
+
+#FIXME 
+exit 0
 
 #startx=$TCOS_XORG_TYPE
 #startx=$(read_cmdline_var "startx" "${startx}")

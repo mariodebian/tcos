@@ -142,10 +142,10 @@ export LC_MESSAGES=C
 [ ! -d /var/cache/tcos/packages/esound ] && gentcos -instpkg esound
 gentcos ${GENTCOS_OPT}
 rm -f /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs
-cp /boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/files/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
+cp /boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
 EOC
 [ ! -e /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} ] && ln -s ${TCOS_CHROOT}/var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/
-[ ! -e /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs ] && ln -s ${TCOS_CHROOT}/var/lib/tcos/files/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
+[ ! -e /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs ] && ln -s ${TCOS_CHROOT}/var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
 
 [ ! -e /var/lib/tcos/tftp/initramfs-${TCOS_KERNEL} ] && \
 	[ -e ${TCOS_CHROOT}/var/lib/tcos/tftp/initramfs-${TCOS_KERNEL} ] && \

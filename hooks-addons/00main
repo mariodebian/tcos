@@ -1,0 +1,44 @@
+# Hook addon for common utils
+
+# copy internal tcos conf
+cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
+cp $CONFDIR/tcos.conf                $DESTDIR/conf/
+
+
+# make some dirs
+[ -d $DESTDIR/dev ]  || mkdir -m 0755 $DESTDIR/dev
+[ -d $DESTDIR/root ] || mkdir --mode=0700 $DESTDIR/root
+[ -d $DESTDIR/ram ]  || mkdir $DESTDIR/ram
+[ -d $DESTDIR/nfs ]  || mkdir $DESTDIR/nfs
+
+mkdir -p $DESTDIR/usr/bin
+mkdir -p $DESTDIR/usr/sbin
+mkdir -p $DESTDIR/lib/lsb/
+
+cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
+cpifexists /etc/debian_version  /etc/
+
+# seq script
+cpifexists ${TCOS_BINS}/seq /bin
+
+# get_filesystem
+cpifexists ${TCOS_BINS}/get_filesystem /bin
+
+# limits
+cpifexists ${TCOS_BINS}/set-limits     /bin
+
+# exec and daemonize 
+cpifexists ${TCOS_BINS}/daemonize.sh /sbin
+
+# exec and daemonize 
+cpifexists ${TCOS_BINS}/clear-logs  /bin
+
+# LIBRARIES
+cpifexists /sbin/ldconfig    /usr/sbin/
+[ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/
+[ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
+
+cpifexists /etc/localtime  /etc/
+cpifexists /etc/adjtime    /etc/
+
+

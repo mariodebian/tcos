@@ -36,25 +36,10 @@ if [ "${BOOT}" = "tcos-nfs" ]; then
 . $TCOS_DIR/tcos-generation-functions.sh
 
 
-# _echo ""
-# _echo "INITRAMFS => BOOT=tcos-nfs"
-# _echo ""
-
 # copy internal tcos conf
 cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
 cp $CONFDIR/tcos.conf                $DESTDIR/conf/
 
-# make some dirs
-[ -d $DESTDIR/dev ]  || mkdir -m 0755 $DESTDIR/dev
-[ -d $DESTDIR/root ] || mkdir --mode=0700 $DESTDIR/root
-[ -d $DESTDIR/ram ]  || mkdir $DESTDIR/ram
-[ -d $DESTDIR/nfs ]  || mkdir $DESTDIR/nfs
-
-
-mkdir -p $DESTDIR/usr/bin
-mkdir -p $DESTDIR/usr/sbin
-mkdir -p $DESTDIR/lib/lsb/
-cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
 
 
 # usplash support
@@ -67,13 +52,18 @@ fi
 
 
 # load some hook-addons (not all needed here, we need a minimal image)
-
+TCOS_INCLUDE_INIT=1
+. ${TCOS_DIR}/hooks-addons/00init  
+unset TCOS_INCLUDE_INIT
+. ${TCOS_DIR}/hooks-addons/00main
 . ${TCOS_DIR}/hooks-addons/00users
 . ${TCOS_DIR}/hooks-addons/01dhclient
 . ${TCOS_DIR}/hooks-addons/01busybox
 . ${TCOS_DIR}/hooks-addons/02hex2ascii
 . ${TCOS_DIR}/hooks-addons/03udev2
 . ${TCOS_DIR}/hooks-addons/03wireless
+. ${TCOS_DIR}/hooks-addons/06funionfs
+. ${TCOS_DIR}/hooks-addons/90usplash
 . ${TCOS_DIR}/hooks-addons/95usplash_timeout
 . ${TCOS_DIR}/hooks-addons/99clean_nfs_image
 

@@ -127,10 +127,6 @@ if [ ! -e /dev/loop0 ] && [ ! -e /dev/loop1 ]; then
     mknod /dev/loop$NUM b 7 $NUM 
   done
 fi
-# wait for /dev/loop* devices creation (ubuntu is too slow)
-#while [ ! -e /dev/loop0 ] && [ ! -e /dev/loop1 ]; do
-#     sleep 1
-#done
 
 
 

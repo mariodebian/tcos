@@ -13,10 +13,6 @@ if [ $TCOS_SOUND ]; then
 
   else
     stat_before
-    # sound support 
-    grep "audio" /etc/passwd >> $DESTDIR/etc/passwd
-    grep "audio" /etc/group >> $DESTDIR/etc/group
-    grep "audio" /etc/shadow >> $DESTDIR/etc/shadow
 
     # aumix
     if [ -x /usr/bin/aumix ]; then
@@ -30,9 +26,6 @@ if [ $TCOS_SOUND ]; then
 
     cpifexists /usr/bin/amixer /usr/bin/
  
-    # test for new cpifexists, amixer is in /usr/bin not in /usr/sbin !!!
-    #cpifexists /usr/sbin/amixer /usr/bin/
-
     mkdir -p $DESTDIR/usr/share/
     copydir /usr/share/alsa/ /usr/share/
     mkdir -p $DESTDIR/var/run/alsa

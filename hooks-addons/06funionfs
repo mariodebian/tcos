@@ -1,0 +1,12 @@
+# hook-addon for funionfs
+#
+#  not support / unionfs at this moment, disabled by default
+#
+
+#if [ -e /usr/bin/funionfs ]; then
+#
+#  cpifexists /usr/bin/funionfs  /usr/bin/
+#  manual_add_modules fuse
+#  echo "fuse" >> $DESTDIR/etc/modules
+#
+#fi
