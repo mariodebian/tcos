@@ -42,3 +42,18 @@ cpifexists /etc/localtime  /etc/
 cpifexists /etc/adjtime    /etc/
 
 
+cpifexists /lib/libresolv.so.2        /lib/
+cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
+
+# need to copy this libs to support usernames with busybox
+cpifexists /lib/libnss_compat.so.2        /lib/
+cpifexists /lib/libnss_files.so.2         /lib/
+cpifexists /lib/libnss_nis.so.2           /lib/
+cpifexists /lib/libnss_dns.so.2           /lib/
+cpifexists /usr/lib/libnss_db.so.2        /usr/lib/
+
+
+# create some dirs
+mkdir -p $DESTDIR/var/log
+touch $DESTDIR/var/log/lastlog
+mkdir -p ${DESTDIR}/var/run

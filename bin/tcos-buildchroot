@@ -20,14 +20,12 @@ fi
 ACTION=
 GENTCOS_OPTS="-tftp"
 
-DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa 
-libnss-db iftop strace twm xterm x11vnc wget dosfstools debootstrap libltdl3 
-cdparanoia scrot eject debconf grub syslinux squashfs-tools mknbi dhcp3-client 
-dropbear python python-dbus aumix alsa-base libkrb53 acpid console-tools console-data
-mtools alsa-utils discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils 
-esound rdesktop xvnc4viewer"
+DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools
+libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils
+squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
 
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server"
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound rdesktop" 
+TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear aumix console-data discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils"
 
 usage() {
   cat << EOF
@@ -74,7 +72,7 @@ chrootcreate() {
     echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO} ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
   fi
 
-  # add /etc/resolv.conf (soime versions of cdebootstrap don't create it)
+  # add /etc/resolv.conf (some versions of cdebootstrap don't create it)
   cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
 
   # add GPG key
@@ -82,6 +80,7 @@ chrootcreate() {
 export LC_ALL=C
 export LC_MESSAGES=C
 apt-get update
+DEBCONF_FRONTEND='noninteractive' apt-get install -y -f tcos-keyring
 DEBCONF_FRONTEND='noninteractive' apt-get install -y ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
 apt-get clean
 EOC

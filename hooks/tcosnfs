@@ -63,6 +63,7 @@ unset TCOS_INCLUDE_INIT
 . ${TCOS_DIR}/hooks-addons/03udev2
 . ${TCOS_DIR}/hooks-addons/03wireless
 . ${TCOS_DIR}/hooks-addons/06funionfs
+. ${TCOS_DIR}/hooks-addons/06nbd_filesystem
 . ${TCOS_DIR}/hooks-addons/90usplash
 . ${TCOS_DIR}/hooks-addons/95usplash_timeout
 . ${TCOS_DIR}/hooks-addons/99clean_nfs_image

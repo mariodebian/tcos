@@ -54,22 +54,53 @@ if [ -x /sbin/usplash_write ]; then
 fi
 
 
-log_begin_msg "Trying to mount NFS"
-  nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2>/dev/null
+# NFS or NBD ?
+NFS_MODE=$(read_cmdline_var "nfsmode" "nfs")
 
 
-# try again
-if [ $? -ne 0 ]; then
-  log_begin_msg "Second retry to mount NFS"
-     nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2> /dev/null
-fi
+if [ "${NFS_MODE}" = "nbd" ]; then
+  # mount root-$(uname -r).squashfs as /dev/nbd0
+  log_begin_msg "Mounting remote squashfs with NBD"
 
-if [ $? -ne 0 ]; then
-  panic "Unable to mount NFS, check NFS service in server and ${TCOS_VAR}/fs-$(uname -r) dir"
-fi
+    NBD_PORT=$(read_cmdline_var "nbdport" "2001")
+
+    # load 1 nbd devices
+    modprobe nbd nbds_max=1
+
+    # wait for device
+    while [ ! -e /dev/nbd0 ]; do
+      sleep 1
+    done
+
+    nbd-client tcos-server $NBD_PORT /dev/nbd0
+    sleep 1
+
+    mount /dev/nbd0 /root/nfs
+  
+  log_end_msg
+
+else
+  log_begin_msg "Trying to mount NFS"
+    nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2>/dev/null
 
 
-log_begin_msg "Remounting NFS root in RW mode"
+  # try again
+  if [ $? -ne 0 ]; then
+    log_begin_msg "Second retry to mount NFS"
+       nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/fs-$(uname -r) ${NFS_RO} 2> /dev/null
+  fi
+
+  if [ $? -ne 0 ]; then
+    panic "Unable to mount NFS, check NFS service in server and ${TCOS_VAR}/fs-$(uname -r) dir"
+  fi
+
+fi # end of NFS_MODE
+
+
+# remount /root in RW mode
+
+
+log_begin_msg "Remounting root in RW mode"
 
   mkdir -p /root/ram
   mount -t tmpfs -o size=5m tmpfs /root/ram
@@ -79,7 +110,7 @@ log_begin_msg "Remounting NFS root in RW mode"
   else
 
      # NFS mounts must have nfsro instead of ro (see man unionfs) with kernel < 2.6.22
-     if [ "$(uname -r| awk -F"[.|-]" '{print $3}')" -lt 22 ]; then
+     if [ "$(uname -r| awk -F"[.|-]" '{print $3}')" -lt 22 ] && [ "${NFS_MODE}" != "nbd" ] ; then
        mount -t unionfs -o dirs=/root/ram=rw:/root/nfs=nfsro unionfs /root
      else
        mount -t unionfs -o dirs=/root/ram=rw:/root/nfs=ro unionfs /root

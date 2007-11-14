@@ -188,6 +188,16 @@ create_rootfs() {
  chroot ${TCOS_VAR}/fs-${TCOS_KERNEL}/ depmod -ae ${TCOS_KERNEL}
  echo " done."
  
+ if [ -e /sbin/nbd-client ]; then
+   echo -n "   * Creating root-${TCOS_KERNEL}.squashfs to use with NBD..."
+   MKSQUASHFS=mksquashfs
+   [ -x /usr/bin/mksquashfs ]  && MKSQUASHFS=/usr/bin/mksquashfs
+   [ -x /usr/sbin/mksquashfs ] && MKSQUASHFS=/usr/sbin/mksquashfs
+   $MKSQUASHFS ${TCOS_VAR}/fs-${TCOS_KERNEL}/ ${TFTP_DIR}/root-${TCOS_KERNEL}.squashfs > /dev/null 2>&1
+   chmod 644 ${TFTP_DIR}/root-${TCOS_KERNEL}.squashfs
+   echo " done."
+ fi
+
  cd ${old_dir}
  rmdir ${OUTROOTFS_TMP}
 }

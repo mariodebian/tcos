@@ -78,7 +78,7 @@ else
   if [ -d ${TFTPBOOT}/tcos ] && [ ! -L ${TFTPBOOT}/tcos ]; then
     echo ""
     echo "Warning: You must delete ${TFTPBOOT}/tcos dir after upgrade"
-    echo "         new TCOS images must not work if you mantain this dir"
+    echo "         new TCOS images will not work if you mantain this dir"
     echo ""
 
   elif [ ! -e ${TFTPBOOT}/tcos ]; then

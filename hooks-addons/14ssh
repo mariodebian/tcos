@@ -24,19 +24,8 @@ if [ $TCOS_SSH ] ;then
 
   cpifexists /usr/sbin/dropbear         /usr/bin/      # ssh server
   cpifexists /usr/bin/dbclient         /usr/bin/   # ssh client ( no have ssh -X support )
-  cpifexists /lib/libresolv.so.2        /lib/
-  cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
-
-  # need to copy this libs to support usernames with busybox
-  cpifexists /lib/libnss_compat.so.2        /lib/ 
-  cpifexists /lib/libnss_files.so.2         /lib/
-  cpifexists /lib/libnss_nis.so.2           /lib/ 
-  cpifexists /lib/libnss_dns.so.2           /lib/ 
-  cpifexists /usr/lib/libnss_db.so.2        /usr/lib/ 
   
   cpifexists /usr/lib/dropbear/dropbearconvert /usr/lib/dropbear/
-  mkdir -p $DESTDIR/var/log
-  touch $DESTDIR/var/log/lastlog
 
    # copy pub key
    if [ ${TCOS_ADMIN_USER} ]; then
