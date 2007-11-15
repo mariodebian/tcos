@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.87.3) unstable; urgency=low
+
+  * Fix tcos-buildchroot in Ubuntu
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Thu, 15 Nov 2007 23:30:51 +0100
+
 initramfs-tools-tcos (0.87.2) unstable; urgency=low
 
   * Move usr-x.x.x.squashfs file to TFTP_DIR, files dir is obsolete from now

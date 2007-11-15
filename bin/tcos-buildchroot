@@ -10,22 +10,27 @@ fi
 
 TCOS_ARCH=i386
 TCOS_FLAVOUR=standard
+
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound rdesktop"
+
+TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear aumix console-data discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils"
+
+
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-  TCOS_MIRROR=http://archive.ubuntu.com/ubuntu
-  MIRROR_EXTRAS="universe multiverse restricted"
+  TCOS_MIRROR=http://archive.ubuntu.com/ubuntu/
+  TCOS_MIRROR2=http://security.ubuntu.com/ubuntu/
+  MIRROR_EXTRAS="universe restricted multiverse"
+  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data console-tools"
+  TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
 else
   TCOS_MIRROR=http://ftp.de.debian.org/debian
   MIRROR_EXTRAS=""
+  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
 fi
 ACTION=
 GENTCOS_OPTS="-tftp"
 
-DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools
-libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils
-squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
-
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound rdesktop" 
-TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear aumix console-data discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils"
+[ -f /etc/tcos/tcos-lliurex.conf ] && . /etc/tcos/tcos-lliurex.conf
 
 usage() {
   cat << EOF
@@ -58,9 +63,14 @@ chrootcreate() {
   done
   mkdir -p ${TCOS_CHROOT}
   echo "Using mirror: ${TCOS_MIRROR}"
-  cdebootstrap --arch="${TCOS_ARCH}" --flavour="${TCOS_FLAVOUR}" \
-      --include=${TMP} \
-      ${TCOS_DISTRO} ${TCOS_CHROOT} ${TCOS_MIRROR}
+ 
+  if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+    debootstrap --arch "${TCOS_ARCH}" ${TCOS_DISTRO} ${TCOS_CHROOT} ${TCOS_MIRROR}
+  else
+    cdebootstrap --arch="${TCOS_ARCH}" --flavour="${TCOS_FLAVOUR}" \
+        --include=${TMP} \
+        ${TCOS_DISTRO} ${TCOS_CHROOT} ${TCOS_MIRROR}
+  fi
 
   if [ $? != 0 ]; then exit $?; fi
 
@@ -70,20 +80,51 @@ chrootcreate() {
   # add extras (universe and multiverse repos)
   if [ "${MIRROR_EXTRAS}" != "" ]; then
     echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO} ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
+    echo "deb ${TCOS_MIRROR2} ${TCOS_DISTRO}-security main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
+    echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO}-updates main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
   fi
 
   # add /etc/resolv.conf (some versions of cdebootstrap don't create it)
   cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
 
   # add GPG key
+
+
+if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+  mount --bind /proc ${TCOS_CHROOT}/proc
+  mount --bind /sys ${TCOS_CHROOT}/sys
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
 apt-get update
-DEBCONF_FRONTEND='noninteractive' apt-get install -y -f tcos-keyring
-DEBCONF_FRONTEND='noninteractive' apt-get install -y ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
+DEBIAN_FRONTEND="noninteractive" apt-get install -y -f --force-yes tcos-keyring
+DEBIAN_FRONTEND="noninteractive" apt-get install -y -f ${TMP2} 
 apt-get clean
 EOC
+  umount ${TCOS_CHROOT}/proc
+  umount ${TCOS_CHROOT}/sys
+
+  cat << EOC | chroot ${TCOS_CHROOT}
+export LC_ALL=C
+export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
+apt-get update 
+apt-get install -y -f ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
+apt-get clean
+EOC
+else
+  cat << EOC | chroot ${TCOS_CHROOT}
+export LC_ALL=C
+export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
+apt-get update
+apt-get install -y -f --force-yes tcos-keyring
+apt-get update 
+apt-get install -y -f ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
+apt-get clean
+EOC
+fi
 }
 
 
@@ -93,6 +134,7 @@ chrootupdate() {
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
 
 [ ! -e /sbin/start-stop-daemon ] && cat << CMD > /sbin/start-stop-daemon
 #!/bin/sh
@@ -102,11 +144,17 @@ CMD
 CMD
 chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
 apt-get update
-DEBCONF_FRONTEND='noninteractive' apt-get install -y cdebootstrap
-dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-DEBCONF_FRONTEND='noninteractive' apt-get -y upgrade
-DEBCONF_FRONTEND='noninteractive' apt-get install -y ${TMP2} ${TCOS_PACKAGES}
-dpkg --remove cdebootstrap-helper-diverts
+if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+    DEBIAN_FRONTEND="noninteractive" apt-get -y upgrade
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y ${TMP2} ${TCOS_PACKAGES}
+else
+    apt-get install -y cdebootstrap
+    dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
+    apt-get -y upgrade
+    apt-get install -y ${TMP2} ${TCOS_PACKAGES}
+    dpkg --remove cdebootstrap-helper-diverts
+fi
+apt-get clean
 EOC
 }
 
@@ -115,6 +163,7 @@ chrootinstallpkg() {
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
 [ ! -e /sbin/start-stop-daemon ] && cat << CMD > /sbin/start-stop-daemon
 #!/bin/sh
 CMD
@@ -123,10 +172,16 @@ CMD
 CMD
 chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
 apt-get update
-DEBCONF_FRONTEND='noninteractive' apt-get install -y cdebootstrap
-dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-DEBCONF_FRONTEND='noninteractive' apt-get -y install $@
-dpkg --remove cdebootstrap-helper-diverts
+
+if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+    DEBIAN_FRONTEND="noninteractive"  apt-get -y install $@
+else
+    apt-get install -y cdebootstrap
+    dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
+    apt-get -y install $@
+    dpkg --remove cdebootstrap-helper-diverts
+fi
+apt-get clean
 EOC
 }
 
@@ -139,6 +194,12 @@ export LC_MESSAGES=C
 [ ! -d /var/cache/tcos/packages/pulseaudio-esound-compat ] && gentcos -instpkg pulseaudio-esound-compat
 [ ! -d /var/cache/tcos/packages/libesd0 ] && gentcos -instpkg libesd0
 [ ! -d /var/cache/tcos/packages/esound ] && gentcos -instpkg esound
+
+#Need for Tcos but conflicts with discover1 required by Lliurex
+if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+    [ ! -d /var/cache/tcos/packages/discover ] && gentcos -instpkg discover discover-data libdiscover2
+fi
+
 gentcos ${GENTCOS_OPT}
 rm -f /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs
 cp /boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
