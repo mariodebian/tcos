@@ -20,7 +20,7 @@ if [ "${DISTRIBUTION}" = "ubuntu" ]; then
   TCOS_MIRROR=http://archive.ubuntu.com/ubuntu/
   TCOS_MIRROR2=http://security.ubuntu.com/ubuntu/
   MIRROR_EXTRAS="universe restricted multiverse"
-  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data console-tools"
+  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data console-tools openbsd-inetd tcpd openssh-client"
   TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
 else
   TCOS_MIRROR=http://ftp.de.debian.org/debian
@@ -104,25 +104,33 @@ apt-get clean
 EOC
   umount ${TCOS_CHROOT}/proc
   umount ${TCOS_CHROOT}/sys
-
-  cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-export DEBCONF_FRONTEND="noninteractive"
-apt-get update 
-apt-get install -y -f ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
-apt-get clean
+  cat << EOC > ${TCOS_CHROOT}/pressed
+linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/lilo-initrd-${TCOS_KERNEL}	boolean	false
 EOC
-else
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
 apt-get update
-apt-get install -y -f --force-yes tcos-keyring
-apt-get update 
-apt-get install -y -f ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
+debconf-set-selections /pressed
+DEBIAN_FRONTEND="noninteractive" apt-get install -y -f ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
 apt-get clean
+ssh-keygen -t rsa -N tcos-${TCOS_KERNEL} -f /root/.ssh/id_rsa
+EOC
+else
+  cat << EOC > ${TCOS_CHROOT}/pressed
+linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/lilo-initrd-${TCOS_KERNEL}	boolean	false
+EOC
+  cat << EOC | chroot ${TCOS_CHROOT}
+export LC_ALL=C
+export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
+apt-get update
+DEBIAN_FRONTEND="noninteractive" apt-get install -y -f --force-yes tcos-keyring
+debconf-set-selections /pressed
+DEBIAN_FRONTEND="noninteractive" apt-get install -y -f ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
+apt-get clean
+ssh-keygen -t rsa -N tcos-${TCOS_KERNEL} -f /root/.ssh/id_rsa
 EOC
 fi
 }
@@ -148,10 +156,10 @@ if [ "${DISTRIBUTION}" = "ubuntu" ]; then
     DEBIAN_FRONTEND="noninteractive" apt-get -y upgrade
     DEBIAN_FRONTEND="noninteractive" apt-get install -y ${TMP2} ${TCOS_PACKAGES}
 else
-    apt-get install -y cdebootstrap
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-    apt-get -y upgrade
-    apt-get install -y ${TMP2} ${TCOS_PACKAGES}
+    DEBIAN_FRONTEND="noninteractive" apt-get -y upgrade
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y ${TMP2} ${TCOS_PACKAGES}
     dpkg --remove cdebootstrap-helper-diverts
 fi
 apt-get clean
@@ -176,9 +184,9 @@ apt-get update
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
     DEBIAN_FRONTEND="noninteractive"  apt-get -y install $@
 else
-    apt-get install -y cdebootstrap
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-    apt-get -y install $@
+    DEBIAN_FRONTEND="noninteractive" apt-get -y install $@
     dpkg --remove cdebootstrap-helper-diverts
 fi
 apt-get clean
@@ -204,6 +212,7 @@ gentcos ${GENTCOS_OPT}
 rm -f /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs
 cp /boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
 EOC
+rm -f /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs
 [ ! -e /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} ] && ln -s ${TCOS_CHROOT}/var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/
 [ ! -e /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs ] && ln -s ${TCOS_CHROOT}/var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
 

@@ -13,6 +13,7 @@ all:
 	cd udev        && make
 	cd lockscreen  && make
 	cd dbus        && make
+	cd session-cmd && make
 
 include common.mk
 
@@ -29,6 +30,7 @@ clean:
 	cd udev        && make clean
 	cd lockscreen  && make clean
 	cd dbus        && make clean
+	cd session-cmd && make clean
 
 gedit:
 	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
@@ -162,6 +164,9 @@ install:
 
 	# dbus conf file
 	cd dbus && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+
+	# session-cmd scripts
+	cd session-cmd && $(MAKE) install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 
 targz: clean
 	rm -rf ../tmp 2> /dev/null

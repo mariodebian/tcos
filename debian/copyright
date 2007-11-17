@@ -105,6 +105,10 @@ Licenses:
         Andre L.R. Ferreira <andrelrf@gmail.com>
 
 
+     session-cmd/*:
+        Scripts to exit from gnome using sockets
+        Copyright (c) 2007 Luis Garcia Gisbert <garcia_luigis@gva.es>
+
 
 On Debian systems, the complete text of the GNU General Public
 License, version 2, can be found in /usr/share/common-licenses/GPL.

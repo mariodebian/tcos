@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.87.4) unstable; urgency=low
+
+  * session-cmd/:
+    - Scripts to exit current session (from lliurex developers)
+    - Added to debian/copyright
+  * bin/tcos-buildchroot:
+    - More changes to make work in Ubuntu
+  * debian/control:
+    - New depends on tcos-core package: netpipes and libnotify-bin (session-cmd)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 17 Nov 2007 19:11:47 +0100
+
 initramfs-tools-tcos (0.87.3) unstable; urgency=low
 
   * Fix tcos-buildchroot in Ubuntu

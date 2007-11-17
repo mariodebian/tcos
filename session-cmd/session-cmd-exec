@@ -1,0 +1,56 @@
+#!/bin/sh
+# -------
+# File:        session-cmd-exec
+# Description: session-cmd backend
+# Author:      Luis Garcia Gisbert <garcia_luigis@gva.es>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston MA 02110-1301 USA
+# --------
+
+
+set -e
+ICON_FILE="/usr/share/lliurex/pixmaps/lliurex-default.png"
+LOGOUT_TIMEOUT=20
+MESSAGE_CMD="notify-send -u normal -t $(($LOGOUT_TIMEOUT * 1000)) -i $ICON_FILE LliureX"
+LOGOUT_MESSAGE="Su sesión se cerrará en $LOGOUT_TIMEOUT segundos"
+
+DEFAULT_OPTIONS="/etc/default/session-cmd"
+[ ! -r "$DEFAULT_OPTIONS" ] || . ${DEFAULT_OPTIONS}
+
+message(){
+   $MESSAGE_CMD "$1" 2>/dev/null
+}
+
+case $1 in
+   MESSAGE)
+      shift
+      if [ "$1" ] ; then
+         message "$*"
+      fi
+      ;;
+   LOGOUT)
+      message "$LOGOUT_MESSAGE"
+      sleep $LOGOUT_TIMEOUT
+      gnome-session-save --kill --silent
+      #dcop ksmserver default logout 0 -1 -1 (kde silent command)
+      ;;
+   OPEN)
+      shift
+      if [ "$1" ] ; then
+         gnome-open "$*" 2>/dev/null
+      fi
+      ;;
+esac
+exit 0
