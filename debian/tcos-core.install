@@ -7,3 +7,4 @@ var/lib/tcos/standalone/*
 usr/share/tcos-core/lockscreen.png
 usr/sbin/update-tcospasswd
 usr/sbin/tcospasswd
+etc/xdg/autostart/session-cmd.desktop

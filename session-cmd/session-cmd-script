@@ -19,6 +19,17 @@
 # 51 Franklin St, Fifth Floor, Boston MA 02110-1301 USA
 # --------
 
+######### changed by mariodebian ########
+if [ -e /etc/default/tcos-standalone ]; then
+  . /etc/default/tcos-standalone
+
+  DISPLAY_HOST=$(echo $DISPLAY| awk -F ":" '{print $1}')
+  if [ "x${DISPLAY_HOST}" = "x" ] && [ "${TCOS_STANDALONE_START}" != "1" ]; then
+    exit 0
+  fi
+fi
+################# end ####################
+
 LIB_FILE="/usr/lib/tcos/session-cmd-common.sh"
 [ -r "$LIB_FILE" ] || exit 1
 . ${LIB_FILE}

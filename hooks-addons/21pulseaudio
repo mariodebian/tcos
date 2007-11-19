@@ -78,10 +78,16 @@ else
 . /scripts/functions
 . /conf/tcos.conf
 . /conf/tcos-run-functions
-
+disable_esound=
 
 # check lib link
 [ -e /usr/lib/libpulsecore.so.3 ] && ln -s /usr/lib/libpulsecore.so.3 /usr/lib/libpulsecore.so.2
+
+if [ -e /usr/lib/libpulsecore.so.4 ]; then
+   ln -s /usr/lib/libpulsecore.so.4 /usr/lib/libpulsecore.so.3
+   # pulseaudio 0.9.7 don't work esound protocol
+   disable_esound="#"
+fi
 
 # generate conf
 rm -f /etc/pulse/default.pa
@@ -101,10 +107,10 @@ cat << FIN > /etc/pulse/default.pa
 
 load-module module-detect
 
-load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
+\${disable_esound}load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
-load-module module-esound-protocol-unix
+\${disable_esound}load-module module-esound-protocol-unix
 
 .nofail
 FIN

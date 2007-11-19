@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Session Cmd
+Comment=Session cmd user agent
+Exec=/usr/lib/tcos/session-cmd-script
+Terminal=false
+Type=Application
+Categories=
+OnlyShowIn=GNOME;XFCE;

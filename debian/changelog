@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.87.6) unstable; urgency=low
+
+  * hooks-addons/21pulseaudio:
+    - Don't enable esound protocol in new pulseaudio lib
+  * session-cmd/session-cmd.desktop:
+    - Start session-cdm from /etc/xdg/autostart
+  * session-cmd/session-cmd-script:
+    - exit if not remote or not standalone
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 19 Nov 2007 23:07:56 +0100
+
 initramfs-tools-tcos (0.87.5) unstable; urgency=low
 
   * session-cmd/*
