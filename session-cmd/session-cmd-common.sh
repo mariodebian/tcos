@@ -21,7 +21,7 @@
 UNIX_SOCKET_DIR="/tmp/session-cmd"
 
 socket_basename(){
-   echo "$(id -un)-"
+   echo "$(id -un)"
 }
 
 create_socket(){
@@ -29,7 +29,7 @@ create_socket(){
    i=0
    MAX_TRY=99
    while [ $i -lt $MAX_TRY ] ; do
-      UNIX_SOCKET="${UNIX_SOCKET_DIR}/$(socket_basename)${i}"
+      UNIX_SOCKET="${UNIX_SOCKET_DIR}-$(socket_basename)/$(socket_basename)$-{i}"
       [ -S "${UNIX_SOCKET}.sock" ] || break
       if [ -r "${UNIX_SOCKET}.pid" ] ; then
          kill -9 "$(cat "${UNIX_SOCKET}.pid")" >/dev/null 2>/dev/null || true
@@ -38,14 +38,14 @@ create_socket(){
       i=$(($i + 1))
    done
    [ $i -lt $MAX_TRY ] || return 1
-   mkdir -p "$UNIX_SOCKET_DIR"
-   [ -d "$UNIX_SOCKET_DIR" ] || return 1
+   mkdir -p "${UNIX_SOCKET_DIR}-$(socket_basename)"
+   [ -d "${UNIX_SOCKET_DIR}-$(socket_basename)" ] || return 1
    echo "$UNIX_SOCKET"
    return 0
 }
 
 list_sockets(){
-   [ -d "$UNIX_SOCKET_DIR" ] || return 0
-   find "$UNIX_SOCKET_DIR" -type s -name "$(socket_basename)*.sock" 2>/dev/null
+   [ -d "${UNIX_SOCKET_DIR}-$(socket_basename)" ] || return 0
+   find "${UNIX_SOCKET_DIR}-$(socket_basename)" -type s -name "$(socket_basename)-*.sock" 2>/dev/null
    return 0
 }

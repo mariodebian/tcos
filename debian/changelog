@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.87.5) unstable; urgency=low
+
+  * session-cmd/*
+    - kde logout
+    - Permission denied with socket creation
+    - Not list or remove all sockets in thin clients actions
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Mon, 19 Nov 2007 14:32:56 +0100
+
 initramfs-tools-tcos (0.87.4) unstable; urgency=low
 
   * session-cmd/:

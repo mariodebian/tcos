@@ -43,13 +43,17 @@ case $1 in
    LOGOUT)
       message "$LOGOUT_MESSAGE"
       sleep $LOGOUT_TIMEOUT
-      gnome-session-save --kill --silent
-      #dcop ksmserver default logout 0 -1 -1 (kde silent command)
+      kdesktop=`ps -C kdesktop`
+      if [ $? -eq 0 -a -f /usr/bin/dcop ];then
+          dcop ksmserver default logout 0 -1 -1
+      else
+          gnome-session-save --kill --silent
+      fi
       ;;
    OPEN)
       shift
       if [ "$1" ] ; then
-         gnome-open "$*" 2>/dev/null
+         [ -x /usr/bin/gnome-open ] && gnome-open "$*" 2>/dev/null
       fi
       ;;
 esac
