@@ -59,9 +59,23 @@ else
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*pipe*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*tunel*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*volume-restore*
+ rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*cli*
+ rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*http*
 
  if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules ]; then
   _echo "    * PulseAudio copying esound compat [cached] modules..."
+  # warn about OLD cached version
+  if [ $(ldd ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/module-esound-sink.so | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
+    _echo ""
+    _echo "    *** WARNING ***"
+    _echo ""
+    _echo "       You have an old copy of cached pulseaudio-esound-compat package"
+    _echo "       Please remove and reinstall it or sound will not work:"
+    _echo ""
+    _echo "       rm -rf ${TCOS_PKG_CACHE}/pulseaudio-esound-compat"
+    _echo "       gentcos -instpkg pulseaudio-esound-compat"
+    _echo ""
+  fi
   cp -ra ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/*.so ${DESTDIR}/usr/lib/pulse-0.9/modules/
  fi
 
@@ -78,16 +92,9 @@ else
 . /scripts/functions
 . /conf/tcos.conf
 . /conf/tcos-run-functions
-disable_esound=
 
 # check lib link
 [ -e /usr/lib/libpulsecore.so.3 ] && ln -s /usr/lib/libpulsecore.so.3 /usr/lib/libpulsecore.so.2
-
-if [ -e /usr/lib/libpulsecore.so.4 ]; then
-   ln -s /usr/lib/libpulsecore.so.4 /usr/lib/libpulsecore.so.3
-   # pulseaudio 0.9.7 don't work esound protocol
-   disable_esound="#"
-fi
 
 # generate conf
 rm -f /etc/pulse/default.pa
@@ -107,10 +114,10 @@ cat << FIN > /etc/pulse/default.pa
 
 load-module module-detect
 
-\${disable_esound}load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
+load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
-\${disable_esound}load-module module-esound-protocol-unix
+load-module module-esound-protocol-unix
 
 .nofail
 FIN
