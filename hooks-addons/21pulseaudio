@@ -65,7 +65,7 @@ else
  if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules ]; then
   _echo "    * PulseAudio copying esound compat [cached] modules..."
   # warn about OLD cached version
-  if [ $(ldd ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/module-esound-sink.so | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
+  if [ $(ldd ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/libprotocol-esound.so 2>&1 | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
     _echo ""
     _echo "    *** WARNING ***"
     _echo ""
