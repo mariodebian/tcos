@@ -29,7 +29,7 @@ create_socket(){
    i=0
    MAX_TRY=99
    while [ $i -lt $MAX_TRY ] ; do
-      UNIX_SOCKET="${UNIX_SOCKET_DIR}-$(socket_basename)/$(socket_basename)$-{i}"
+      UNIX_SOCKET="${UNIX_SOCKET_DIR}-$(socket_basename)/$(socket_basename)-${i}"
       [ -S "${UNIX_SOCKET}.sock" ] || break
       if [ -r "${UNIX_SOCKET}.pid" ] ; then
          kill -9 "$(cat "${UNIX_SOCKET}.pid")" >/dev/null 2>/dev/null || true

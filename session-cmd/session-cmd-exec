@@ -33,6 +33,10 @@ message(){
    $MESSAGE_CMD "$1" 2>/dev/null
 }
 
+socket_basename(){
+   echo "$(id -un)"
+}
+
 case $1 in
    MESSAGE)
       shift
@@ -43,8 +47,7 @@ case $1 in
    LOGOUT)
       message "$LOGOUT_MESSAGE"
       sleep $LOGOUT_TIMEOUT
-      kdesktop=`ps -C kdesktop`
-      if [ $? -eq 0 -a -f /usr/bin/dcop ];then
+      if [ `ps -U $(socket_basename) | grep -c -e "ksmserver" -e "start_kdeinit"` -eq 2 ];then
           dcop ksmserver default logout 0 -1 -1
       else
           gnome-session-save --kill --silent
