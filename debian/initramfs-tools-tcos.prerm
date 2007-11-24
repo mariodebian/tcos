@@ -6,6 +6,8 @@ if [ "$1" = "purge" ]; then
 
   # delete all generated files and dirs
   rm -rf /var/lib/tcos/tftp
+  rm -rf /var/lib/tcos/files
+  rm -rf /var/lib/tcos/fs-*
 
 fi
 

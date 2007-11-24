@@ -66,14 +66,12 @@ if [ -z "${TFTPBOOT}" ]; then
   echo ""
   echo "***********************************************************"
 
-elif [ ! -d ${TFTPBOOT} ]; then
-
-  echo "***********************************************************"
-  echo "initramfs-tools-tcos: ERROR: your configured TFTPD dir "
-  echo "        "${TFTPBOOT}" not exits, please create first."
-  echo "***********************************************************"
-
 else
+  if [ ! -d ${TFTPBOOT} ]; then
+     # create dir
+     mkdir -p "${TFTPBOOT}"
+  fi
+
   # make symlinks
   if [ -d ${TFTPBOOT}/tcos ] && [ ! -L ${TFTPBOOT}/tcos ]; then
     echo ""
@@ -84,9 +82,6 @@ else
   elif [ ! -e ${TFTPBOOT}/tcos ]; then
     ln -s /var/lib/tcos/tftp ${TFTPBOOT}/tcos
 
-  #elif [ -L ${TFTPBOOT}/tcos ]; then
-  #  echo "initramfs-tools-tcos: INFO: ${TFTPBOOT}/tcos is a symbolic link, all seems OK."
-  
   fi
 fi 
 

@@ -1,3 +1,17 @@
+initramfs-tools-tcos (0.87.7) unstable; urgency=low
+
+  [ vidal ]
+  * session-cmd/*
+      - fix syntax error and logout kde
+
+  [ Mario Izquierdo (mariodebian) ]
+  * Fix pulseaudio errors, need to update cached pulseaudio-esound-compat package
+  * Remove debian/initramfs-tools-tcos.postrm
+  * Create TFTPBOOT dir if not exists
+  * Clean more dirs in debian/initramfs-tools-tcos.prerm
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 24 Nov 2007 11:53:49 +0100
+
 initramfs-tools-tcos (0.87.6) unstable; urgency=low
 
   * hooks-addons/21pulseaudio:

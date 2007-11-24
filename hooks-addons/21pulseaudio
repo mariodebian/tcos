@@ -69,10 +69,10 @@ else
     _echo ""
     _echo "    *** WARNING ***"
     _echo ""
-    _echo "       You have an old copy of cached pulseaudio-esound-compat package"
+    _echo "       You have an old cached copy of pulseaudio-esound-compat package"
     _echo "       Please remove and reinstall it or sound will not work:"
     _echo ""
-    _echo "       rm -rf ${TCOS_PKG_CACHE}/pulseaudio-esound-compat"
+    _echo "       gentcos -rmpkg pulseaudio-esound-compat"
     _echo "       gentcos -instpkg pulseaudio-esound-compat"
     _echo ""
   fi
