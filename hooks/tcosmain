@@ -32,6 +32,13 @@ if [ "${BOOT}" = "tcos" -o "${BOOT}" = "tcos-nfs" ]; then
 . $CONFDIR/tcos.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
+  # load forced settings for derivatives
+  if [ -d $CONFDIR/conf.d/ ]; then
+    for file in $CONFDIR/conf.d/tcos*conf; do
+      . $file
+    done
+  fi
+
   # copy scripts into image
   cp -ra ${TCOS_DIR}/scripts/* ${DESTDIR}/scripts/
 

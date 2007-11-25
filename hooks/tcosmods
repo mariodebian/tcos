@@ -34,6 +34,14 @@ if [ "${BOOT}" = "tcos" ]; then
 . $TCOS_CONF/tcos-modules.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
+# load forced settings for derivatives
+if [ -d $CONFDIR/conf.d/ ]; then
+  for file in $CONFDIR/conf.d/tcos*conf; do
+    . $file
+  done
+fi
+
+
 TCOS_USB=$(read_env_var "TCOS_USB" "$TCOS_USB")
 TCOS_XORG=$(read_env_var "TCOS_XORG" "$TCOS_XORG")
 TCOS_SOUND=$(read_env_var "TCOS_SOUND" "$TCOS_SOUND")

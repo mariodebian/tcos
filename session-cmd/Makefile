@@ -12,3 +12,4 @@ install:
 
 	mkdir -p $(DESTDIR)/etc/xdg/autostart/
 	install -m 644 session-cmd.desktop     $(DESTDIR)/etc/xdg/autostart/
+

@@ -8,6 +8,7 @@
 /etc/tcos/scripts/tcos-top
 /etc/tcos/hooks
 /etc/tcos/hooks-addons
+/etc/tcos/conf.d/
 /var/cache/tcos/packages
 /var/lib/tcos/tftp
 /usr/sbin/

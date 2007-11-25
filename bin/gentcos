@@ -32,6 +32,14 @@ fi
 . ${TCOS_DIR}/tcos-generation-functions.sh
 . /usr/share/initramfs-tools/hook-functions
 
+# load forced settings for derivatives
+if [ -d /etc/tcos/conf.d/ ]; then
+  for file in /etc/tcos/conf.d/tcos*conf; do
+    . $file
+  done
+fi
+
+
 # default output files
 OUTPUTIMAGE=${ISOS}/tcos-boot-usb.iso
 
@@ -73,13 +81,12 @@ fi
 
 if [ -d /opt/tcos ]; then
    echo ""
-   echo "Warning: can delete /opt/tcos dir"
+   echo "Info:    You can delete /opt/tcos dir"
    echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"
    echo ""
 fi
 
 # ugly hack to avoid edit /etc/tcos/tcos.conf file
-#rm -f ${TCOS_CONF}/tcos.conf.dpkg* >/dev/null 2>&1
 cp ${TCOS_CONF}/tcos.conf ${TCOS_CONF}/tcos.conf.orig > /dev/null 2>&1
 # TCOS-Config save file before or after call gentcos
 
@@ -90,6 +97,7 @@ _exit () {
  unset TCOS_SUFFIX
  rm -f ${TMPNBI}
  rm -f ${INITRAMFS}
+ rm -f ${INITRAMFS}-nfs
  rm -rf ${OUTROOTFS_TMP}
  cp ${TCOS_CONF}/tcos.conf.orig ${TCOS_CONF}/tcos.conf > /dev/null 2>&1
  # exit wrapper
@@ -129,7 +137,6 @@ create_initramfs() {
  # call mkinitramfs
  _echo "Creating initramfs with ${TCOS_KERNEL} kernel..."
  call_mkinitramfs ${INITRAMFS}
- #mkinitramfs -d ${TCOS_CONF} -o ${INITRAMFS} ${TCOS_KERNEL}
 
  if [ ! -f ${TFTP_DIR}/vmlinuz-${TCOS_KERNEL} ]; then
    _echo "  Linking vmlinuz-${TCOS_KERNEL} in ${TFTP_DIR}"
@@ -143,7 +150,6 @@ create_initramfs_nfs() {
  _echo "Creating initramfs NFS with ${TCOS_KERNEL} kernel..."
 
  export TCOS_BOOT=tcos-nfs
- # mkinitramfs -d ${TCOS_CONF} -o ${INITRAMFS}-nfs ${TCOS_KERNEL}
  call_mkinitramfs "${INITRAMFS}-nfs"
  unset TCOS_BOOT
  
@@ -543,12 +549,13 @@ tcos_inst_pkg() {
     fi
   done
   [ $error = 0 ] && echo "All package installed."
-  [ $error != 0 ] && echo "Ther are some errors during caching..."
+  [ $error != 0 ] && echo "There are some errors during caching..."
 }
 
 
 fix_nvidia_ati() {
     tcos_inst_pkg "xserver-xorg-core libgl1-mesa-glx"
+    rm -rf   ${TCOS_PKG_CACHE}/fix-nvidia-ati
     mkdir -p ${TCOS_PKG_CACHE}/fix-nvidia-ati
     mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libglx.so \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so

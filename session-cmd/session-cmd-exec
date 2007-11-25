@@ -21,13 +21,31 @@
 
 
 set -e
-ICON_FILE="/usr/share/lliurex/pixmaps/lliurex-default.png"
-LOGOUT_TIMEOUT=20
-MESSAGE_CMD="notify-send -u normal -t $(($LOGOUT_TIMEOUT * 1000)) -i $ICON_FILE LliureX"
-LOGOUT_MESSAGE="Su sesión se cerrará en $LOGOUT_TIMEOUT segundos"
 
-DEFAULT_OPTIONS="/etc/default/session-cmd"
-[ ! -r "$DEFAULT_OPTIONS" ] || . ${DEFAULT_OPTIONS}
+. /etc/tcos/tcos.conf
+. ${TCOS_DIR}/tcos-generation-functions.sh
+
+# title of popup
+TITLE="TCOS"
+
+# icon to show in popup
+ICON_FILE="/usr/share/pixmaps/tcos-icon-32x32.png"
+
+# timeout for popup (in seconds)
+LOGOUT_TIMEOUT=20
+
+# message to show in popup (FIXME i18n)
+LOGOUT_MESSAGE="Session will close in $LOGOUT_TIMEOUT seconds"
+
+if [ -d /etc/tcos/conf.d/ ]; then
+  for file in /etc/tcos/conf.d/session-cmd*; do
+    . $file
+  done
+fi
+
+
+MESSAGE_CMD="notify-send -u normal -t $(($LOGOUT_TIMEOUT * 1000)) -i ${ICON_FILE} {$TITLE}"
+
 
 message(){
    $MESSAGE_CMD "$1" 2>/dev/null

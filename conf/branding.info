@@ -1,0 +1,25 @@
+# 
+#
+#   BRANDING info for TCOS
+#
+#
+#  You can change some default settings in TCOS creating a file
+#  in /etc/tcos/conf.d/ dir
+#
+#
+#  Files allowed:
+#
+#  tcos*.conf
+#    Overwrite /etc/tcos/tcos.conf settings
+#
+#  session-cmd*
+#   Overwrite default session-cmd-exec settings
+#   Vars:
+#     TITLE
+#     ICON_FILE
+#     LOGOUT_TIMEOUT
+#     LOGOUT_MESSAGE
+#
+#
+#  If you want to brand another file, please tell me
+#

@@ -4,6 +4,13 @@ if [ -f /etc/tcos/version.conf ]; then
   cat /etc/tcos/version.conf >> ${DESTDIR}/conf/tcos.conf
 fi
 
+# load forced settings for derivatives
+if [ -d $CONFDIR/conf.d/ ]; then
+  for file in $CONFDIR/conf.d/tcos*conf; do
+    cat $file >> ${DESTDIR}/conf/tcos.conf
+  done
+fi
+
 tcos_date=$(LANG=C LC_ALL=C date)
 echo "# date of image" >> ${DESTDIR}/conf/tcos.conf
 echo "TCOS_DATE=\"${tcos_date}\"" >> ${DESTDIR}/conf/tcos.conf

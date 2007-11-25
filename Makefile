@@ -56,6 +56,7 @@ install:
 	#  Creating directories
 	install -d $(DESTDIR)/$(TCOS_CONF)
 	install -d $(DESTDIR)/$(TCOS_CONF)/hooks-addons/
+	install -d $(DESTDIR)/$(TCOS_CONF)/conf.d/
 	install -d $(DESTDIR)/$(TCOS_DIR)
 	install -d $(DESTDIR)/$(TCOS_DIR)/hooks
 	install -d $(DESTDIR)/$(TCOS_DIR)/hooks-addons
@@ -118,6 +119,7 @@ install:
 
 	install -m 644 conf/tcos-generation-functions.sh $(DESTDIR)$(TCOS_DIR)/tcos-generation-functions.sh
 	install -m 644 conf/tcos-run-functions.sh        $(DESTDIR)$(TCOS_DIR)/tcos-run-functions.sh
+	install -m 644 conf/branding.info                $(DESTDIR)$(TCOS_CONF)/conf.d/
 
 	install -m 644 conf/82export_pulseaudio  $(DESTDIR)$(X11_CONF)/
 

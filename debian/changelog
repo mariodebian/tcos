@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.87.8) unstable; urgency=low
+
+  * Add branding support:
+    - New dir /etc/tcos/conf.d/ which can contain some tcos conf files
+  * bin/tcos-buildchroot:
+    - Add same apt-get options to all calls
+    - Fix some errors
+    - tested with Debian and Ubuntu.
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 Nov 2007 21:33:00 +0100
+
 initramfs-tools-tcos (0.87.7) unstable; urgency=low
 
   [ vidal ]
