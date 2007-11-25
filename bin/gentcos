@@ -35,7 +35,7 @@ fi
 # load forced settings for derivatives
 if [ -d /etc/tcos/conf.d/ ]; then
   for file in /etc/tcos/conf.d/tcos*conf; do
-    . $file
+    [ -e $file ] && . $file
   done
 fi
 

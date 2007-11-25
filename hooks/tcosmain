@@ -35,7 +35,7 @@ if [ "${BOOT}" = "tcos" -o "${BOOT}" = "tcos-nfs" ]; then
   # load forced settings for derivatives
   if [ -d $CONFDIR/conf.d/ ]; then
     for file in $CONFDIR/conf.d/tcos*conf; do
-      . $file
+      [ -e $file ] && . $file
     done
   fi
 

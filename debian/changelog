@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.87.9) unstable; urgency=low
+
+  * Fix branding errors:
+    - Only include if file exists
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 Nov 2007 23:13:37 +0100
+
 initramfs-tools-tcos (0.87.8) unstable; urgency=low
 
   * Add branding support:

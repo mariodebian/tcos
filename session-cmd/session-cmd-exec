@@ -39,7 +39,7 @@ LOGOUT_MESSAGE="Session will close in $LOGOUT_TIMEOUT seconds"
 
 if [ -d /etc/tcos/conf.d/ ]; then
   for file in /etc/tcos/conf.d/session-cmd*; do
-    . $file
+    [ -e $file ] && . $file
   done
 fi
 

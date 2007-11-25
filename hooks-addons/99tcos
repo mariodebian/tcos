@@ -7,7 +7,7 @@ fi
 # load forced settings for derivatives
 if [ -d $CONFDIR/conf.d/ ]; then
   for file in $CONFDIR/conf.d/tcos*conf; do
-    cat $file >> ${DESTDIR}/conf/tcos.conf
+    [ -e $file ] && cat $file >> ${DESTDIR}/conf/tcos.conf
   done
 fi
 
