@@ -227,7 +227,7 @@ fi
 
 gentcos ${GENTCOS_OPT}
 EOC
-rm -f /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs
+rm -f /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/initramfs-${TCOS_KERNEL} /var/lib/tcos/tftp/linux-${TCOS_KERNEL}.nbi
 
 [ ! -e /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} ] && \
 	ln -s ${TCOS_CHROOT}/boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/

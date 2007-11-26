@@ -22,8 +22,8 @@
 
 set -e
 
-. /etc/tcos/tcos.conf
-. ${TCOS_DIR}/tcos-generation-functions.sh
+[ -r /etc/tcos/tcos.conf ] && . /etc/tcos/tcos.conf
+[ ${TCOS_DIR} ] && . ${TCOS_DIR}/tcos-generation-functions.sh
 
 # title of popup
 TITLE="TCOS"
