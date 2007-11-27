@@ -101,7 +101,7 @@ chrootcreate() {
   fi
   
   # add extra source include in forced settings
-  if [ ${TCOS_MIRROR_EXTRA} != "" ];then
+  if [ ! -z ${TCOS_MIRROR_EXTRA} ];then
     echo ${TCOS_MIRROR_EXTRA} >> ${TCOS_CHROOT}/etc/apt/sources.list
   fi
 
