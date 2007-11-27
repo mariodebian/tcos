@@ -2,8 +2,12 @@ initramfs-tools-tcos (0.87.11) unstable; urgency=low
 
   * conf/tcos-run-functions.sh:
     - Revert last change, sorry for break TCOS
+  * debian/control:
+    - Put depends in single line (old versions like dapper don't allow multiple lines)
+    - Remove [i386] arch depends (old versions don't support)
+    - Remove mknbi depends from Makefile patch_amd64
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 27 Nov 2007 10:01:44 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 27 Nov 2007 10:26:33 +0100
 
 initramfs-tools-tcos (0.87.10) unstable; urgency=low
 

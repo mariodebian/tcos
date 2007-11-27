@@ -184,7 +184,10 @@ tcos: clean
 	debuild -us -uc; true
 	sudo dpkg -i ../initramfs-tools-tcos*deb ../gentcos*deb ../tcos-server-utils*deb ../tcos-usplash*deb ../tcos_*deb
 
-patch_dapper:
+patch_amd64:
+	if [ "$(shell dpkg-architecture -qDEB_BUILD_ARCH)" != "i386" ]; then sed -i 's/mknbi,//g' debian/control ; fi
+
+patch_dapper: patch_amd64
 	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu DAPPER
 	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control	
 	sed -i 's/source:Version/Source-Version/g' debian/control
@@ -192,21 +195,21 @@ patch_dapper:
 	sed -i '/python-support/s/0.3/0.1.1ubuntu1/g' debian/control
 	sed -i '/dh_pysupport/s/dh_pysupport/dh_python/g' debian/rules
 
-patch_edgy:
+patch_edgy: patch_amd64
 	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu EDGY
 	sed -i '/^Build/s/libusplash-dev/usplash-dev, libbogl-dev/g' debian/control	
 
-patch_feisty:
+patch_feisty: patch_amd64
 	# nothing to patch
 
-patch_gutsy:
+patch_gutsy: patch_amd64
 	# nothing to patch
 
-patch_etch:
+patch_etch: patch_amd64
 	# PATCHING INITRAMFS_TOOLS_TCOS in Debian etch
 	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control
 
-patch_unstable:
+patch_unstable: patch_amd64
 	# nothing to patch
 
 
