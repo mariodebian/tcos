@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.87.11) unstable; urgency=low
+
+  * conf/tcos-run-functions.sh:
+    - Revert last change, sorry for break TCOS
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 27 Nov 2007 10:01:44 +0100
+
 initramfs-tools-tcos (0.87.10) unstable; urgency=low
 
   * session-cmd/session-cmd-exec:

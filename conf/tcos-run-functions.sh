@@ -107,9 +107,7 @@ if_is_zero() {
 
 
 _log () {
-  app=$1
-  #shift
-  /bin/logger -t "$app" "$@" >> /tmp/initramfs.debug 2>&1
+  /bin/logger -t "$(echo $1| awk '{print $1}')" "$@" >> /tmp/initramfs.debug 2>&1
 }
 
 read_server() {
