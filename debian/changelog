@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.87.12) unstable; urgency=low
+
+  * bin/tcos-buildchroot:
+     - Update support for Ubuntu distros grather than Gutsy with kernel modules
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 27 Nov 2007 15:00:23 +0100
+
 initramfs-tools-tcos (0.87.11) unstable; urgency=low
 
   * conf/tcos-run-functions.sh:

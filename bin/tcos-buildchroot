@@ -30,6 +30,10 @@ if [ "${DISTRIBUTION}" = "ubuntu" ]; then
   MIRROR_EXTRAS="universe restricted multiverse"
   DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data console-tools openbsd-inetd tcpd"
   TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
+  # need kernel modules unionfs and squashfs in linux-ubuntu-modules from distros grather than gutsy
+  if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ];then
+    TCOS_PACKAGES="linux-ubuntu-modules-${TCOS_KERNEL} ${TCOS_PACKAGES}"
+  fi
 else
   TCOS_MIRROR=http://ftp.de.debian.org/debian
   MIRROR_EXTRAS=""
@@ -95,6 +99,11 @@ chrootcreate() {
     echo "deb ${TCOS_MIRROR2} ${TCOS_DISTRO}-security main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
     echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO}-updates main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
   fi
+  
+  # add extra source include in forced settings
+  if [ ${TCOS_MIRROR_EXTRA} != "" ];then
+    echo ${TCOS_MIRROR_EXTRA} >> ${TCOS_CHROOT}/etc/apt/sources.list
+  fi
 
   # add /etc/resolv.conf (some versions of cdebootstrap don't create it)
   cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
@@ -125,12 +134,14 @@ export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
 apt-get update
 debconf-set-selections /pressed
-DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
+DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} linux-restricted-modules-${TCOS_KERNEL} ${TCOS_PACKAGES} tcos-extra-modules-${TCOS_KERNEL}
 DEBIAN_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
 apt-get clean
 /etc/init.d/dropbear stop
 rm -f /pressed
 EOC
+  # need umount this directory to allow remove later chroot from distros grather than gutsy
+  [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
 else # DISTRO != ubuntu
   cat << EOF > ${TCOS_CHROOT}/pressed
 linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/lilo-initrd-${TCOS_KERNEL}	boolean	false
@@ -172,6 +183,8 @@ apt-get update
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
     DEBIAN_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
     DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
+    # need umount this directory to allow remove later chroot from distros grather than gutsy
+    [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
 else
     DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
