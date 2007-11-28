@@ -44,7 +44,7 @@ if [ -d /etc/tcos/conf.d/ ]; then
 fi
 
 
-MESSAGE_CMD="notify-send -u normal -t $(($LOGOUT_TIMEOUT * 1000)) -i ${ICON_FILE} {$TITLE}"
+MESSAGE_CMD="notify-send -u normal -t $(($LOGOUT_TIMEOUT * 1000)) -i ${ICON_FILE} ${TITLE}"
 
 
 message(){

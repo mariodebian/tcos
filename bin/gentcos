@@ -318,6 +318,7 @@ echo -e "Usage:
           $RED-nbi$NORMAL   [-nbi-output=linux.nbi]   Floppy
           $RED-cdrom$NORMAL [-type=grub] [-force]     CDROM
           $RED-instpkg$NORMAL pkgname
+          $RED-rmpkg$NORMAL pkgname
           $RED-listpkg$NORMAL
           $RED-fix-nvidia-ati$NORMAL
 
@@ -366,6 +367,10 @@ This is gentcos help info about generating net init images.
         and extract package in ${TCOS_PKG_CACHE}
         This is used for use some tool (example esound) without instllin it.
 
+  ${BLUE}Remove package from cache:${NORMAL}
+     ${GREEN}-rmpkg${NORMAL}
+        This option remove cached package from ${TCOS_PKG_CACHE}
+
   ${BLUE}List cached packages:${NORMAL}
      ${GREEN}-listpkg${NORMAL}
         This option list all cached packages with -instpkg option
@@ -388,6 +393,7 @@ ${WHITE}
      gentcos -cdrom -type=grub
      gentcos -nbi -extra-append=\"splash vga=791 uselocal\"
      gentcos -instpkg esound
+     gentcos -rmpkg esound
      gentcos -listpkg
      gentcos -fix-nvidia-ati
 ${NORMAL}
@@ -552,6 +558,19 @@ tcos_inst_pkg() {
   [ $error != 0 ] && echo "There are some errors during caching..."
 }
 
+tcos_rm_pkg() {
+  echo "Remove PKG \"$@\""
+  for PKG in ${@}; do
+
+    if [ -d "${TCOS_PKG_CACHE}/${PKG}" ]; then
+      echo -n "Removing package ${PKG}..."
+      rm -rf "${TCOS_PKG_CACHE}/${PKG}"
+      echo " done."
+    fi
+  done
+  _exit 0
+}
+
 
 fix_nvidia_ati() {
     tcos_inst_pkg "xserver-xorg-core libgl1-mesa-glx"
@@ -628,6 +647,8 @@ for opt in $@ ; do
             TCOS_ROOTFS=1
             ;;
         -instpkg) tcos_inst_pkg "${@#-instpkg}"; _exit 0
+            ;;
+        -rmpkg) tcos_rm_pkg "${@#-rmpkg}"; _exit 0
             ;;
         -listpkg) list_pkg
             ;;

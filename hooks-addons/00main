@@ -34,7 +34,14 @@ cpifexists ${TCOS_BINS}/daemonize.sh /sbin
 cpifexists ${TCOS_BINS}/clear-logs  /bin
 
 # LIBRARIES
-cpifexists /sbin/ldconfig    /usr/sbin/
+# ubuntu hack for ldconfig
+if [ -e /sbin/ldconfig.real ]; then
+ cpifexists /sbin/ldconfig.real /usr/sbin/
+ ( cd $DESTDIR/usr/sbin/ && mv ldconfig.real ldconfig )
+else
+  cpifexists /sbin/ldconfig    /usr/sbin/
+fi
+
 [ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/
 [ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
 

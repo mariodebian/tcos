@@ -25,6 +25,9 @@ USPLASH_experimental=0.4.1
 
 KERNEL_gutsy="2.6.22-14-generic"
 USPLASH_gutsy=0.4.1
+
+KERNEL_hardy="2.6.22-14-generic"
+USPLASH_hardy=0.4.1
 ##################################
 
 

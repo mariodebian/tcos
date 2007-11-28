@@ -1,3 +1,18 @@
+initramfs-tools-tcos (0.87.13) unstable; urgency=low
+
+  * gentcos:
+    - Add option -rmpkg (remove cached package)
+  * session-cmd/session-cmd-exec:
+    - Fix typo in TITLE var
+  * common.mk:
+    - Add Ubuntu hardy to defined distros
+  * hooks-addons/00main:
+    - Copy real ldconfig (suggested by Ignacio Vidal)
+  * lockscreen/lockscreen2.c lockscreen/Makefile:
+    - Support branding (if lockscreen-custom.png exists, loads it)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 28 Nov 2007 17:47:36 +0100
+
 initramfs-tools-tcos (0.87.12) unstable; urgency=low
 
   * bin/tcos-buildchroot:

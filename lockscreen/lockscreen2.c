@@ -38,7 +38,11 @@
 #include <Imlib.h>
 
 #ifndef LOCKSCREEN_IMAGE
-#define LOCKSCREEN_IMAGE "/usr/share/tcos-core/lockscreen.png"
+#define LOCKSCREEN_IMAGE "/usr/share/tcos-core/lockscreen-custom.png"
+#endif
+
+#ifndef LOCKSCREEN_IMAGE_TCOS
+#define LOCKSCREEN_IMAGE_TCOS "/usr/share/tcos-core/lockscreen.png"
 #endif
 
 
@@ -153,11 +157,19 @@ int main (int argc, char **argv) {
 	gc = XCreateGC(display, desktop_win, 0, NULL);
 
 
-    if ( file_exists (LOCKSCREEN_IMAGE) )
+    if ( file_exists (LOCKSCREEN_IMAGE) || file_exists(LOCKSCREEN_IMAGE_TCOS) )
     {
-        printf("loading image %s...\n", LOCKSCREEN_IMAGE);
         id = Imlib_init(display);
-        image=Imlib_load_image(id,LOCKSCREEN_IMAGE);
+        
+        if ( file_exists(LOCKSCREEN_IMAGE) ) {
+            printf("loading custom image %s...\n", LOCKSCREEN_IMAGE);
+            image=Imlib_load_image(id, LOCKSCREEN_IMAGE);
+        }
+        else {
+            printf("loading TCOS image %s...\n", LOCKSCREEN_IMAGE_TCOS);
+            image=Imlib_load_image(id, LOCKSCREEN_IMAGE_TCOS);
+        }
+        
         image_x = image->rgb_width;
         image_y = image->rgb_height;
 
