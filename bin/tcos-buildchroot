@@ -108,6 +108,13 @@ chrootcreate() {
   # add /etc/resolv.conf (some versions of cdebootstrap don't create it)
   cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
 
+  # avoid to use a shell script in chroot
+  if [ "$(file ${TCOS_CHROOT}/sbin/start-stop-daemon | grep -c ELF)" = "1" ]; then
+        cp ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/sbin/start-stop-daemon.original
+  fi
+  if [ "$(file ${TCOS_CHROOT}/sbin/start-stop-daemon.REAL | grep -c ELF)" = "1" ]; then
+        cp ${TCOS_CHROOT}/sbin/start-stop-daemon.REAL ${TCOS_CHROOT}/sbin/start-stop-daemon.original
+  fi
 
 
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then

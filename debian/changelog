@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.88.2) unstable; urgency=low
+
+  * debian/tcos-standalone.init
+    - don't exit if TCOS_STANDALONE_START is 0, but no allow to start daemons
+    - kill tcosxmlrpc-standalone and delete pid in stop process
+    - in tcosxmlrpc status compare pidof output with pid file and ensure pid is not empty
+  * hooks-addons/25tcosmonitor bin/tcos-buildchroot:
+    - Copy start-stop-daemon original executable in start-stop-daemon.original
+    - check that we are copying a binary file and not a script
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 29 Nov 2007 22:50:01 +0100
+
 initramfs-tools-tcos (0.88.1) unstable; urgency=low
 
   * tcos-standalone/*:
