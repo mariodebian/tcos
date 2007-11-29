@@ -45,8 +45,8 @@ Description: usplash artwork for TCOS
 
 Package: tcos
 Architecture: all
-Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5) , tcos-usplash (>= 0.84.5), atftpd, dhcp3-server | dhcp-server, tcosmonitor, openbsd-inetd | netkit-inetd | inetutils-inetd, aumix, pulseaudio, pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, ltspfs-server, esound, alsa-utils, cdebootstrap, shfs-utils, python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
-Recommends: pulseaudio-esound-compat
+Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5) , tcos-usplash (>= 0.84.5), atftpd, dhcp3-server | dhcp-server, tcosmonitor, openbsd-inetd | netkit-inetd | inetutils-inetd, aumix, pulseaudio, pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, ltspfs-server, esound, alsa-utils, cdebootstrap, python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
+Recommends: pulseaudio-esound-compat, shfs-utils
 Provides: tcos-server-utils
 Replaces: tcos-server-utils
 XB-Python-Version: ${python:Versions}
