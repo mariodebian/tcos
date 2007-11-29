@@ -50,7 +50,7 @@ if [ $TCOS_WIRELESS ]; then
     fi
 
     if [ "$mod" = "zd1211" ]; then
-      _echo "   WIFI: Copying Zydas  modules and firmware"
+      _echo "   WIFI: Copying Zydas modules and firmware"
        manual_add_modules zd1211rw
        # firmware
        mkdir -p $DESTDIR/lib/firmware/

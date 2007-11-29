@@ -51,8 +51,7 @@ cp $CONFDIR/tcos.conf                $DESTDIR/conf/
 
 # load some hook-addons (not all needed here, we need a minimal image)
 TCOS_INCLUDE_INIT=1
-. ${TCOS_DIR}/hooks-addons/00init  
-unset TCOS_INCLUDE_INIT
+. ${TCOS_DIR}/hooks-addons/00init
 . ${TCOS_DIR}/hooks-addons/00main
 . ${TCOS_DIR}/hooks-addons/00users
 . ${TCOS_DIR}/hooks-addons/01dhclient
@@ -63,7 +62,7 @@ unset TCOS_INCLUDE_INIT
 . ${TCOS_DIR}/hooks-addons/90usplash
 . ${TCOS_DIR}/hooks-addons/95usplash_timeout
 . ${TCOS_DIR}/hooks-addons/99clean_nfs_image
-
+unset TCOS_INCLUDE_INIT
 
 manual_add_modules unionfs
 manual_add_modules aufs

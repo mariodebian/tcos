@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.88.1) unstable; urgency=low
+
+  * tcos-standalone/*:
+    - New python GUI to configure tcos standalone mode
+  * debian/control debian/tcos-core* debian/tcos-standalone*:
+    - Move some code to new package tcos-standalone
+  * hooks/tcosnfs hooks-addons/00main hooks-addons/00users:
+    - Only include files if not using NFS
+  * hooks/03wireless  hooks-addons/90usplash:
+    - Fix minor typos
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 29 Nov 2007 16:26:57 +0100
+
 initramfs-tools-tcos (0.87.13) unstable; urgency=low
 
   * gentcos:

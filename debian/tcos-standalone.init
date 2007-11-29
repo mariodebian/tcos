@@ -117,6 +117,18 @@ case "$1" in
 		;;
 	esac
 	;;
+   status)
+       if [ "$(pidof tcosxmlrpc-standalone)" = "$(cat /var/lib/tcos/standalone/log/abyss.pid)" ]; then
+           echo "tcosxmlrpc running"
+       else
+           echo "tcosxmlrpc stopped"
+       fi
+       if [ "$(pidof busybox)" != "" ]; then
+          echo "busybox running"
+       else
+          echo "busybox stopped"
+       fi
+       ;;
   *)
 	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
 	exit 3

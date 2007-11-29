@@ -14,13 +14,12 @@ reload_dbus() {
 }
 
 # restart dbus with new tcosmonitor.conf
-# on purge delete tcosmonitor.conf and tcos-standalone daemon
+# on purge delete tcosmonitor.conf
 case "$1" in
     configure|reconfigure)
       reload_dbus
     ;;
     purge)
-       update-rc.d -f tcos-standalone remove >/dev/null ||true
        rm -f /etc/dbus/system.d/tcosmonitor.conf
        reload_dbus
     ;;

@@ -1,8 +1,9 @@
 # Hook addon for user password stuff
 
-
-# to change pass during boot
-cpifexists /usr/sbin/chpasswd /bin/
+if [ "${TCOS_INCLUDE_INIT}" != "1" ]; then
+    # to change pass during boot
+    cpifexists /usr/sbin/chpasswd /bin/
+fi
 cpifexists /etc/login.defs    /etc
 
 

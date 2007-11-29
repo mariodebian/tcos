@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=TCOS Standalone
+Name[en_GB]=TCOS Standalone
+Name[es]=TCOS Autónomo
+GenericName[es_ES]=TCOS Autónomo
+Comment=Configure standalone mode of TCOS
+Comment[en_GB]=Configure standalone mode of TCOS
+Comment[es]=Configurar modo autónomo de TCOS
+Exec=/usr/sbin/tcos-standalone
+Terminal=false
+Type=Application
+Icon=/usr/share/tcos-standalone/images/tcos-icon-32x32.png
+Categories=GNOME;Settings;System;DesktopSettings;Monitor

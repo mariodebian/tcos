@@ -33,13 +33,15 @@ cpifexists ${TCOS_BINS}/daemonize.sh /sbin
 # exec and daemonize 
 cpifexists ${TCOS_BINS}/clear-logs  /bin
 
-# LIBRARIES
-# ubuntu hack for ldconfig
-if [ -e /sbin/ldconfig.real ]; then
- cpifexists /sbin/ldconfig.real /usr/sbin/
- ( cd $DESTDIR/usr/sbin/ && mv ldconfig.real ldconfig )
-else
-  cpifexists /sbin/ldconfig    /usr/sbin/
+if [ "${TCOS_INCLUDE_INIT}" != "1" ]; then
+    # only include ldconfig in no NFS image
+    # ubuntu hack for ldconfig
+    if [ -e /sbin/ldconfig.real ]; then
+     cpifexists /sbin/ldconfig.real /usr/sbin/
+     ( cd $DESTDIR/usr/sbin/ && mv ldconfig.real ldconfig )
+    else
+      cpifexists /sbin/ldconfig    /usr/sbin/
+    fi
 fi
 
 [ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/
@@ -64,3 +66,4 @@ cpifexists /usr/lib/libnss_db.so.2        /usr/lib/
 mkdir -p $DESTDIR/var/log
 touch $DESTDIR/var/log/lastlog
 mkdir -p ${DESTDIR}/var/run
+

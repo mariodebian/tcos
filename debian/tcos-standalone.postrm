@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+
+# on purge delete tcos-standalone daemon
+case "$1" in
+    purge)
+       update-rc.d -f tcos-standalone remove >/dev/null ||true
+    ;;
+esac
+
+
+
+#DEBHELPER#
+

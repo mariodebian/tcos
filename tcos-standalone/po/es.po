@@ -1,0 +1,93 @@
+# Spanish translations for tcos-standalone package
+# Traducciones al español para el paquete tcos-standalone.
+# Copyright (C) 2007 Mario Izquierdo
+# This file is distributed under the same license as the TCOS package.
+# <mariodebian@gmail.com>, 2007.
+#  <mariodebian@gmail.com>, 2007.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: tcos-standalone 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-29 16:20+0100\n"
+"PO-Revision-Date: 2007-11-29 16:20+0100\n"
+"Last-Translator: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>\n"
+"Language-Team: Spanish/Spain <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);"
+
+#: tcos-standalone.glade:9
+msgid "TCOS Standalone"
+msgstr "TCOS autónomo"
+
+#: tcos-standalone.glade:32
+msgid "<span size=\"x-large\">Configure TCOS standalone mode</span>"
+msgstr "<span size=\"x-large\">Configurar modo autónomo de TCOS</span>"
+
+#: tcos-standalone.glade:199
+msgid "Stop"
+msgstr "Parar"
+
+#: tcos-standalone.glade:277
+msgid "Start"
+msgstr "Arrancar"
+
+#: tcos-standalone.glade:355
+msgid "Apply"
+msgstr "Aplicar"
+
+#: tcos-standalone.glade:417
+msgid "Enable tcos-standalone daemon"
+msgstr "Activar modo autónomo de TCOS"
+
+#: tcos-standalone.glade:438
+msgid "Username (root):"
+msgstr "Usuario (root):"
+
+#: tcos-standalone.glade:487
+msgid "Password (not visible):"
+msgstr "Contraseña (no visible):"
+
+#: tcos-standalone.glade:551
+msgid "Options"
+msgstr "Opciones"
+
+#: tcos-standalone.py:162
+msgid ""
+"Not user and password configured.\n"
+"Using root system user."
+msgstr ""
+"No se ha configurado el usuario y la contraseña.\n"
+"Se usará el usuario root del sistema."
+
+#: tcos-standalone.py:224
+msgid "New username and password used.\n"
+msgstr "Se usará el nuevo usuario y contraseña.\n"
+
+#: tcos-standalone.py:246
+msgid "tcosxmlrpc running"
+msgstr "tcosxmlrpc ejecutándose"
+
+#: tcos-standalone.py:251
+msgid "tcosxmlrpc stopped"
+msgstr "tcosxmlrpc parado"
+
+#: tcos-standalone.py:257
+msgid "busybox running"
+msgstr "busybox ejecutándose"
+
+#: tcos-standalone.py:260
+msgid "busybox stopped"
+msgstr "busybox parado"
+
+#~ msgid "Password:"
+#~ msgstr "Contraseña:"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "Exiting"
+#~ msgstr "Saliendo"
