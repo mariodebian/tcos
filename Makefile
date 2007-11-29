@@ -14,6 +14,7 @@ all:
 	cd lockscreen  && make
 	cd dbus        && make
 	cd session-cmd && make
+	cd tcos-standalone && make
 
 include common.mk
 
@@ -31,6 +32,7 @@ clean:
 	cd lockscreen  && make clean
 	cd dbus        && make clean
 	cd session-cmd && make clean
+	cd tcos-standalone && make clean
 
 gedit:
 	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
@@ -169,6 +171,9 @@ install:
 
 	# session-cmd scripts
 	cd session-cmd && $(MAKE) install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
+
+	# tcos-standalone helper
+	cd tcos-standalone && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 targz: clean
 	rm -rf ../tmp 2> /dev/null

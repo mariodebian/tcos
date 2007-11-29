@@ -1,0 +1,5 @@
+/etc/default
+/var/lib/tcos/standalone
+/var/lib/tcos/standalone/log
+/var/lib/tcos/standalone/www
+/var/lib/tcos/standalone/etc

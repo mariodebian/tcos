@@ -8,8 +8,10 @@ initramfs-tools-tcos (0.88.1) unstable; urgency=low
     - Only include files if not using NFS
   * hooks/03wireless  hooks-addons/90usplash:
     - Fix minor typos
+  * Add gksu in tcos-standalone.desktop launcher
+  * Add Conflicts in new tcos-core with tcos-standalone
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 29 Nov 2007 16:26:57 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 29 Nov 2007 17:13:16 +0100
 
 initramfs-tools-tcos (0.87.13) unstable; urgency=low
 
