@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.88.3) unstable; urgency=low
+
+  * hooks-addons/25tcosmonitor:
+    - Move check of ELF file inside especial start-stop-daemon condition
+  * bin/rsync-controller:
+    - New script to wrap rsync calls and allow to work with translated dirs
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 02 Dec 2007 11:15:20 +0100
+
 initramfs-tools-tcos (0.88.2) unstable; urgency=low
 
   * debian/tcos-standalone.init
