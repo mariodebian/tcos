@@ -20,8 +20,10 @@ if [ $TCOS_WIRELESS ]; then
   mkdir -p $DESTDIR/lib/firmware
 
   # generic modules
-  manual_add_modules ieee80211-crypt-wep
+  
   manual_add_modules ieee80211-crypt-tkip
+  manual_add_modules ieee80211
+  manual_add_modules ieee80211-crypt-wep
 
   # copy kernel modules
   for mod in $TCOS_WIRELESS_MODS; do
@@ -30,26 +32,24 @@ if [ $TCOS_WIRELESS ]; then
     if [ "$mod" = "ipw2200" ]; then
       _echo "   WIFI: Copying firmware of ipw2200"
       cp -ra /lib/firmware/ipw2200* $DESTDIR/lib/firmware/
-    fi
-    if [ "$mod" = "ipw2100" ]; then
+    
+    elif [ "$mod" = "ipw2100" ]; then
       _echo "   WIFI: Copying firmware of ipw2100"
       cp -ra /lib/firmware/ipw2100* $DESTDIR/lib/firmware/
-    fi
-
-    if [ "$mod" = "madwifi" ]; then
+    
+    elif [ "$mod" = "madwifi" ]; then
       _echo "   WIFI: Copying madwifi modules"
       #ath-pci ath-hal wlan_tkip wlan_scan_sta ath-hal
       manual_add_modules ath-pci
       manual_add_modules ath-hal
       manual_add_modules wlan-tkip
       manual_add_modules wlan-scan-sta
-    fi
-
-    if [ "$mod" = "ndiswrapper" ]; then
+    
+    elif [ "$mod" = "ndiswrapper" ]; then
       _echo "   WIFI: ndiswrapper not supported (perl based)"
-    fi
+    
 
-    if [ "$mod" = "zd1211" ]; then
+    elif [ "$mod" = "zd1211" ]; then
       _echo "   WIFI: Copying Zydas modules and firmware"
        manual_add_modules zd1211rw
        # firmware
@@ -68,12 +68,23 @@ ln -s /lib/firmware/zd1211/zd1211_ur /usr/lib/hotplug/firmware/zd1211-WS11Ur.fw
 EOF
        chmod +x $DESTDIR/scripts/tcos-top/02zydas_firmware
 
-    fi
-
-  done
+    else
+      _echo "   WIFI: Trying to copy unknow firmware"
+      cp -ra /lib/firmware/$mod* $DESTDIR/lib/firmware/ 2>/dev/null
+    fi # end of if module    
+    
+  done # end of modules for loop
 
    if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
-      _echo "  DEBUG: using WEP, do something? "
+      _echo "  DEBUG: using WEP..."
+      if [ ! $TCOS_WEP ]; then
+          _echo ""
+          _echo "    WARNING:"
+          _echo "      Configured Wireless with WEP encription, but TCOS_WEP is empty"
+          _echo "      Put your wireless key into this var in a supported format (HEX or ASCII)."
+          _echo "      See: man iwconfig (section key)"
+          _echo ""
+      fi
    fi
 
    if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then

@@ -83,6 +83,8 @@ if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
     if [ -d /sys/class/net/$dev/wireless ]; then
       TCOS_NET_WIFI=1
       TCOS_NET_ACTIVE=$dev
+      # stop searching
+      break
     fi
   done
 
@@ -99,7 +101,7 @@ fi
           modprobe -q ath-hal 2>/dev/null
           modprobe -q wlan_tkip 2>/dev/null
           modprobe -q wlan_scan_sta 2>/dev/null
-	else
+        else
           modprobe -q $kmod 2>/dev/null
         fi
       done
@@ -118,6 +120,12 @@ fi
        if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then
            log_begin_msg "Wireless WPA mode"
              /sbin/start-wpa.sh "${TCOS_NET_ACTIVE}"
+           log_end_msg
+       fi
+       
+       if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
+           log_begin_msg "Wireless WEP mode setting key"
+             [ ! $TCOS_WEP ] && iwconfig $TCOS_NET_ACTIVE key $TCOS_WEP
            log_end_msg
        fi
        

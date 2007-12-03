@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.88.4) unstable; urgency=low
+
+  * hooks-addons/03wireless scripts/tcos-top/05network:
+    - Support WEP encription
+    - WEP key is in in new var TCOS_WEP
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 03 Dec 2007 17:04:35 +0100
+
 initramfs-tools-tcos (0.88.3) unstable; urgency=low
 
   * hooks-addons/25tcosmonitor:
