@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.88.7) unstable; urgency=low
+
+  * Patches by: Ignacio Vidal <vidal_joshur@gva.es>
+  * xmlrpc/sh/vnc-controller.sh
+      - In some cases process not die, need force kill with SIGKILL
+      - Fix stopclient, bad username password exec in standalone
+  * bin/tcos-buildchroot
+      - Need ssh in chroot for xterm connection from tcosmonitor
+  * hooks-addons/50xorg
+    - Delete libvnc Xorg extension (conflicts with x11vnc)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Dec 2007 00:23:54 +0100
+
 initramfs-tools-tcos (0.88.6) unstable; urgency=low
 
   * debian/tcos-standalone.init:

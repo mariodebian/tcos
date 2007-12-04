@@ -116,6 +116,8 @@ if [ $XORG = 6 ]; then
  # delete nvidia/ati glx module
  rm -f $DESTDIR/usr/X11R6/lib/modules/libglx.so
  rm -rf $DESTDIR/usr/X11R6/lib/modules/extensions/libGLcore.so
+ # delete vnc extension
+ rm -f $DESTDIR/usr/X11R6/lib/modules/libvnc.so
 
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support IS ENABLED"
@@ -169,6 +171,9 @@ else # Xorg 7.x
  rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so
  rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
  
+ # delete vnc extension
+ rm -f $DESTDIR/usr/X11R6/lib/modules/libvnc.so
+
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support is ENABLED"
     if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \

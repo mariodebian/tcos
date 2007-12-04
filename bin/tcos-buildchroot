@@ -28,7 +28,7 @@ if [ "${DISTRIBUTION}" = "ubuntu" ]; then
   TCOS_MIRROR=http://archive.ubuntu.com/ubuntu/
   TCOS_MIRROR2=http://security.ubuntu.com/ubuntu/
   MIRROR_EXTRAS="universe restricted multiverse"
-  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data console-tools openbsd-inetd tcpd"
+  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data console-tools openbsd-inetd tcpd ssh"
   TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
   # need kernel modules unionfs and squashfs in linux-ubuntu-modules from distros grather than gutsy
   if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ];then
