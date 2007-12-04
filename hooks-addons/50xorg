@@ -172,7 +172,7 @@ else # Xorg 7.x
  rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
  
  # delete vnc extension
- rm -f $DESTDIR/usr/X11R6/lib/modules/libvnc.so
+ rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so
 
  if [ $TCOS_XORG_OPENGL ]; then
     _echo "    * OpenGL support is ENABLED"
