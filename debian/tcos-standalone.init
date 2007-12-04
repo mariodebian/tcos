@@ -30,7 +30,7 @@ DEFAULT_CONF=/etc/default/tcos-standalone
 TCOS_STANDALONE_START=1
 
 # Exit if the package is not installed
-[ -x "$DAEMON" ] || exit 0
+[ ! -f $DAEMON_ARGS ] || exit 0
 
 # Read configuration file if it is present
 [ -e "$DEFAULT_CONF" ] && . ${DEFAULT_CONF}
@@ -65,6 +65,9 @@ do_stop()
 {
         # kill busybox httpd
         kill $(ps aux|grep "busybox httpd" |grep -v grep | awk '{print $2}') 2>/dev/null
+        
+        # ubuntu dapper busybox rename busybox process to httpd
+        kill $(ps aux|egrep "httpd.*standalone" |grep -v grep | awk '{print $2}') 2>/dev/null
 
         kill $(cat /var/lib/tcos/standalone/log/abyss.pid 2>/dev/null ) 2> /dev/null
         killall tcosxmlrpc-standalone 2>/dev/null
@@ -124,7 +127,7 @@ case "$1" in
            echo "tcosxmlrpc stopped"
        fi
 
-       if [ "$(pidof busybox)" != "" ]; then
+       if [ "$(pidof busybox)" != "" ] || [ "$(ps aux|egrep "httpd.*standalone" |grep -c -v grep)" != "0" ]; then
           echo "busybox running"
        else
           echo "busybox stopped"

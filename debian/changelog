@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.88.5) unstable; urgency=low
+
+  * tcos-standalone/tcos-standalone.glade:
+    - Change invisible character with *
+  * debian/tcos-standalone.init:
+    - Busybox dapper rename process to httpd, fix for it
+    - Exit script if conf file not found
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 04 Dec 2007 09:30:29 +0100
+
 initramfs-tools-tcos (0.88.4) unstable; urgency=low
 
   * hooks-addons/03wireless scripts/tcos-top/05network:
