@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.88.6) unstable; urgency=low
+
+  * debian/tcos-standalone.init:
+    - Fix stupid typo, if file don't exists exit
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 04 Dec 2007 10:34:57 +0100
+
 initramfs-tools-tcos (0.88.5) unstable; urgency=low
 
   * tcos-standalone/tcos-standalone.glade:

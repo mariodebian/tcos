@@ -30,7 +30,7 @@ DEFAULT_CONF=/etc/default/tcos-standalone
 TCOS_STANDALONE_START=1
 
 # Exit if the package is not installed
-[ ! -f $DAEMON_ARGS ] || exit 0
+[ ! -e $DAEMON_ARGS ] && exit 0
 
 # Read configuration file if it is present
 [ -e "$DEFAULT_CONF" ] && . ${DEFAULT_CONF}
