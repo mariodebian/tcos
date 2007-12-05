@@ -12,6 +12,26 @@
 #  tcos*.conf
 #    Overwrite /etc/tcos/tcos.conf settings
 #
+#  Examples:
+#
+#     1.- Overwrite usplash theme
+#
+#       Create /etc/tcos/conf.d/usplash with this content
+#
+#         TCOS_USPLASH=[put your so filename here]
+#
+#
+#     2.- Overwrite TFTP image
+#
+#       Create /etc/tcos/conf.d/tftp_image with this content
+#
+#         TFTP_MSG=xxxxx.msg
+#
+#         this file must be in /var/lib/tcos/tftp/xxx.msg
+#         and must contain a .lss logo (use tcos.msg as template)
+#        
+#
+#
 #  session-cmd*
 #   Overwrite default session-cmd-exec settings
 #   Vars:

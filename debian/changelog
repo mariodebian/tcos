@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.88.8) unstable; urgency=low
+
+  * bin/installer.sh bin/gentcos bin/tcos-buildchroot
+    - Add help2.msg file
+  * bin/gentcos bin/tcos-buildchroot conf/tcos.conf conf/branding.info
+    - Brand TCOS TFTP splash message
+  * xmlrpc/exe.c:
+    - Debug complete command in job_exe
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Dec 2007 12:57:56 +0100
+
 initramfs-tools-tcos (0.88.7) unstable; urgency=low
 
   * Patches by: Ignacio Vidal <vidal_joshur@gva.es>

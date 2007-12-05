@@ -37,7 +37,7 @@ job_exe( char *cmd )
   fp=(FILE*)popen(job, "r");
   pclose(fp);
 
-  dbgtcos("tcosxmlrpc::job_exe() EXEC !!!\n");
+  dbgtcos("tcosxmlrpc::job_exe() EXEC cmd=\"%s\"\n", job);
   return;
 }
 

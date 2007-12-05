@@ -1,7 +1,7 @@
 default tcos
 prompt 1
 timeout 200
-display tcos.msg
+display __TFTP_MSG__
 F0 tcos.msg
 F1 help.msg
 F2 help2.msg

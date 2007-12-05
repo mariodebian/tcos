@@ -142,6 +142,7 @@ install_kernel () {
   log_begin_msg "Downloading startup logos and help"
     download_file /tcos/tcos.msg /target/tcos.msg
     download_file /tcos/help.msg /target/help.msg
+    download_file /tcos/help2.msg /target/help2.msg
     download_file /tcos/logo.lss /target/logo.lss
   log_end_msg
 
@@ -167,6 +168,7 @@ TIMEOUT 50
 DISPLAY tcos.msg
 F0 tcos.msg
 F1 help.msg
+F2 help2.msg
 PROMPT 1
 
 LABEL tcos
