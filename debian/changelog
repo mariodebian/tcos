@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.88.9) unstable; urgency=low
+
+  * With tcos-standalone separation avoid session-cmd running on server
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Fri,  7 Dec 2007 14:09:24 +0100
+
 initramfs-tools-tcos (0.88.8) unstable; urgency=low
 
   * bin/installer.sh bin/gentcos bin/tcos-buildchroot
