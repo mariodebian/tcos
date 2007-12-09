@@ -1,3 +1,18 @@
+initramfs-tools-tcos (0.88.10) unstable; urgency=low
+
+  * conf/tcos-generation-functions.sh:
+    - Fix convert_links2files (check if using PKG_CACHE)
+  * hooks-addons/05devices:
+    - Support new auth method (LTSPFS_TOKEN) of ltspfsd > 0.5
+  * scripts/tcos-bottom/25startx:
+    - Save mcookie in /var/run/ltspfs_token
+  * xmlrpc/sh/devicesctl.sh:
+    - Call ltspfs-set-xprop to auth new LTSPFS_TOKEN
+  * debian/control:
+    - Split Depends lines again (dapper don't support [arch])
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 09 Dec 2007 16:25:13 +0100
+
 initramfs-tools-tcos (0.88.9) unstable; urgency=low
 
   * With tcos-standalone separation avoid session-cmd running on server

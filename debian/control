@@ -2,7 +2,9 @@ Source: initramfs-tools-tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, libxmlrpc-c3-dev, bc, libxau-dev, libxaw-headers, libxaw7-dev, imlib11-dev, python, python-support (>= 0.3)
+Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, 
+               libxmlrpc-c3-dev, bc, libxau-dev, libxaw-headers, libxaw7-dev, 
+               imlib11-dev, python, python-support (>= 0.3)
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.4
 XS-Vcs-Browser: http://trac.tcosproject.org/browser/trunk/initramfs-tools-tcos
@@ -10,7 +12,10 @@ XS-Vcs-Svn: https://forja.rediris.es/svn/cls-tcos/trunk/initramfs-tools-tcos
 
 Package: initramfs-tools-tcos
 Architecture: any
-Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, console-data, libnss-db, iftop, strace, twm, debootstrap, libltdl3, tinylogin, debconf, grub, syslinux, squashfs-tools, mknbi, dropbear, ltspfs-client, ${misc:Depends}, ${shlibs:Depends}
+Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
+         console-data, libnss-db, iftop, strace, twm, debootstrap, 
+         libltdl3, tinylogin, debconf, grub, syslinux, squashfs-tools, 
+         mknbi, dropbear, ltspfsd | ltspfs-client, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2)
 Recommends: pulseaudio, pulseaudio-utils
 Description: tools for generating a thin client bootable image: TCOS
@@ -25,7 +30,9 @@ Description: tools for generating a thin client bootable image: TCOS
 
 Package: tcos-core
 Architecture: any
-Depends: busybox, xterm, x11vnc, xvnc4viewer | xvncviewer, dosfstools, cdparanoia, scrot, eject, netpipes, libnotify-bin, python, python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
+Depends: busybox, xterm, x11vnc, xvnc4viewer | xvncviewer, dosfstools, cdparanoia, 
+         scrot, eject, netpipes, libnotify-bin, python, 
+         python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
 XB-Python-Version: ${python:Versions}
 Description: common script and bins for generating a thin client bootable image: TCOS
@@ -44,7 +51,8 @@ Description: usplash artwork for TCOS
 
 Package: tcos-standalone
 Architecture: any
-Depends: tcos-core (>= 0.88.0), tcosmonitor, gksu, python-gnome2-extras, python-gtk2, python-glade2, ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
+Depends: tcos-core (>= 0.88.0), tcosmonitor, gksu, python-gnome2-extras, python-gtk2, 
+         python-glade2, ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-core (<< 0.87.15)
 XB-Python-Version: ${python:Versions}
 Description: TCOS standalone GUI configurator
@@ -56,10 +64,15 @@ Description: TCOS standalone GUI configurator
 
 Package: tcos
 Architecture: all
-Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), tcos-usplash (>= 0.84.5), atftpd, dhcp3-server | dhcp-server, tcosmonitor, openbsd-inetd | netkit-inetd | inetutils-inetd, aumix, pulseaudio, pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, ltspfs-server, esound, alsa-utils, cdebootstrap, python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
-Recommends: pulseaudio-esound-compat, shfs-utils
+Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), tcos-usplash (>= 0.84.5), 
+         atftpd, dhcp3-server | dhcp-server, tcosmonitor, 
+         openbsd-inetd | netkit-inetd | inetutils-inetd, aumix, pulseaudio, 
+         pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, 
+         ltspfs | ltspfs-server, esound, alsa-utils, cdebootstrap, 
+         python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
 Provides: tcos-server-utils
 Replaces: tcos-server-utils
+Suggests: pulseaudio-esound-compat, shfs-utils
 XB-Python-Version: ${python:Versions}
 Description: new thin client implementation
  This is a system for generating thin client hosts using initramfs.

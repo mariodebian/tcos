@@ -23,15 +23,22 @@ convert_links2files () {
  cd $DESTDIR
  # copy binary not links
  for xfile in $(find "$subdir" -type l); do
-   if [ -f /$xfile ] ;then
-     rm -f $DESTDIR/$xfile
-     cp -f /$xfile $DESTDIR/$xfile
-   else
-     #_echo "    convert_links2files() "
-     _link=$(readlink $xfile)
-     #_echo "    link=$_link"
+   _link=$(readlink $xfile)
+   if [ $(echo $_link | grep -c ${TCOS_PKG_CACHE}) != 0 ]; then
      rm -f $DESTDIR/$xfile
      cp -f $_link $DESTDIR/$xfile
+     #_echo " ******** convert_link2files() CACHED FILE => cp -f $_link $DESTDIR/$xfile"
+
+   elif [ -f /$xfile ] ;then
+     rm -f $DESTDIR/$xfile
+     cp -f /$xfile $DESTDIR/$xfile
+     #_echo "  :::::::  convert_link2files() :::::A:::: cp /$xfile $DESTDIR/$xfile"
+
+   else
+     #_echo "    convert_links2files() "
+     rm -f $DESTDIR/$xfile
+     cp -f $_link $DESTDIR/$xfile
+     #_echo "  :::::::  convert_link2files() :::::R:::: cp -f $_link $DESTDIR/$xfile"
    fi
  done
  cd $dir

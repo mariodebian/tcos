@@ -3,17 +3,63 @@
 # ltspfs
 # TCOS_REMOTEFS = shfs ltspfs
 
+create_launcher() {
+    cat << EOF > $DESTDIR/bin/ltspfs-set-xprop
+#!/bin/sh
+# wait for Xorg
+
+if [ "\$1" != "now" ]; then
+  time1=2
+  time2=5
+else 
+  time1=0
+  time2=0
+fi
+
+echo "ltspfs-set-xprop start"
+while [ "\$(pidof Xorg)" = "" ] ; do
+ sleep \$time1
+ echo "ltspfs-set-xprop waiting for Xorg"
+done
+
+# wait until Xorg is complety started
+sleep \$time2
+echo "ltspfs-set-xprop setting xprop value"
+
+export DISPLAY=:0 
+export XAUTHORITY=/root/.Xauthority
+echo "xprop -root -f LTSPFS_TOKEN 8s -set LTSPFS_TOKEN \$(cat /var/run/ltspfs_token)"
+xprop -root -f LTSPFS_TOKEN 8s -set LTSPFS_TOKEN \$(cat /var/run/ltspfs_token)
+
+echo "ltspfs-set-xprop setting done"
+exit 0
+EOF
+   chmod +x $DESTDIR/bin/ltspfs-set-xprop
+}
+
+
+
 if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
 
 
   if [ -d ${TCOS_PKG_CACHE}/ltspfsd/ ]; then
    stat_before
-    cpifexists ${TCOS_PKG_CACHE}/ltspfsd/usr/bin/ltspfsd /usr/bin
+     cpifexists ${TCOS_PKG_CACHE}/ltspfsd/usr/bin/ltspfsd /usr/bin
+     if [ "$(strings `readlink $DESTDIR/usr/bin/ltspfsd` |grep -c ltspfs_token)" != 0 ]; then
+       _echo "   * ltspfsd new auth version > 0.5"
+       cpifexists /usr/bin/xprop                            /usr/bin
+       create_launcher
+     fi
    stat_after "ltspfsd [cached]"
 
   elif [ -e /usr/bin/ltspfsd ]; then
    stat_before
    cpifexists /usr/bin/ltspfsd /usr/bin
+     if [ "$(strings `readlink $DESTDIR/usr/bin/ltspfsd` |grep -c ltspfs_token)" != 0 ]; then
+       _echo "   * ltspfsd new auth version > 0.5"
+       cpifexists /usr/bin/xprop                            /usr/bin
+       create_launcher
+     fi
    stat_after "ltspfsd"
 
   else
