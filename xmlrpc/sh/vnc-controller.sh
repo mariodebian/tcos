@@ -36,7 +36,7 @@ for arg in $1; do
      startserver)
         cmd=" -shared -noshm -forever -rfbauth $2"
         if [ $STANDALONE = 0 ]; then
-             killall -s KILL x11vnc
+             killall -SIGKILL x11vnc
             /sbin/daemonize.sh "x11vnc" "$cmd"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting vnc server"; fi
         else
@@ -47,7 +47,7 @@ for arg in $1; do
      ;;
      stopserver)
         if [ $STANDALONE = 0 ]; then
-           killall -s KILL x11vnc
+           killall -SIGKILL x11vnc
            if [ $? = 0 ]; then echo "ok"; else echo "error: killing vnc server"; fi
         else
            $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL x11vnc"
@@ -79,7 +79,7 @@ for arg in $1; do
      ;;
      stopclient)
         if [ $STANDALONE = 0 ]; then
-            killall -s KILL vncviewer
+            killall -SIGKILL vncviewer
             if [ $? = 0 ]; then echo "ok"; else echo "error: killing vncviewer"; fi
         else
             $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL vncviewer"

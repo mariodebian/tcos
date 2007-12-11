@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.88.11) unstable; urgency=low
+
+  * xmlrpc/sh/vnc-controller.sh:
+    - Fix params in killall for busybox
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 11 Dec 2007 21:41:47 +0100
+
 initramfs-tools-tcos (0.88.10) unstable; urgency=low
 
   * conf/tcos-generation-functions.sh:
