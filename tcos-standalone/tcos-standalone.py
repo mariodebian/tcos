@@ -219,7 +219,7 @@ class TcosStandalone:
         if self.v["newpass"]:
             tmp=self.exe_cmd("/usr/sbin/tcospasswd %s" %(self.w["txt_password"].get_text() ) )
             fw=file(tcos_standalone_pass, 'w')
-            fw.write("%s:%s" %(self.w["txt_username"].get_text(), tmp) )
+            fw.write("%s:%s\n" %(self.w["txt_username"].get_text(), tmp) )
             fw.close()
             self.w["lb_status"].set_text( _("New username and password used.\n") )
             self.v["newpass"]=False

@@ -1,9 +1,14 @@
 initramfs-tools-tcos (0.88.11) unstable; urgency=low
 
+  [ Ignacio Vidal ]
   * xmlrpc/sh/vnc-controller.sh:
     - Fix params in killall for busybox
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 11 Dec 2007 21:41:47 +0100
+  [ Mario Izquierdo (mariodebian) ]
+  * tcos-standalone/tcos-standalone.py:
+    - Save username:password with a end line break
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 12 Dec 2007 16:14:43 +0100
 
 initramfs-tools-tcos (0.88.10) unstable; urgency=low
 
