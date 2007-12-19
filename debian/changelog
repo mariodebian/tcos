@@ -1,3 +1,37 @@
+initramfs-tools-tcos (0.88.13) unstable; urgency=low
+
+  * hooks-addons/18tcos_hdd_installer bin/installer.sh
+    - Use install-mbr from mbr package to regenerate HDD TOC
+  * hooks-addons/22esd
+    - Start esound without -noterminate
+  * bin/rsync-controller
+    - Delete -no-p -no-g -chmod in rsync cmdline
+  * debian/rules
+    - Call dh_installinit with -n (not duplicate postinst code)
+  * debian/control
+    - Add mbr package depend
+    - Revert ltspfs depends, change order first ltspfs-client second ltspfsd
+  * session-cmd/session-cmd-script
+    - Wait 2 seconds after killing faucet
+  * Merge from branches/experimental r608 => r615
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 19 Dec 2007 09:31:59 +0100
+
+initramfs-tools-tcos (0.88.12) unstable; urgency=low
+
+  * scripts/tcos-premount/35sqmount
+    - Check if mount squashfs returns error and stop loading (new squashfs bugs)
+  * hooks/tcosbin
+    - Check if mksquashfs returns error
+  * xmlrpc/xauth.h xmlrpc/xauth.c
+    - New function check_ip_address that return an IP address check struct
+    - Don't fail in xauth if pass servername as IP address
+    - Rename hostname var to host (now can be an IP address)
+  * session-cmd/session-cmd-script
+    - Kill facet before launching
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 19 Dec 2007 09:12:51 +0100
+
 initramfs-tools-tcos (0.88.11) unstable; urgency=low
 
   [ Ignacio Vidal ]

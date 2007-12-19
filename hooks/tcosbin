@@ -97,8 +97,18 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
   SQUASHFS_FILE="usr${TCOS_SUFFIX}-${version}.squashfs"
   _echo "     Creating ${SQUASHFS_FILE} of /usr"
   mkdir -p $DESTDIR/mnt/tmp
-  $MKSQUASHFS $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /dev/null 2>&1
+  $MKSQUASHFS $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /tmp/tcos-mksquashfs.log 2>&1
   
+  # check for mksquashfs errors
+  if [ $? != 0 ]; then
+    _echo "   ERROR:"
+    _echo "          mksquashfs error"
+    _echo "#############################################"
+    cat /tmp/tcos-mksquashfs.log
+    _echo "#############################################"
+  fi
+  rm -f /tmp/tcos-mksquashfs.log
+
   # mksquashfs create files with 700 rights, change to 644
   chmod 644 $DESTDIR/mnt/tmp/${SQUASHFS_FILE}
   rm -rf $DESTDIR/usr/ && mkdir $DESTDIR/usr

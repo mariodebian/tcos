@@ -133,6 +133,11 @@ fi
 # Mount squashfs filesystems
 log_begin_msg "Mounting usr filesystem"
  mount -r -o loop -t squashfs ${mnt_usr} /usr >> /tmp/initramfs.debug 2>&1
+ # check if squashfs mount give an error
+ if [ $? != 0 ]; then
+   panic "Error mounting usr.squashfs check squashfs module or bugs"
+   FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
+ fi
  mount_unionfs /mnt/ram /.usr /usr
 log_end_msg $?
 

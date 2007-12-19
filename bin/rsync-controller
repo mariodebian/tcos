@@ -68,7 +68,8 @@ shift
 
 [ -d ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR} ] || mkdir -p ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
 
-rsync -avx --timeout=30 --ignore-existing --no-p --no-g --chmod=ugo-wx,u+rw,go+r ${SERVER_IP}::"$*" ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
+rsync -avx --timeout=30 --ignore-existing ${SERVER_IP}::"$*" ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
 
+chmod -R 644 ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR}/*
 
 exit 0

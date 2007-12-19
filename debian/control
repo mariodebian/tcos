@@ -13,9 +13,9 @@ XS-Vcs-Svn: https://forja.rediris.es/svn/cls-tcos/trunk/initramfs-tools-tcos
 Package: initramfs-tools-tcos
 Architecture: any
 Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
-         console-data, libnss-db, iftop, strace, twm, debootstrap, 
+         console-data, libnss-db, iftop, strace, twm, debootstrap, mbr, 
          libltdl3, tinylogin, debconf, grub, syslinux, squashfs-tools, 
-         mknbi, dropbear, ltspfsd | ltspfs-client, ${misc:Depends}, ${shlibs:Depends}
+         mknbi, dropbear, ltspfs-client | ltspfsd, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2)
 Recommends: pulseaudio, pulseaudio-utils
 Description: tools for generating a thin client bootable image: TCOS
@@ -68,7 +68,7 @@ Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), tcos-usplash (>= 0.84.5
          atftpd, dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd, aumix, pulseaudio, 
          pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, 
-         ltspfs | ltspfs-server, esound, alsa-utils, cdebootstrap, 
+         ltspfs-server | ltspfs, esound, alsa-utils, cdebootstrap, 
          python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
 Provides: tcos-server-utils
 Replaces: tcos-server-utils

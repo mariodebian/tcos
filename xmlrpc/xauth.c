@@ -11,31 +11,68 @@
 
 #include "xauth.h"
 
-int snprintf(char *str, size_t size, const char *format, ...);
+
+
+struct ip_address check_ip_address(char *data) {
+  struct ip_address ip;
+  /*
+  *  split ip address with 4 dots
+  *  join ip address in ip.ipstr
+  *  and compare with original data
+  *
+  */
+  sscanf(data, "%d.%d.%d.%d", &ip.data[0], &ip.data[1], &ip.data[2], &ip.data[3]);
+
+  snprintf(ip.ipstr, IP_LENGHT, "%d.%d.%d.%d", ip.data[0], ip.data[1], ip.data[2], ip.data[3]);
+
+  dbgtcos("tcosxmlrpc::is_ip() comparing %s with %s ...\n", data, ip.ipstr);
+
+  if ( strcmp(data, ip.ipstr) == 0 ) { 
+    ip.is_ip=1;
+  }
+  else {
+    dbgtcos("tcosxmlrpc::is_ip() ip.data[0]=%d\n", ip.data[0]);
+    dbgtcos("tcosxmlrpc::is_ip() ip.data[1]=%d\n", ip.data[1]);
+    dbgtcos("tcosxmlrpc::is_ip() ip.data[2]=%d\n", ip.data[2]);
+    dbgtcos("tcosxmlrpc::is_ip() ip.data[3]=%d\n", ip.data[3]);
+    ip.is_ip=0;
+  }
+  return ip;
+}
+
+
 
 int
 handle_xauth( char *cookie , char *servername)
 {
-  char hostname[BSIZE];
+  char host[BSIZE];
   char displayname[BSIZE];
   Display* displ;
   int found = 0, i;
   char cmd[BSIZE];
+  struct ip_address ip;
 
   dbgtcos("tcosxmlrpc::handle_auth() cookie=%s server=%s\n" ,cookie, servername);
 
     /* read my hostname */
-    gethostname(hostname, BSIZE);
-    dbgtcos("tcosxmlrpc::handle_xauth() gethostname=%s\n", hostname);
+    gethostname(host, BSIZE);
+    dbgtcos("tcosxmlrpc::handle_xauth() gethostname=%s\n", host);
 
+    /* check if servername is an IP address (see xauth.h for struct) */
+    ip=check_ip_address(servername);
 
     /* compare with cookie hostname */
-    if (strcmp (servername, hostname) != 0 ) {
-       dbgtcos("tcosxmlrpc::handle_xauth() ERROR servername != hostname");
-       return(XAUTH_ERROR);
+    if (ip.is_ip == 0) {
+       if ( strcmp (servername, host) != 0 ) {
+         dbgtcos("tcosxmlrpc::handle_xauth() ERROR servername != hostname");
+         return(XAUTH_ERROR);
+       }
+    }
+    else {
+        snprintf(host, BSIZE, "%s", ip.ipstr);
     }
 
-    snprintf ( (char*) cmd, BSIZE, "xauth -q -f /tmp/.tmpxauth add %s:0 MIT-MAGIC-COOKIE-1 %s >/dev/null 2>&1", hostname, cookie);
+    snprintf ( (char*) cmd, BSIZE, "xauth -q -f /tmp/.tmpxauth add %s:0 MIT-MAGIC-COOKIE-1 %s >/dev/null 2>&1", host, cookie);
 
     dbgtcos("tcosxmlrpc::handle_xauth() cmd=\"%s\"\n", cmd);
 
@@ -48,7 +85,7 @@ handle_xauth( char *cookie , char *servername)
 
 
     for (i = 0; i < 1; i++) {
-      snprintf(displayname, BSIZE, "%s:%d", hostname, i);               /* displayify it */
+      snprintf(displayname, BSIZE, "%s:%d", host, i);               /* displayify it */
 
       dbgtcos("tcosxmlrpc::handle_xauth() trying to connect to %s\n", displayname);
 

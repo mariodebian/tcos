@@ -9,6 +9,7 @@ hda1_size=100
 
 
 FDISK=/sbin/fdisk
+INSTALL_MBR=/sbin/install-mbr
 
 # translatable strings
 MSG_TITLE="TCOS hdd installer"
@@ -71,6 +72,7 @@ make_all_parts () {
   # clean MBR
   log_begin_msg "Cleaning MBR of /dev/hda"
     dd if=/dev/zero of=/dev/hda bsize=512 count=1 >/dev/null 2>&1
+    $INSTALL_MBR /dev/hda
   log_end_msg
 
   log_begin_msg "Making 2 partitions in /dev/hda"

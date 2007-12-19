@@ -4,7 +4,7 @@
 cat << EOF > $DESTDIR/sbin/startesd
 #!/bin/sh
 echo "STARTESD starting esound daemon" >> /tmp/initramfs.debug
-esd -public -tcp -public -noterminate -nobeeps &  >> /tmp/initramfs.debug 2>&1
+esd -public -tcp -nobeeps &  >> /tmp/initramfs.debug 2>&1
 EOF
 chmod +x $DESTDIR/sbin/startesd
 

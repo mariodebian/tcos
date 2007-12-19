@@ -17,6 +17,7 @@ if [ $TCOS_INSTALLER ]; then
   cpifexists /usr/bin/syslinux /usr/bin
   cpifexists /usr/bin/mcopy /usr/bin
   cpifexists /usr/bin/mattrib /usr/bin
+  cpifexists /sbin/install-mbr /sbin
   
   cpifexists /sbin/mkfs.vfat /usr/bin
 

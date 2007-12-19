@@ -33,6 +33,11 @@ LIB_FILE="/usr/lib/tcos/session-cmd-common.sh"
 . ${LIB_FILE}
 EXEC_SCRIPT="/usr/lib/tcos/session-cmd-exec"
 
+# kill before launching again
+killall -w faucet &>/dev/null
+
+sleep 2
+
 UNIX_SOCKET="$(create_socket)" || exit 0
 rm -f "${UNIX_SOCKET}.sock" "${UNIX_SOCKET}.pid"
 faucet "${UNIX_SOCKET}.sock" --unix --daemon --pidfile "${UNIX_SOCKET}.pid" --in xargs ${EXEC_SCRIPT}
