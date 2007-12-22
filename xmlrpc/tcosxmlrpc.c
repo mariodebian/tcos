@@ -67,6 +67,7 @@ http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=2032
 #include "sound.c"
 #include "devices.c"
 #include "lockscreen.c"
+#include "lockkeybmouse.c"
 #include "vnc.c"
 
 
@@ -122,6 +123,8 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.devices", &tcos_devices, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.lockscreen", &tcos_lockscreen, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockscreen", &tcos_unlockscreen, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.lockkeybmouse", &tcos_lockkeybmouse, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockkeybmouse", &tcos_unlockkeybmouse, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.info", &tcos_info, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.vnc", &tcos_vnc, NULL);
 #else
@@ -175,6 +178,12 @@ int main (int argc, char **argv)
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.unlockscreen", &tcos_unlockscreen, NULL,
     "ss:s", "Tcos, kill lockscreen to unblock thin client.");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.lockkeybmouse", &tcos_lockkeybmouse, NULL,
+    "ss:s", "Tcos, exec lockkeybmouse to block thin client.");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.unlockkeybmouse", &tcos_unlockkeybmouse, NULL,
+    "ss:s", "Tcos, kill lockkeybmouse to unblock thin client.");
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.info", &tcos_info, NULL,
     "s:s", "Tcos, return passed info string. (no auth needed)\n\

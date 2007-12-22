@@ -1,3 +1,39 @@
+initramfs-tools-tcos (0.88.13.1) unstable; urgency=low
+
+  [ Ignacio Vidal ]
+  * debian/control:
+    - Add vlc depend
+  * session-cmd/session-cmd-exec:
+    - Add Poweroff and Reboot actions
+  * scripts/tcos-premount/20swapon:
+    - Fix memory exhausted in dd command
+  * scripts/tcos-premount/15uselocal:
+    - Fix typo
+  * lockscreen/*:
+    - Add screensize command to obtain screen resolution for vncviewer
+    - Add lockkeybmouse to avoid user interaction with video difusion
+    - Update Makefile
+  * xmlrpc/*:
+    - Add support for new lockkeybmouse in tcosxmlrpc.c
+    - Add lockkeybmouse.c
+  * xmlrpc/sh/vnc-controller.sh:
+    - Exec vncviewer with screen resolution in client
+  * bin/tryXorg.sh:
+    - Fix sed
+  * hooks-addons/*
+    - 22esd: Fix esd command and ldd, now works correctly in etc-2300 and also
+             fix sound which only work in first user logged
+    - 25tcosmonitor: Fix typos and add support for lockkeybmouse and screensize
+    - 21pulseaudio: Fix ldd and not remove necessary modules
+
+  [ Mario Izquierdo (mariodebian) ]
+  * bin/installer.sh
+    - Copy files if boot from cdrom (initrd.gz image)
+  * bin/gentcos
+    - Use parse_pxelinux to create isolinux cfg file 
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 23 Dec 2007 00:27:23 +0100
+
 initramfs-tools-tcos (0.88.13) unstable; urgency=low
 
   * hooks-addons/18tcos_hdd_installer bin/installer.sh

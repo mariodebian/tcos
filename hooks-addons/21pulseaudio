@@ -62,14 +62,18 @@ else
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*cli*
  rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*http*
 
+ # needed for pulse -> esound -> OSS
+ cpifexists /usr/lib/pulse-0.9/modules/libsocket-client.so /usr/lib/pulse-0.9/modules/
+
  if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules ]; then
   _echo "    * PulseAudio copying esound compat [cached] modules..."
   # warn about OLD cached version
-  if [ $(ldd ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/libprotocol-esound.so 2>&1 | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
+  PULSE_LIB_FILE=${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/libprotocol-esound.so
+  if [ $(LC_ALL=C ldd ${PULSE_LIB_FILE} 2>&1 | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
     _echo ""
     _echo "    *** WARNING ***"
     _echo ""
-    _echo "       You have an old cached copy of pulseaudio-esound-compat package"
+    _echo "       You have a old cached copy of pulseaudio-esound-compat package"
     _echo "       Please remove and reinstall it or sound will not work:"
     _echo ""
     _echo "       gentcos -rmpkg pulseaudio-esound-compat"

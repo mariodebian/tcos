@@ -128,25 +128,68 @@ install_kernel () {
      exit 1
   fi
 
-  log_begin_msg "Downloading kernel"
-    download_file /tcos/vmlinuz-$(uname -r)  /target/vmlinuz > /dev/null
-  log_end_msg
+  NET_INSTALL=1
+  # check if we are booting from cdrom or USB
+  if [ $(grep -c initrd.gz /proc/cmdline ) -gt 0 ]; then
 
-  log_begin_msg "Downloading initramfs"
-    download_file /tcos/initramfs-$(uname -r) /target/initrd.gz > /dev/null
-    download_file /tcos/initramfs-$(uname -r)-nfs /target/initrd.nfs > /dev/null
-  log_end_msg
+    # instalation from cdrom
+    cdroms=$(awk '/iso9660/ {print $1}')
+    mkdir /cdrom
+    for cdrom in cdroms; do
+       mount $cdrom /cdrom &>/dev/null && break
+    done
 
-  log_begin_msg "Downloading usr.squashfs"
-    download_file /tcos/usr-$(uname -r).squashfs /target/usr.squashfs > /dev/null
-  log_end_msg
+    if [ -d /cdrom/boot/grub ]; then
+      NET_INSTALL=0
+      cp /cdrom/boot/grub/vmlinuz   /target/vmlinuz
+      cp /cdrom/boot/grub/initrd.gz /target/initrd.gz
+    elif [ -d /cdrom/isolinux ]; then
+      NETINSTALL=0
+      cp /cdrom/isolinux/vmlinuz    /target/vmlinuz
+      cp /cdrom/isolinux/initrd.gz  /target/initrd.gz
+      cp /cdrom/isolinux/tcos.msg   /target/tcos.msg
+      cp /cdrom/isolinux/help.msg   /target/help.msg
+      cp /cdrom/isolinux/help2.msg  /target/help2.msg
+      cp /cdrom/isolinux/logo.lss   /target/logo.lss
+THEME="
+DISPLAY tcos.msg
+F0 tcos.msg
+F1 help.msg
+F2 help2.msg
+"
+    else
+      NET_INSTALL=1
+    fi
+  fi
 
-  log_begin_msg "Downloading startup logos and help"
-    download_file /tcos/tcos.msg /target/tcos.msg
-    download_file /tcos/help.msg /target/help.msg
-    download_file /tcos/help2.msg /target/help2.msg
-    download_file /tcos/logo.lss /target/logo.lss
-  log_end_msg
+   if [ $NET_INSTALL = 1 ]; then
+    log_begin_msg "Downloading kernel"
+      download_file /tcos/vmlinuz-$(uname -r)  /target/vmlinuz > /dev/null
+    log_end_msg
+
+    log_begin_msg "Downloading initramfs"
+      download_file /tcos/initramfs-$(uname -r) /target/initrd.gz > /dev/null
+      download_file /tcos/initramfs-$(uname -r)-nfs /target/initrd.nfs > /dev/null
+    log_end_msg
+
+    log_begin_msg "Downloading usr.squashfs"
+      download_file /tcos/usr-$(uname -r).squashfs /target/usr.squashfs > /dev/null
+    log_end_msg
+
+    log_begin_msg "Downloading startup logos and help"
+      download_file /tcos/tcos.msg /target/tcos.msg
+      download_file /tcos/help.msg /target/help.msg
+      download_file /tcos/help2.msg /target/help2.msg
+      download_file /tcos/logo.lss /target/logo.lss
+THEME="
+DISPLAY tcos.msg
+F0 tcos.msg
+F1 help.msg
+F2 help2.msg
+"
+    log_end_msg
+   fi
+
 
   # check for min ram
   memory=$(awk '/^MemTotal/ {print int($2/1000)}' /proc/meminfo)
@@ -167,12 +210,8 @@ install_kernel () {
 cat << EOF > /target/syslinux.cfg
 DEFAULT $DEFAULT
 TIMEOUT 50
-DISPLAY tcos.msg
-F0 tcos.msg
-F1 help.msg
-F2 help2.msg
+$THEME
 PROMPT 1
-
 LABEL tcos
         KERNEL vmlinuz
         APPEND ramdisk_size=65536 initrd=initrd.gz root=/dev/ram0 BOOT=tcos ${TCOS_INSTALLER_BOOT_OPT}

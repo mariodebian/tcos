@@ -4,7 +4,7 @@
 cat << EOF > $DESTDIR/sbin/startesd
 #!/bin/sh
 echo "STARTESD starting esound daemon" >> /tmp/initramfs.debug
-esd -public -tcp -nobeeps &  >> /tmp/initramfs.debug 2>&1
+esd -public -tcp -nobeeps -as 1 -trust -promiscuous &  >> /tmp/initramfs.debug 2>&1
 EOF
 chmod +x $DESTDIR/sbin/startesd
 
@@ -41,7 +41,7 @@ if [ $TCOS_SOUND ]; then
      _echo "  Warning: eSound not installed."
      exit 0
 
-   elif [ "$(ldd /usr/bin/esd 2>/dev/null | grep -c dynamic)" = "1"  ]; then
+   elif [ "$(LC_ALL=C ldd /usr/bin/esd 2>/dev/null | grep -c dynamic)" = "1"  ]; then
      stat_before
      mkdir -p $DESTDIR/etc/esound
 

@@ -36,6 +36,8 @@ LOGOUT_TIMEOUT=20
 
 # message to show in popup (FIXME i18n)
 LOGOUT_MESSAGE="Session will close in $LOGOUT_TIMEOUT seconds"
+POWEROFF_MESSAGE="Pc will shutdown in $LOGOUT_TIMEOUT seconds"
+REBOOT_MESSAGE="Pc will reboot in $LOGOUT_TIMEOUT seconds"
 
 if [ -d /etc/tcos/conf.d/ ]; then
   for file in /etc/tcos/conf.d/session-cmd*; do
@@ -61,6 +63,16 @@ case $1 in
       if [ "$1" ] ; then
          message "$*"
       fi
+      ;;
+   POWEROFF)
+      message "$POWEROFF_MESSAGE"
+      [ "$2" ] && LOGOUT_TIMEOUT=$2
+      sleep $LOGOUT_TIMEOUT
+      ;;
+   REBOOT)
+      message "$REBOOT_MESSAGE"
+      [ "$2" ] && LOGOUT_TIMEOUT=$2
+      sleep $LOGOUT_TIMEOUT
       ;;
    LOGOUT)
       message "$LOGOUT_MESSAGE"

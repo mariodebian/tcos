@@ -40,12 +40,16 @@ fi
 need_free_space=65536
 
 mem_max=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+mem_max_dd=901120
 
 if [ ${need_free_space} -ge ${mem_max} ] ; then
  # mem_max - 10 Mb
  need_free_space=$(($mem_max-10240))
 fi
 
+if [ ${need_free_space} -ge ${mem_max_dd} ];then
+ need_free_space=${mem_max_dd}
+fi
 
 #################################
 

@@ -37,16 +37,19 @@ fi
 
 # add font server
 sed "/modules/i\
-        FontPath        \"tcp/${FONT_SERVER}:7100\"\
+\	FontPath     \"tcp/${FONT_SERVER}:7100\"\
 " $new_xorg > /etc/X11/xorg.conf.auto
 
 # change keyboard map
 sed -i "/kbd/i\
-	Option          "XkbRules"      "xorg"
-        Option          "XkbModel"      "${TCOS_XORG_XKBMODEL}"
-        Option          "XkbLayout"     "${TCOS_XORG_XKB}"
+\	Option     \"XkbRules\"     \"xorg\"\
 " /etc/X11/xorg.conf.auto
-
+sed -i "/kbd/i\
+\	Option     \"XkbModel\"     \"${TCOS_XORG_XKBMODEL}\"\
+" /etc/X11/xorg.conf.auto
+sed -i "/kbd/i\
+\	Option     \"XkbLayout\"     \"${TCOS_XORG_XKB}\"\
+" /etc/X11/xorg.conf.auto
 
 # start Xorg at vt7 to avoid getty keyboard conflicts
 Xorg vt7 -config /etc/X11/xorg.conf.auto ${TCOS_XORG_OPTS}  > /dev/null 2>&1

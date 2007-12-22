@@ -18,11 +18,11 @@
 #   vnc-controller.sh genpass "pass" "file" "user:pass"
 
 export DISPLAY=:0
+export XAUTHORITY=/root/.Xauthority
 
 if [ -e /conf/tcos-run-functions ]; then
   # running in thin client
   STANDALONE=0
-  export XAUTHORITY=/root/.Xauthority
 else
   STANDALONE=1
   STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
@@ -59,21 +59,21 @@ for arg in $1; do
         if [ ! -f "$3" ]; then echo "error: no passwd file"; exit 1; fi
         
         # check vncviewer version
-        
+        SIZE="$(screensize)+0+0"
         VNC_NEW_VERSION=$(vncviewer --version 2>&1| grep built |grep -c "4.1")
         if [ $STANDALONE = 0 ]; then
             if [ $VNC_NEW_VERSION = 1 ]; then
-               /sbin/daemonize.sh "vncviewer" "$2 -ViewOnly -FullScreen -passwd $3"
+               /sbin/daemonize.sh "vncviewer" "$2 -ViewOnly -FullScreen -geometry ${SIZE} -passwd $3"
                if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
             else
-               /sbin/daemonize.sh "vncviewer" "$2 -viewonly -fullscreen -passwd $3"
+               /sbin/daemonize.sh "vncviewer" "$2 -viewonly -fullscreen -geometry ${SIZE} -passwd $3"
                if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
             fi
         else
             if [ $VNC_NEW_VERSION = 1 ]; then
-               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -passwd $3"
+               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -geometry ${SIZE} -passwd $3"
             else
-               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -viewonly -fullscreen -passwd $3"
+               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -viewonly -fullscreen -geometry ${SIZE} -passwd $3"
             fi
         fi
      ;;

@@ -100,7 +100,7 @@ log_begin_msg "Try to use some vfat parts"
         exit 0
      else
        _log "USELOCAL no free space in ${vfat}"
-       umount ${ext3}
+       umount ${vfat}
      fi
      
    fi

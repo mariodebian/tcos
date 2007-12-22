@@ -42,6 +42,8 @@ cpifexists /usr/bin/udevinfo                     /usr/bin/
 # tcosxmlrpc utils
 cpifexists ${TCOS_BINS}/tcosxmlrpc  /usr/bin/
 cpifexists ${TCOS_BINS}/lockscreen  /usr/bin/
+cpifexists ${TCOS_BINS}/screensize  /usr/bin/
+cpifexists ${TCOS_BINS}/lockkeybmouse  /usr/bin/
 
 # copy locked image
 mkdir -p ${DESTDIR}/usr/share/tcos-core/
@@ -102,7 +104,7 @@ mkdir -p $DESTDIR/var/www
 # add launcher
 cat << EOF > $DESTDIR/sbin/startxmlrpc
 #!/bin/sh
-killall tcosxmlrpc
+killall tcosxmlrpc >/dev/null 2>&1
 cd /
 /usr/bin/tcosxmlrpc /etc/abyss.conf >> /var/log/tcosxmlrpc.log 2>&1
 exit 0
