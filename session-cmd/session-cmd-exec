@@ -67,12 +67,10 @@ case $1 in
    POWEROFF)
       message "$POWEROFF_MESSAGE"
       [ "$2" ] && LOGOUT_TIMEOUT=$2
-      sleep $LOGOUT_TIMEOUT
       ;;
    REBOOT)
       message "$REBOOT_MESSAGE"
       [ "$2" ] && LOGOUT_TIMEOUT=$2
-      sleep $LOGOUT_TIMEOUT
       ;;
    LOGOUT)
       message "$LOGOUT_MESSAGE"

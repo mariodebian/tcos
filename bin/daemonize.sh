@@ -8,4 +8,16 @@ fi
 
 args=$(echo $@ | sed "s|$1||g")
 
-/sbin/start-stop-daemon --quiet --background --start --exec $cmd -- $args
+case $1 in
+  poweroff)
+    sleep $2
+    /sbin/start-stop-daemon --quiet --background --start --exec $cmd -- 
+    ;;
+  reboot)
+    sleep $2
+    /sbin/start-stop-daemon --quiet --background --start --exec $cmd -- 
+    ;;
+  *)
+    /sbin/start-stop-daemon --quiet --background --start --exec $cmd -- $args
+    ;;
+esac

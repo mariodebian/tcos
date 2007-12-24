@@ -24,7 +24,7 @@ clean:
 	rm -f $(LOCK) $(XRES) $(KEYBMOUSE) *~
 
 debug: clean
-	$(CC) $(SOURCES) $(LDADD) -o $(LOCK) -DDEBUG=1
+	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK) -DDEBUG=1
 	$(CC) $(KEYBMOUSE_SOURCES) $(LDADD) -o $(KEYBMOUSE) -DDEBUG=1
 
 install:
