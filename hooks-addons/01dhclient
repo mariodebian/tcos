@@ -21,8 +21,8 @@ if [ ! -f /sbin/dhclient ]; then
  echo "  => apt-get install dhcp-client (or)"
  echo "  => apt-get install dhcp3-client"
  echo ""
- # critical error
- exit 1
+ # critical error FIXME clean tmp files !!!!
+ killall gentcos
 
 elif [ -f /sbin/dhclient3 ]; then
 
@@ -35,23 +35,49 @@ elif [ -f /sbin/dhclient3 ]; then
 
  copydir /etc/dhcp3                /etc/
  cpifexists /sbin/dhclient         /sbin/
+ cat << EOF > $DESTDIR/sbin/dhclient-script
+#!/bin/sh
+
+if [ -f /tmp/dhclient-script.done ]; then
+  exit 0
+fi
 
 
- [ -e /sbin/dhclient-script ]      && cpifexists /sbin/dhclient-script       /sbin/
- [ -e /etc/dhcp3/dhclient-script ] && rm $DESTDIR/etc/dhcp3/dhclient-script && \
-					cp /etc/dhcp3/dhclient-script $DESTDIR/etc/dhcp3/
+# we have some env vars apply it
+#
+# \${interface} should be network iface (ex: eth0)
+# \${new_ip_address} IP address of dhcp response
+# \${new_subnet_mask} netmask
+# \{new_routers} gateway
+#
 
- [ -e $DESTDIR/sbin/dhclient-script ] &&\
-    sed -i -e s/"^run_hook "/"#DISABLED run_hook "/g \
-	   -e s/"^run_hookdir "/"#DISABLED run_hookdir "/g \
-	   -e s/"^exit_with_hooks"/"#DISABLED exit_with_hooks"/g \
-	   -e s/"bash"/"sh"/g $DESTDIR/sbin/dhclient-script
+for varpar in \$(env); do
+  varname=\$(echo \$varpar| awk -F'=' '{print \$1}')
+  varvalue=\$(echo \$varpar| awk -F'=' '{print \$2}')
+  if [ "\$varname" = "new_ip_address" ]; then
+    IP=\$varvalue
+  fi
+  if [ "\$varname" = "interface" ]; then
+    INTERFACE=\$varvalue
+  fi
+  if [ "\$varname" = "new_subnet_mask" ]; then
+    NETMASK=\$varvalue
+  fi
+  if [ "\$varname" = "new_routers" ]; then
+    GATEWAY=\$varvalue
+  fi
+done
 
- [ -e $DESTDIR/etc/dhcp3/dhclient-script ] &&\
-    sed -i -e s/"^run_hook "/"#DISABLED run_hook "/g \
-	   -e s/"^run_hookdir "/"#DISABLED run_hookdir "/g \
-	   -e s/"^exit_with_hooks"/"#DISABLED exit_with_hooks"/g \
-	   -e s/"bash"/"sh"/g $DESTDIR/etc/dhcp3/dhclient-script
+# test if we have all needed variables
+if [ \$INTERFACE ] && [ \$IP ] && [ \$NETMASK ] && [ \$GATEWAY ] ; then
+   ifconfig \${INTERFACE} \${IP} netmask \${NETMASK} up
+   route add default dev \${INTERFACE} gw \${GATEWAY}
+   # create a file to not configure network again
+   touch /tmp/dhclient-script.done
+fi
+
+EOF
+ chmod +x $DESTDIR/sbin/dhclient-script
 
  mkdir -p $DESTDIR/var/lib/dhcp3 $DESTDIR/lib/dhcp3-client
  touch $DESTDIR/lib/dhcp3-client/call-dhclient-script

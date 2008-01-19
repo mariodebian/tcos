@@ -1,11 +1,13 @@
 # hooks addon to export USB devices with USB/IP
 # need usbip-tools and modules
 
-
-if [ -x /usr/bin/usbipd ]; then
+# I have put no-exists to disable usbip (not work yet)
+# but I want to provide code
+if [ -x /usr/bin/usbipd-noexists ]; then
 
    stat_before
 
+    cpifexists /usr/bin/usbip        /usr/bin
     cpifexists /usr/bin/usbipd        /usr/bin
     cpifexists /usr/bin/bind_driver   /usr/bin
 
@@ -14,6 +16,7 @@ if [ -x /usr/bin/usbipd ]; then
 
     manual_add_modules usbip_common_mod
     manual_add_modules usbip
+    manual_add_modules vhci-hcd
 
 
    cat << EOF > $DESTDIR/scripts/tcos-bottom/70usbip
@@ -55,7 +58,7 @@ exit 0
 EOF
    chmod +x $DESTDIR/scripts/tcos-bottom/70usbip 
 
-   stat_after "USB/IP export support"
+   stat_after "** EXPERIMENTAL ** USB/IP support"
 
 fi
 

@@ -15,6 +15,7 @@ all:
 	cd dbus        && make
 	cd session-cmd && make
 	cd tcos-standalone && make
+	cd httpfs      && make
 
 include common.mk
 
@@ -33,6 +34,7 @@ clean:
 	cd dbus        && make clean
 	cd session-cmd && make clean
 	cd tcos-standalone && make clean
+	cd httpfs      && make clean
 
 gedit:
 	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
@@ -175,6 +177,9 @@ install:
 
 	# tcos-standalone helper
 	cd tcos-standalone && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+
+	# httpfs
+	cd httpfs && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 targz: clean
 	rm -rf ../tmp 2> /dev/null

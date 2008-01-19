@@ -1,11 +1,11 @@
 
 
-if [ -e /sbin/nbd-client ]; then
-
- stat_before
-   manual_add_modules nbd
-   cpifexists /sbin/nbd-client /sbin
- stat_after "NBD client"
-
-
-fi
+#if [ -e /sbin/nbd-client ]; then
+#
+# stat_before
+#   manual_add_modules nbd
+#   cpifexists /sbin/nbd-client /sbin
+# stat_after "NBD client"
+#
+#
+#fi

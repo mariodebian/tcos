@@ -49,12 +49,6 @@ if [ "$TCOS_ENABLE_NBD" != "0" ]; then
     sleep 1
 
     mount /dev/nbd0 /usr
-    [ $? = 0 ] && mount_unionfs /mnt/ram /.usr /usr
-
-    if [ -d /.usr/lib ]; then
-      # delete sqmount script
-      echo "exit 0" > /scripts/tcos-premount/35sqmount
-    fi
 
   log_end_msg
 

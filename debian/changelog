@@ -1,3 +1,33 @@
+initramfs-tools-tcos (0.88.14) unstable; urgency=low
+
+  * New stable release
+  * hooks-addons/01dhclient:
+    - Don't copy dhclient-script, create a small hack to configure network
+  * Reorganize scripts/tcos-premount to allow get squashfs with other methods ( plugins?? )
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 19 Jan 2008 15:07:40 +0100
+
+initramfs-tools-tcos (0.88.13.4) unstable; urgency=low
+
+  * Add HTTPFS method to get squashfs
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 04 Jan 2008 14:09:58 +0100
+
+initramfs-tools-tcos (0.88.13.3) unstable; urgency=low
+
+  * scripts/tcos-top/01busybox:
+    - Wait for any wireless iface instead of only eth0
+  * bin/gentcos:
+    - In cdrom copy initramfs as initrd.cdrom
+  * conf/tcos-run-functions.sh:
+    - Disable progress log (too many calls)
+  * bin/installer.sh:
+    - Copy files from cdrom instead of network if booting from cdrom
+  * grub/menu.lst-tcos:
+    - Put initrd var in kernel line to allow installer to detect cdrom
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 26 Dec 2007 15:47:04 +0100
+
 initramfs-tools-tcos (0.88.13.2) unstable; urgency=low
 
   * session-cmd/session-cmd-exec:

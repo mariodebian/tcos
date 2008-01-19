@@ -1,0 +1,47 @@
+USAGE
+=====
+
+	httpfs http://www.site.com/big.iso local_dir
+
+gives you access to big.iso in directory local_dir.
+
+In other words:
+It seems to be an instant download of big.iso to local_dir
+
+
+DEPENDENCIES
+============
+
+Needs fuse kernel module, fusermount, fuselib.
+Fuse-headers for compiling.
+
+
+STATUS
+======
+
+First Release. Kept it as simple as possible.
+
+
+CONTENTS
+========
+
+httpfs		Binary, compiled with gcc-2.95 against Fuse 2.5.3
+httpfs.c	Source
+make_httpfs	Bash-Script to build httpfs
+readme		This file
+
+
+INTENTION
+=========
+
+I wanted a 'glue' to handle an ISO, which is only accessible by http,
+with loop device. That is something like httpdisk from Bo Brantén.
+(http://www.acc.umu.se/~bosse/	-- driver for windows)
+
+It's a design decision, not to use a fancy libaray like libcurl.
+Also there is no idea, to incorporate curlftp or even webdav.
+
+The result is only gradually more complex than hello.c from fuse.
+
+But --
+in another branch i'm willing to add a few more features.

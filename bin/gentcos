@@ -261,7 +261,9 @@ create_grub_iso(){
  [ -f /usr/lib/grub/i386-pc/stage2_eltorito ] && install -m 644 /usr/lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
  install -m 644 /boot/vmlinuz-${TCOS_KERNEL} ${dir}/boot/vmlinuz
  create_initramfs
- cp ${INITRAMFS} ${dir}/boot/initramfs
+ cp ${INITRAMFS} ${dir}/boot/initrd.cdrom
+ sed -i s/"initramfs"/"initrd.cdrom"/g ${dir}/boot/grub/menu.lst
+
 
 mkisofs -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b boot/grub/stage2_eltorito\
  -no-emul-boot -boot-load-size 4\
@@ -279,11 +281,11 @@ create_isolinux_iso() {
  dir=/tmp/isolinux-iso$$
  mkdir -p ${dir}/isolinux
  create_initramfs
- cp ${INITRAMFS} ${dir}/isolinux/initramfs
+ cp ${INITRAMFS} ${dir}/isolinux/initrd.cdrom
 
  parse_pxelinuxcfg ${dir}/isolinux/isolinux.cfg
  sed -i s/"vmlinuz-${TCOS_KERNEL}"/"vmlinuz"/g ${dir}/isolinux/isolinux.cfg
- sed -i s/"initramfs-${TCOS_KERNEL}"/"initramfs"/g ${dir}/isolinux/isolinux.cfg
+ sed -i s/"initramfs-${TCOS_KERNEL}"/"initrd.cdrom"/g ${dir}/isolinux/isolinux.cfg
 
  cp ${TFTP_DIR}/logo.lss ${dir}/isolinux/
  cp ${TFTP_DIR}/tcos.msg ${dir}/isolinux/

@@ -191,7 +191,7 @@ update_progress() {
   new=$((${old}+${sum}))
   if [ -x /sbin/usplash_write ]; then
     /sbin/usplash_write "PROGRESS ${new}"
-    _log "updating progress to ${new} %"
+    #_log "updating progress to ${new} %"
     echo ${new} > /tmp/progress
   fi
 }

@@ -1,0 +1,30 @@
+# httpfs support
+
+
+
+if [ $TCOS_HTTPFS ]; then
+
+  stat_before
+
+   cpifexists ${TCOS_BINS}/httpfs /bin
+
+   #cpifexists /sbin/mount.fuse      /bin
+   #cpifexists //usr/bin/fusermount  /bin
+
+   touch $DESTDIR/etc/fuse.conf
+   tcos_manual_add_modules fuse
+
+   # need libfuse in /lib before mounting /usr/lib
+   cp -f $(readlink -f /usr/lib/libfuse.so.2) $DESTDIR/lib/libfuse.so.2
+
+
+   # klibc mount don't work with fuse
+   mkdir -p $DESTDIR/opt/bin
+   cpifexists /bin/mount            /opt/bin
+
+   # delete file and put  really in /opt
+   rm -f $DESTDIR/opt/bin/mount
+   cp -ra /bin/mount $DESTDIR/opt/bin
+
+  stat_after " ** EXPERIMENTAL ** HTTPFS support"
+fi

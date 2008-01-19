@@ -32,24 +32,24 @@ color cyan/blue white/blue
 
 title   TCOS Thin Client Operating System (normal)
 root    
-kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 boot=tcos quiet splash
+kernel  /boot/vmlinuz ramdisk_size=65536 initrd=/boot/initramfs root=/dev/ram0 boot=tcos quiet splash
 initrd  /boot/initramfs
 boot
 
 title   TCOS Thin Client Operating System (HDD installer)
 root    
-kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet splash startx=N installer
+kernel  /boot/vmlinuz ramdisk_size=65536 initrd=/boot/initramfs root=/dev/ram0 BOOT=tcos quiet splash startx=N installer
 initrd  /boot/initramfs
 boot
 
 title   TCOS Thin Client Operating System (HDD installer UPDATE)
 root    
-kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos quiet splash startx=N installer-update
+kernel  /boot/vmlinuz ramdisk_size=65536 initrd=/boot/initramfs root=/dev/ram0 BOOT=tcos quiet splash startx=N installer-update
 initrd  /boot/initramfs
 boot
 
 title   TCOS Thin Client Operating System (unknow hardware)
 root    
-kernel  /boot/vmlinuz ramdisk_size=100000 root=/dev/ram0 BOOT=tcos showmodules discover=1 startx=N
+kernel  /boot/vmlinuz ramdisk_size=65536 initrd=/boot/initramfs root=/dev/ram0 BOOT=tcos showmodules discover=1 startx=N
 initrd  /boot/initramfs
 boot

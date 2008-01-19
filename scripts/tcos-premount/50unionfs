@@ -1,0 +1,62 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+quiet=n
+
+
+. /scripts/functions
+# if break=unionfs STOP here
+maybe_break unionfs
+
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+# Mount squashfs over unionfs
+log_begin_msg "Mounting UNIONFS usr filesystem"
+ if [ ! -d /usr/share ]; then
+   panic "Error mounting usr.squashfs check squashfs module or bugs"
+   FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
+ fi
+ mount_unionfs /mnt/ram /.usr /usr
+log_end_msg $?
+
+
+
+###############################################
+
+
+
+# DOCUMENTME allmodules | download with tftp allmodules.squashfs to test what modules need thin client
+TCOS_ALL_MODULES=$(read_cmdline_var "allmodules" "0")
+
+if [ "$TCOS_ALL_MODULES" = "1" ] && [ -d /mnt/.modules/ ]; then
+
+  log_begin_msg "Remounting allmodules in RW mode"
+    mount_unionfs /mnt/.ram-modules /mnt/.modules /lib/modules/$(uname -r)
+  log_end_msg
+
+fi
+
+
+update_progress 5
+
+exit 0
+

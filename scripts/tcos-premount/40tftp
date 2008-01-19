@@ -1,0 +1,101 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+
+quiet=n
+
+
+. /scripts/functions
+# if break=tftp STOP here
+maybe_break tftp
+
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+
+if [ -d /usr/share ]; then
+  # we have mounted /usr/share with other method
+  exit 0
+fi
+
+
+
+
+###############################################
+if [ ! -f /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -f /mnt/tmp/usr.squashfs ]; then
+  # download usr.squashfs from tftp server
+
+  # say to usplash more timeout
+  if [ -x /sbin/usplash_write ]; then
+    /sbin/usplash_write "TIMEOUT 180" || true
+  fi
+
+
+  log_begin_msg "Downloading usr.squashfs from $(read_server "tftp-server")"
+    _log "SQMOUNT downloading squashfs"
+    download_file /tcos/usr-$(uname -r).squashfs /mnt/tmp/usr-$(uname -r).squashfs
+    sync
+    sleep 1
+  log_end_msg
+
+
+  if [ "$(if_is_zero /mnt/tmp/usr-$(uname -r).squashfs)" = "0" ]; then
+    panic "Error downloading extra data from server $(read_server "tftp-server")"
+    FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
+  fi
+else
+  log_begin_msg "usr-$(uname -r).squashfs not downloaded"
+    sync
+  log_end_msg
+fi
+
+##############################################
+
+
+# DOCUMENTME allmodules | download with tftp allmodules.squashfs to test what modules need thin client
+TCOS_ALL_MODULES=$(read_cmdline_var "allmodules" "0")
+
+if [ "$TCOS_ALL_MODULES" = "1" ]; then
+
+  if [ /mnt/tmp/allmodules-$(uname -r).squashfs ] && [ ! -f /mnt/tmp/allmodules.squashfs ]; then
+
+    # say to usplash more timeout
+    if [ -x /sbin/usplash_write ]; then
+      usplash_write "TIMEOUT 180" || true
+    fi
+
+    _log "SQMOUNT Downloading allmodules-$(uname -r).squashfs"
+    log_begin_msg "Downloading all kernel modules: allmodules-$(uname -r).squashfs"
+    download_file /tcos/allmodules-$(uname -r).squashfs /mnt/tmp/allmodules-$(uname -r).squashfs
+    if [ "$(if_is_zero /mnt/tmp/allmodules-$(uname -r).squashfs)" = "0" ]; then
+       echo -e "Error downloading allmodules"
+       log_end_msg 1
+       exit 0
+     fi
+    log_end_msg
+  fi
+  
+fi
+
+
+update_progress 10
+
+exit 0
+

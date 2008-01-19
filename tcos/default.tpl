@@ -12,11 +12,11 @@ label tcos
 
 label install
   kernel vmlinuz-__TCOS_KERNEL__
-  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash installer
+  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash startx=N installer
 
 label update
   kernel vmlinuz-__TCOS_KERNEL__
-  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash installer-update
+  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash startx=N installer-update
 
 label nfs
   kernel vmlinuz-__TCOS_KERNEL__

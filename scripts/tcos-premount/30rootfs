@@ -39,16 +39,15 @@ fi
 
 
 
-rootfs_file=${download_dir}/rootfs-$(uname -r).squashfs
-mkdir -p ${download_dir} /target
+rootfs_file=/mnt/tmp/rootfs-$(uname -r).squashfs
+mkdir -p /mnt/tmp /target
 
 if [ "${TCOS_USENFS}" = "nfs" ]; then
-  log_begin_msg "Mounting NFS ${download_dir}"
+  log_begin_msg "Mounting NFS /mnt/tmp"
     MOPTS="nolock,ro"
     mount -n -t ramfs none /target
-    #mount -n -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} ${download_dir}
-    nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} ${download_dir} 2>&1 > /dev/null ||\
-	 nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} ${download_dir} 2>&1 > /dev/null ||\
+    nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} /mnt/tmp 2>&1 > /dev/null ||\
+	 nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} /mnt/tmp 2>&1 > /dev/null ||\
 	  _log "ROOTFS: __ERROR__ can't mount NFS!!!!!"
   log_end_msg
 
@@ -65,12 +64,12 @@ fi
 
 
 if [ ! -f ${rootfs_file} ]; then
-  _log "ROOTFS is __NOT__ in ${download_dir}"
+  _log "ROOTFS is __NOT__ in /mnt/tmp"
   log_begin_msg "Downloading rootfs"
      download_file /tcos/rootfs-$(uname -r).squashfs ${rootfs_file}
   log_end_msg
 else
-  _log "ROOTFS is in ${download_dir}"
+  _log "ROOTFS is in /mnt/tmp"
   log_begin_msg "Using NFS rootfs"
     sync
   log_end_msg
