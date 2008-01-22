@@ -25,19 +25,6 @@ maybe_break fstab
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
-# DOCUMENTME uselocal | enable use of local disks
-uselocal=$(read_cmdline_var "uselocal" "1")
-if [ ${uselocal} = 0 ]; then
-  _log "FSTAB uselocal disabled from cmdline"
-  exit 0
-fi
-
-# wait for devices (ubuntu udev low speed)
-[ -x /sbin/udevtrigger ] && /sbin/udevtrigger --subsystem-match=ide --subsystem-match=block
-[ -x /sbin/udevsettle ] && /sbin/udevsettle
-
-# To avoid fsck
-#touch ${rootmnt}/fastboot
 
 cat <<EOF > /etc/fstab
 # /etc/fstab: static file system information.
@@ -53,6 +40,23 @@ if [ ! -d /dev/pts ]; then
   mkdir -p /dev/pts
   mount /dev/pts >> /tmp/initramfs.debug 2>&1
 fi
+
+
+# DOCUMENTME uselocal | enable use of local disks
+uselocal=$(read_cmdline_var "uselocal" "1")
+if [ ${uselocal} = 0 ]; then
+  _log "FSTAB uselocal disabled from cmdline"
+  exit 0
+fi
+
+
+
+# wait for devices (ubuntu udev low speed)
+[ -x /sbin/udevtrigger ] && /sbin/udevtrigger --subsystem-match=ide --subsystem-match=block
+[ -x /sbin/udevsettle ] && /sbin/udevsettle
+
+# To avoid fsck
+#touch ${rootmnt}/fastboot
 
 #
 # Search local disks partitions

@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.88.14.2) unstable; urgency=low
+
+  * hooks-addons/13kbmap:
+    - Don't copy keymaps if exists
+  * scripts/tcos-top/50fstab:
+    - Move exit code after /etc/fstab creation
+    - Allow to mount /dev/pts always
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 22 Jan 2008 17:50:09 +0100
+
 initramfs-tools-tcos (0.88.14.1) unstable; urgency=low
 
   * Remove httpfs build (old versions of libfuse don't work)
