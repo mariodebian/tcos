@@ -249,7 +249,7 @@ EOF
 
   # umount vfat partition
   sync
-  umount /target 
+  umount /dev/hda1
 }
 
 

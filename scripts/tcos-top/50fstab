@@ -50,10 +50,13 @@ if [ ${uselocal} = 0 ]; then
 fi
 
 
+if [ "$NO_UDEV" = "" ]; then
+  # don't call udev again with NFS
+  # wait for devices
+  [ -x /sbin/udevtrigger ] && /sbin/udevtrigger --subsystem-match=ide --subsystem-match=block
+  [ -x /sbin/udevsettle ] && /sbin/udevsettle
+fi
 
-# wait for devices (ubuntu udev low speed)
-[ -x /sbin/udevtrigger ] && /sbin/udevtrigger --subsystem-match=ide --subsystem-match=block
-[ -x /sbin/udevsettle ] && /sbin/udevsettle
 
 # To avoid fsck
 #touch ${rootmnt}/fastboot

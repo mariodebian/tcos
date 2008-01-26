@@ -39,7 +39,7 @@ fi
 
 
 ###############################################
-if [ ! -f /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -f /mnt/tmp/usr.squashfs ]; then
+if [ ! -e /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/usr.squashfs ]; then
   # download usr.squashfs from tftp server
 
   # say to usplash more timeout
@@ -74,7 +74,7 @@ TCOS_ALL_MODULES=$(read_cmdline_var "allmodules" "0")
 
 if [ "$TCOS_ALL_MODULES" = "1" ]; then
 
-  if [ /mnt/tmp/allmodules-$(uname -r).squashfs ] && [ ! -f /mnt/tmp/allmodules.squashfs ]; then
+  if [ ! -e /mnt/tmp/allmodules-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/allmodules.squashfs ]; then
 
     # say to usplash more timeout
     if [ -x /sbin/usplash_write ]; then

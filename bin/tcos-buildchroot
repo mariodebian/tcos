@@ -125,9 +125,9 @@ export LC_ALL=C
 export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
 apt-get $APT_OPTS update
-DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS tcos-keyring
+DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS tcos-keyring
 apt-get $APT_OPTS update
-DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TMP2} 
+DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TMP2} 
 apt-get clean
 EOC
   umount ${TCOS_CHROOT}/proc
@@ -141,8 +141,8 @@ export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
 apt-get update
 debconf-set-selections /pressed
-DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} linux-restricted-modules-${TCOS_KERNEL} ${TCOS_PACKAGES} tcos-extra-modules-${TCOS_KERNEL}
-DEBIAN_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
+DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} linux-restricted-modules-${TCOS_KERNEL} ${TCOS_PACKAGES} tcos-extra-modules-${TCOS_KERNEL}
+DEBCONF_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
 apt-get clean
 /etc/init.d/dropbear stop
 rm -f /pressed
@@ -158,11 +158,11 @@ export LC_ALL=C
 export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
 apt-get update
-DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS tcos-keyring
+DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS tcos-keyring
 apt-get $APT_OPTS update
 debconf-set-selections /pressed
-DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
-DEBIAN_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
+DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
+DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS upgrade
 apt-get clean
 /etc/init.d/dropbear stop
 rm -f /pressed
@@ -188,15 +188,15 @@ CMD
 chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
 apt-get update
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-    DEBIAN_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
-    DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
+    DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS upgrade
+    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
     # need umount this directory to allow remove later chroot from distros grather than gutsy
     [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
 else
-    DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS cdebootstrap
+    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-    DEBIAN_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
-    DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
+    DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS upgrade
+    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
     dpkg --remove cdebootstrap-helper-diverts
 fi
 apt-get clean
@@ -219,11 +219,11 @@ chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
 apt-get update
 
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-    DEBIAN_FRONTEND="noninteractive"  apt-get $APT_OPTS install $@
+    DEBCONF_FRONTEND="dialog"  apt-get $APT_OPTS install $@
 else
-    DEBIAN_FRONTEND="noninteractive" apt-get install $APT_OPTS cdebootstrap
+    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-    DEBIAN_FRONTEND="noninteractive" apt-get $APT_OPTS install $@
+    DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS install $@
     dpkg --remove cdebootstrap-helper-diverts
 fi
 apt-get clean
@@ -247,7 +247,12 @@ fi
 
 gentcos ${GENTCOS_OPT}
 EOC
-rm -f /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/initramfs-${TCOS_KERNEL} /var/lib/tcos/tftp/linux-${TCOS_KERNEL}.nbi
+# this is exec outside chroot
+rm -rf /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} \
+       /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs \
+       /var/lib/tcos/tftp/initramfs-${TCOS_KERNEL} \
+       /var/lib/tcos/tftp/linux-${TCOS_KERNEL}.nbi \
+       /var/lib/tcos/fs-${TCOS_KERNEL}
 
 [ ! -e /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} ] && \
 	ln -s ${TCOS_CHROOT}/boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/

@@ -59,8 +59,8 @@ TCOS_INCLUDE_INIT=1
 . ${TCOS_DIR}/hooks-addons/02hex2ascii
 . ${TCOS_DIR}/hooks-addons/03udev2
 . ${TCOS_DIR}/hooks-addons/03wireless
-. ${TCOS_DIR}/hooks-addons/90usplash
-. ${TCOS_DIR}/hooks-addons/95usplash_timeout
+#. ${TCOS_DIR}/hooks-addons/90usplash
+#. ${TCOS_DIR}/hooks-addons/95usplash_timeout
 . ${TCOS_DIR}/hooks-addons/99clean_nfs_image
 unset TCOS_INCLUDE_INIT
 

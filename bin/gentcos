@@ -164,7 +164,19 @@ create_initramfs_nfs() {
 
 
 create_rootfs() {
- if [ "$(grep -c ^${TCOS_VAR} /etc/exports)" = "0" ]; then
+ if [ ! -f /etc/exports ]; then
+    echo "  Warning:"
+    echo "          No NFS server detected and /etc/exports file."
+    echo "          Install nfs-kernel-server and put this line into /etc/exports"
+    echo ""
+    echo "          /var/lib/tcos  192.168.0.0/255.255.255.0(ro,no_root_squash,sync,no_subtree_check)"
+    echo ""
+    echo "          (change 192.168.0.0 with your network addresses)"
+    echo ""
+    echo "          Ignore this if you are running with a 32bit chroot."
+ fi
+
+ if [ "$(grep -c ^${TCOS_VAR} /etc/exports 2>/dev/null)" = "0" ]; then
     echo "  Warning:"
     echo "         TCOS NFS dirs have changed, need to edit /etc/exports"
     echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"

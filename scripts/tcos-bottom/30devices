@@ -26,6 +26,13 @@ quiet=n
 
 . /bin/set-limits
 
+# rewrite /etc/fstab from NFS
+if [ "$(cat /tmp/less_ram)" != "0" ]; then
+  export NO_UDEV=1
+  /scripts/tcos-top/50fstab
+  unset NO_UDEV
+fi
+
 
 if [ ${TCOS_USB} ]; then
  MODULES="scsi_mod sd_mod sr_mod isofs vfat floppy usbcore ehci-hcd ohci-hcd uhci-hcd usb-storage"

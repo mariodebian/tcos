@@ -50,7 +50,8 @@ create_links "logger"
 create_links "ulimit"
 
 # start syslogd (busybox embeded)
-busybox syslogd 2>/dev/null 
+killall syslogd 2>/dev/null
+syslogd 2>/dev/null 
 
 if [ $? != 0 ]; then
   # create a fuck logger

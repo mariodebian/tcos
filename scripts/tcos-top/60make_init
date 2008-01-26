@@ -22,6 +22,9 @@ esac
 
 quiet=n
 
+# if break=make_init STOP here
+maybe_break make_init
+
 # read /tmp/less_ram
 if [ "$(cat /tmp/less_ram)" = "0" ]; then
   # have more than TCOS_MIN_RAM
@@ -46,7 +49,7 @@ quiet=n
 
 # start udev again
 log_begin_msg "Re-Discovering hardware"
-.  /scripts/init-premount/udev
+/scripts/init-premount/udev
 log_end_msg
 
 
@@ -75,8 +78,10 @@ move_file /etc/hostname     /root
 move_file /etc/hosts        /root
 move_file /etc/resolv.conf  /root
 move_file /tmp/progress     /root
-move_file /etc/fstab        /root
 move_file /tmp/initramfs.debug /root
+
+move_file /var/log/messages /root
+move_file /tmp/less_ram     /root
 
 touch /etc/mtab
 move_file /etc/mtab         /root
@@ -84,6 +89,7 @@ move_file /etc/mtab         /root
 mkdir -p /root/proc
 mkdir -p /root/dev
 mkdir -p /root/sys
+
 
 
 exit 0

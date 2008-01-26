@@ -41,38 +41,12 @@ USR_SQUASH=/mnt/tmp/usr-$(uname -r).squashfs
 MOD_SQUASH=/mnt/tmp/allmodules-$(uname -r).squashfs
 
 # check if have in /mnt/tmp without version
-if [ -f /mnt/tmp/usr.squashfs ]; then
+if [ -e /mnt/tmp/usr.squashfs ]; then
   USR_SQUASH=/mnt/tmp/usr.squashfs
 fi
 
-if [ -f /mnt/tmp/allmodules.squashfs ]; then
+if [ -e /mnt/tmp/allmodules.squashfs ]; then
   MOD_SQUASH=/mnt/tmp/allmodules.squashfs
-fi
-
-
-# check if we are booting from HD / USB
-_INITRD=$(read_cmdline_var "initrd" "")
-if [ "$_INITRD" = "initrd.gz" ]; then
-   # booting from hdd, use usr.squashfs from HDD if exists
-   mkdir -p /target
-
-   for part in $(grep -e ext3 -e vfat /etc/fstab| awk '{print $1":"$3}'); do
-     device=$(echo $part | awk -F":" '{print $1}')
-     fs=$(echo $part | awk -F":" '{print $2}')
-     mount -t${fs} ${device} /target
-
-     if [ -f /target/usr.squashfs ]; then
-       USR_SQUASH=/target/usr.squashfs
-       _log "SQMOUNT found usr.squashfs in $device "
-       break
-     elif [ -f /target/usr-$(uname -r).squashfs ]; then
-       USR_SQUASH=/target/usr-$(uname -r).squashfs
-       _log "SQMOUNT found usr-$(uname -r).squashfs in $device "
-       break
-     else
-       umount /target        
-     fi
-   done
 fi
 
 

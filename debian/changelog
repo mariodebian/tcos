@@ -1,3 +1,23 @@
+initramfs-tools-tcos (0.88.14.3) unstable; urgency=low
+
+  * Move script/tcos-top/40make_init to 60make_init
+  * hooks-addons/99clean_nfs_image:
+    - Don't remove ide and ata modules (need for swap in NFS boot)
+    - Delete usplash bins and libs (with 32 Mb of RAM can't play with usplash)
+  * scripts/tcos-top/20mountnfs:
+    - Reduce ramdisk size from 5m to 1m
+  * scripts/tcos-bottom/30devices:
+    - call fstab again (with NFS modules)
+  * bin/gentcos:
+    - Warn about /etc/exports not found
+  * scripts/tcos-premount/20hdd
+    - Detect if bootting from hdd mount disk in /target and create symlink if squashfs exists
+  * bin/tcos-buildchroot
+    - Fix typo DEBIAN_FRONTEND => DEBCONF_FRONTEND
+    - Change DEBCONF_FRONTEND to dialog in some cases (needed for user input)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 26 Jan 2008 18:17:37 +0100
+
 initramfs-tools-tcos (0.88.14.2) unstable; urgency=low
 
   * hooks-addons/13kbmap:

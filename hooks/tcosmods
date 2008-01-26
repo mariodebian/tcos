@@ -113,6 +113,7 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/isofs/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/isofs/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ide/
+       rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ata/
        rm -f ${DESTDIR}/sbin/vgchange
        rm -f ${DESTDIR}/lib/libdevmapper*
     fi

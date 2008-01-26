@@ -30,6 +30,14 @@ maybe_break inittcos
 [ -d /usr/lib/discover ] &&  ln -s /usr/lib/discover /lib/
 
 
+# Loop over every line in /etc/modules.
+# patch from Roberto Ibañez
+grep '^[^#]' /etc/modules | \
+while read module args; do
+  [ "$module" ] || continue
+  modprobe "$module" "$args"
+done
+
 
 if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
  # setup root passwd
@@ -125,13 +133,8 @@ else
 fi
 
 
-# rewrite /etc/fstab with disktype info
-if [ -x /usr/bin/disktype ] ; then
-  _log "INITTCOS creating fstab with disktype info"
-  export NO_MSG=1
-  /scripts/tcos-top/50fstab 
-  unset NO_MSG
-fi
+
+
 
 update_progress 2
 

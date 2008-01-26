@@ -5,26 +5,61 @@ if [ "${BOOT}" = "tcos-nfs" ]; then
 
 stat_before
 
+# not delete ide and ata
+#rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ide
+#rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ata
+#rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/scsi
+#rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/cdrom
+
+# delete fstab
+#rm -f ${DESTDIR}/scripts/tcos-top/*fstab
+
 
 # delete some kernel modules
 rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/usb
-rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/scsi
-rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ide
-rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/cdrom
 rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ieee1394
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/firewire
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/pcmcia
 rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/md
 rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/message
+
+# filesystems
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/xfs
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/reiserfs
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/jfs
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/ext3
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/jbd
+rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/isofs/
+
 
 # delete some bins
 rm -rf ${DESTDIR}/scripts/local*
 rm -rf ${DESTDIR}/scripts/nfs*
-#rm -rf ${DESTDIR}/scripts/tcos-top
-#rm -rf ${DESTDIR}/scripts/tcos-bottom
-#rm -rf ${DESTDIR}/scripts/tcos-premount
+rm -rf ${DESTDIR}/scripts/tcos-bottom
+rm -rf ${DESTDIR}/scripts/tcos-premount
+
 
 rm -rf ${DESTDIR}/sbin/vgchange
 rm -rf ${DESTDIR}/lib/libdevmapper*
 
+rm -f ${DESTDIR}/sbin/usplash*
+rm -rf ${DESTDIR}/usr/lib/usplash*
+rm -f ${DESTDIR}/lib*splash*
+rm -f ${DESTDIR}/scripts/init-top/*usplash*
+rm -f ${DESTDIR}/scripts/init-top/*framebuffer*
+
+rm -f ${DESTDIR}/sbin/resume
+rm -f ${DESTDIR}/bin/strace
+
+rm -rf ${DESTDIR}/usr/lib
+
+
+# add again ata scsi and ide modules
+tcos_manual_add_modules libata
+tcos_manual_add_modules scsi-mod
+tcos_manual_add_modules ide-generic
+tcos_manual_add_modules ata-generic
+tcos_manual_add_modules ide-cd
 
 
 stat_after "Clean NFS initramfs"
