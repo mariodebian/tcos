@@ -216,6 +216,9 @@ patch_feisty: patch_amd64
 patch_gutsy: patch_amd64
 	# nothing to patch
 
+patch_max: patch_amd64
+	# nothing to patch
+
 patch_hardy: patch_amd64
 	# nothing to patch
 
