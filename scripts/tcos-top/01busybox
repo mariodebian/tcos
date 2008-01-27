@@ -83,8 +83,8 @@ modprobe -q loop     >> /tmp/initramfs.debug 2>&1
 modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
 
 # network and nfs
-modprobe nfs
-modprobe af_packet
+modprobe nfs 2>/dev/null
+modprobe af_packet 2>/dev/null
 
 # load cdrom and HDD modules
 modprobe -q ide_disk >> /tmp/initramfs.debug 2>&1

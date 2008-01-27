@@ -35,7 +35,7 @@ maybe_break inittcos
 grep '^[^#]' /etc/modules | \
 while read module args; do
   [ "$module" ] || continue
-  modprobe "$module" "$args"
+  modprobe "$module" "$args" >> /tmp/initramfs.debug 2>&1
 done
 
 

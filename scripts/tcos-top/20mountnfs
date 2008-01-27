@@ -41,12 +41,12 @@ fi
 
 
 MNTOPT="ro,nolock,rsize=2048,wsize=2048,retrans=10"
-NFS_RO=/root/nfs
+NFS_RO=/mnt/nfs
 NFS_RW=/root
 
 
 mkdir -p /root 
-mkdir -p /root/nfs
+mkdir -p /mnt/nfs
 
 # say to usplash more timeout
 if [ -x /sbin/usplash_write ]; then
@@ -75,7 +75,7 @@ if [ "${NFS_MODE}" = "nbd" ]; then
     nbd-client tcos-server $NBD_PORT /dev/nbd0
     sleep 1
 
-    mount /dev/nbd0 /root/nfs
+    mount /dev/nbd0 /mnt/nfs
   
   log_end_msg
 
@@ -102,23 +102,31 @@ fi # end of NFS_MODE
 
 log_begin_msg "Remounting root in RW mode"
 
-  mkdir -p /root/ram
-  mount -t tmpfs -o size=1m tmpfs /root/ram
+  mkdir -p /mnt/ram
+  mount -t tmpfs -o size=5m tmpfs /mnt/ram
 
   if [ $(grep -c unionfs /proc/modules) = 0 ] && [ $(grep -c aufs /proc/modules) != 0 ]; then
-       mount -t aufs -o br:/root/ram:/root/nfs none /root >> /tmp/initramfs.debug 2>&1
+       mount -t aufs -o br:/mnt/ram:/mnt/nfs none /root >> /tmp/initramfs.debug 2>&1
   else
 
      # NFS mounts must have nfsro instead of ro (see man unionfs) with kernel < 2.6.22
      if [ "$(uname -r| awk -F"[.|-]" '{print $3}')" -lt 22 ] && [ "${NFS_MODE}" != "nbd" ] ; then
-       mount -t unionfs -o dirs=/root/ram=rw:/root/nfs=nfsro unionfs /root
+       mount -t unionfs -o dirs=/mnt/ram=rw:/mnt/nfs=nfsro unionfs /root
      else
-       mount -t unionfs -o dirs=/root/ram=rw:/root/nfs=ro unionfs /root
+       mount -t unionfs -o dirs=/mnt/ram=rw:/mnt/nfs=ro unionfs /root
      fi
   fi
 
 log_end_msg
 
+
+maybe_break move_mnt
+
+# Set browseable NFS and RAM dirs
+mkdir -p /root/.dirs/nfs
+mkdir -p /root/.dirs/ram
+mount -o move /mnt/nfs /root/.dirs/nfs
+mount -o move /mnt/ram /root/.dirs/ram
 
 
 exit 0

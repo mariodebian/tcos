@@ -1,3 +1,18 @@
+initramfs-tools-tcos (0.88.14.5) unstable; urgency=low
+
+  * scripts/tcos-top/20mountnfs
+    - Move NFS and ramdisk to /mnt/
+    - Set ramdisk size to 5m (normal boot needs 2.3 Mb)
+    - Move /mnt/nfs and /mnt/ram to /root/.dirs
+  * scripts/tcos-top/01busybox:
+    - Hide errors in modprobe nfs and af_packet modules
+  * hooks-addons/00main:
+    - Create empty /etc/modules (needed by 05inittcos)
+  * scripts/tcos-bottom/05inittcos:
+    - Redirect errors in modprobe
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 27 Jan 2008 12:46:02 +0100
+
 initramfs-tools-tcos (0.88.14.4) unstable; urgency=low
 
   * Add max (Ubuntu MAdrid_linuX) to distro list

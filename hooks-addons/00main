@@ -50,6 +50,8 @@ fi
 cpifexists /etc/localtime  /etc/
 cpifexists /etc/adjtime    /etc/
 
+# create (if not exists) empty modules file
+touch      $DESTDIR/etc/modules
 
 cpifexists /lib/libresolv.so.2        /lib/
 cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
