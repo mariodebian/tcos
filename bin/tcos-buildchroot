@@ -16,31 +16,45 @@ fi
 # default settings
 TCOS_ARCH=i386
 TCOS_FLAVOUR=standard
+TCOS_MIRROR="http://www.tcosproject.org"
 
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound rdesktop"
-TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear aumix console-data discover busybox pulseaudio pulseaudio-module-x11 pulseaudio-utils"
+
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound"
+TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear aumix console-data discover"
+TCOS_PACKAGES="${TCOS_PACKAGES} busybox rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils"
 
 # apt options (force-yes)
 APT_OPTS="-y --force-yes"
-
-
-if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-  TCOS_MIRROR=http://archive.ubuntu.com/ubuntu/
-  TCOS_MIRROR2=http://security.ubuntu.com/ubuntu/
-  MIRROR_EXTRAS="universe restricted multiverse"
-  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data console-tools openbsd-inetd tcpd ssh"
-  TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
-  # need kernel modules unionfs and squashfs in linux-ubuntu-modules from distros grather than gutsy
-  if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ];then
-    TCOS_PACKAGES="linux-ubuntu-modules-${TCOS_KERNEL} ${TCOS_PACKAGES}"
-  fi
-else
-  TCOS_MIRROR=http://ftp.de.debian.org/debian
-  MIRROR_EXTRAS=""
-  DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
-fi
 ACTION=
 GENTCOS_OPTS="-tftp"
+MIRROR_EXTRAS=""
+
+UBUNTU_DEF_MIRROR=http://archive.ubuntu.com/ubuntu/
+UBUNTU_DEF_MIRROR2=http://security.ubuntu.com/ubuntu/
+DEBIAN_DEF_MIRROR=http://ftp.de.debian.org/debian/
+
+
+set_conf() {
+    if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+      if [ ! $MIRROR ]; then MIRROR=$UBUNTU_DEF_MIRROR ; fi
+      if [ ! $MIRROR2 ]; then MIRROR2=$UBUNTU_DEF_MIRROR2 ; fi
+      MIRROR_EXTRAS="universe restricted multiverse"
+      DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools"
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi"
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data "
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} console-tools openbsd-inetd tcpd ssh"
+      TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
+      # need kernel modules unionfs and squashfs in linux-ubuntu-modules from distros grather than gutsy
+      if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ];then
+        TCOS_PACKAGES="linux-ubuntu-modules-${TCOS_KERNEL} ${TCOS_PACKAGES}"
+      fi
+    else
+      if [ ! $MIRROR ]; then MIRROR=$DEBIAN_DEF_MIRROR ; fi
+      DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools "
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi "
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
+    fi
+}
 
 # load forced settings for derivatives
 if [ -d /etc/tcos/conf.d/ ]; then
@@ -54,19 +68,32 @@ usage() {
 tcos-buildchroot usage:
 
      Actions:
-           --create                     (Create chroot)
-           --update                     (Update chroot)
-           --install=package1,package2  (Install some packages in chroot)
-           --update-images              (Update chroot TCOS images)
+        --create                     (Create chroot)
+        --update                     (Update chroot)
+        --install=package1,package2  (Install some packages in chroot)
+        --update-images              (Update chroot TCOS images)
 
      Options:
-           --arch=xxx      (Set Architecture of chroot, default: $TCOS_ARCH)
-           --flavour=xxx   (Set flavour of chroot, default: $TCOS_FLAVOUR)  
-           --version=xxx   (Set version of chroot, default: $TCOS_DISTRO)
-           --dir=xxx       (Set dir of chroot, default: $TCOS_CHROOT)
-           --mirror=xxx    (Set mirror of chroot, default: $TCOS_MIRROR)
-           --kversion=xxx  (Set kernel version of chroot, default: $TCOS_KERNEL)
-           --gentcos="xxx" (Set gentcos cmdline options)
+        --arch=xxx           (Set Architecture of chroot, default: $TCOS_ARCH)
+        --flavour=xxx        (Set flavour of chroot, default: $TCOS_FLAVOUR)  
+        --version=xxx        (Set version of chroot, default: $TCOS_DISTRO)
+        --forcedistro=xxx    (Set distro of chroot, default: $DISTRIBUTION)
+        --dir=xxx            (Set dir of chroot, default: $TCOS_CHROOT)
+EOF
+if [ "$DISTRIBUTION" = "ubuntu" ]; then
+cat << EOF
+        --mirror=xxx         (Set mirror of chroot, default: $UBUNTU_DEF_MIRROR)
+        --securitymirror=xxx (Set security mirror of chroot, default: $UBUNTU_DEF_MIRROR2)
+EOF
+else
+cat << EOF
+        --mirror=xxx         (Set mirror of chroot, default: $DEBIAN_DEF_MIRROR)
+EOF
+fi
+cat << EOF
+        --tcosmirror=xxx     (Set mirror of TCOS, default: $TCOS_MIRROR)
+        --kversion=xxx       (Set kernel version of chroot, default: $TCOS_KERNEL)
+        --gentcos="xxx"      (Set gentcos cmdline options)
 
 EOF
 }
@@ -79,30 +106,29 @@ chrootcreate() {
     TMP2="$TMP2 $pkg"
   done
   mkdir -p ${TCOS_CHROOT}
-  echo "Using mirror: ${TCOS_MIRROR}"
  
   if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-    debootstrap --arch "${TCOS_ARCH}" ${TCOS_DISTRO} ${TCOS_CHROOT} ${TCOS_MIRROR}
+    debootstrap --arch "${TCOS_ARCH}" ${TCOS_DISTRO} ${TCOS_CHROOT} ${MIRROR}
   else
     cdebootstrap --arch="${TCOS_ARCH}" --flavour="${TCOS_FLAVOUR}" --include=${TMP} \
-        ${TCOS_DISTRO} ${TCOS_CHROOT} ${TCOS_MIRROR}
+        ${TCOS_DISTRO} ${TCOS_CHROOT} ${MIRROR}
   fi
 
   if [ $? != 0 ]; then echo "Error running debootstrap." ; exit $?; fi
 
   # Add TCOS mirror
-  echo "deb http://www.tcosproject.org $TCOS_DISTRO main" >> ${TCOS_CHROOT}/etc/apt/sources.list
+  echo "deb ${TCOS_MIRROR} $TCOS_DISTRO main" >> ${TCOS_CHROOT}/etc/apt/sources.list
 
   # add extras (universe and multiverse repos)
   if [ "${MIRROR_EXTRAS}" != "" ]; then
-    echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO} ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
-    echo "deb ${TCOS_MIRROR2} ${TCOS_DISTRO}-security main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
-    echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO}-updates main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
+    echo "deb ${MIRROR} ${TCOS_DISTRO} ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
+    echo "deb ${MIRROR2} ${TCOS_DISTRO}-security main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
+    echo "deb ${MIRROR} ${TCOS_DISTRO}-updates main ${MIRROR_EXTRAS}" >> ${TCOS_CHROOT}/etc/apt/sources.list
   fi
   
   # add extra source include in forced settings
-  if [ ! -z ${TCOS_MIRROR_EXTRA} ];then
-    echo ${TCOS_MIRROR_EXTRA} >> ${TCOS_CHROOT}/etc/apt/sources.list
+  if [ ! -z ${MIRROR_EXTRA} ];then
+    echo ${MIRROR_EXTRA} >> ${TCOS_CHROOT}/etc/apt/sources.list
   fi
 
   # add /etc/resolv.conf (some versions of cdebootstrap don't create it)
@@ -117,57 +143,72 @@ chrootcreate() {
   fi
 
 
-if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-  mount --bind /proc ${TCOS_CHROOT}/proc
-  mount --bind /sys ${TCOS_CHROOT}/sys
-  cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-export DEBCONF_FRONTEND="noninteractive"
-apt-get $APT_OPTS update
-DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS tcos-keyring
-apt-get $APT_OPTS update
-DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS ${TMP2} 
-apt-get clean
-EOC
-  umount ${TCOS_CHROOT}/proc
-  umount ${TCOS_CHROOT}/sys
-  cat << EOF > ${TCOS_CHROOT}/pressed
+mount --bind /proc ${TCOS_CHROOT}/proc
+mount --bind /sys ${TCOS_CHROOT}/sys
+
+# pressed linux-image message
+cat << EOF > ${TCOS_CHROOT}/pressed
 linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/lilo-initrd-${TCOS_KERNEL}	boolean	false
 EOF
-  cat << EOC | chroot ${TCOS_CHROOT}
+
+cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
+#!/bin/sh
+exit 0
+CMD
+cat << CMD > ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+#!/bin/sh
+exit 0
+CMD
+chmod +x ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+
+cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
-apt-get update
-debconf-set-selections /pressed
-DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} linux-restricted-modules-${TCOS_KERNEL} ${TCOS_PACKAGES} tcos-extra-modules-${TCOS_KERNEL}
-DEBCONF_FRONTEND="noninteractive" apt-get $APT_OPTS upgrade
+export DEBIAN_FRONTEND="noninteractive"
+apt-get $APT_OPTS update
+apt-get install $APT_OPTS tcos-keyring
+apt-get $APT_OPTS update
+apt-get install $APT_OPTS ${TMP2} 
 apt-get clean
-/etc/init.d/dropbear stop
+debconf-set-selections /pressed
 rm -f /pressed
+apt-get $APT_OPTS upgrade
 EOC
-  # need umount this directory to allow remove later chroot from distros grather than gutsy
-  [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
-else # DISTRO != ubuntu
-  cat << EOF > ${TCOS_CHROOT}/pressed
-linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/lilo-initrd-${TCOS_KERNEL}	boolean	false
-EOF
-  cat << EOC | chroot ${TCOS_CHROOT}
+
+
+
+if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+
+cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
-apt-get update
-DEBCONF_FRONTEND="noninteractive" apt-get install $APT_OPTS tcos-keyring
-apt-get $APT_OPTS update
-debconf-set-selections /pressed
-DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES} linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL}
-DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS upgrade
+export DEBIAN_FRONTEND="noninteractive"
+
+apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} linux-restricted-modules-${TCOS_KERNEL} ${TCOS_PACKAGES} tcos-extra-modules-${TCOS_KERNEL}
 apt-get clean
-/etc/init.d/dropbear stop
+/etc/init.d/dropbear stop || true
+EOC
+# need umount this directory to allow remove later chroot from distros grather than gutsy
+[ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
+  
+######################################
+else # DISTRO != ubuntu
+cat << EOC | chroot ${TCOS_CHROOT}
+export LC_ALL=C
+export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
+export DEBIAN_FRONTEND="noninteractive"
+apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL} ${TCOS_PACKAGES}
+apt-get clean
+/etc/init.d/dropbear stop || true
 rm -f /pressed
 EOC
 fi
+touch ${TCOS_CHROOT}/etc/tcos/chroot
+umount -l ${TCOS_CHROOT}/proc
+umount -l ${TCOS_CHROOT}/sys
 }
 
 
@@ -177,8 +218,8 @@ chrootupdate() {
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
-export DEBCONF_FRONTEND="noninteractive"
-
+export DEBCONF_FRONTEND="dialog"
+export DEBIAN_FRONTEND="dialog"
 [ ! -e /sbin/start-stop-daemon ] && cat << CMD > /sbin/start-stop-daemon
 #!/bin/sh
 CMD
@@ -188,19 +229,20 @@ CMD
 chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
 apt-get update
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-    DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS upgrade
-    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
+    apt-get $APT_OPTS dist-upgrade
+    apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
     # need umount this directory to allow remove later chroot from distros grather than gutsy
     [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
 else
-    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS cdebootstrap
+    apt-get install $APT_OPTS cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-    DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS upgrade
-    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
+    apt-get $APT_OPTS dist-upgrade
+    apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
     dpkg --remove cdebootstrap-helper-diverts
 fi
 apt-get clean
 EOC
+touch ${TCOS_CHROOT}/etc/tcos/chroot
 }
 
 chrootinstallpkg() {
@@ -209,6 +251,7 @@ chrootinstallpkg() {
 export LC_ALL=C
 export LC_MESSAGES=C
 export DEBCONF_FRONTEND="noninteractive"
+export DEBIAN_FRONTEND="noninteractive"
 [ ! -e /sbin/start-stop-daemon ] && cat << CMD > /sbin/start-stop-daemon
 #!/bin/sh
 CMD
@@ -219,11 +262,11 @@ chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
 apt-get update
 
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-    DEBCONF_FRONTEND="dialog"  apt-get $APT_OPTS install $@
+    apt-get $APT_OPTS install $@
 else
-    DEBCONF_FRONTEND="dialog" apt-get install $APT_OPTS cdebootstrap
+    apt-get install $APT_OPTS cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
-    DEBCONF_FRONTEND="dialog" apt-get $APT_OPTS install $@
+    apt-get $APT_OPTS install $@
     dpkg --remove cdebootstrap-helper-diverts
 fi
 apt-get clean
@@ -293,7 +336,7 @@ if [ "$#" = 0 ]; then
 fi
 
 
-OPTIONS=`getopt -o d:ko:r:v --long create,update,install:,update-images,help,version:,arch:,flavour:,dir:,mirror:,kversion:,gentcos:,debug,quiet,verbose -n "$0" -- "$@"`
+OPTIONS=`getopt -o d:ko:r:v --long create,update,install:,update-images,help,version:,forcedistro:,arch:,flavour:,dir:,mirror:,securitymirror:,tcosmirror:,kversion:,gentcos:,debug,quiet,verbose -n "$0" -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "$OPTIONS"
@@ -303,9 +346,12 @@ while true; do
         case "$1" in
                 --help) usage ; exit 0              ;;
                 --version) TCOS_DISTRO=$2; shift 2 ;;
+                --forcedistro) DISTRIBUTION=$2; shift 2;;
                 --arch) TCOS_ARCH=$2 ; shift 2      ;;
                 --flavour) TCOS_FLAVOUR=$2; shift 2 ;;
-                --mirror) TCOS_MIRROR=$2; shift 2    ;;
+                --mirror) MIRROR=$2; shift 2    ;;
+                --securitymirror) MIRROR2=$2; shift 2;;
+                --tcosmirror) TCOS_MIRROR=$2; shift 2    ;;
                 --dir) TCOS_CHROOT=$2 ; shift 2     ;;
                 --kversion) TCOS_KERNEL=$2; shift 2   ;;
                 --gentcos) GENTCOS_OPT=$2; shift 2   ;;
@@ -324,6 +370,21 @@ while true; do
         esac
 done
 
+# load conf with forces settings
+set_conf
+
+# save data in tcos-buildchroot.conf or load if chroot exists
+if [ ! -f ${TCOS_CHROOT}/tcos-buildchroot.conf ]; then
+    mkdir -p ${TCOS_CHROOT}
+    echo "DISTRIBUTION=$DISTRIBUTION" >  ${TCOS_CHROOT}/tcos-buildchroot.conf
+    echo "MIRROR=$MIRROR"             >> ${TCOS_CHROOT}/tcos-buildchroot.conf
+    echo "MIRROR2=$MIRROR2"           >> ${TCOS_CHROOT}/tcos-buildchroot.conf
+    echo "TCOS_MIRROR=$TCOS_MIRROR"   >> ${TCOS_CHROOT}/tcos-buildchroot.conf
+    echo "TCOS_KERNEL=$TCOS_KERNEL"   >> ${TCOS_CHROOT}/tcos-buildchroot.conf
+    echo "TCOS_DISTRO=$TCOS_DISTRO"   >> ${TCOS_CHROOT}/tcos-buildchroot.conf
+else
+    . ${TCOS_CHROOT}/tcos-buildchroot.conf
+fi
 
 if [ "$ACTION" != "" ]; then
   case $ACTION in

@@ -41,11 +41,17 @@ tcos-buildchroot \- TCOS tool to create and manage a TCOS chroot.
 .B --version=etch
  Set Debian/Ubuntu codename of chroot. (NOTE Debian unstable sometimes don\'t work)
 
+.B --forcedistro=ubuntu
+ Set DISTRIBUTION (debian or ubuntu)
+
 .B --dir=/var/lib/tcos/chroot
  Set path where chroot is builded.
 
 .B --mirror=http://ftp.debian.org/debian
  Set an alternate mirror to download packages.
+
+.B --tcosmirror=http://www.tcosproject.org
+ Set an alternate TCOS mirror to download packages.
 
 .B --kversion=2.6.18-5-486
  Set kernel version (recomended use default of TCOS in every Debian/Ubuntu codename)

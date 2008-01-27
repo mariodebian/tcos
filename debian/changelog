@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.88.14.6) unstable; urgency=low
+
+  * bin/gentcos:
+    - Don't show warnings if running in chroot
+  * bin/tcos-buildchroot:
+    - Save settings in chroot/tcos-buildchroot.conf
+    - Allow to install other distributions (ubuntu from debian for example)
+    - Allow to set TCOS mirror or ubuntu security mirror
+    - Enable DEBIAN_FRONTEND again (set to dialog in upgrade) 
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 27 Jan 2008 16:51:38 +0100
+
 initramfs-tools-tcos (0.88.14.5) unstable; urgency=low
 
   * scripts/tcos-top/20mountnfs

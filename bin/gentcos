@@ -72,14 +72,14 @@ WHITE="\033[1;37m"
 
 
 # check for old dirs
-if [ -d /tftpboot/tcos ]  && [ ! -L /tftpboot/tcos ]; then
+if [ ! -e /etc/tcos/chroot ] && [ -d /tftpboot/tcos ]  && [ ! -L /tftpboot/tcos ]; then
    echo ""
    echo "Warning: need to delete /tftpboot/tcos dir to work with this new version."
    echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"
    echo ""
 fi
 
-if [ -d /opt/tcos ]; then
+if [ ! -e /etc/tcos/chroot ] && [ -d /opt/tcos ]; then
    echo ""
    echo "Info:    You can delete /opt/tcos dir"
    echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"
@@ -164,7 +164,7 @@ create_initramfs_nfs() {
 
 
 create_rootfs() {
- if [ ! -f /etc/exports ]; then
+ if [ ! -e /etc/tcos/chroot ] && [ ! -f /etc/exports ]; then
     echo "  Warning:"
     echo "          No NFS server detected and /etc/exports file."
     echo "          Install nfs-kernel-server and put this line into /etc/exports"
@@ -176,7 +176,7 @@ create_rootfs() {
     echo "          Ignore this if you are running with a 32bit chroot."
  fi
 
- if [ "$(grep -c ^${TCOS_VAR} /etc/exports 2>/dev/null)" = "0" ]; then
+ if [ ! -e /etc/tcos/chroot ] && [ "$(grep -c ^${TCOS_VAR} /etc/exports 2>/dev/null)" = "0" ]; then
     echo "  Warning:"
     echo "         TCOS NFS dirs have changed, need to edit /etc/exports"
     echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"
@@ -473,7 +473,7 @@ check_modules() {
 
 
 check_xfs() {
-    if [ ! -f /etc/X11/fs/config ]; then
+    if [ ! -e /etc/tcos/chroot ] && [ ! -f /etc/X11/fs/config ]; then
         echo ""
         echo "WARNING:"
         echo "        TCOS needs a font server, please install xfs package"
@@ -481,7 +481,7 @@ check_xfs() {
         echo ""
     else
       xfs_config=$(grep -c "^no-listen" /etc/X11/fs/config)
-      if [ $xfs_config != 0 ]; then
+      if [ ! -e /etc/tcos/chroot ] && [ $xfs_config != 0 ]; then
         echo "WARNING:"
         echo "        TCOS need a network font server. Please edit /etc/X11/fs/config"
         echo "        search for no-listen = tcp line and put like this:"
