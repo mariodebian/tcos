@@ -8,7 +8,7 @@ Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin,
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.4
 XS-Vcs-Browser: http://trac.tcosproject.org/browser/trunk/initramfs-tools-tcos
-XS-Vcs-Svn: https://forja.rediris.es/svn/cls-tcos/trunk/initramfs-tools-tcos
+XS-Vcs-Svn: https://www.tcosproject.org/svn/tcos/trunk/initramfs-tools-tcos
 
 Package: initramfs-tools-tcos
 Architecture: any
