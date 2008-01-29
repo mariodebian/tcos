@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.88.14.7) unstable; urgency=low
+
+  * scripts/tcos-premount/20hdd:
+    - Change /target with /mnt/tmp (booting from hdd)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 29 Jan 2008 16:23:06 +0100
+
 initramfs-tools-tcos (0.88.14.6) unstable; urgency=low
 
   * bin/gentcos:

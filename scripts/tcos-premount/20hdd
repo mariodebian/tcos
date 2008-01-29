@@ -35,25 +35,23 @@ maybe_break hdd
 _INITRD=$(read_cmdline_var "initrd" "")
 if [ "$_INITRD" = "initrd.gz" ]; then
    # booting from hdd, use usr.squashfs from HDD if exists
-   mkdir -p /target
+   mkdir -p /mnt/tmp
 
    for part in $(grep -e ext3 -e vfat /etc/fstab| awk '{print $1":"$3}'); do
      device=$(echo $part | awk -F":" '{print $1}')
      fs=$(echo $part | awk -F":" '{print $2}')
-     mount -t${fs} ${device} /target
+     mount -t${fs} ${device} /mnt/tmp
 
-     if [ -f /target/usr.squashfs ]; then
-       USR_SQUASH=/target/usr.squashfs
+     if [ -f /mnt/tmp/usr.squashfs ]; then
+       USR_SQUASH=/mnt/tmp/usr.squashfs
        _log "SQMOUNT found usr.squashfs in $device "
-       ln -s /target/usr.squashfs /mnt/tmp/usr.squashfs
        break
-     elif [ -f /target/usr-$(uname -r).squashfs ]; then
-       USR_SQUASH=/target/usr-$(uname -r).squashfs
+     elif [ -f /mnt/tmp/usr-$(uname -r).squashfs ]; then
+       USR_SQUASH=/mnt/tmp/usr-$(uname -r).squashfs
        _log "SQMOUNT found usr-$(uname -r).squashfs in $device "
-       ln -s /target/usr-$(uname -r).squashfs /mnt/tmp/usr.squashfs
        break
      else
-       umount /target        
+       umount /mnt/tmp
      fi
    done
 fi
