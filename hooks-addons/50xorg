@@ -115,6 +115,7 @@ if [ $XORG = 6 ]; then
  cp -ra /usr/X11R6/lib/modules/extensions/lib*.so $DESTDIR/usr/X11R6/lib/modules/extensions/
  # delete nvidia/ati glx module
  rm -f $DESTDIR/usr/X11R6/lib/modules/libglx.so
+ rm -f $DESTDIR/usr/X11R6/lib/modules/libwfb.so
  rm -rf $DESTDIR/usr/X11R6/lib/modules/extensions/libGLcore.so
  # delete vnc extension
  rm -f $DESTDIR/usr/X11R6/lib/modules/libvnc.so
@@ -127,6 +128,7 @@ if [ $XORG = 6 ]; then
        if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/X11R6/lib/modules/extensions
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/X11R6/lib/modules/extensions
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/X11R6/lib/modules/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
           #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
           _echo "       * OpenGL use cached fix-nvidia-ati libs"
@@ -169,6 +171,7 @@ else # Xorg 7.x
  cp -ra /usr/lib/xorg/modules/extensions/lib*.so $DESTDIR/usr/lib/xorg/modules/extensions/
  # delete nvidia/ati glx module
  rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so
+ rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so
  rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
  
  # delete vnc extension
@@ -183,6 +186,7 @@ else # Xorg 7.x
           rm -rf $DESTDIR/usr/lib/libGL.so*
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
           #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
           _echo "       * OpenGL use cached fix-nvidia-ati libs"

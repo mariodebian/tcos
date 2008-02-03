@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.88.14.8) unstable; urgency=low
+
+  * Add libwfb.so file to fix-nvidia-atu hack (need to rerun gentcos -fix-nvidia-ati)
+  * Update Debian Unstable kernel to 2.6.24-1
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 03 Feb 2008 15:31:23 +0100
+
 initramfs-tools-tcos (0.88.14.7) unstable; urgency=low
 
   * scripts/tcos-premount/20hdd:
