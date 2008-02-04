@@ -51,11 +51,13 @@ static xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   else {  
     /* need XAUTH first */
     xauth_ok=handle_xauth(cookie,hostname);
-    if( xauth_ok != XAUTH_OK )
-      return xmlrpc_build_value(env, "s", "error: xauth access denied" );
+    if( xauth_ok != XAUTH_OK ) {
+          dbgtcos("tcos_devices() error: xauth access denied :::::: err number: %d\n", xauth_ok);
+          return xmlrpc_build_value(env, "s", "error: xauth access denied" );
+      }
   }
 
-   dbgtcos("tcosxmlrpc::tcos_devices() exec=\"%s %s %s\"\n", DEVICES_WRAPPER, option, cmdline);
+   /*dbgtcos("tcosxmlrpc::tcos_devices() exec=%s %s %s \n", DEVICES_WRAPPER, option, cmdline);*/
 
    snprintf( (char*) mycmd, BSIZE, "%s %s %s", DEVICES_WRAPPER, option, cmdline);
 
@@ -67,6 +69,8 @@ static xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    strncpy(line, DEVICES_ERROR, BSIZE);
 
    fgets( line, sizeof line, fp);
+   dbgtcos("tcosxmlrpc::tcos_devices(%s) = %s \n", mycmd, line);
+
    if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", DEVICES_READING_ERROR);
 

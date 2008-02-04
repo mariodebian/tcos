@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.88.14.9) unstable; urgency=low
+
+  * xmlrpc/xauth.[ch]:
+    - Add mkstemp file to create xauth (don't fail with concurrect connections)
+  * xmlrpc/devices.c
+    - Add more debug output (error codes)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 04 Feb 2008 20:15:08 +0100
+
 initramfs-tools-tcos (0.88.14.8) unstable; urgency=low
 
   * Add libwfb.so file to fix-nvidia-atu hack (need to rerun gentcos -fix-nvidia-ati)

@@ -13,6 +13,7 @@
 
 
 
+
 struct ip_address check_ip_address(char *data) {
   struct ip_address ip;
   /*
@@ -28,15 +29,15 @@ struct ip_address check_ip_address(char *data) {
   dbgtcos("tcosxmlrpc::is_ip() comparing %s with %s ...\n", data, ip.ipstr);
 
   if ( strcmp(data, ip.ipstr) == 0 ) { 
-    dbgtcos("tcosxmlrpc::is_ip() True ...\n");
+    /*dbgtcos("tcosxmlrpc::is_ip() True ...\n");*/
     ip.is_ip=1;
   }
   else {
-    dbgtcos("tcosxmlrpc::is_ip() ip.data[0]=%d\n", ip.data[0]);
+    /*dbgtcos("tcosxmlrpc::is_ip() ip.data[0]=%d\n", ip.data[0]);
     dbgtcos("tcosxmlrpc::is_ip() ip.data[1]=%d\n", ip.data[1]);
     dbgtcos("tcosxmlrpc::is_ip() ip.data[2]=%d\n", ip.data[2]);
     dbgtcos("tcosxmlrpc::is_ip() ip.data[3]=%d\n", ip.data[3]);
-    dbgtcos("tcosxmlrpc::is_ip() False ...\n");
+    dbgtcos("tcosxmlrpc::is_ip() False ...\n");*/
     ip.is_ip=0;
   }
   return ip;
@@ -47,18 +48,19 @@ struct ip_address check_ip_address(char *data) {
 int
 handle_xauth( char *cookie , char *servername)
 {
-  char host[BSIZE];
-  char displayname[BSIZE];
-  Display* displ;
-  int found = 0, i;
-  char cmd[BSIZE];
-  struct ip_address ip;
+    char host[BSIZE];
+    char displayname[BSIZE];
+    Display* displ;
+    int found = 0, i;
+    char cmd[BSIZE];
+    struct ip_address ip;
+    char xauth_file[]="/tmp/.tmpxauthXXXXXX";
 
-  dbgtcos("tcosxmlrpc::handle_auth() cookie=%s server=%s\n" ,cookie, servername);
+    dbgtcos("tcosxmlrpc::handle_auth() cookie=%s server=%s\n" ,cookie, servername);
 
     /* read my hostname */
     gethostname(host, BSIZE);
-    dbgtcos("tcosxmlrpc::handle_xauth() gethostname=%s\n", host);
+    /*dbgtcos("tcosxmlrpc::handle_xauth() gethostname=%s\n", host);*/
 
     /* check if servername is an IP address (see xauth.h for struct) */
     ip=check_ip_address(servername);
@@ -67,7 +69,7 @@ handle_xauth( char *cookie , char *servername)
     if (ip.is_ip == 0) {
        if ( strcmp (servername, host) != 0 ) {
          dbgtcos("tcosxmlrpc::handle_xauth() ERROR servername != hostname\n");
-         return(XAUTH_ERROR);
+         return(XAUTH_BAD_HOSTNAME);
        }
        dbgtcos("tcosxmlrpc::handle_xauth() not ip using hostname\n");
     }
@@ -76,22 +78,28 @@ handle_xauth( char *cookie , char *servername)
         snprintf(host, BSIZE, "%s", ip.ipstr);
     }
 
-    snprintf ( (char*) cmd, BSIZE, "xauth -q -f /tmp/.tmpxauth add %s:0 MIT-MAGIC-COOKIE-1 %s >/dev/null 2>&1", host, cookie);
+
+    /* create a temp file name to use with xauth */
+    mkstemp(xauth_file);
+
+    /*dbgtcos("tcosxmlrpc::handle_xauth() xauth_file=%s\n", xauth_file);*/
+
+    snprintf ( (char*) cmd, BSIZE, "xauth -q -f %s add %s:0 MIT-MAGIC-COOKIE-1 %s >/dev/null 2>&1", xauth_file, host, cookie);
 
     dbgtcos("tcosxmlrpc::handle_xauth() cmd=\"%s\"\n", cmd);
 
-    unlink("/tmp/.tmpxauth");
+    unlink(xauth_file);
     system(cmd);
 
-    setenv("XAUTHORITY", "/tmp/.tmpxauth", 1);          /* for XOpenDisplay */
+    setenv("XAUTHORITY", xauth_file, 1);          /* for XOpenDisplay */
 
-    dbgtcos("tcosxmlrpc::handle_xauth() XAUTHORITY=%s \n", getenv("XAUTHORITY"));
+    /*dbgtcos("tcosxmlrpc::handle_xauth() XAUTHORITY=%s \n", getenv("XAUTHORITY"));*/
 
 
     for (i = 0; i < 1; i++) {
       snprintf(displayname, BSIZE, "%s:%d", host, i);               /* displayify it */
 
-      dbgtcos("tcosxmlrpc::handle_xauth() trying to connect to %s\n", displayname);
+      /*dbgtcos("tcosxmlrpc::handle_xauth() trying to connect to %s\n", displayname);*/
 
       displ = XOpenDisplay(displayname);
 
@@ -103,14 +111,15 @@ handle_xauth( char *cookie , char *servername)
     } /* end of for */
 
     unlink(XauFileName());                              /* delete file */
+    unlink(xauth_file);
     unsetenv("XAUTHORITY");				/* unset environment XAUTH */
 
     if (!found) {
-      dbgtcos("error openning DISPLAY \n");
+      dbgtcos("error openning DISPLAY to server %s\n", displayname);
       return(XAUTH_ERROR);
     }
 
-    dbgtcos("tcosxmlrpc::handle_xauth() AUTH ok.\n");  
+    /*dbgtcos("tcosxmlrpc::handle_xauth() connect to %s AUTH ok.\n", displayname);*/
 
   return(XAUTH_OK);
 }

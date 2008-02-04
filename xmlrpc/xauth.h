@@ -1,7 +1,11 @@
 #define XAUTH_OK 0
 #define XAUTH_ERROR 1
-#define XAUTH_FAIL -1
+#define XAUTH_FAIL 2
+#define XAUTH_TIMEOUT 3
+#define XAUTH_BAD_HOSTNAME 4
 #define IP_LENGHT 1024
+
+
 
 
 #ifndef __XAUTH_H__
@@ -21,3 +25,4 @@ int setenv(const char *nombre, const char *valor, int sobrescribir);
 void unsetenv(const char *nombre);
 int handle_xauth( char *cookie , char *servername);
 int snprintf(char *str, size_t size, const char *format, ...);
+char *mkstemp(char *template);
