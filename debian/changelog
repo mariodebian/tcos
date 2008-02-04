@@ -8,8 +8,9 @@ initramfs-tools-tcos (0.88.14.8) unstable; urgency=low
     - unset tmp env var XAUTHORITY
   * xmlrpc/sh/devicesctl.sh:
     - Don't fail if already mounted
+  * Update Debian etch kernel to 2.6.18-6
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 04 Feb 2008 12:25:36 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 04 Feb 2008 15:09:12 +0100
 
 initramfs-tools-tcos (0.88.14.7) unstable; urgency=low
 
