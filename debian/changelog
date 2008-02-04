@@ -2,8 +2,14 @@ initramfs-tools-tcos (0.88.14.8) unstable; urgency=low
 
   * Add libwfb.so file to fix-nvidia-atu hack (need to rerun gentcos -fix-nvidia-ati)
   * Update Debian Unstable kernel to 2.6.24-1
+  * xmlrpc/exe.h:
+    - Add XAUTHORITY=/root/.Xauthority to thin client
+  * xmlrpc/xauth.c:
+    - unset tmp env var XAUTHORITY
+  * xmlrpc/sh/devicesctl.sh:
+    - Don't fail if already mounted
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 03 Feb 2008 15:31:23 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 04 Feb 2008 12:25:36 +0100
 
 initramfs-tools-tcos (0.88.14.7) unstable; urgency=low
 

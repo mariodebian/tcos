@@ -22,7 +22,7 @@
  #define DISPLAY "DISPLAY=:0 XAUTHORITY=/home/$("STANDALONE_USER")/.Xauthority"
  #define CMD_WRAPPER DISPLAY" /usr/lib/tcos/daemonize.sh "
 #else
- #define DISPLAY "DISPLAY=:0"
+ #define DISPLAY "DISPLAY=:0 XAUTHORITY=/root/.Xauthority"
  #define CMD_WRAPPER DISPLAY" /sbin/daemonize.sh "
 #endif
 

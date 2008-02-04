@@ -28,6 +28,7 @@ struct ip_address check_ip_address(char *data) {
   dbgtcos("tcosxmlrpc::is_ip() comparing %s with %s ...\n", data, ip.ipstr);
 
   if ( strcmp(data, ip.ipstr) == 0 ) { 
+    dbgtcos("tcosxmlrpc::is_ip() True ...\n");
     ip.is_ip=1;
   }
   else {
@@ -35,6 +36,7 @@ struct ip_address check_ip_address(char *data) {
     dbgtcos("tcosxmlrpc::is_ip() ip.data[1]=%d\n", ip.data[1]);
     dbgtcos("tcosxmlrpc::is_ip() ip.data[2]=%d\n", ip.data[2]);
     dbgtcos("tcosxmlrpc::is_ip() ip.data[3]=%d\n", ip.data[3]);
+    dbgtcos("tcosxmlrpc::is_ip() False ...\n");
     ip.is_ip=0;
   }
   return ip;
@@ -64,11 +66,13 @@ handle_xauth( char *cookie , char *servername)
     /* compare with cookie hostname */
     if (ip.is_ip == 0) {
        if ( strcmp (servername, host) != 0 ) {
-         dbgtcos("tcosxmlrpc::handle_xauth() ERROR servername != hostname");
+         dbgtcos("tcosxmlrpc::handle_xauth() ERROR servername != hostname\n");
          return(XAUTH_ERROR);
        }
+       dbgtcos("tcosxmlrpc::handle_xauth() not ip using hostname\n");
     }
     else {
+        dbgtcos("tcosxmlrpc::handle_xauth() ip True\n");
         snprintf(host, BSIZE, "%s", ip.ipstr);
     }
 
@@ -99,6 +103,7 @@ handle_xauth( char *cookie , char *servername)
     } /* end of for */
 
     unlink(XauFileName());                              /* delete file */
+    unsetenv("XAUTHORITY");				/* unset environment XAUTH */
 
     if (!found) {
       dbgtcos("error openning DISPLAY \n");
@@ -132,7 +137,7 @@ static xmlrpc_value *tcos_xauth(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   if( xauth_ok != XAUTH_OK )
     return xmlrpc_build_value(env, "s", "xauth: error access denied" );
 
-  return xmlrpc_build_value(env, "s", "xauth: access OK " );
+  return xmlrpc_build_value(env, "s", "xauth: access OK" );
 }
 
 

@@ -39,7 +39,6 @@ http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=2032
 #define OLD_VERSION_MINOR 920
 
 #if XMLRPC_VERSION_MAYOR > OLD_VERSION_MAYOR || ( (XMLRPC_VERSION_MAYOR == OLD_VERSION_MAYOR) && (XMLRPC_VERSION_MINOR > OLD_VERSION_MINOR) )
-    /*#warning "########### WARNING ######### NEWAPI > 0.9.20 not good tested ###########"*/
     #define NEWAPI 1
     #include <xmlrpc_server.h>
 #endif

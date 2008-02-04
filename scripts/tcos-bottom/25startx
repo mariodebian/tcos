@@ -33,6 +33,7 @@ maybe_break startx
 
 modprobe -q mousedev 2>&1 >> /tmp/initramfs.debug
 modprobe -q psmouse  2>&1 >> /tmp/initramfs.debug
+modprobe -q agpgart  2>&1 >> /tmp/initramfs.debug
 
 
 
@@ -54,7 +55,7 @@ if [ ! -f $XAUTHORITY ]; then
     xauth -f $XAUTHORITY -q add ${MYIP}:0               MIT-MAGIC-COOKIE-1 $cookie 2>> /tmp/initramfs.debug
     # for new LTSPFS
     echo $cookie > /var/run/ltspfs_token
-    xauth list >> /tmp/initramfs.debug
+    #xauth list >> /tmp/initramfs.debug
     _log "STARTX end cookie"
   log_end_msg
 fi

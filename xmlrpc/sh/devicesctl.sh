@@ -84,6 +84,10 @@ if [ "$1" = "--mount" ]; then
   [ -x /bin/ltspfs-set-xprop ] && /bin/ltspfs-set-xprop now 2>&1 >> /tmp/initramfs.debug
   if [ "$2" != "" ]; then
       mnt=$(basename $2)
+      if [ $(grep -c /mnt/$mnt /proc/mounts) != 0 ]; then
+        echo -n "/mnt/$mnt"
+        return
+      fi
       cdrom=$(is_cdrom $mnt)
       fs=""
       if [ "$3" != "" ]; then
