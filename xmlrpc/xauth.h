@@ -18,5 +18,6 @@ typedef struct ip_address {
 
 int gethostname(char *name, size_t len);
 int setenv(const char *nombre, const char *valor, int sobrescribir);
+void unsetenv(const char *nombre);
 int handle_xauth( char *cookie , char *servername);
 int snprintf(char *str, size_t size, const char *format, ...);
