@@ -51,10 +51,11 @@ handle_xauth( char *cookie , char *servername)
     char host[BSIZE];
     char displayname[BSIZE];
     Display* displ;
-    int found = 0, i;
+    int found = 0;
     char cmd[BSIZE];
     struct ip_address ip;
     char xauth_file[]="/tmp/.tmpxauthXXXXXX";
+    FILE *fp;
 
     dbgtcos("tcosxmlrpc::handle_auth() cookie=%s server=%s\n" ,cookie, servername);
 
@@ -79,7 +80,6 @@ handle_xauth( char *cookie , char *servername)
     }
 
 
-    /* create a temp file name to use with xauth */
     mkstemp(xauth_file);
 
     /*dbgtcos("tcosxmlrpc::handle_xauth() xauth_file=%s\n", xauth_file);*/
@@ -89,29 +89,23 @@ handle_xauth( char *cookie , char *servername)
     dbgtcos("tcosxmlrpc::handle_xauth() cmd=\"%s\"\n", cmd);
 
     unlink(xauth_file);
-    system(cmd);
+    fp=(FILE*)popen(cmd, "r");
+    pclose(fp);
 
-    setenv("XAUTHORITY", xauth_file, 1);          /* for XOpenDisplay */
+    setenv("XAUTHORITY", xauth_file, 1);          /* for XOpenDisplay */ 
 
     /*dbgtcos("tcosxmlrpc::handle_xauth() XAUTHORITY=%s \n", getenv("XAUTHORITY"));*/
 
 
-    for (i = 0; i < 1; i++) {
-      snprintf(displayname, BSIZE, "%s:%d", host, i);               /* displayify it */
+    snprintf(displayname, BSIZE, "%s:0", host);               /* displayify it */
+    displ = XOpenDisplay(displayname);
 
-      /*dbgtcos("tcosxmlrpc::handle_xauth() trying to connect to %s\n", displayname);*/
+    if (displ) {
+      found++;
+      XCloseDisplay(displ);                           /* close display */
+    }
 
-      displ = XOpenDisplay(displayname);
-
-      if (displ) {
-        found++;
-        XCloseDisplay(displ);                           /* close display */
-        break;
-      }
-    } /* end of for */
-
-    unlink(XauFileName());                              /* delete file */
-    unlink(xauth_file);
+    unlink(xauth_file);					/* delete XAUTHORITY temp file */
     unsetenv("XAUTHORITY");				/* unset environment XAUTH */
 
     if (!found) {
@@ -121,7 +115,7 @@ handle_xauth( char *cookie , char *servername)
 
     /*dbgtcos("tcosxmlrpc::handle_xauth() connect to %s AUTH ok.\n", displayname);*/
 
-  return(XAUTH_OK);
+    return(XAUTH_OK);
 }
 
 

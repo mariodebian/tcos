@@ -4,8 +4,11 @@ initramfs-tools-tcos (0.88.14.9) unstable; urgency=low
     - Add mkstemp file to create xauth (don't fail with concurrect connections)
   * xmlrpc/devices.c
     - Add more debug output (error codes)
+  * xmlrpc/xauth.c xmlrpc/xauth.h
+    - Use popen to write tmp cookie
+    - Remove for loop 
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 04 Feb 2008 20:15:08 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 04 Feb 2008 22:52:06 +0100
 
 initramfs-tools-tcos (0.88.14.8) unstable; urgency=low
 

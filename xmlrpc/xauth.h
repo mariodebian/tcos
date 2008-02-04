@@ -26,3 +26,5 @@ void unsetenv(const char *nombre);
 int handle_xauth( char *cookie , char *servername);
 int snprintf(char *str, size_t size, const char *format, ...);
 char *mkstemp(char *template);
+FILE *popen(const char *orden, const char *tipo);
+int pclose(FILE *flujo);
