@@ -1,22 +1,23 @@
-/*# lockkeybmouse.c method that lock unlock and get status of screen 2006-09-09 14:22:40 mariodebian $
-#
-# This file is part of tcosxmlrpc.
-#
-# tcosxmlrpc is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# tcosxmlrpc is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with tcosxmlrpc; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-# USA.
+/*
+* lockkeybmouse.c part of tcosxmlrpc
+*   => method that lock unlock and get status of screen
+* Copyright (C) 2008  vidal_joshur at gva.es
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 
 
 #if NEWAPI
@@ -45,7 +46,7 @@ static xmlrpc_value *tcos_lockkeybmouse(xmlrpc_env *env, xmlrpc_value *in, void 
   else
     job_exe("lockkeybmouse");
 
-  return xmlrpc_build_value(env, "s", "OK" );  
+  return xmlrpc_build_value(env, "s", "OK" );
 }
 
 #if NEWAPI
@@ -69,9 +70,7 @@ static xmlrpc_value *tcos_unlockkeybmouse(xmlrpc_env *env, xmlrpc_value *in, voi
     return xmlrpc_build_value(env, "s", login_ok );
 
   system("killall lockkeybmouse");
-  return xmlrpc_build_value(env, "s", "OK" );  
+  return xmlrpc_build_value(env, "s", "OK" );
 }
-
-
 
 

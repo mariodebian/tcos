@@ -1,21 +1,21 @@
-/*# info.c method that get system info based on /proc 2006-09-09 14:22:40 mariodebian $
-#
-# This file is part of tcosxmlrpc.
-#
-# tcosxmlrpc is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# tcosxmlrpc is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with tcosxmlrpc; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-# USA.
+/*
+* info.c part of tcosxmlrpc
+*   => method that get system info based on /proc
+* Copyright (C) 2006,2007,2008  mariodebian at gmail
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include "info.h"
@@ -99,7 +99,7 @@ static xmlrpc_value *tcos_info(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   else if ( strcmp(info, "network_tx" ) == 0)
       fp=(FILE*)popen(NETWORK_TX, "r");
 
-  /* MODULES METHODS */  
+  /* MODULES METHODS */
   else if ( strcmp(info, "modules_loaded" ) == 0)
       fp=(FILE*)popen(MODULES_LOADED, "r");
   else if ( strcmp(info, "modules_notfound" ) == 0)
@@ -120,7 +120,7 @@ static xmlrpc_value *tcos_info(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   dbgtcos("tcosxmlrpc::tcos_info() line=\"%s\"\n", line);
 
   pclose(fp);
-  return xmlrpc_build_value(env, "s", line );  
+  return xmlrpc_build_value(env, "s", line );
 }
 
 

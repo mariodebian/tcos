@@ -9,8 +9,9 @@ initramfs-tools-tcos (0.88.14.9) unstable; urgency=low
     - Remove for loop
   * xmlrpc/*:
     - Reorganize code, move some functions to common.c and defines to common.h
+  * Fix some license typos (tcos is GPL2+)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 05 Feb 2008 18:13:09 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 05 Feb 2008 23:49:36 +0100
 
 initramfs-tools-tcos (0.88.14.8) unstable; urgency=low
 

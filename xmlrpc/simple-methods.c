@@ -1,22 +1,22 @@
-/*# simeple-methods.c  2006-09-09 14:22:40 mariodebian $
-#
-# This file is part of tcosxmlrpc.
-#
-# tcosxmlrpc is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# tcosxmlrpc is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with tcosxmlrpc; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-# USA.
+/*
+* simple-methods.c part of tcosxmlrpc
+* Copyright (C) 2006,2007,2008  mariodebian at gmail
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 
 /* tcosxmlrpc simple methods */
 
@@ -67,7 +67,7 @@ static xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_
    if (env->fault_occurred)
 	return xmlrpc_build_value(env, "s", "params error");
 
-   dbgtcos("tcosxmlrpc::tcos_status() pidof %s\n", app);   
+   dbgtcos("tcosxmlrpc::tcos_status() pidof %s\n", app);
    snprintf( (char*) &cmd, BUFF_SIZE, "pidof %s| grep [1234567890] | wc -l" ,app);
    dbgtcos("tcosxmlrpc::tcos_status() exec cmd=\"%s\"\n", cmd);
 
@@ -80,7 +80,7 @@ static xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_
    dbgtcos( "tcosxmlrpc::tcos_status() ret value=%s\n", ret);
    pclose(fp);
 
-   if (ret != NULL)   
+   if (ret != NULL)
        return xmlrpc_build_value(env, "s", ret);
    else
        return xmlrpc_build_value(env, "s", "error");

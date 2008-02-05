@@ -1,23 +1,23 @@
-/*xorg.c througt configurexorg script make some actions and get info
-#  2006-09-09 14:22:40 mariodebian $
-#
-# This file is part of tcosxmlrpc.
-#
-# tcosxmlrpc is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# tcosxmlrpc is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with tcosxmlrpc; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-# USA.
+/*
+* xorg.c part of tcosxmlrpc
+*   => througt configurexorg script make some actions and get info
+* Copyright (C) 2006,2007,2008  mariodebian at gmail
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 
 #include "xorg.h"
 
@@ -35,7 +35,7 @@ static xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *user;
   char *pass;
   char *login_ok;
-  
+
 
   /* read what option and cmdline params need */
   xmlrpc_parse_value(env, in, "(ssss)", &option, &cmdline, &user, &pass);
@@ -105,7 +105,7 @@ static xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
         return xmlrpc_build_value(env, "s", XORG_READING_ERROR);
 
    pclose(fp);
-   return xmlrpc_build_value(env, "s", line );  
+   return xmlrpc_build_value(env, "s", line );
   }
 
 
@@ -114,7 +114,6 @@ static xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   }
 
 }
-
 
 
 

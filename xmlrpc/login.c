@@ -1,27 +1,26 @@
-/*# login.c method that AUTH remote XMLRPC 2006-09-09 14:22:40 mariodebian $
-#
-# This file is part of tcosxmlrpc.
-#
-# tcosxmlrpc is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# tcosxmlrpc is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with tcosxmlrpc; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-# USA.
+/*
+* login.c part of tcosxmlrpc
+*   => method that AUTH remote XMLRPC
+* Copyright (C) 2006,2007,2008  mariodebian at gmail
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 
 #include "login.h"
 #include "validate.c"
-
-
 
 
 #if NEWAPI
@@ -33,7 +32,7 @@ static xmlrpc_value *tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *login_ok;
   char *user;
   char *pass;
-  
+
 
   xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
 
@@ -61,7 +60,7 @@ static xmlrpc_value *tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   else if (  strcmp(login_ok,  LOGIN_EXPIRED ) == 0 )
     return xmlrpc_build_value(env, "s", LOGIN_EXPIRED_MSG);
     
-  return xmlrpc_build_value(env, "s", LOGIN_ERROR);  
+  return xmlrpc_build_value(env, "s", LOGIN_ERROR);
 }
 
 
