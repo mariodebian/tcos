@@ -140,7 +140,7 @@ fi
 
 if [ "$1" = "--getstatus" ]; then
  if [ "$2" != "" ]; then
-   output=$(grep -c ^$2 /proc/mounts)
+   output=$(grep -c "^$2 " /proc/mounts)
  else
    output="error: need a device"
  fi

@@ -20,9 +20,6 @@
 
 #define NO_ALLOWED "error: access denied"
 
-#ifndef BSIZE
-#define BSIZE 500
-#endif
 
 #define LOGIN_OK_MSG      "ok"
 #define LOGIN_NOUSER_MSG  "error: User not allowed"

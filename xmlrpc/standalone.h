@@ -43,6 +43,4 @@
 
 
 
-FILE *popen(const char *orden, const char *tipo);
-int pclose(FILE *flujo);
 

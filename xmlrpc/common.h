@@ -1,4 +1,4 @@
-/*vnc.h common headers  2006-09-09 14:22:40 mariodebian $
+/*# common.h  2006-09-09 14:22:40 mariodebian $
 #
 # This file is part of tcosxmlrpc.
 #
@@ -19,9 +19,35 @@
 */
 
 
-/* xmlrpc methods of VNC server and client */
-#define VNC_CONTROLLER TCOS_PATH"/vnc-controller.sh "
 
-#define VNC_ERROR "error: vnc command error"
-#define VNC_OK "ok"
+#ifndef __COMMON_H__
 
+#define IP_LENGHT 1024
+#ifndef BSIZE
+#define BSIZE 500
+#endif
+#define MY_IP_ADDRESS       TCOS_PATH"/getinfo.sh -i NETWORK_IP"
+
+
+typedef struct ip_address {
+  int data[4] ;
+  int is_ip;
+  char ipstr[IP_LENGHT];
+} ip ;
+
+#define  __COMMON_H__
+
+
+
+FILE *popen(const char *orden, const char *tipo);
+int pclose(FILE *flujo);
+
+int gethostname(char *name, size_t len);
+int setenv(const char *nombre, const char *valor, int sobrescribir);
+void unsetenv(const char *nombre);
+
+char *mkstemp(char *template);
+int snprintf(char *str, size_t size, const char *format, ...);
+
+
+#endif

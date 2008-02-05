@@ -2,8 +2,8 @@
 
 # timer to clean some big logs
 
-# empty file if size is more than 256 Kb
-MAX_SIZE=256
+# empty file if size is more than 52 Kb
+MAX_SIZE=52
 
 while [ 1 ]; do
 

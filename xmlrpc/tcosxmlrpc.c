@@ -18,12 +18,6 @@
 # USA.
 */
 
-/* 
-
-Incompatible pointer types error
-http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=20325
-
-*/
 
 
 
@@ -53,7 +47,7 @@ http://www.elrincondelc.com/portal/modules.php?name=Forums&file=viewtopic&p=2032
 /* My TCOS includes */
 
 #include "debug.c"
-
+#include "common.c"
 
 #include "login.c"
 #include "xauth.c"

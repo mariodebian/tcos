@@ -27,11 +27,12 @@
 *     TCOS_DEBUG=1 ./debug  print some debug strings
 */
 
-
+/*
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+*/
 
 /* variable argument list */
 #include <stdarg.h>

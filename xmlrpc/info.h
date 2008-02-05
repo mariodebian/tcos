@@ -74,6 +74,4 @@
 #define INFO_ERROR  "error: info command failure"
 
 
-FILE *popen(const char *orden, const char *tipo);
-int pclose(FILE *flujo);
 

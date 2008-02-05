@@ -18,7 +18,10 @@
 # USA.
 */
 
+/*
 #include <stdio.h>
+*/
+
 #include "exe.h"
 
 

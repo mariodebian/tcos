@@ -6,9 +6,11 @@ initramfs-tools-tcos (0.88.14.9) unstable; urgency=low
     - Add more debug output (error codes)
   * xmlrpc/xauth.c xmlrpc/xauth.h
     - Use popen to write tmp cookie
-    - Remove for loop 
+    - Remove for loop
+  * xmlrpc/*:
+    - Reorganize code, move some functions to common.c and defines to common.h
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 04 Feb 2008 22:52:06 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 05 Feb 2008 18:13:09 +0100
 
 initramfs-tools-tcos (0.88.14.8) unstable; urgency=low
 

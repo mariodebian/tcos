@@ -20,6 +20,7 @@
 
 #include "sound.h"
 
+
 #if NEWAPI
 static xmlrpc_value *tcos_sound(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
@@ -36,6 +37,8 @@ static xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *login_ok;
   char hostname[BSIZE];
   int xauth_ok;
+  struct ip_address ip;
+  char ip_string[BSIZE];
 
   dbgtcos("tcosxmlrpc::tcos_sound() Init \n");
 
@@ -45,10 +48,15 @@ static xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
         return xmlrpc_build_value(env, "s", "params error");
 
   gethostname(hostname,BSIZE);
+  fp=(FILE*)popen(MY_IP_ADDRESS, "r");
+  fgets( ip_string, sizeof ip_string, fp);
+  pclose(fp);
+
+  ip=check_ip_address(ip_string);
 
   dbgtcos("tcosxmlrpc::tcos_sound() option=%s cmdline=%s user=%s pass=%s\n", option, cmdline, user, pass);
 
-  if (strcmp(pass, hostname ) == 0 ) {
+  if ( (strcmp(pass, hostname ) == 0) || (strcmp(pass, ip.ipstr) == 0) ) {
     /* need XAUTH first */
     xauth_ok=handle_xauth(user,pass);
     if( xauth_ok != XAUTH_OK )

@@ -42,22 +42,6 @@
 #include "validate-tcos.c"
 
 
-int
-check_for_file(char *fname)
-{
-/* return 0 if not found or cant read or 1 if found */
-
- FILE *fptemp;
- fptemp = fopen(fname,"r");
- if (!fptemp) {
-    dbgtcos("info check_for_file(): File \"%s\" not found or cant read.\n", fname);
-    return 0;
- }
- else
-    dbgtcos("info check_for_file(): File \"%s\" found.\n", fname);
-   return 1;
-}
-
 
 char
 *validate_login(char *user, char*pw)
