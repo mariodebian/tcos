@@ -33,6 +33,7 @@ cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/050_tcos_devices.rules  /etc/u
 
 # with new kernels (>= 2.6.22) need mount/umount events
 cpifexists ${TCOS_BINS}/mount-listener           /usr/sbin/
+cpifexists ${TCOS_BINS}/save-udev.sh             /usr/sbin/
 cpifexists ${TCOS_BINS}/listener-daemon.sh       /usr/sbin/
 
 # need udevinfo in listener-daemon.sh

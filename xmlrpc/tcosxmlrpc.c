@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 
 #include <xmlrpc.h>
 #include <xmlrpc_abyss.h>

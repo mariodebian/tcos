@@ -1,5 +1,5 @@
 all:
-	gcc -o mount-listener mount_listener.c
+	gcc -Wall -o mount-listener mount_listener.c
 
 include ../common.mk
 
@@ -11,7 +11,8 @@ install:
 	install -m 755 tcos-udevd.sh          $(DESTDIR)$(TCOS_BINS)/
 	install -m 755 mount-listener         $(DESTDIR)$(TCOS_BINS)/
 	install -m 755 listener-daemon.sh     $(DESTDIR)$(TCOS_BINS)/
+	install -m 755 save-udev.sh           $(DESTDIR)$(TCOS_BINS)/
 	install -m 644 050_tcos_devices.rules $(DESTDIR)$(TCOS_XMLRPC_DIR)/
 
 clean:
-	rm -f *.pyc *~ mount-listener
+	rm -f *.pyc *~ mount-listener proc_mounts

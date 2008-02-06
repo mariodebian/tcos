@@ -1,3 +1,18 @@
+initramfs-tools-tcos (0.88.14.10) unstable; urgency=low
+
+  * udev/mount_listener.c udev/listener-daemon.sh udev/save-udev.sh
+    - Make mount-listener more inteligent, compare files and sync without scripts
+    - save-udev.sh is a script helper to generate udev event and put into /tmp/tcos-udev.log
+    - listener-daemon.sh now only start mount-listener and if crash start again
+  * hooks-addons/25tcosmonitor
+    - Add save-udev.sh script to image
+  * scripts/tcos-bottom/55mount_listener
+    - Remove extra code
+  * xmlrpc/tcosxmlrpc.c
+    - Include time.h header
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Feb 2008 23:52:16 +0100
+
 initramfs-tools-tcos (0.88.14.9) unstable; urgency=low
 
   * xmlrpc/xauth.[ch]:

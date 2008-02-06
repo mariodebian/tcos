@@ -3,7 +3,7 @@
 
 PREREQ=""
 
-prereqs()
+prereqs() 
 {
         echo "$PREREQ"
 }
@@ -17,13 +17,11 @@ prereqs)
 esac
 
 quiet=n
-. /scripts/functions
-. /conf/tcos.conf
-. /conf/tcos-run-functions
+
+
 
 
 if [ -x /usr/sbin/listener-daemon.sh ]; then
-   _log "MOUNT-listener trying to start"
    /usr/sbin/listener-daemon.sh > /var/log/listener-daemon.log 2>&1 &
 fi
 
