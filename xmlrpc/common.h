@@ -27,6 +27,8 @@
 #endif
 #define MY_IP_ADDRESS       TCOS_PATH"/getinfo.sh -i NETWORK_IP"
 
+#define FILE_CONTENT_ERROR_MEM  "error: unable to malloc memory"
+#define FILE_CONTENT_ERROR_FILE "error: file not found"
 
 typedef struct ip_address {
   int data[4] ;

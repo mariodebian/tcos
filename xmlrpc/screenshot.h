@@ -21,9 +21,21 @@
 
 /* xmlrpc methods to screenshot thin client display */
 
-#define SCROT_CMD TCOS_PATH"/screenshot.sh"
+#define SCROT_CMD     TCOS_PATH"/screenshot.sh"
+#define SCROT_CMD_B64 TCOS_PATH"/screenshot64.sh"
+
+#ifdef IS_STANDALONE
+#define SCREENSHOT_FILE TCOS_PATH"/var/www/capture-thumb.b64"
+#else
+#define SCREENSHOT_FILE "/var/www/capture-thumb.b64"
+#endif
 
 #define SCROT_ERROR "error: screenshot command error"
+#define SCROT_ERROR_FILE "error: screenshot file not found"
+#define SCROT_ERROR_MEM  "error: screenshot memory error"
+#define SCROT_ERROR_BUF  "error: screenshot buffer error"
+
 #define SCROT_OK "ok"
+#define SCROT_EMPTY ""
 
 

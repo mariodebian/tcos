@@ -64,6 +64,7 @@
 #include "lockkeybmouse.c"
 #include "vnc.c"
 
+#include "get_screenshot.c"
 
 #include "simple-methods.c"
 
@@ -121,6 +122,7 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockkeybmouse", &tcos_unlockkeybmouse, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.info", &tcos_info, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.vnc", &tcos_vnc, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.getscreenshot", &tcos_get_screenshot, NULL);
 #else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
@@ -206,6 +208,9 @@ Info methods:\n\
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.vnc", &tcos_vnc, NULL,
     "ssss:s", "Tcos, manage vnc server and client.");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.getscreenshot", &tcos_get_screenshot, NULL,
+    "ssss:ss", "Tcos, make screenshot and return in base64.");
 #endif
 
     /*  end of add methods */

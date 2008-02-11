@@ -28,6 +28,8 @@ static xmlrpc_value *tcos_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud
 #endif
  {
   char line[BIG_BUFFER];
+  char response[BSIZE];
+  FILE *fp;
   char *size;
   char *user;
   char *pass;
@@ -50,10 +52,10 @@ static xmlrpc_value *tcos_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud
 
   dbgtcos("tcosxmlrpc::screenshot() exe=%s\n", line);
 
-  if (system(line) != 0 )
-      return xmlrpc_build_value(env, "s", SCROT_ERROR );
-   else
-      return xmlrpc_build_value(env, "s", SCROT_OK );
+  fp=(FILE*)popen(line, "r");
+  fgets( response, sizeof(response), fp);
+  fclose(fp);
+  return xmlrpc_build_value(env, "s", response );
 
 }
 

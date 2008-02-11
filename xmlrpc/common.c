@@ -18,7 +18,7 @@
 */
 
 #include "common.h"
-
+#include <sys/stat.h>
 
 struct ip_address check_ip_address(char *data) {
   struct ip_address ip;
@@ -61,3 +61,42 @@ check_for_file(char *fname)
 }
 
 
+
+
+unsigned int getfilesize(char *fname) {
+    struct stat infobuf;              /* place to store info */
+
+    if ( stat( fname, &infobuf) == -1 )  /* get info */
+        return -1;
+    else
+        return infobuf.st_size;
+}
+
+
+/* read 1 line of file (used by base64) 
+
+int getfilecontent(char *fname, char *buffer) {
+    unsigned int file_size;
+    FILE *fp;
+    
+    file_size=getfilesize(fname);
+    
+    dbgtcos("getfilecontent() reservando %d\n", sizeof(char)*(file_size +1));
+    
+    buffer = (char*) malloc (sizeof(char)*(file_size +1) );
+    if ( &buffer == NULL ) {
+        dbgtcos("tcosxmlrpc::getfilecontent() memory error\n");
+        return -1;
+    }
+    
+    dbgtcos("getfilecontent() leyendo archivo %s\n", fname);
+    fp = fopen(fname, "r");
+    if ( fp == NULL ) {
+        dbgtcos("tcosxmlrpc::getfilecontent() file %s not found\n", fname);
+        return -1;
+    }
+    fgets(buffer, sizeof(char)*(file_size +1), fp);
+    fclose(fp);
+    return 0;
+}
+*/

@@ -40,7 +40,7 @@ tcospasswd:
 
 clean:
 #	cd md5 && make clean
-	rm -f $(SERVER) $(STANDALONE) tcosmd5 prueba prueba2 prueba3 validate-tcos validate-passwd tcospasswd var/log.txt var/log/* *~
+	rm -f $(SERVER) $(STANDALONE) tcosmd5 prueba prueba2 prueba3 validate-tcos validate-passwd tcospasswd var/log.txt var/log/* *~ image*.jpg image*png
 	rm -f sh/*~
 
 run:
@@ -67,6 +67,7 @@ install:
 	
 	# Install tcosxmlrpc utils
 	install -m 755 sh/screenshot.sh    $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 sh/screenshot64.sh  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/soundctl.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/starthttpd.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/getinfo.sh       $(DESTDIR)/$(TCOS_BINS)/
