@@ -13,6 +13,8 @@ get_env_var() {
 
    id_bus=$(get_env_var "ID_BUS")
    device=$(get_env_var "DEVNAME")
+  devpath=$(get_env_var "DEVPATH")
+  blockname=$(echo $devpath | awk -F"/" '{print $3}')
 
 if [ $(echo $DEVNAME | grep -c "/dev/loop") != 0 ]; then
    exit 0
@@ -34,7 +36,15 @@ fi
 
    vendor=$(get_env_var "ID_VENDOR")
     model=$(get_env_var "ID_MODEL")
-  devpath=$(get_env_var "DEVPATH")
+
+if [ "$vendor" = "ID_VENDOR=" ] || [ "$vendor" = "" ]; then
+  vendor="ID_VENDOR="$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$blockname") 2>/dev/null)/vendor 2>/dev/null)
+fi
+
+if [ "$model" = "ID_MODEL=" ] || [ "$model" = "" ]; then
+  model="ID_MODEL="$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$blockname") 2>/dev/null)/model 2>/dev/null)
+fi
+
 
 echo "$id_bus#$device#$action#$label#$fs_type#$vendor#$model#$devpath" >> $output_file
 

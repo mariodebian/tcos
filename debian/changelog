@@ -1,3 +1,19 @@
+initramfs-tools-tcos (0.88.14.11) unstable; urgency=low
+
+  * xmlrpc/*
+    - Add new method getscreenshot (returns base64 screenshot file)
+  * xmlrpc/sh/screenshot*:
+    - Change default image format to jpg
+  * hooks-addons/25tcosmonitor
+    - Add jpg imlib2 lib and remove gif (not used)
+    - Add base64 bin and screenshot64.sh script
+  * xmlrpc/var/etc/abyss.conf
+    - Change port from 8080 to 8998 (not conflicts with proxys or dansguardian)
+  * udev/tcos-udevd.sh udev/save-udev.sh
+    - Search ID_VENDOR and ID_MODEL in /sys tree if empty
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 11 Feb 2008 11:58:42 +0100
+
 initramfs-tools-tcos (0.88.14.10) unstable; urgency=low
 
   * udev/mount_listener.c udev/listener-daemon.sh udev/save-udev.sh
