@@ -38,11 +38,11 @@ fi
     model=$(get_env_var "ID_MODEL")
 
 if [ "$vendor" = "ID_VENDOR=" ] || [ "$vendor" = "" ]; then
-  vendor="ID_VENDOR="$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$blockname") 2>/dev/null)/vendor 2>/dev/null)
+  vendor="ID_VENDOR="$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$blockname") 2>/dev/null)/vendor 2>/dev/null | sed 's/ //g')
 fi
 
 if [ "$model" = "ID_MODEL=" ] || [ "$model" = "" ]; then
-  model="ID_MODEL="$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$blockname") 2>/dev/null)/model 2>/dev/null)
+  model="ID_MODEL="$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$blockname") 2>/dev/null)/model 2>/dev/null | sed 's/ //g')
 fi
 
 

@@ -11,8 +11,10 @@ initramfs-tools-tcos (0.88.14.11) unstable; urgency=low
     - Change port from 8080 to 8998 (not conflicts with proxys or dansguardian)
   * udev/tcos-udevd.sh udev/save-udev.sh
     - Search ID_VENDOR and ID_MODEL in /sys tree if empty
+  * udev/tcos-udevd.sh udev/save-udev.sh
+    - Remove spaces in ID_VENDOR and ID_MODEL detection 
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 11 Feb 2008 11:58:42 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 11 Feb 2008 12:05:24 +0100
 
 initramfs-tools-tcos (0.88.14.10) unstable; urgency=low
 
