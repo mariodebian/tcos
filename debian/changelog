@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.88.14.12) unstable; urgency=low
+
+  * udev/tcos-udevd.sh udev/save-udev.sh:
+    - Collect mount/umount events with listener-daemon in any kernel version
+  * scripts/tcos-bottom/70wakeonlan hooks-addons/45wakeonlan
+    conf/tcos.conf
+    - New var TCOS_WAKEONLAN
+    - Set eth0 wol on during boot (needed in some network cards)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 17 Feb 2008 18:45:21 +0100
+
 initramfs-tools-tcos (0.88.14.11) unstable; urgency=low
 
   * xmlrpc/*

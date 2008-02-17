@@ -25,8 +25,12 @@ DEVPATH="/block/$DISK"
 
 [ $DEVNAME ] && [ -e $DEVNAME ] && export $(udevinfo --path=/sys$DEVPATH --query=env )
 
+if [ "$ID_FS_LABEL_SAFE" ]; then
+  ID_FS_LABEL=$ID_FS_LABEL_SAFE
+fi
+
 if [ "$(is_cdrom $PART)" = 1 ]; then
-ID_FS_TYPE="cdfs"
+ID_FS_TYPE=$(cd_type $DEVNAME)
 fi
 
 if [ -z $ID_VENDOR ]; then

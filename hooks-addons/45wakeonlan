@@ -1,0 +1,16 @@
+# WAKEONLAN support
+#  need to copy ethtool to image
+#
+
+if [ $TCOS_WAKEONLAN ]; then
+
+  if [ ! -x /usr/sbin/ethtool ]; then
+    _echo " WARNING:"
+    _echo "         WAKEONLAN enabled but ethtool package not installed !!!"
+    _echo "         Please install ethtool or disable WAKEONLAN"
+    _echo ""
+  else
+    cpifexists /usr/sbin/ethtool /usr/sbin
+  fi
+
+fi

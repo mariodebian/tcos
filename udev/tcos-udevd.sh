@@ -10,11 +10,25 @@ get_env_var() {
   echo $env_var
 }
 
+is_cdrom() {
+  # receive hdc hda (without /dev/)
+  cdrom=$(head -3 /proc/sys/dev/cdrom/info 2>/dev/null | tail -1 | cut -f 3- | grep -c "$1")
+  echo $cdrom
+}
+
+
+   action=$(get_env_var "ACTION")
+
+if [ "$action" = "ACTION=mount" ] || [ "$action" = "ACTION=umount" ]; then
+  # action mount/umount not controlled by tcos-udev.sh
+  exit 0
+fi
 
    id_bus=$(get_env_var "ID_BUS")
    device=$(get_env_var "DEVNAME")
   devpath=$(get_env_var "DEVPATH")
   blockname=$(echo $devpath | awk -F"/" '{print $3}')
+       part=$(echo $device | awk -F"/" '{print $3}')
 
 if [ $(echo $DEVNAME | grep -c "/dev/loop") != 0 ]; then
    exit 0
@@ -23,8 +37,7 @@ if [ $(echo $DEVNAME | grep -c "/dev/ram") != 0 ]; then
    exit 0
 fi
 
-   action=$(get_env_var "ACTION")
-    label=$(get_env_var "ID_FS_LABEL")
+    label="ID_FS_LABEL="$(get_env_var "ID_FS_LABEL_SAFE"| awk -F"=" '{print $2}')
   fs_type=$(get_env_var "ID_FS_TYPE")
 
 if [ "$fs_type" = "ID_FS_TYPE=" ] || [ "$fs_type" = "" ]; then
@@ -33,6 +46,11 @@ if [ "$fs_type" = "ID_FS_TYPE=" ] || [ "$fs_type" = "" ]; then
      fs_type="ID_FS_TYPE=$fs"
   fi
 fi
+
+if [ "$(is_cdrom $part)" = 1 ]; then
+  fs_type=$(cd_type "${device#DEVNAME=}")
+fi
+
 
    vendor=$(get_env_var "ID_VENDOR")
     model=$(get_env_var "ID_MODEL")

@@ -1,0 +1,31 @@
+#!/bin/sh
+# 
+
+PREREQ=""
+
+prereqs()
+{
+	echo "$PREREQ"
+}
+
+case $1 in
+# get pre-requisites
+prereqs)
+	prereqs
+	exit 0
+	;;
+esac
+
+quiet=n
+
+. /conf/tcos.conf
+. /scripts/functions
+. /conf/tcos-run-functions
+
+
+if [ $TCOS_WAKEONLAN ]; then
+   _log "70WAKEONLAN Enabling WOL in eth0 device..."
+   /usr/sbin/ethtool -s eth0 wol g >> /tmp/initramfs.debug 2>&1
+fi
+
+exit 0
