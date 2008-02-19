@@ -14,4 +14,5 @@ LAST_MOUNTS=/tmp/proc_mounts
 
 while [ 1 ]; do
   $MOUNT_LISTENER $MOUNTS $LAST_MOUNTS
+  echo "******* Something wrong happen mount-listener died ******* restarting..."
 done

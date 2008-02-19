@@ -25,8 +25,6 @@
    listen in changes of /proc/mounts and return
    device mounted or umounted
 
-  Because kernel >= 2.6.22 have removed this feature
-
 */
 #include <stdio.h>
 #include <string.h>
@@ -77,7 +75,8 @@ int getnumlines( char *fname )
 void print_dev(char *device, char *txt, char *action) {
     int i;
     char *output;
-    char *cmd;
+    char cmd[MSG_BUFF];
+    FILE *fp;
     for ( i=0; i<strlen(txt); i++) {
      if ( txt[i] == ' ') {
         output[i]='\0';
@@ -86,8 +85,12 @@ void print_dev(char *device, char *txt, char *action) {
      output[i]=txt[i];
   }
   debug("DEBUG: output \"%s %s\"\n", output, action);
-  sprintf(cmd, "%s %s %s", SAVE_UDEV, output, action);
-  system(cmd);
+
+  snprintf( (char*) &cmd, MSG_BUFF, "%s %s %s", SAVE_UDEV, output, action);
+
+  debug("DEBUG: command \"%s\"\n", cmd);
+  fp=popen(cmd, "r");
+  pclose(fp);
 }
 
 
@@ -103,7 +106,7 @@ void sync_files(char *fname1, char *fname2){
         debug("Cannot open output file.\n");
         return;
     }
-  
+
     while(!feof(in)) {
     ch = getc(in);
     if(ferror(in)) {
@@ -123,7 +126,7 @@ void sync_files(char *fname1, char *fname2){
   fclose(out);
   debug(" DEBUG: sync_files() done...\n");
 }
-  
+
 
 
 int compare(char *fname1, char *fname2)
@@ -164,9 +167,9 @@ int compare(char *fname1, char *fname2)
         new=fname1;
         action="umount";
     }
-  
-  
-   
+
+
+
     /* open file that contain extra lines */
     fpold=fopen(old, "r");
     while ( fgets(lineold, MSG_BUFF, fpold) != NULL ) {
@@ -179,11 +182,11 @@ int compare(char *fname1, char *fname2)
                 break;
             }
         }
-        
+
         if (dev == 0) {
             debug("   DEBUG: lineold not found %s", lineold);
             print_dev(device, lineold, action);
-            
+
         }
         fclose(fpnew);
     }
@@ -197,7 +200,7 @@ int compare(char *fname1, char *fname2)
 int main (int argc, char *argv[]) {
   debug("DEBUG: *** comparing: %s <=> %s\n", argv[1], argv[2]);
   sync_files(argv[1], argv[2]);
-  
+
   int fd_file;
   struct pollfd fdarray[1];
   int nfds, rc;
@@ -213,7 +216,7 @@ int main (int argc, char *argv[]) {
     nfds = 1;
 
     rc = poll(fdarray, nfds, POLL_TIMEOUT);
-    
+
     /*debug("DEBUG: rc is %d nfds is %d\n", rc, nfds);*/
 
     if (rc < 0) {
@@ -223,7 +226,7 @@ int main (int argc, char *argv[]) {
 
     if(rc > 0) {
      debug("  DEBUG: Changes detected at %s rc=%d\n", argv[1], rc);
-     usleep(200);   
+     usleep(200);
      compare(argv[1], argv[2]);
     }
   }
