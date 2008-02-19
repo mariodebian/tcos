@@ -17,8 +17,6 @@ cpifexists /usr/lib/imlib2/loaders/jpeg.so       /usr/lib/imlib2/loaders/
 
 # screenshot script and webserver
 cpifexists ${TCOS_BINS}/screenshot.sh      /sbin/
-cpifexists /usr/bin/base64                 /usr/bin/
-cpifexists ${TCOS_BINS}/screenshot64.sh    /sbin/
 
 cpifexists ${TCOS_BINS}/useallmodules.sh   /sbin/
 cpifexists ${TCOS_BINS}/devicesctl.sh      /sbin/

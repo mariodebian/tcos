@@ -22,12 +22,11 @@
 /* xmlrpc methods to screenshot thin client display */
 
 #define SCROT_CMD     TCOS_PATH"/screenshot.sh"
-#define SCROT_CMD_B64 TCOS_PATH"/screenshot64.sh"
 
 #ifdef IS_STANDALONE
-#define SCREENSHOT_FILE TCOS_PATH"/var/www/capture-thumb.b64"
+#define SCREENSHOT_FILE TCOS_PATH"/var/www/capture-thumb.jpg"
 #else
-#define SCREENSHOT_FILE "/var/www/capture-thumb.b64"
+#define SCREENSHOT_FILE "/var/www/capture-thumb.jpg"
 #endif
 
 #define SCROT_ERROR "error: screenshot command error"

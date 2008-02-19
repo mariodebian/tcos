@@ -3,8 +3,12 @@ initramfs-tools-tcos (0.88.14.13) unstable; urgency=low
   * udev/mount_listener.c
     - Fix Segmentation Fault:
       call to save-udev.sh, use popen() instead of system()
+  * xmlrpc/get_screenshot.c xmlrpc/screenshot.h xmlrpc/common.c
+    xmlrpc/sh/screenshot64.sh hooks-addons/25tcosmonitor
+    - Remove screenshot64.sh and base64
+    - Rewrite tcos_get_screenshot method with base64_encode function (based on wpa_supplicant)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 19 Feb 2008 15:23:06 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 19 Feb 2008 17:31:37 +0100
 
 initramfs-tools-tcos (0.88.14.12) unstable; urgency=low
 

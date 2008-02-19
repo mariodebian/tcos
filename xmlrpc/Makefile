@@ -67,7 +67,6 @@ install:
 	
 	# Install tcosxmlrpc utils
 	install -m 755 sh/screenshot.sh    $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 sh/screenshot64.sh  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/soundctl.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/starthttpd.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/getinfo.sh       $(DESTDIR)/$(TCOS_BINS)/

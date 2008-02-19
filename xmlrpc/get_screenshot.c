@@ -29,14 +29,15 @@ static xmlrpc_value *tcos_get_screenshot(xmlrpc_env *env, xmlrpc_value *in, void
     {
     
     FILE *fp;
-    unsigned int scrot_size;
     
     char line[BIG_BUFFER];
-    char *bufferb64;
     char *size;
     char *user;
     char *pass;
     char *login_ok;
+
+    size_t len, elen;
+	unsigned char *buf, *e;
     
     static xmlrpc_value *result;
 
@@ -51,43 +52,26 @@ static xmlrpc_value *tcos_get_screenshot(xmlrpc_env *env, xmlrpc_value *in, void
         return xmlrpc_build_value(env, "(ss)", login_ok, SCROT_EMPTY );
 
     if ( strlen(size) > 0)
-        snprintf( (char*) line, BSIZE, "%s %s", SCROT_CMD_B64, size);
+        snprintf( (char*) line, BSIZE, "%s %s", SCROT_CMD, size);
     else
-        snprintf( (char*) line, BSIZE, "%s", SCROT_CMD_B64);
+        snprintf( (char*) line, BSIZE, "%s", SCROT_CMD);
 
     dbgtcos("tcosxmlrpc::getscreenshot() exe=%s\n", line);
 
-    /* exec command (to generate b64 text file) */
+    /* exe screenshot */
     fp=(FILE*)popen(line, "r");
     fclose(fp);
-     
-    /* get file size and reserve memory */
-    scrot_size=getfilesize(SCREENSHOT_FILE);
-    dbgtcos("tcosxmlrpc::getscreenshot() file size %d\n", scrot_size);
-    
-    /* reserve memory */
-    dbgtcos("tcosxmlrpc::getscreenshot() trying to reserve %d\n", sizeof(char)*(scrot_size +1));
-    bufferb64 = (char*) malloc (sizeof(char)*scrot_size +1);
-    if ( bufferb64 == NULL ) {
-        dbgtcos("tcosxmlrpc::getscreenshot() memory error\n");
-        return xmlrpc_build_value(env, "(ss)", SCROT_ERROR_MEM, SCROT_EMPTY);
-    }
-    
-    /* read line (base64 have 1 line only) */
-    fp = fopen(SCREENSHOT_FILE, "r");
-    if ( fp == NULL ) {
-        dbgtcos("tcosxmlrpc::getscreenshot() file error\n");
-        return xmlrpc_build_value(env, "(ss)", SCROT_ERROR_FILE, SCROT_EMPTY);
-    }
-    fgets(bufferb64, sizeof(char)*(scrot_size +1), fp);
-    fclose(fp);
-     
-    /* build result */
-    result = xmlrpc_build_value(env, "(ss)", SCROT_OK, bufferb64 );
-    
-    /* free buffer */
-    free(bufferb64);
 
+    /* convert base64 string */
+    buf = readfile(SCREENSHOT_FILE, &len);
+	if (buf == NULL)
+		return xmlrpc_build_value(env, "(ss)", SCROT_ERROR, SCROT_EMPTY );
+
+	e = base64_encode(buf, len, &elen);
+
+    result = xmlrpc_build_value(env, "(ss)", SCROT_OK, e );
+    
+    free(e);
     return result;
 }
 
