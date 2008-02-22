@@ -31,13 +31,30 @@ TITLE="TCOS"
 # icon to show in popup
 ICON_FILE="/usr/share/pixmaps/tcos-icon-32x32.png"
 
+MODE=$1
+shift
+
 # timeout for popup (in seconds)
 LOGOUT_TIMEOUT=20
+[ $# -gt 1 ] && LOGOUT_TIMEOUT=$1 && shift
 
-# message to show in popup (FIXME i18n)
+
+# message to show in popup
 LOGOUT_MESSAGE="Session will close in $LOGOUT_TIMEOUT seconds"
 POWEROFF_MESSAGE="Pc will shutdown in $LOGOUT_TIMEOUT seconds"
 REBOOT_MESSAGE="Pc will reboot in $LOGOUT_TIMEOUT seconds"
+
+case ${MODE} in
+   POWEROFF)
+      POWEROFF_MESSAGE="$*"
+      ;;
+   REBOOT)
+      REBOOT_MESSAGE="$*"
+      ;;
+   LOGOUT)
+      LOGOUT_MESSAGE="$*"
+      ;;
+esac
 
 if [ -d /etc/tcos/conf.d/ ]; then
   for file in /etc/tcos/conf.d/session-cmd*; do
@@ -57,20 +74,17 @@ socket_basename(){
    echo "$(id -un)"
 }
 
-case $1 in
+case ${MODE} in
    MESSAGE)
-      shift
-      if [ "$1" ] ; then
+      if [ "$*" ] ; then
          message "$*"
       fi
       ;;
    POWEROFF)
       message "$POWEROFF_MESSAGE"
-      [ "$2" ] && LOGOUT_TIMEOUT=$2
       ;;
    REBOOT)
       message "$REBOOT_MESSAGE"
-      [ "$2" ] && LOGOUT_TIMEOUT=$2
       ;;
    LOGOUT)
       message "$LOGOUT_MESSAGE"
@@ -81,9 +95,18 @@ case $1 in
           gnome-session-save --kill --silent
       fi
       ;;
+   NOSCREENSAVER)
+      if [ `ps -U $(socket_basename) | grep -c -e "ksmserver" -e "start_kdeinit"` -eq 2 ];then
+          dcop kdesktop KScreensaverIface quit
+      fi
+      if [ -f /usr/bin/gnome-screensaver-command ];then
+          gnome-screensaver-command -d
+      elif [ -f /usr/bin/xscreensaver-command ];then
+          xscreensaver-command --deactivate
+      fi
+      ;;
    OPEN)
-      shift
-      if [ "$1" ] ; then
+      if [ "$*" ] ; then
          [ -x /usr/bin/gnome-open ] && gnome-open "$*" 2>/dev/null
       fi
       ;;

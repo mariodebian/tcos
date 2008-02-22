@@ -1,0 +1,13 @@
+# hook addon for EPATEC eTC2300
+
+
+if [ $TCOS_ETC2300 ]; then
+  stat_before
+ 
+    manual_add_modules ac97_codec
+    manual_add_modules sis5513
+    manual_add_modules sis7019
+
+  stat_after "eTC2300 modules support"
+
+fi

@@ -230,6 +230,7 @@ ramdisk_size () {
   cd ${tmpdir}/
   cpio -i < initrd >/dev/null 2>&1
   rm initrd
+  squashfs_size=0
   ramdisk_size=$(du -s . | awk '{print $1}')
   if [ -e ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs ]; then
     squashfs_size=$(du -s ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs 2> /dev/null | awk '{print $1}')

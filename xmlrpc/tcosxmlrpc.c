@@ -61,8 +61,9 @@
 #include "sound.c"
 #include "devices.c"
 #include "lockscreen.c"
-#include "lockkeybmouse.c"
+#include "lockcontroller.c"
 #include "vnc.c"
+#include "vlc.c"
 
 #include "get_screenshot.c"
 
@@ -118,11 +119,12 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.devices", &tcos_devices, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.lockscreen", &tcos_lockscreen, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockscreen", &tcos_unlockscreen, NULL);
-    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.lockkeybmouse", &tcos_lockkeybmouse, NULL);
-    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockkeybmouse", &tcos_unlockkeybmouse, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.lockcontroller", &tcos_lockcontroller, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.unlockcontroller", &tcos_unlockcontroller, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.info", &tcos_info, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.vnc", &tcos_vnc, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.getscreenshot", &tcos_get_screenshot, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.vlc", &tcos_vlc, NULL);
 #else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
@@ -175,11 +177,11 @@ int main (int argc, char **argv)
     xmlrpc_server_abyss_add_method_w_doc("tcos.unlockscreen", &tcos_unlockscreen, NULL,
     "ss:s", "Tcos, kill lockscreen to unblock thin client.");
 
-    xmlrpc_server_abyss_add_method_w_doc("tcos.lockkeybmouse", &tcos_lockkeybmouse, NULL,
-    "ss:s", "Tcos, exec lockkeybmouse to block thin client.");
+    xmlrpc_server_abyss_add_method_w_doc("tcos.lockcontroller", &tcos_lockcontroller, NULL,
+    "sss:s", "Tcos, exec lockvnc or lockvlc to block thin client.");
 
-    xmlrpc_server_abyss_add_method_w_doc("tcos.unlockkeybmouse", &tcos_unlockkeybmouse, NULL,
-    "ss:s", "Tcos, kill lockkeybmouse to unblock thin client.");
+    xmlrpc_server_abyss_add_method_w_doc("tcos.unlockcontroller", &tcos_unlockcontroller, NULL,
+    "sss:s", "Tcos, kill lockvlc or lockvnc to unblock thin client.");
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.info", &tcos_info, NULL,
     "s:s", "Tcos, return passed info string. (no auth needed)\n\
@@ -211,6 +213,9 @@ Info methods:\n\
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.getscreenshot", &tcos_get_screenshot, NULL,
     "ssss:ss", "Tcos, make screenshot and return in base64.");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.vlc", &tcos_vlc, NULL,
+    "ssss:s", "Tcos, manage vlc params.");
 #endif
 
     /*  end of add methods */

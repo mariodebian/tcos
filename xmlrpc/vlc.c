@@ -1,6 +1,6 @@
 /*
-* vnc.c part of tcosxmlrpc
-*   => method to start/stop vnc server and client
+* vlc.c part of tcosxmlrpc
+*   => methods for vlc difussion
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
 *
 * This program is free software; you can redistribute it and/or
@@ -18,27 +18,26 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include "vnc.h"
+#include "vlc.h"
 
 
 #if NEWAPI
-static xmlrpc_value *tcos_vnc(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+static xmlrpc_value *tcos_vlc(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+static xmlrpc_value *tcos_vlc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   FILE *fp;
-  char line[BIG_BUFFER];
-  char *action;
-  char *args;
+  char *volume;
+  char *lock;
   char *user;
   char *pass;
   char *login_ok;
   char cmd[BIG_BUFFER];
-
+  
 
   /* read what info search */
-  xmlrpc_parse_value(env, in, "(ssss)", &action, &args, &user, &pass);
+  xmlrpc_parse_value(env, in, "(ssss)", &volume, &lock, &user, &pass);
   if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", "params error");
 
@@ -47,35 +46,28 @@ static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )
     return xmlrpc_build_value(env, "s", login_ok );
 
-  dbgtcos("tcosxmlrpc::tcos_vnc() login ok, action=%s, args=%s, user=%s, pass=**notshow**\n", action, args, user);
+  dbgtcos("tcosxmlrpc::tcos_vlc() login ok, volume=%s, lock=%s, user=%s, pass=**notshow**\n", volume, lock, user);
 
 #ifdef IS_STANDALONE
-  dbgtcos("tcosxmlrpc::tcos_vnc() standalone\n");
+  dbgtcos("tcosxmlrpc::tcos_vlc() standalone\n");
 #else
-  dbgtcos("tcosxmlrpc::tcos_vnc() thin client\n");
+  dbgtcos("tcosxmlrpc::tcos_vlc() thin client\n");
 #endif
 
   /* prepare action */
-  sprintf( cmd , "%s %s %s %s:%s", VNC_CONTROLLER, action, args, user, pass );
+  sprintf( cmd , "%s %s", VLC_CONTROLLER, volume);
 
-  dbgtcos("tcosxmlrpc::tcos_vnc() cmd=\"%s\"\n", cmd);
-
+  dbgtcos("tcosxmlrpc::tcos_vlc() cmd=\"%s\"\n", cmd);
+  
   fp=(FILE*)popen(cmd, "r");
-
-  /* put error in line */
-  strncpy(line, VNC_ERROR, BIG_BUFFER);
-
-  fgets( line, sizeof line, fp);
-
   pclose(fp);
-  dbgtcos("tcosxmlrpc::tcos_vnc() line=\"%s\"", line);
 
-  if( strcmp(action, "startclient" ) == 0 )
-    lockcontroller_exe("lockvnc");
-  else if( strcmp(action, "stopclient" ) == 0 )
-    lockcontroller_kill("lockvnc");
+  if ( strcmp(lock, "enable" ) == 0 )
+    lockcontroller_exe("lockvlc");
 
-  return xmlrpc_build_value(env, "s", line );
+  return xmlrpc_build_value(env, "s", "OK" );
 }
+
+
 
 

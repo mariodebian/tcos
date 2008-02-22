@@ -68,7 +68,7 @@ static xmlrpc_value *tcos_unlockscreen(xmlrpc_env *env, xmlrpc_value *in, void *
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )
     return xmlrpc_build_value(env, "s", login_ok );
 
-  system("killall lockscreen");
+  kill_exe("lockscreen");
   return xmlrpc_build_value(env, "s", "OK" );
 }
 

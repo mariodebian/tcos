@@ -1,9 +1,11 @@
 LOCK = lockscreen
 XRES = screensize
-KEYBMOUSE = lockkeybmouse
+LOCKVNC = lockvnc
+LOCKVLC = lockvlc
 SOURCES = lockscreen2.c
 XRES_SOURCES = screensize.c
-KEYBMOUSE_SOURCES = lockkeybmouse.c
+LOCKVNC_SOURCES = lockvnc.c
+LOCKVLC_SOURCES = lockvlc.c
 LIBS= -I/usr/lib
 LOCKLIBS=$(shell imlib-config --libs)
 CFLAGS=$(shell imlib-config --cflags)
@@ -18,14 +20,16 @@ include ../common.mk
 compile:
 	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK)
 	$(CC) $(XRES_SOURCES) $(LDADD) -o $(XRES)
-	$(CC) $(KEYBMOUSE_SOURCES) $(LDADD) -o $(KEYBMOUSE)
+	$(CC) $(LOCKVNC_SOURCES) $(LDADD) -o $(LOCKVNC)
+	$(CC) $(LOCKVLC_SOURCES) $(LDADD) -o $(LOCKVLC)
 
 clean:
-	rm -f $(LOCK) $(XRES) $(KEYBMOUSE) *~
+	rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) *~
 
 debug: clean
 	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK) -DDEBUG=1
-	$(CC) $(KEYBMOUSE_SOURCES) $(LDADD) -o $(KEYBMOUSE) -DDEBUG=1
+	$(CC) $(LOCKVNC_SOURCES) $(LDADD) -o $(LOCKVNC) -DDEBUG=1
+	$(CC) $(LOCKVLC_SOURCES) $(LDADD) -o $(LOCKVLC) -DDEBUG=1
 
 install:
 	mkdir -p $(DESTDIR)/$(TCOS_BINS)
@@ -33,5 +37,6 @@ install:
 
 	install -m 755 $(LOCK)        $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(XRES)        $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 $(KEYBMOUSE)   $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 $(LOCKVNC)   $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 $(LOCKVLC)   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 644 lockscreen.png $(DESTDIR)/$(PREFIX)/share/tcos-core/lockscreen.png

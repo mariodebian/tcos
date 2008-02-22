@@ -132,13 +132,16 @@ fi
 DISPLAY=:0
 export DISPLAY
 
-
+cpu=\$(awk '/MHz/ { if($4 < 500) printf "low"}' /proc/cpuinfo | tail -1)
 
 OPTS="--log-target=stderr "
 if [ \${TCOS_PULSEAUDIO_RESAMPLE_METHOD} ]; then
  OPTS="\${OPTS} --resample-method=\${TCOS_PULSEAUDIO_RESAMPLE_METHOD}"
 fi
 
+if [ $cpu = "low" ]; then
+ OPTS="\${OPTS} --no-cpu-limit --realtime"
+fi
 
 _log "STARTPULSEAUDIO starting pulseaudio server..."
 pulseaudio  \${OPTS}  &

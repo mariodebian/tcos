@@ -1,5 +1,5 @@
 /*
-* lockkeybmouse.c part of tcosxmlrpc
+* lock-controller.c part of tcosxmlrpc
 *   => method that lock unlock and get status of screen
 * Copyright (C) 2008  vidal_joshur at gva.es
 *
@@ -19,19 +19,44 @@
 */
 
 
+void 
+lockcontroller_exe( char *action )
+{
+  char cmd[BIG_BUFFER];
+  dbgtcos("tcosxmlrpc::lockcontroller_exe() action=> \"%s\"\n", action);
+
+  if ( strcmp(TCOS_PATH, "/sbin" ) )
+    sprintf( cmd , "%s/%s", TCOS_PATH, action );
+  else
+    sprintf( cmd , "%s", action );
+
+  job_exe(cmd);
+  return;
+}
+
+void 
+lockcontroller_kill( char *action )
+{
+  dbgtcos("tcosxmlrpc::lockcontroller_kill() action=> \"%s\"\n", action);
+
+  kill_exe(action);
+
+  return;
+}
 
 #if NEWAPI
-static xmlrpc_value *tcos_lockkeybmouse(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+static xmlrpc_value *tcos_lockcontroller(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_lockkeybmouse(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+static xmlrpc_value *tcos_lockcontroller(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   char *user;
   char *pass;
+  char *action;
   char *login_ok;
-  
+  char cmd[BIG_BUFFER];
    /* Parse app string */
-   xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
+   xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
    if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", "params error");
 
@@ -41,26 +66,28 @@ static xmlrpc_value *tcos_lockkeybmouse(xmlrpc_env *env, xmlrpc_value *in, void 
     return xmlrpc_build_value(env, "s", login_ok );
 
   if ( strcmp(TCOS_PATH, "/sbin" ) )
-    job_exe(TCOS_PATH"/lockkeybmouse");
-
+    sprintf( cmd , "%s/%s", TCOS_PATH, action );
   else
-    job_exe("lockkeybmouse");
+    sprintf( cmd , "%s", action );
+
+  job_exe(cmd);
 
   return xmlrpc_build_value(env, "s", "OK" );
 }
 
 #if NEWAPI
-static xmlrpc_value *tcos_unlockkeybmouse(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+static xmlrpc_value *tcos_unlockcontroller(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_unlockkeybmouse(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+static xmlrpc_value *tcos_unlockcontroller(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   char *user;
   char *pass;
+  char *action;
   char *login_ok;
 
    /* Parse app string */
-   xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
+   xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
    if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", "params error");
 
@@ -69,7 +96,7 @@ static xmlrpc_value *tcos_unlockkeybmouse(xmlrpc_env *env, xmlrpc_value *in, voi
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )
     return xmlrpc_build_value(env, "s", login_ok );
 
-  system("killall lockkeybmouse");
+  kill_exe(action);
   return xmlrpc_build_value(env, "s", "OK" );
 }
 

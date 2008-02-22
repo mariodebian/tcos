@@ -10,6 +10,7 @@ if [ "${TCOS_INCLUDE_INIT}" = "1" ]; then
     # init reboot poweroff
     cpifexists /sbin/reboot       /usr/sbin/
     cpifexists /sbin/poweroff     /usr/sbin/
+    cpifexists ${TCOS_BINS}/down-controller  /sbin/
 
     rm -f $DESTDIR/bin/reboot
     rm -f $DESTDIR/bin/poweroff

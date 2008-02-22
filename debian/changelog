@@ -1,3 +1,27 @@
+initramfs-tools-tcos (0.88.14.14) unstable; urgency=low
+
+  * session-cmd/session-cmd-exec
+    - Redefine script
+  * lockscreen/*
+    - Generate lockvlc and lockvnc for non multi-actions conflicts
+    - Add method to don´t allow screensaver activate
+  * xmlrpc/*
+    - Add lockcontroller to avoid locks not work correctly
+    - Add vlc controller
+    - Add lock screensaver and keyboard in vnc controller
+  * bin/daemonize.sh
+    - Remove recents changes
+  * bin/down-controller
+    - Add controller for poweroff and reboot with timout
+  * bin/gentcos
+    - Fix broken size calculation
+  * hooks-addons/21pulseaudio
+    - In some cases pulseaudio down unexpectedly
+  * hooks-addons/40etc2300
+    - Manual add modules for Epatec 2300 thin clients 
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 22 Feb 2008 16:14:16 +0100
+
 initramfs-tools-tcos (0.88.14.13) unstable; urgency=low
 
   * udev/mount_listener.c

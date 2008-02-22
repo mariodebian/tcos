@@ -1,5 +1,6 @@
 /*
-* lockkeybmouse.c
+* lockvnc.c
+* Copyright (C) 2006,2007,2008  mariodebian at gmail
 * Copyright (C) 2008  vidal_joshur at gva.es
 *
 *  This file is based on  screen-locker of iTALC project:
@@ -24,15 +25,17 @@
 */
 
 
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <X11/StringDefs.h>
+#include <X11/IntrinsicP.h>
 #include <X11/Shell.h>
+#include <X11/Xaw/Viewport.h>
 #include <X11/Xmu/Converters.h>
 
 #include<sys/stat.h>
-
 
 
 #define AllPointerEventMask \
@@ -54,10 +57,11 @@ int main (int argc, char **argv) {
 	XtResource desktopBackingStoreResources[] = { { XtNbackingStore, XtCBackingStore, XtRBackingStore, sizeof(int), 0, XtRImmediate, (XtPointer) Always, }, };
 
 	Display * display;
+	Visual * vis;
 
 	XSetWindowAttributes attr;
 	unsigned long valuemask;
-
+	int count = 0;
 	Pixmap src, msk;
 	XColor fg, bg;
 
@@ -66,16 +70,20 @@ int main (int argc, char **argv) {
 
 	Cursor blankcursor;
 
+	Widget form, viewport, desktop;
+	Window desktop_win;
+
 	char srcBits[] = { 0,0,0,0,0 };
 	char mskBits[] = { 0,0,0,0,0 };
 
-    
+
 	/* Call the main Xt initialisation function.  It parses command-line options, generating appropriate resource specs, and makes a
 	 * connection to the X display. */
 	toplevel = XtVaAppInitialize(NULL, "ScreenLocker", NULL, 0, &argc, argv, NULL, XtNborderWidth, 0, NULL);
 
 	display = XtDisplay(toplevel);
 
+	vis = DefaultVisual(display, DefaultScreen(display));
 
 	displayWidth = WidthOfScreen(DefaultScreenOfDisplay(display));
 	displayHeight = HeightOfScreen(DefaultScreenOfDisplay(display));
@@ -85,20 +93,35 @@ int main (int argc, char **argv) {
 	XtVaSetValues(toplevel, XtNoverrideRedirect, True, XtNgeometry, "+0+0", NULL);
 
 
-	
+	form = XtVaCreateManagedWidget("form", formWidgetClass, toplevel, XtNborderWidth, 0, XtNdefaultDistance, 0, NULL);
+	viewport = XtVaCreateManagedWidget("viewport", viewportWidgetClass, form, XtNborderWidth, 0, NULL);
+	desktop = XtVaCreateManagedWidget("desktop", coreWidgetClass, viewport, XtNborderWidth, 0, NULL);
 
-	XtVaSetValues(toplevel, XtNwidth, 1, XtNheight, 1, NULL);
+	XtVaSetValues(desktop, XtNwidth, displayWidth, XtNheight, displayHeight, NULL);
 
 	/* "Realize" all the widgets, i.e. actually create and map their X windows */
 	XtRealizeWidget(toplevel);
 
 
 
+	/* We want to stop the window manager from managing our toplevel window. This is not really a nice thing to do, so may not work
+	 * properly with every window manager.  We do this simply by setting overrideRedirect and reparenting our window to the root. 
+	 * The window manager will get a ReparentNotify and hopefully clean up its frame window. */
+	XtVaSetValues(toplevel, XtNoverrideRedirect, True, NULL);
+	XReparentWindow(display, XtWindow(toplevel), DefaultRootWindow(display), 0, 0);
+
+	 /* attempt to resize it, then ask "form" to manage it again. */
+	XtResizeWidget(toplevel, 1, 1, 0);
+
+	desktop_win = XtWindow(desktop);
+
 
 	src = XCreateBitmapFromData(display, DefaultRootWindow(display), srcBits, 5, 5);
 	msk = XCreateBitmapFromData(display, DefaultRootWindow(display), mskBits, 5, 5);
 	
-
+	
+	XAllocNamedColor(display, DefaultColormap(display,DefaultScreen(display)), "black", &fg, &fg);
+	XAllocNamedColor(display, DefaultColormap(display,DefaultScreen(display)), "white", &bg, &bg);
 	
 	
 	
@@ -107,20 +130,42 @@ int main (int argc, char **argv) {
 	XFreePixmap(display, src);
 	XFreePixmap(display, msk);
 
-	XtVaGetApplicationResources(toplevel, (XtPointer)&attr.backing_store, desktopBackingStoreResources, 1, NULL);
+	XtVaGetApplicationResources(desktop, (XtPointer)&attr.backing_store, desktopBackingStoreResources, 1, NULL);
 	valuemask = CWBackingStore;
 
 	attr.cursor = blankcursor;
 	valuemask |= CWCursor;
 
+	XChangeWindowAttributes(display, desktop_win, valuemask, &attr);
   
 	/* Try to get the input focus. */
 	XSetInputFocus(display, DefaultRootWindow(display), RevertToPointerRoot, CurrentTime);
 
+	/* Try to dont allow screensaver to activate */
+	XForceScreenSaver(display, (int) ScreenSaverReset);
+	while (count < 5) {
+		if (XSetScreenSaver(display, 0, 0, (int) DontPreferBlanking, (int) DontAllowExposures) != BadValue ) {
+			break;
+		}
+		printf ("lockvnc::screensaver Could not disable screensaver, Badvalue=%d Count=%d.\n", BadValue, count);
+		sleep (1);
+		count++;
+	}
+
+	/*XUngrabKeyboard(display, CurrentTime);
+	XUngrabPointer(display, CurrentTime);*/
+
+	count=0;
 	/* now grab keyboard and mouse */
-	if (XtGrabKeyboard(toplevel, True, GrabModeAsync, GrabModeAsync, CurrentTime) != GrabSuccess ||
-	    XtGrabPointer(toplevel, True, (unsigned int) AllPointerEventMask, GrabModeAsync, GrabModeAsync, None, blankcursor, CurrentTime) != GrabSuccess) {
-		printf ("Could not grab keyboard and mouse.\n");
+	while (count < 5) {
+		if (XtGrabKeyboard(toplevel, True, GrabModeAsync, GrabModeAsync, CurrentTime) != GrabSuccess) {
+			printf ("lockvnc::keybmouse Could not grab keyboard, Count=%d.\n", count);
+			sleep (1);
+			count++;
+		}
+		else {
+			break;
+		}
 	}
 
 #ifndef DEBUG

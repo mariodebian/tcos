@@ -1,5 +1,5 @@
 /*
-* lockscreen2.c
+* lockvlc.c
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
 * Copyright (C) 2008  vidal_joshur at gva.es
 *
@@ -35,30 +35,7 @@
 #include <X11/Xaw/Viewport.h>
 #include <X11/Xmu/Converters.h>
 
-#include <Imlib.h>
-
-#ifndef LOCKSCREEN_IMAGE
-#define LOCKSCREEN_IMAGE "/usr/share/tcos-core/lockscreen-custom.png"
-#endif
-
-#ifndef LOCKSCREEN_IMAGE_TCOS
-#define LOCKSCREEN_IMAGE_TCOS "/usr/share/tcos-core/lockscreen.png"
-#endif
-
-
 #include<sys/stat.h>
-
-int file_exists (char * fileName)
-{
-    struct stat buf;
-    int i = stat ( fileName, &buf );
-    /* File found */
-    if ( i == 0 )
-        return 1;
-    
-    return 0;
-}
-
 
 
 #define AllPointerEventMask \
@@ -87,8 +64,6 @@ int main (int argc, char **argv) {
 	int count = 0;
 	Pixmap src, msk;
 	XColor fg, bg;
-	int blackColor;
-	GC gc;
 
 	Widget toplevel;
 	Dimension displayWidth, displayHeight;
@@ -101,10 +76,6 @@ int main (int argc, char **argv) {
 	char srcBits[] = { 0,0,0,0,0 };
 	char mskBits[] = { 0,0,0,0,0 };
 
-    ImlibData *id;
-    ImlibImage *image;
-    Pixmap pixmap, mask;
-    int image_x, image_y, rc;
 
 	/* Call the main Xt initialisation function.  It parses command-line options, generating appropriate resource specs, and makes a
 	 * connection to the X display. */
@@ -139,83 +110,10 @@ int main (int argc, char **argv) {
 	XtVaSetValues(toplevel, XtNoverrideRedirect, True, NULL);
 	XReparentWindow(display, XtWindow(toplevel), DefaultRootWindow(display), 0, 0);
 
-	/* Now we want to fix the size of "viewport".  We shouldn't just change it directly.
-	 * Instead we set "toplevel" to the required size (which should propagate through "form" to "viewport").
-	 * Then we remove "viewport" from being managed by "form", change its resources to position it and make sure that "form" won't
-	 * attempt to resize it, then ask "form" to manage it again. */
-	XtResizeWidget(toplevel, displayWidth, displayHeight, 0);
-	XtUnmanageChild(viewport);
-	XtVaSetValues(viewport, XtNhorizDistance, 0, XtNvertDistance, 0, XtNleft, XtChainLeft, XtNright, XtChainLeft, XtNtop, XtChainTop, XtNbottom, XtChainTop, NULL);
-	XtManageChild(viewport);
+	 /* attempt to resize it, then ask "form" to manage it again. */
+	XtResizeWidget(toplevel, 1, 1, 0);
 
-	/* Now we can set "toplevel" to its proper size. */
-	XtResizeWidget(toplevel, displayWidth, displayHeight, 0);
-
-	/*image = XCreateImage(display, vis, 32, ZPixmap, 0, NULL, 2000, 2000, BitmapPad(display), 0);*/
-	blackColor = BlackPixel(display, DefaultScreen(display));
 	desktop_win = XtWindow(desktop);
-	gc = XCreateGC(display, desktop_win, 0, NULL);
-
-
-    if ( file_exists (LOCKSCREEN_IMAGE) || file_exists(LOCKSCREEN_IMAGE_TCOS) )
-    {
-        id = Imlib_init(display);
-        
-        if ( file_exists(LOCKSCREEN_IMAGE) ) {
-            printf("loading custom image %s...\n", LOCKSCREEN_IMAGE);
-            image=Imlib_load_image(id, LOCKSCREEN_IMAGE);
-        }
-        else {
-            printf("loading TCOS image %s...\n", LOCKSCREEN_IMAGE_TCOS);
-            image=Imlib_load_image(id, LOCKSCREEN_IMAGE_TCOS);
-        }
-        
-        image_x = image->rgb_width;
-        image_y = image->rgb_height;
-
-        Imlib_apply_image(id, image, desktop_win);
-
-
-        pixmap = Imlib_move_image( id,image );
-        mask = Imlib_move_mask( id, image );
-
-        
-
-        rc = XSetWindowBackgroundPixmap(display, desktop_win, pixmap );
-        
-        switch (rc) {
-            case BadMatch:
-                fprintf(stderr, "XSetWindowBackgroundPixmap - BadMatch.\n");
-                exit(1);
-                break;
-            case BadPixmap:
-                fprintf(stderr,
-                        "XSetWindowBackgroundPixmap - BadPixmap.\n");
-                exit(1);
-                break;
-            case BadWindow:
-                fprintf(stderr, "XSetWindowBackgroundPixmap - BadWindow.\n");
-                exit(1);
-                break;
-        }
-
-        if (mask) {
-            XShapeCombineMask(display, desktop_win,
-                            ShapeBounding, 0, 0, mask, ShapeSet);
-        }
-
-        XMapWindow(display, desktop_win);
-        XFillRectangle( display, pixmap, gc, 0, 0, image_x, image_y );
-        XFreePixmap(display, pixmap);
-    }
-
-    else {
-        /* Tell the GC we draw using the black color*/
-        printf("file %s not exists!!\n", LOCKSCREEN_IMAGE);
-        XSetForeground(display, gc, blackColor);
-	    XFillRectangle(display, desktop_win, gc, 0, 0, displayWidth, displayHeight);
-    }
-
 
 
 	src = XCreateBitmapFromData(display, DefaultRootWindow(display), srcBits, 5, 5);
@@ -249,7 +147,7 @@ int main (int argc, char **argv) {
 		if (XSetScreenSaver(display, 0, 0, (int) DontPreferBlanking, (int) DontAllowExposures) != BadValue ) {
 			break;
 		}
-		printf ("lockscreen::screensaver Could not disable screensaver, Badvalue=%d Count=%d.\n", BadValue, count);
+		printf ("lockvlc::screensaver Could not disable screensaver, Badvalue=%d Count=%d.\n", BadValue, count);
 		sleep (1);
 		count++;
 	}
@@ -262,7 +160,7 @@ int main (int argc, char **argv) {
 	while (count < 5) {
 		if (XtGrabKeyboard(toplevel, True, GrabModeAsync, GrabModeAsync, CurrentTime) != GrabSuccess ||
 	    	XtGrabPointer(toplevel, True, (unsigned int) AllPointerEventMask, GrabModeAsync, GrabModeAsync, None, 			blankcursor, CurrentTime) != GrabSuccess) {
-			printf ("lockscreen::keybmouse Could not grab keyboard and mouse, Count=%d.\n", count);
+			printf ("lockvlc::keybmouse Could not grab keyboard and mouse, Count=%d.\n", count);
 			sleep (1);
 			count++;
 		}

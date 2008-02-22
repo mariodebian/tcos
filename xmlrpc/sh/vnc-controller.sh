@@ -62,7 +62,7 @@ for arg in $1; do
         else
             $DBUS_HANDLER --auth=$3 --type=exec --text="killall -s KILL x11vnc" 2>/dev/null
             # this returns ok if can send dbus msg, no need to parse
-            $DBUS_HANDLER --auth=$3 --type=exec --text="x11vnc $cmd"
+            $DBUS_HANDLER --auth=$3 --type=exec --text="x11vnc $cmd" 2>/dev/null
         fi
      ;;
      stopserver)
