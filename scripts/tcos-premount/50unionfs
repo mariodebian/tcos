@@ -51,7 +51,7 @@ if [ "$TCOS_ALL_MODULES" = "1" ] && [ -d /mnt/.modules/ ]; then
 
   log_begin_msg "Remounting allmodules in RW mode"
     mount_unionfs /mnt/.ram-modules /mnt/.modules /lib/modules/$(uname -r)
-  log_end_msg
+  log_end_msg $?
 
 fi
 

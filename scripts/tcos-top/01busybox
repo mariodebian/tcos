@@ -48,6 +48,7 @@ create_links "pidof"
 create_links "syslogd"
 create_links "logger"
 create_links "ulimit"
+create_links "ifconfig"
 
 # start syslogd (busybox embeded)
 killall syslogd 2>/dev/null

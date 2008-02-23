@@ -3,7 +3,7 @@ all: compile
 include ../common.mk
 
 compile:
-	gcc -Wall print_server.c -o print_server
+	gcc -Wall -O2 -ansi -pedantic print_server.c -o print_server
 
 clean:
 	rm -f print_server *~

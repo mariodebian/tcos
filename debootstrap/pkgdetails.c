@@ -6,6 +6,8 @@
 #define MAX_LINE 1000
 #define MAX_PKGS 100
 
+int strncasecmp(const char *s1, const char *s2, size_t n);
+
 static char *fieldcpy(char *dst, char *fld) {
     while (*fld && *fld != ':') 
         fld++;
@@ -23,6 +25,7 @@ static void dogetdeps(char *pkgsfile, char **in_pkgs, int pkgc) {
     int i;
     int skip;
     FILE *f;
+    int any = 0;
 
     cur_pkg[0] = cur_deps[0] = '\0';
 
@@ -40,7 +43,7 @@ static void dogetdeps(char *pkgsfile, char **in_pkgs, int pkgc) {
         if (strncasecmp(buf, "Package:", 8) == 0) {
             skip = 1;
             fieldcpy(cur_pkg, buf);
-	    int any = 0;
+	    
 	    for (i = 0; i < pkgc; i++) {
 		if (!pkgs[i]) continue;
 		any = 1;

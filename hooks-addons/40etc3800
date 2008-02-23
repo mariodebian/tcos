@@ -50,7 +50,7 @@ log_begin_msg "Loading eTC 3800 modules"
     configurexorg --newsettings --xdriver=via --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
   fi
 
-log_end_msg
+log_end_msg $?
 
 EOF
 chmod +x ${DESTDIR}/scripts/tcos-bottom/15etc3800

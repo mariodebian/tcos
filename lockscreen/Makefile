@@ -9,7 +9,7 @@ LOCKVLC_SOURCES = lockvlc.c
 LIBS= -I/usr/lib
 LOCKLIBS=$(shell imlib-config --libs)
 CFLAGS=$(shell imlib-config --cflags)
-LDADD = -Wall -lXaw $(LIBS) $(CFLAGS)
+LDADD = -O2 -ansi -pedantic -Wall -lXaw $(LIBS) $(CFLAGS)
 
 
 all: compile

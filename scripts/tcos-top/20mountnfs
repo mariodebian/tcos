@@ -77,7 +77,7 @@ if [ "${NFS_MODE}" = "nbd" ]; then
 
     mount /dev/nbd0 /mnt/nfs
   
-  log_end_msg
+  log_end_msg $?
 
 else
   log_begin_msg "Trying to mount NFS"
@@ -117,7 +117,7 @@ log_begin_msg "Remounting root in RW mode"
      fi
   fi
 
-log_end_msg
+log_end_msg $?
 
 
 maybe_break move_mnt

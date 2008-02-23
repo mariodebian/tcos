@@ -43,13 +43,14 @@ rootfs_file=/mnt/tmp/rootfs-$(uname -r).squashfs
 mkdir -p /mnt/tmp /target
 
 if [ "${TCOS_USENFS}" = "nfs" ]; then
+  value=0
   log_begin_msg "Mounting NFS /mnt/tmp"
     MOPTS="nolock,ro"
     mount -n -t ramfs none /target
     nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} /mnt/tmp 2>&1 > /dev/null ||\
 	 nfsmount -o ${MOPTS} $(read_server "nfs-server"):${nfs_dir} /mnt/tmp 2>&1 > /dev/null ||\
-	  _log "ROOTFS: __ERROR__ can't mount NFS!!!!!"
-  log_end_msg
+	  value=1 
+  log_end_msg $value
 
 fi
 
@@ -67,12 +68,12 @@ if [ ! -f ${rootfs_file} ]; then
   _log "ROOTFS is __NOT__ in /mnt/tmp"
   log_begin_msg "Downloading rootfs"
      download_file /tcos/rootfs-$(uname -r).squashfs ${rootfs_file}
-  log_end_msg
+  log_end_msg $?
 else
   _log "ROOTFS is in /mnt/tmp"
   log_begin_msg "Using NFS rootfs"
     sync
-  log_end_msg
+  log_end_msg $?
 fi
 
 update_progress
@@ -82,7 +83,7 @@ update_progress
 _log "ROOTFS mounting rootfs in /target"
 log_begin_msg "Mounting rootfs filesystem"
    mount -r -o loop -t squashfs ${rootfs_file} /target >> /tmp/initramfs.debug 2>&1
-log_end_msg
+log_end_msg $?
 
 update_progress
 
@@ -91,7 +92,7 @@ _log "ROOTFS remounting /target as RW"
 log_begin_msg "Remounting /target in rw mode"
    mkdir -p /.target
    mount_unionfs /mnt/rootram /.target /target
-log_end_msg
+log_end_msg $?
 
 update_progress
   
@@ -142,7 +143,7 @@ log_begin_msg "Moving /dev /proc and /sys"
   mount -n -o move /sys  /target/sys
   mount -n -o move /mnt/tmp  /target/mnt/tmp
   mount -n -o move /proc /target/proc
-log_end_msg
+log_end_msg $?
 
 
 # enter to jail

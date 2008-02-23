@@ -71,7 +71,7 @@ static xmlrpc_value *tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
      if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", "error: params error");
 
-  
+
   /* need login first */
   login_ok=validate_login(user,pass);
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )

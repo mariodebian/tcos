@@ -21,6 +21,7 @@ is_cdrom() {
 
 if [ "$action" = "ACTION=mount" ] || [ "$action" = "ACTION=umount" ]; then
   # action mount/umount not controlled by tcos-udev.sh
+  echo "**tcos-udev.sh ** $action not processed" >> /var/log/listener-daemon.log
   exit 0
 fi
 

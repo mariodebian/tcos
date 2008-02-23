@@ -81,7 +81,7 @@ EOF
  #start daemon
  _log "AUTOFS Starting autofs daemon"
  autofs >> /tmp/initramfs.debug 2>&1 & 
-log_end_msg
+log_end_msg $?
 
 # manually make mountpoints
 #mkdir /media/autofs >> /tmp/initramfs.debug 2>&1

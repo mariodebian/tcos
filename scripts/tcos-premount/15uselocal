@@ -67,7 +67,7 @@ log_begin_msg "Try to use some ext3 parts"
      # check if free space > 64 Mb
      if [ ${free_space} -ge ${need_free_space} ] ; then
         _log "USELOCAL have more than ${need_free_space} in ${ext3}"
-        log_end_msg
+        log_end_msg 0
         exit 0
      else
        _log "USELOCAL no free space in ${ext3}"
@@ -96,7 +96,7 @@ log_begin_msg "Try to use some vfat parts"
      # check if free space > 64 Mb
      if [ ${free_space} -ge ${need_free_space} ] ; then
         _log "USELOCAL have more than ${need_free_space} in ${vfat}"
-        log_end_msg
+        log_end_msg 0
         exit 0
      else
        _log "USELOCAL no free space in ${vfat}"
@@ -110,7 +110,7 @@ log_end_msg 1
 fi
 
 log_begin_msg "NO parts avalaible (ext3 or fat)"
-log_end_msg
+log_end_msg 0
 
 update_progress
 exit 0

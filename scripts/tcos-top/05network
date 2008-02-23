@@ -33,7 +33,7 @@ echo 5 > /tmp/progress
 # localhost
 log_begin_msg "Bring up Local loopback device"
  ifconfig lo up
-log_end_msg
+log_end_msg $?
 
 touch /etc/resolv.conf
 
@@ -64,16 +64,35 @@ TCOS_NET_ACTIVE="eth0"
 TCOS_NET_WIFI=
 TCOS_NET_WIFI_ESSID=""
 TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0)
-TCOS_NET_LINK=$(mii-tool 2>/dev/null | awk -F ":" '/link ok/ {print $1}')
+TCOS_NET_LINK=""
+TCOS_NET_LINK_NUMBER=0
 
 # search for network interfaces with link ok status
 for dev in $TCOS_NET_DEVS; do
+    # need to up iface
+    ifconfig $dev up >> /tmp/initramfs.debug 2>&1
     # have link ???
-    if [ $(echo "$TCOS_NET_LINK" |grep -c $dev) = 1 ]; then
-      _log "05NETWORK found \"LINK OK\" in $dev"
-      TCOS_NET_ACTIVE=$dev
+    if [ -e /sys/class/net/$dev/carrier ] && \
+       [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ]; then
+      _log "05NETWORK found carrier link in $dev iface"
+      TCOS_NET_LINK="$TCOS_NET_LINK $dev"
+      TCOS_NET_LINK_NUMBER=$(($TCOS_NET_LINK_NUMBER+1))
     fi
 done
+
+if [ $TCOS_NET_LINK_NUMBER -gt 1 ]; then
+    # we have some ifaces with link
+    _log "05NETWORK various net ifaces have link"
+    
+elif [ $TCOS_NET_LINK_NUMBER = 1 ]; then
+    # one iface
+    TCOS_NET_ACTIVE=$TCOS_NET_LINK
+    
+else
+    # not link !!!
+    panic "ERROR: No link network detected, check cable."
+fi
+
 
 if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
   #force wireless, read some vars
@@ -105,7 +124,7 @@ fi
           modprobe -q $kmod 2>/dev/null
         fi
       done
-    log_end_msg
+    log_end_msg 0
 
     ifconfig $TCOS_NET_ACTIVE down
     ifconfig $TCOS_NET_ACTIVE up
@@ -113,46 +132,46 @@ fi
     # scan wireless
     log_begin_msg "Scanning wireless networks"
       iwlist $TCOS_NET_ACTIVE scan | grep ESSID | awk -F ":" '{print $2}' | sed s/\"//g >> /tmp/initramfs.debug 2>&1
-    log_end_msg
+    log_end_msg $?
 
     # associate if ap cmdline var is set
     if [ "$TCOS_NET_WIFI_ESSID" != "" ]; then
        if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then
            log_begin_msg "Wireless WPA mode"
              /sbin/start-wpa.sh "${TCOS_NET_ACTIVE}"
-           log_end_msg
+           log_end_msg $?
        fi
        
        if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
            log_begin_msg "Wireless WEP mode setting key"
              [ ! $TCOS_WEP ] && iwconfig $TCOS_NET_ACTIVE key $TCOS_WEP
-           log_end_msg
+           log_end_msg $?
        fi
        
        log_begin_msg "Wireless associating with $TCOS_NET_WIFI_ESSID"
          iwconfig $TCOS_NET_ACTIVE essid "$TCOS_NET_WIFI_ESSID"
-       log_end_msg
+       log_end_msg $?
     else
        log_begin_msg "Wireless associating with any"
          iwconfig $TCOS_NET_ACTIVE essid any
-       log_end_msg
+       log_end_msg $?
     fi
- else
-    # wired network
-    ifconfig $TCOS_NET_ACTIVE down
-    ifconfig $TCOS_NET_ACTIVE up
+ #else
+ #   # wired network
+ #   ifconfig $TCOS_NET_ACTIVE down
+ #   ifconfig $TCOS_NET_ACTIVE up
  fi
  
  # break for wireless
  maybe_break wireless
  
- log_begin_msg "Sending DHCP request on $TCOS_NET_ACTIVE"
-  _log "DHCLIENT $TCOS_NET_ACTIVE"
-  dhclient $TCOS_NET_ACTIVE >> /tmp/initramfs.debug  2>&1
-  myip=$(ifconfig $TCOS_NET_ACTIVE | grep "inet addr"| awk '{print $2}' | awk -F ":" '{print $2}')
+ log_begin_msg "Sending DHCP request on $TCOS_NET_LINK"
+  _log "DHCLIENT $TCOS_NET_LINK"
+  dhclient $TCOS_NET_LINK >> /tmp/initramfs.debug  2>&1
+  myip=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases     | head -1| awk '{print $2}' | sed s/";"//g)
   dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
   hostname=$(grep 'host-name' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}' | sed s/\"//g)
- log_end_msg
+ log_end_msg 0
 
 # hack for dhcp3-client
 if [ "$myip" = "" ]; then
@@ -164,7 +183,7 @@ if [ "$myip" = "" ]; then
      #ifconfig $TCOS_NET_ACTIVE down
      ifconfig $TCOS_NET_ACTIVE $myip netmask $netmask up
      route add default dev $TCOS_NET_ACTIVE gw $gateway
-   log_end_msg
+   log_end_msg $?
 fi
 
 
@@ -182,8 +201,8 @@ if [ $(echo $hostname | awk '{print split($1, A, ":")}') -gt 1 ]; then
   fi
 fi
 
-if [ "x{$hostname}" = "x" ]; then
-  hostname=tcos
+if [ "x{$hostname}" = "x" ] || [ "x{$hostname}" = "x " ]; then
+  panic "ERROR: DHCP server don't give me a hostname !!! Edit /etc/hosts in dhcp server"
 fi
 
 # search for other hosts
@@ -216,7 +235,7 @@ echo "nameserver $TCOS_DNS_SERVER" > /etc/resolv.conf
 hostname $hostname
 export HOSTNAME=$hostname
 export hostname
-log_end_msg
+log_end_msg $?
 
 
 update_progress

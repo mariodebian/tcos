@@ -37,6 +37,7 @@
 
 #include<sys/stat.h>
 
+int setenv(const char *name, const char *value, int overwrite);
 
 #define AllPointerEventMask \
 	(ButtonPressMask | ButtonReleaseMask | \
@@ -51,8 +52,6 @@
 /* TODO: don't use X-Athena-Widgets (xaw)*/
 
 int main (int argc, char **argv) {
-
-	setenv("XLIB_SKIP_ARGB_VISUALS", "1", 1);
 
 	XtResource desktopBackingStoreResources[] = { { XtNbackingStore, XtCBackingStore, XtRBackingStore, sizeof(int), 0, XtRImmediate, (XtPointer) Always, }, };
 
@@ -76,6 +75,7 @@ int main (int argc, char **argv) {
 	char srcBits[] = { 0,0,0,0,0 };
 	char mskBits[] = { 0,0,0,0,0 };
 
+    setenv("XLIB_SKIP_ARGB_VISUALS", "1", 1);
 
 	/* Call the main Xt initialisation function.  It parses command-line options, generating appropriate resource specs, and makes a
 	 * connection to the X display. */

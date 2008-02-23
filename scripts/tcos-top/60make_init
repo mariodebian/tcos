@@ -50,7 +50,7 @@ quiet=n
 # start udev again
 log_begin_msg "Re-Discovering hardware"
 /scripts/init-premount/udev
-log_end_msg
+log_end_msg \$?
 
 
 run_scripts /scripts/tcos-bottom/

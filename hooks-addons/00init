@@ -33,7 +33,7 @@ clear
 start_usplash
 
     log_begin_msg "Rebooting"
-    log_end_msg
+    log_end_msg 0
 
 kill_all
 
@@ -57,7 +57,7 @@ clear
 start_usplash
 
     log_begin_msg "Poweroff system"
-    log_end_msg
+    log_end_msg 0
 
 kill_all
 

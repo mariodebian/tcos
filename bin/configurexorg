@@ -51,8 +51,7 @@ debug () {
 }
 
 tftp_download_again() {
-  # thanks to Juanje Ojeda for awk trick
-  MYIP=$(ifconfig eth0| awk '/inet addr/ {split ($2,A,":"); print A[2]}')
+  MYIP=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $2}' | sed s/";"//g)
   debug "downloading file /tcos/conf/${MYIP}.conf"
   download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf
   . /conf/mysettings.conf

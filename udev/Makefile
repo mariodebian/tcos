@@ -1,5 +1,5 @@
 all:
-	gcc -Wall -o mount-listener mount_listener.c
+	gcc -Wall -O2 -ansi -pedantic -o mount-listener mount_listener.c
 
 include ../common.mk
 

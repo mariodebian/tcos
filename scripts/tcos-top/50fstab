@@ -129,7 +129,7 @@ create_fstab ()
   fi
 
   _log "FSTAB done"
-[ "$NO_MSG" = "" ] && log_end_msg
+[ "$NO_MSG" = "" ] && log_end_msg 0
 
 update_progress
 

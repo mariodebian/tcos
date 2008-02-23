@@ -115,17 +115,18 @@ modprobe -q loop >> /tmp/initramfs.debug 2>&1
 modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
 modprobe -q unionfs >> /tmp/initramfs.debug 2>&1
 
+value=0
 log_begin_msg "Downloading FREENX squashfs"
-  download_file /tcos/\${TCOS_FREENX_SQUASHFS_FILE} /mnt/tmp/nxclient.squashfs
+  download_file /tcos/\${TCOS_FREENX_SQUASHFS_FILE} /mnt/tmp/nxclient.squashfs || value=1
   sync
   sleep 1
-log_end_msg
+log_end_msg \$value
 
 # Mount squashfs filesystems
 log_begin_msg "Mounting FREENX filesystem"
  mkdir -p /usr/NX
  mount -r -o loop -t squashfs /mnt/tmp/\${TCOS_FREENX_SQUASHFS_FILE} /usr/NX >> /tmp/initramfs.debug 2>&1
-log_end_msg $?
+log_end_msg \$?
 
 # download settings
 mkdir -p /root/.nx/config

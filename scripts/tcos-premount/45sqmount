@@ -71,8 +71,9 @@ log_begin_msg "Mounting usr filesystem"
  if [ $? != 0 ]; then
    panic "Error mounting usr.squashfs check squashfs module or bugs"
    FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
- fi
-log_end_msg
+ else
+   log_end_msg 0
+fi
 
 
 

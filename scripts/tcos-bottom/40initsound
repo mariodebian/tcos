@@ -32,7 +32,7 @@ TCOS_DISABLE_SOUND=$(read_cmdline_var "nosound" "0")
 
 if [  ${TCOS_SOUND} = 0  -o ${TCOS_DISABLE_SOUND} = 1 ]; then
   log_begin_msg "Sound disabled"
-  log_end_msg
+  log_end_msg 1
   exit 0
 fi
 
@@ -62,7 +62,7 @@ log_begin_msg "Setting volume to ${TCOS_VOLUME}"
     aumix -v ${TCOS_VOLUME}
     aumix -w ${TCOS_VOLUME}
   fi
-log_end_msg
+log_end_msg $?
 
 
 if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
@@ -71,20 +71,20 @@ if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
 
   log_begin_msg "Init sound server OSS (eSound)"
     /sbin/startesd
-  log_end_msg
+  log_end_msg $?
 fi
 
 if [ $TCOS_PULSEAUDIO ]; then
   log_begin_msg "Init sound server (PulseAudio)"
     _log "INITSOUND starting pulseaudio"
     startpulseaudio 2> /var/log/pulseaudio.log &
-  log_end_msg
+  log_end_msg $?
 
 elif [ ! $TCOS_PULSEAUDIO ] && [ ! $TCOS_SOUND_OSS ]; then
   log_begin_msg "Init sound server (esound)"
     _log "INITSOUND starting esd daemon"
     /sbin/startesd
-  log_end_msg
+  log_end_msg $?
 fi
 
 update_progress

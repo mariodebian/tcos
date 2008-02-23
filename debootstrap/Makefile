@@ -1,10 +1,9 @@
 all: compile
-	#none
 
 include ../common.mk
 
 compile:
-	gcc -Wall pkgdetails.c -o pkgdetails
+	gcc -Wall -O2 -ansi -pedantic pkgdetails.c -o pkgdetails
 
 clean:
 	rm -f pkgdetails *~

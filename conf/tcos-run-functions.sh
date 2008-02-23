@@ -42,7 +42,7 @@ kill_xorg() {
   log_begin_msg "Killing Xorg"
     killall tryXorg >/dev/null 2>&1
     killall Xorg    >/dev/null 2>&1
-  log_end_msg
+  log_end_msg $?
   update_progress "-5"
 }
 
@@ -52,14 +52,14 @@ kill_all() {
   for proc in ${process}; do
      log_begin_msg "Stopping ${proc}"
        killall $proc >  /dev/null 2>&1 &
-     log_end_msg
+     log_end_msg $?
      update_progress "-5"
   done
   # kill all with -9
   for proc in ${process}; do
      log_begin_msg "Force kill ${proc}"
        killall -9 $proc >  /dev/null 2>&1 &
-     log_end_msg
+     log_end_msg $?
      update_progress "-5"
   done
 }
@@ -67,7 +67,7 @@ kill_all() {
 umount_swap() {
  log_begin_msg "Disable swap"
    swapoff -a
- log_end_msg
+ log_end_msg $?
  update_progress "-5"
 }
 
@@ -86,7 +86,7 @@ umount_all() {
      #echo "Force umount ${dev}"
      umount -l ${dev} >  /dev/null 2>&1
    done
-  log_end_msg
+  log_end_msg $?
   update_progress "-5"
 }
 
@@ -146,8 +146,10 @@ _log "tftp -g -r ${1} -l ${2} "$(read_server "tftp-server")
 tftp -g -r ${1} -l ${2} $(read_server "tftp-server") > /dev/null 2> /tmp/download_file.log
 if [ $? = 0 ] ;then
  _log "download_file() OK"
+ return true
 else
  _log "download_file() Error"
+ return false
  cat /tmp/download_file.log >> /tmp/initramfs.debug 2> /dev/null
  rm /tmp/download_file.log > /dev/null 2>&1
 fi

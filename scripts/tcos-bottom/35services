@@ -53,7 +53,7 @@ if [ "$(which dropbear)" ] ; then
    ln -s /var/log/dropbear /etc/dropbear/log/main >> /tmp/initramfs.debug 2>&1   
    ln -s /var/run/dropbear.log /etc/dropbear/log/superwise >> /tmp/initramfs.debug 2>&1   
    dropbear -p 22 -E -d /etc/dropbear/dropbear_dss_host_key -r /etc/dropbear/dropbear_rsa_host_key 2> /tmp/sshd.log
- log_end_msg
+ log_end_msg $?
 
  rm -f /dev/random
  mv /dev/random.old /dev/random
@@ -70,7 +70,7 @@ if [ "$(which inetd)" ] && [ -e /etc/inetd.conf ] ; then
  _log "INITTCOS starting inetd daemon"
  log_begin_msg "Starting inetd"
    inetd
- log_end_msg
+ log_end_msg $?
 else
  _log "INITTCOS not starting inetd"
 fi

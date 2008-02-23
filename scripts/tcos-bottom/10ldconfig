@@ -61,7 +61,7 @@ fi
 if [ ! "$(which Xorg)" ]; then
   _log "LDCONFIG Xorg not found"
   log_failure_msg "Xorg not found"
-  log_end_msg
+  log_end_msg 1
   exit 0
 fi
 

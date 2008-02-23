@@ -22,10 +22,26 @@ quiet=n
 . /scripts/functions
 . /conf/tcos-run-functions
 
-
-if [ $TCOS_WAKEONLAN ]; then
-   _log "70WAKEONLAN Enabling WOL in eth0 device..."
-   /usr/sbin/ethtool -s eth0 wol g >> /tmp/initramfs.debug 2>&1
+if [ ! $TCOS_WAKEONLAN ]; then
+   exit 0
 fi
 
+
+# get list of network interfaces
+TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0)
+
+# search for network interfaces with link ok status
+for dev in $TCOS_NET_DEVS; do
+    # have link ???
+    if [ -e /sys/class/net/$dev/carrier ] && \
+       [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ]; then
+      _log "70WAKEONLAN Enabling WOL in $dev iface..."
+      /usr/sbin/ethtool -s $dev wol g >> /tmp/initramfs.debug 2>&1
+    fi
+done
+
+
+
+
 exit 0
+

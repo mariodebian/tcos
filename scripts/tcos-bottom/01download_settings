@@ -25,12 +25,11 @@ maybe_break download_settings
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
-
-MYIP=$(ifconfig eth0| grep "inet addr"| awk '{print $2}'| awk -F ":" '{print $2}')
+MYIP=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $2}' | sed s/";"//g)
 
 log_begin_msg "Download personalized settings ${MYIP}.conf"
   download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf
-log_end_msg
+log_end_msg $?
 
 
 update_progress 2

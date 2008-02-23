@@ -4,7 +4,7 @@ all: compile
 include ../common.mk
 
 compile:
-	gcc -Wall daemon.c -o daemonize
+	gcc -Wall -O2 -ansi -pedantic daemon.c -o daemonize
 
 clean:
 	rm -f daemonize daemon *~

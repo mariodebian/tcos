@@ -50,10 +50,11 @@ if [ ! -e /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/usr.squashfs ];
 
   log_begin_msg "Downloading usr.squashfs from $(read_server "tftp-server")"
     _log "SQMOUNT downloading squashfs"
-    download_file /tcos/usr-$(uname -r).squashfs /mnt/tmp/usr-$(uname -r).squashfs
+    value=0
+    download_file /tcos/usr-$(uname -r).squashfs /mnt/tmp/usr-$(uname -r).squashfs || value=1
     sync
     sleep 1
-  log_end_msg
+  log_end_msg $value
 
 
   if [ "$(if_is_zero /mnt/tmp/usr-$(uname -r).squashfs)" = "0" ]; then
@@ -63,7 +64,7 @@ if [ ! -e /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/usr.squashfs ];
 else
   log_begin_msg "usr-$(uname -r).squashfs not downloaded"
     sync
-  log_end_msg
+  log_end_msg $?
 fi
 
 ##############################################
@@ -89,7 +90,7 @@ if [ "$TCOS_ALL_MODULES" = "1" ]; then
        log_end_msg 1
        exit 0
      fi
-    log_end_msg
+    log_end_msg 0
   fi
   
 fi

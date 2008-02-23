@@ -59,3 +59,32 @@ else
   _echo "   * Usplash not found, timeout path not applied."
 
 fi
+
+
+# add fancy startup messages
+
+cat << EOF >> $DESTDIR/scripts/functions
+
+log_use_fancy_output () {
+    TPUT=/bin/tput
+    EXPR=/bin/expr
+    if [ "x\$TERM" != "xdumb" ] && [ -x \$TPUT ] && [ -x \$EXPR ] && \$TPUT hpa 60 >/dev/null 2>&1 && \$TPUT setaf 1 >/dev/null 2>&1; then
+        [ -z \$FANCYTTY ] && FANCYTTY=1 || true
+    else
+        FANCYTTY=0
+    fi
+    case "\$FANCYTTY" in
+        1|Y|yes|true)   true;;
+        *)              false;;
+    esac
+}
+
+FANCYTTY=
+[ -e /etc/lsb-base-logging.sh ] && . /etc/lsb-base-logging.sh || true
+
+EOF
+
+cpifexists /etc/lsb-base-logging.sh /etc
+cpifexists /usr/bin/tput /bin
+cpifexists /usr/bin/expr /bin
+

@@ -26,6 +26,6 @@ quiet=n
 
 log_begin_msg "Setting clock based on hardware clock"
   hwclock --localtime --hctosys
-log_end_msg
+log_end_msg $?
 
 exit 0

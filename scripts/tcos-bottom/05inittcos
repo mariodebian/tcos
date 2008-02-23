@@ -47,7 +47,7 @@ if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
    rm -f /etc/.pwd.lock
 
    echo "root:${TCOS_ROOT_PASSWD}" | chpasswd  2>&1 >/dev/null
- log_end_msg
+ log_end_msg $?
 else
  _log "INITTCOS not updating root passwd, using generation root passwd"
 fi
@@ -68,7 +68,7 @@ if [ "${start_discover}" = "1" ] ; then
  log_begin_msg "Discovering hardware"
    _log "INITTCOS launching discover"
   discover-modprobe -v >> /tmp/initramfs.debug 2>&1
- log_end_msg $?
+ fg $?
 else
  _log "INITTCOS not starting discover"
 fi
@@ -100,19 +100,19 @@ if [ ${showmodules} ]; then
   
   log_begin_msg "Loaded modules are
 ${loaded}"
-  log_end_msg
+  log_end_msg 0
 
   log_begin_msg "Discover needed modules are
 ${discover_modules}"
-  log_end_msg
+  log_end_msg 0
   
   if [ "${not_found}" != "" ]; then
   log_begin_msg "NOT FOUND modules
 ${not_found}"
-  log_end_msg
+  log_end_msg 1
   else
   log_begin_msg "OK all needed modules loaded"
-  log_end_msg
+  log_end_msg 0
   fi
 
   echo -n "Press ENTER to continue loading..."
@@ -127,7 +127,7 @@ if [ "$(which loadkeys)" ]; then
  _log "INITTCOS loading keymap"
  log_begin_msg "Loading default server keymap"
    loadkeys -q /etc/console/boottime.kmap.gz >> /tmp/initramfs.debug 2>&1 &
- log_end_msg
+ log_end_msg $?
 else
  _log "INITTCOS not loading default keymap"
 fi

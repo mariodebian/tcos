@@ -2,8 +2,6 @@
 # necessary dhcp-client package
 
 
-cpifexists /sbin/mii-tool        /sbin/
-
 # some network stuff
 touch $DESTDIR/etc/hosts.allow
 touch $DESTDIR/etc/hosts.deny

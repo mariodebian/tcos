@@ -59,7 +59,7 @@ log_begin_msg "Loading Intel Dot Station (Paquito) modules"
   fi
   
 
-log_end_msg
+log_end_msg $?
 
 EOF
 chmod +x ${DESTDIR}/scripts/tcos-bottom/16paquito

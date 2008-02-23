@@ -1,5 +1,6 @@
-initramfs-tools-tcos (0.88.14.14) unstable; urgency=low
+initramfs-tools-tcos (0.88.15) unstable; urgency=low
 
+  [ Ignacio Vidal ]
   * session-cmd/session-cmd-exec
     - Redefine script
   * lockscreen/*
@@ -18,9 +19,25 @@ initramfs-tools-tcos (0.88.14.14) unstable; urgency=low
   * hooks-addons/21pulseaudio
     - In some cases pulseaudio down unexpectedly
   * hooks-addons/40etc2300
-    - Manual add modules for Epatec 2300 thin clients 
+    - Manual add modules for Epatec 2300 thin clients
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 22 Feb 2008 16:14:16 +0100
+  [ Mario Izquierdo (mariodebian) ]
+  * Set log_end_msg first param in all init scripts
+  * Append to GCC flags '-O2 -ansi -pedantic'
+  * udev/mount_listener.c
+    - Use strtok to split device (no more segfaults)
+  * lockscreen/lockvnc.c lockscreen/lockscreen2.c lockscreen/lockvlc.c
+    - Call setenv after vars declaration (ANSI C)
+  * hooks-addons/95usplash_timeout
+    - Append /etc/lsb-base-logging.sh to /scripts/functions to support fancy output
+  * scripts/tcos-top/05network hooks-addons/01dhclient
+    - Use /sys/class/net/IFNAME/carrier to detect link status
+    - Delete mii-tool as no needed
+  * scripts/tcos-bottom/25startx scripts/tcos-bottom/01download_settings
+    bin/configurexorg
+    - Use /var/lib/dhcp/dhclient.leases to retrieve IP ADDRESS (not eth0)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 23 Feb 2008 12:43:57 +0100
 
 initramfs-tools-tcos (0.88.14.13) unstable; urgency=low
 

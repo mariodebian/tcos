@@ -34,15 +34,15 @@ ID_FS_TYPE=$(cd_type $DEVNAME)
 fi
 
 if [ -z $ID_VENDOR ]; then
-  ID_VENDOR=$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$DISK") 2>/dev/null)/vendor 2>/dev/null | sed 's/ //g')
+  ID_VENDOR=$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$DISK" 2>/dev/null) 2>/dev/null)/vendor 2>/dev/null | sed 's/ //g')
 fi
 
 if [ -z $ID_MODEL ]; then
-  ID_MODEL=$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$DISK") 2>/dev/null)/model 2>/dev/null | sed 's/ //g')
+  ID_MODEL=$(cat $(dirname $(find /sys/class/scsi_disk/*/device/  -name "block:$DISK" 2>/dev/null) 2>/dev/null)/model 2>/dev/null | sed 's/ //g')
 fi
 
 echo "ID_BUS=$ID_BUS#DEVNAME=$DEVNAME#ACTION=$ACTION#ID_FS_LABEL=$ID_FS_LABEL#ID_FS_TYPE=$ID_FS_TYPE#ID_VENDOR=$ID_VENDOR#ID_MODEL=$ID_MODEL#DEVPATH=$DEVPATH" >> $output_file
 debug "ID_BUS=$ID_BUS#DEVNAME=$DEVNAME#ACTION=$ACTION#ID_FS_LABEL=$ID_FS_LABEL#ID_FS_TYPE=$ID_FS_TYPE#ID_VENDOR=$ID_VENDOR#ID_MODEL=$ID_MODEL#DEVPATH=$DEVPATH"
 
 
-
+exit 0

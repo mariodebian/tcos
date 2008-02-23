@@ -52,7 +52,7 @@ log_begin_msg "Starting USB/IP"
   modprobe usbip
 
   usbipd -D > /var/log/usbipd.log 2>&1
-log_end_msg
+log_end_msg $?
 
 exit 0
 EOF
