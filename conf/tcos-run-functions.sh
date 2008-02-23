@@ -146,12 +146,12 @@ _log "tftp -g -r ${1} -l ${2} "$(read_server "tftp-server")
 tftp -g -r ${1} -l ${2} $(read_server "tftp-server") > /dev/null 2> /tmp/download_file.log
 if [ $? = 0 ] ;then
  _log "download_file() OK"
- return true
+ return 0
 else
  _log "download_file() Error"
- return false
  cat /tmp/download_file.log >> /tmp/initramfs.debug 2> /dev/null
  rm /tmp/download_file.log > /dev/null 2>&1
+ return 1
 fi
 }
 

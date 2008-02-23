@@ -479,7 +479,7 @@ check_xfs() {
         echo "        and configure to allow remote connections. See README."
         echo ""
     else
-      xfs_config=$(grep -c "^no-listen" /etc/X11/fs/config)
+      xfs_config=$(grep -c "^no-listen" /etc/X11/fs/config 2>/dev/null)
       if [ ! -e /etc/tcos/chroot ] && [ $xfs_config != 0 ]; then
         echo "WARNING:"
         echo "        TCOS need a network font server. Please edit /etc/X11/fs/config"

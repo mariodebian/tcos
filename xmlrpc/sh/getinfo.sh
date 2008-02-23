@@ -24,7 +24,10 @@
 
 
 IFCONFIG="busybox ifconfig"
-IFDEV="eth0"
+IFDEV=$(grep 'interface' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $2}' | sed s/";"//g | sed s/\"//g)
+if [ "$IFDEV" = "" ]; then
+  IFDEV="eth0"
+fi
 KVER=$(uname -r)
 TCOS_CONF=/conf/tcos.conf
 STANDALONE=0
@@ -238,6 +241,10 @@ hostname
 
 NETWORK_IP)
 ${IFCMD} | grep "inet addr:"| awk '{print $2}'| awk -F ":" '{print $2}'
+;;
+
+NETWORK_IFACE)
+echo ${IFDEV}
 ;;
 
 NETWORK_MAC)
