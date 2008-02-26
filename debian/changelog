@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
+
+  * Add pxelinux boot menu (normal and vesa mode)
+    - Move parse_pxelinux to tcos-generation-functions.sh
+    - Add 3 new TCOS vars:
+      TCOS_NETBOOT_MENU, TCOS_NETBOOT_MENU_VESA, and TCOS_NETBOOT_HIDE_INSTALL
+  * tcos/pxetcos.png and tcos/pxetcos.jpg
+    - vesamenu.c32 images (better jpg, less size)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 26 Feb 2008 19:23:46 +0100
+
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 
   * scripts/tcos-top/05network

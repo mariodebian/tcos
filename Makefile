@@ -96,6 +96,9 @@ install:
 	install -m 644 tcos/tcos.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/logo.lss $(DESTDIR)$(TFTP_DIR)/
 
+	install -m 644 tcos/default.menu.tpl $(DESTDIR)$(TCOS_CONF)/pxelinux.menu.cfg.tpl
+	install -m 644 tcos/pxetcos.jpg      $(DESTDIR)$(TFTP_DIR)/
+
 	install -m 755 hooks/tcosmain $(DESTDIR)$(TCOS_CONF)/hooks/
 	
 	for i in `find scripts/ -type f`; do install -m 755 $$i $(DESTDIR)$(TCOS_DIR)/$$i; done

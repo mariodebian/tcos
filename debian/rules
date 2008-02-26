@@ -51,6 +51,9 @@ install: build
 	install -m 755 $(CURDIR)/debian/tcos-standalone.init $(CURDIR)/debian/tmp/etc/init.d/tcos-standalone
 
 	dh_link /usr/lib/syslinux/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
+	# support of pxelinux menu
+	dh_link /usr/lib/syslinux/menu.c32       /var/lib/tcos/tftp/menu.c32
+	dh_link /usr/lib/syslinux/vesamenu.c32   /var/lib/tcos/tftp/vesamenu.c32
 
 
 	@# remove SVN dirs
