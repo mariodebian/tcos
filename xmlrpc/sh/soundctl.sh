@@ -38,6 +38,7 @@ if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
 else
   TCOS_OSS=
   MIXER="amixer -c 0 "
+  [ $? -eq 1 ] && MIXER="amixer -c 1 "
 fi
 
 # for debug force OSS
@@ -62,7 +63,9 @@ get_level() {
   if [ $TCOS_OSS ]; then
     $MIXER -q | grep $1 | head -1 | awk '{print $3}' | sed s/","//g
   else
-    $MIXER  sget "$1" | grep "^  Front"| head -1 | awk '{print $5}'| sed s/"\["//g| sed s/"\]"//g
+    var=$($MIXER  sget "$1" | grep "^  Front"| head -1 | awk '{print $5}'| sed s/"\["//g| sed s/"\]"//g)
+    [ -z $var ] && var=$($MIXER  sget "$1" | grep "^  Mono"| head -1 | awk '{print $4}'| sed s/"\["//g| sed s/"\]"//g)
+    echo $var
   fi
 }
 
@@ -91,7 +94,9 @@ set_level() {
       echo "unknow OSS mixer channel"
     fi
  else
-    $MIXER  set "$1" "$2" | grep "^  Front"| head -1 | awk '{print $5}'| sed s/"\["//g| sed s/"\]"//g
+    var=$($MIXER  set "$1" "$2" | grep "^  Front"| head -1 | awk '{print $5}'| sed s/"\["//g| sed s/"\]"//g)
+    [ -z $var ] && var=$($MIXER  set "$1" "$2" | grep "^  Mono"| head -1 | awk '{print $4}'| sed s/"\["//g| sed s/"\]"//g)
+    echo $var
  fi
 }
 
@@ -107,7 +112,13 @@ get_mute() {
       echo "on"
     fi
   else
-    $MIXER  sget $1| grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g
+    var=$($MIXER  sget $1| grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
+    if [ -z $var ];then
+      var=$($MIXER  sget $1| grep "^  Mono"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
+    elif [ $var != "on" -a $var != "off" -a $var != "" ];then
+      var=$($MIXER  sget $1| grep "^  Front"| head -1 | awk '{print $7}'| sed s/"\["//g| sed s/"\]"//g)
+    fi
+    echo $var
   fi
 }
 
@@ -119,7 +130,13 @@ set_mute() {
  if [ $TCOS_OSS ]; then
     set_level "$1" "0"
   else
-    $MIXER  set $1 mute| grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g
+    var=$($MIXER  set $1 mute| grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
+    if [ -z $var ];then
+      var=$($MIXER  set $1 mute| grep "^  Mono"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
+    elif [ $var != "on" -a $var != "off" -a $var != "" ];then
+      var=$($MIXER  set $1 mute| grep "^  Front"| head -1 | awk '{print $7}'| sed s/"\["//g| sed s/"\]"//g)
+    fi
+    echo $var
   fi
 }
 
@@ -131,7 +148,13 @@ set_unmute() {
  if [ $TCOS_OSS ]; then
     set_level "$1" "$unmute_level"
   else
-    $MIXER set $1 unmute| grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g
+    var=$($MIXER  set $1 unmute| grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
+    if [ -z $var ];then
+      var=$($MIXER  set $1 unmute| grep "^  Mono"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
+    elif [ $var != "on" -a $var != "off" -a $var != "" ];then
+      var=$($MIXER  set $1 unmute| grep "^  Front"| head -1 | awk '{print $7}'| sed s/"\["//g| sed s/"\]"//g)
+    fi
+    echo $var
   fi
 }
 

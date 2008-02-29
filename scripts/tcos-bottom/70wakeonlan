@@ -28,7 +28,7 @@ fi
 
 
 # get list of network interfaces
-TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0)
+TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster|grep -v vmnet)
 
 # search for network interfaces with link ok status
 for dev in $TCOS_NET_DEVS; do

@@ -52,7 +52,11 @@ cpifexists ${TCOS_BINS}/lockvnc     /usr/bin/
 
 # copy locked image
 mkdir -p ${DESTDIR}/usr/share/tcos-core/
-cp /usr/share/tcos-core/lockscreen.png ${DESTDIR}/usr/share/tcos-core/
+if [ -e /usr/share/tcos-core/lockscreen-custom.png ];then
+  cp /usr/share/tcos-core/lockscreen-custom.png ${DESTDIR}/usr/share/tcos-core/
+else
+  cp /usr/share/tcos-core/lockscreen.png ${DESTDIR}/usr/share/tcos-core/
+fi
 
 # in tcos-buildchroot we save this exe file in start-stop-daemon.original
 if [ -e /sbin/start-stop-daemon.original ]; then

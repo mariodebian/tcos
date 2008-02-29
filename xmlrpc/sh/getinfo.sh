@@ -25,7 +25,7 @@
 
 IFCONFIG="busybox ifconfig"
 # not DHCP try with static ip
-for dev in $(ls /sys/class/net/|grep -v lo|grep -v sit0); do
+for dev in $(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v vmnet|grep -v wmaster); do
      LINK=$(cat /sys/class/net/$dev/carrier 2>/dev/null)
      if [ "$LINK" = "1" ] && \
         [ "$(busybox ifconfig $dev | grep 'inet addr:'| awk '{print $2}'| awk -F ":" '{print $2}')" != "" ]; then

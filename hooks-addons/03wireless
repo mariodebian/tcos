@@ -15,15 +15,27 @@ if [ $TCOS_WIRELESS ]; then
 
   # copy udev firmware agent
   mkdir -p $DESTDIR/lib/udev
-  cp -ra /lib/udev/firmware* $DESTDIR/lib/udev/
+  cp -ra /lib/udev/firmware* $DESTDIR/lib/udev/ >/dev/null 2>&1
 
-  mkdir -p $DESTDIR/lib/firmware
+  if [ -d /lib/firmware/${TCOS_KERNEL} ];then
+    firmwaredir="/lib/firmware/${TCOS_KERNEL}"
+    mkdir -p "${DESTDIR}${firmwaredir}"
+  else
+    firmwaredir="/lib/firmware"
+    mkdir -p "${DESTDIR}${firmwaredir}"
+  fi
 
   # generic modules
-  
-  manual_add_modules ieee80211-crypt-tkip
+
+  manual_add_modules arc4
+  manual_add_modules ecb
   manual_add_modules ieee80211
+  manual_add_modules rc80211_simple
+  manual_add_modules mac80211
+  manual_add_modules ieee80211-crypt-tkip
+  manual_add_modules ieee80211_crypt
   manual_add_modules ieee80211-crypt-wep
+  manual_add_modules ieee80211softmac
 
   # copy kernel modules
   for mod in $TCOS_WIRELESS_MODS; do
@@ -31,11 +43,11 @@ if [ $TCOS_WIRELESS ]; then
     manual_add_modules $mod
     if [ "$mod" = "ipw2200" ]; then
       _echo "   WIFI: Copying firmware of ipw2200"
-      cp -ra /lib/firmware/ipw2200* $DESTDIR/lib/firmware/
+      cp -ra ${firmwaredir}/ipw2200* ${DESTDIR}${firmwaredir}
     
     elif [ "$mod" = "ipw2100" ]; then
       _echo "   WIFI: Copying firmware of ipw2100"
-      cp -ra /lib/firmware/ipw2100* $DESTDIR/lib/firmware/
+      cp -ra ${firmwaredir}/ipw2100* ${DESTDIR}${firmwaredir}
     
     elif [ "$mod" = "madwifi" ]; then
       _echo "   WIFI: Copying madwifi modules"
@@ -53,34 +65,42 @@ if [ $TCOS_WIRELESS ]; then
       _echo "   WIFI: Copying Zydas modules and firmware"
        manual_add_modules zd1211rw
        # firmware
-       mkdir -p $DESTDIR/lib/firmware/
-       cp -ra /lib/firmware/zd1211/ $DESTDIR/lib/firmware/
+       #mkdir -p $DESTDIR/lib/firmware/
+       cp -ra ${firmwaredir}/zd1211/ ${DESTDIR}${firmwaredir}
        cat << EOF > $DESTDIR/scripts/tcos-top/02zydas_firmware
 #!/bin/sh
 
 mkdir -p /usr/lib/hotplug/firmware/
-ln -s /lib/firmware/zd1211/zd1211_ub /usr/lib/hotplug/firmware/zd1211-WS11Ub.fw
-ln -s /lib/firmware/zd1211/zd1211_uph /usr/lib/hotplug/firmware/zd1211-WS11UPh.fw
-ln -s /lib/firmware/zd1211/zd1211_uphm /usr/lib/hotplug/firmware/zd1211-WS11UPhm.fw
-ln -s /lib/firmware/zd1211/zd1211_uphr /usr/lib/hotplug/firmware/zd1211-WS11UPhR.fw
-ln -s /lib/firmware/zd1211/zd1211_ur /usr/lib/hotplug/firmware/zd1211-WS11Ur.fw
+ln -s ${firmwaredir}/zd1211/zd1211_ub /usr/lib/hotplug/firmware/zd1211-WS11Ub.fw
+ln -s ${firmwaredir}/zd1211/zd1211_uph /usr/lib/hotplug/firmware/zd1211-WS11UPh.fw
+ln -s ${firmwaredir}/zd1211/zd1211_uphm /usr/lib/hotplug/firmware/zd1211-WS11UPhm.fw
+ln -s ${firmwaredir}/zd1211/zd1211_uphr /usr/lib/hotplug/firmware/zd1211-WS11UPhR.fw
+ln -s ${firmwaredir}/zd1211/zd1211_ur /usr/lib/hotplug/firmware/zd1211-WS11Ur.fw
 
 EOF
        chmod +x $DESTDIR/scripts/tcos-top/02zydas_firmware
 
+    elif [ "$mod" = "rt61" -o "$mod" = "rt2561" -o "$mod" = "rt61pci" ]; then
+      _echo "   WIFI: Copying firmware of rt61/2561"
+      cp -ra ${firmwaredir}/rt2* ${DESTDIR}${firmwaredir}
+
+    elif [ "$mod" = "rt73" -o "$mod" = "rt73usb" ]; then
+      _echo "   WIFI: Copying firmware of rt73"
+      cp -ra ${firmwaredir}/rt7* ${DESTDIR}${firmwaredir}
+
     else
       _echo "   WIFI: Trying to copy unknow firmware"
-      cp -ra /lib/firmware/$mod* $DESTDIR/lib/firmware/ 2>/dev/null
+      cp -ra ${firmwaredir}/$mod* ${DESTDIR}${firmwaredir} 2>/dev/null
     fi # end of if module    
     
   done # end of modules for loop
 
    if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
       _echo "  DEBUG: using WEP..."
-      if [ ! $TCOS_WEP ]; then
+      if [ ! $TCOS_WIRELESS_KEY ]; then
           _echo ""
           _echo "    WARNING:"
-          _echo "      Configured Wireless with WEP encription, but TCOS_WEP is empty"
+          _echo "      Configured Wireless with WEP encription, but TCOS_WIRELESS_KEY is empty"
           _echo "      Put your wireless key into this var in a supported format (HEX or ASCII)."
           _echo "      See: man iwconfig (section key)"
           _echo ""
@@ -91,6 +111,7 @@ EOF
       cpifexists /sbin/wpa_action      /sbin/
       cpifexists /sbin/wpa_cli         /sbin/
       cpifexists /sbin/wpa_supplicant  /sbin/
+      cpifexists /usr/bin/wpa_passphrase   /sbin/
       # need linked libs in /lib not /usr/lib
       for lib in $(ldd /sbin/wpa_supplicant /sbin/wpa_action /sbin/wpa_cli | awk '{print $3}' |grep ^/); do
         newlib=$(echo $lib | sed s/"\/i686\/cmov"//g | sed s/"\/tls"//g )
@@ -124,13 +145,13 @@ if [ "\$TCOS_WIRELESS_DEV" = "" ]; then
    echo " example: \$0 wlan0"
 fi
 
-WPA_CONF=\$(echo /etc/wpa_supplicant/*conf)
+WPA_CONF=\$(ls /etc/wpa_supplicant/*conf 2>/dev/null)
 if [ "\$WPA_CONF" = "" ]; then
    echo "Error: need a wpa conf file..."
    echo "Generating it..."
    echo ""
    echo "Please enter the (plain) WPA passphrase of \${TCOS_NET_WIFI_ESSID} network"
-   wpa_passphrase "\${TCOS_NET_WIFI_ESSID}" > /etc/wpa_supplicant/wpa.conf
+   wpa_passphrase "\${TCOS_NET_WIFI_ESSID}" "\${TCOS_WIRELESS_KEY}" > /etc/wpa_supplicant/wpa.conf
    WPA_CONF=/etc/wpa_supplicant/wpa.conf
 fi
 

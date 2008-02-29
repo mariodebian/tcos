@@ -58,41 +58,64 @@ fi
 # * ESSID is wireless network
 
 
+if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
+  # load kernel modules
+  log_begin_msg "Loading wireless kernel modules"
+    modprobe -q arc4
+    modprobe -q ecb
+    modprobe -q ieee80211
+    modprobe -q rc80211_simple
+    modprobe -q ieee80211-crypt-wep
+    modprobe -q ieee80211-crypt-tkip
+
+    for kmod in $TCOS_WIRELESS_MODS; do
+      if [ "$kmod" = "madwifi" ]; then
+        #ath-pci ath-hal wlan_tkip wlan_scan_sta ath-hal
+        modprobe -q ath-pci 2>/dev/null
+        modprobe -q ath-hal 2>/dev/null
+        modprobe -q wlan_tkip 2>/dev/null
+        modprobe -q wlan_scan_sta 2>/dev/null
+      elif [ "$kmod" = "zd1211" -o "$kmod" = "zd1211rw" ]; then
+        modprobe -q zd1211rw 2>/dev/null
+      elif [ "$kmod" = "rt2400" -o "$kmod" = "rt2400pci" ]; then
+        modprobe -q rt2400pci 2>/dev/null
+      elif [ "$kmod" = "rt2500" -o "$kmod" = "rt2500pci" ]; then
+        modprobe -q rt2500pci 2>/dev/null
+      elif [ "$kmod" = "rt61" -o "$kmod" = "rt2561" -o "$kmod" = "rt61pci" ]; then
+        modprobe -q rt61pci 2>/dev/null
+      elif [ "$kmod" = "rt73" -o "$kmod" = "rt73usb" ]; then
+        modprobe -q rt73usb 2>/dev/null
+      else
+        modprobe -q $kmod 2>/dev/null
+      fi
+    done
+  log_end_msg 0
+fi
 
 # get list of network interfaces
 TCOS_NET_ACTIVE="eth0"
 TCOS_NET_WIFI=
 TCOS_NET_WIFI_ESSID=""
-TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0)
+TCOS_NET_WIFI_KEYMODE=""
+TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster)
 TCOS_NET_LINK=""
 TCOS_NET_LINK_NUMBER=0
+
 
 # search for network interfaces with link ok status
 for dev in $TCOS_NET_DEVS; do
     # need to up iface
     ifconfig $dev up >> /tmp/initramfs.debug 2>&1
     # have link ???
-    if [ -e /sys/class/net/$dev/carrier ] && \
-       [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ]; then
-      _log "05NETWORK found carrier link in $dev iface"
-      TCOS_NET_LINK="$TCOS_NET_LINK $dev"
-      TCOS_NET_LINK_NUMBER=$(($TCOS_NET_LINK_NUMBER+1))
+    if [ -e /sys/class/net/$dev/carrier ]; then
+       [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" != 1 ] && sleep 3
+       if [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ]; then
+          _log "05NETWORK found carrier link in $dev iface"
+          TCOS_NET_LINK="$TCOS_NET_LINK $dev"
+          TCOS_NET_LINK_NUMBER=$(($TCOS_NET_LINK_NUMBER+1))
+       fi
     fi
 done
-
-if [ $TCOS_NET_LINK_NUMBER -gt 1 ]; then
-    # we have some ifaces with link
-    _log "05NETWORK various net ifaces have link"
-    
-elif [ $TCOS_NET_LINK_NUMBER = 1 ]; then
-    # one iface
-    TCOS_NET_ACTIVE=$TCOS_NET_LINK
-    
-else
-    # not link !!!
-    panic "ERROR: No link network detected, check cable."
-fi
-
 
 if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
   #force wireless, read some vars
@@ -101,37 +124,46 @@ if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
     # is wireless????
     if [ -d /sys/class/net/$dev/wireless ]; then
       TCOS_NET_WIFI=1
-      TCOS_NET_ACTIVE=$dev
+      TCOS_NET_LINK=$dev
       # stop searching
       break
     fi
   done
-
 fi
 
 
- if [ $TCOS_NET_WIFI ]; then
-    # load kernel modules
-    log_begin_msg "Loading wireless kernel modules"
-      for kmod in $TCOS_WIRELESS_MODS; do
-        if [ "$kmod" = "madwifi" ]; then
-          #ath-pci ath-hal wlan_tkip wlan_scan_sta ath-hal
-          modprobe -q ath-pci 2>/dev/null
-          modprobe -q ath-hal 2>/dev/null
-          modprobe -q wlan_tkip 2>/dev/null
-          modprobe -q wlan_scan_sta 2>/dev/null
-        else
-          modprobe -q $kmod 2>/dev/null
-        fi
-      done
-    log_end_msg 0
+if [ $TCOS_NET_WIFI = 1 ]; then
+    # one iface wireless
+    TCOS_NET_ACTIVE=$TCOS_NET_LINK
 
-    ifconfig $TCOS_NET_ACTIVE down
-    ifconfig $TCOS_NET_ACTIVE up
- 
+elif [ $TCOS_NET_LINK_NUMBER -gt 1 ]; then
+    # we have some ifaces with link
+    _log "05NETWORK various net ifaces have link"
+    
+elif [ $TCOS_NET_LINK_NUMBER = 1 ]; then
+    # one iface
+    TCOS_NET_ACTIVE=$TCOS_NET_LINK
+
+else
+    # not link !!!
+    panic "ERROR: No link network detected, check cable."
+fi
+
+
+
+ if [ $TCOS_NET_WIFI ]; then
+
+    #ifconfig $TCOS_NET_ACTIVE down
+    #ifconfig $TCOS_NET_ACTIVE up
+    
+    [ -z $TCOS_NET_WIFI_KEYMODE ] && TCOS_NET_WIFI_KEYMODE="restricted"
     # scan wireless
     log_begin_msg "Scanning wireless networks"
       iwlist $TCOS_NET_ACTIVE scan | grep ESSID | awk -F ":" '{print $2}' | sed s/\"//g >> /tmp/initramfs.debug 2>&1
+    log_end_msg $?
+
+    log_begin_msg "Wireless associating with $TCOS_NET_WIFI_ESSID"
+      iwconfig $TCOS_NET_ACTIVE essid "$TCOS_NET_WIFI_ESSID"
     log_end_msg $?
 
     # associate if ap cmdline var is set
@@ -144,13 +176,11 @@ fi
        
        if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
            log_begin_msg "Wireless WEP mode setting key"
-             [ ! $TCOS_WEP ] && iwconfig $TCOS_NET_ACTIVE key $TCOS_WEP
+             if [ ! -z $TCOS_WIRELESS_KEY ];then
+               iwconfig $TCOS_NET_ACTIVE key $TCOS_NET_WIFI_KEYMODE $TCOS_WIRELESS_KEY
+             fi
            log_end_msg $?
        fi
-       
-       log_begin_msg "Wireless associating with $TCOS_NET_WIFI_ESSID"
-         iwconfig $TCOS_NET_ACTIVE essid "$TCOS_NET_WIFI_ESSID"
-       log_end_msg $?
     else
        log_begin_msg "Wireless associating with any"
          iwconfig $TCOS_NET_ACTIVE essid any

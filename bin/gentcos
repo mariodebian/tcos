@@ -41,6 +41,12 @@ fi
 # default output files
 OUTPUTIMAGE=${ISOS}/tcos-boot-usb.iso
 
+if [ -e /usr/bin/mkisofs ];then
+  GENISO="/usr/bin/mkisofs"
+else
+  GENISO="/usr/bin/genisoimage"
+fi
+
 OUTINITRAMFS=initramfs
 OUTNBI=linux.nbi
 
@@ -266,6 +272,7 @@ create_grub_iso(){
  # Create temp dir
  dir=/tmp/grub-iso$$
  mkdir -p ${dir}/boot/grub
+ [ ! -d ${ISOS} ] && mkdir -p ${ISOS}
  install -m 644 /etc/tcos/menu.lst-tcos ${dir}/boot/grub/menu.lst
  install -m 644 /etc/tcos/logo.xpm.gz   ${dir}/boot/grub/logo.xpm.gz
  [ -f /lib/grub/i386-pc/stage2_eltorito ] && install -m 644 /lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
@@ -276,7 +283,7 @@ create_grub_iso(){
  sed -i s/"initramfs"/"initrd.cdrom"/g ${dir}/boot/grub/menu.lst
 
 
-mkisofs -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b boot/grub/stage2_eltorito\
+${GENISO} -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b boot/grub/stage2_eltorito\
  -no-emul-boot -boot-load-size 4\
  -boot-info-table -o  ${OUTPUTIMAGE} ${dir}/ >/dev/null 2>&1
   if [ $? = 0 ]; then
@@ -291,6 +298,7 @@ create_isolinux_iso() {
  # ISOLINUX
  dir=/tmp/isolinux-iso$$
  mkdir -p ${dir}/isolinux
+ [ ! -d ${ISOS} ] && mkdir -p ${ISOS}
  create_initramfs
  cp ${INITRAMFS} ${dir}/isolinux/initrd.cdrom
 
@@ -306,7 +314,7 @@ create_isolinux_iso() {
  cp /usr/lib/syslinux/isolinux.bin ${dir}/isolinux/
  cp /boot/vmlinuz-${TCOS_KERNEL} ${dir}/isolinux/vmlinuz
 
-mkisofs -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b isolinux/isolinux.bin -c boot.cat \
+${GENISO} -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b isolinux/isolinux.bin -c boot.cat \
  -no-emul-boot -boot-load-size 4 -boot-info-table -o  ${OUTPUTIMAGE} ${dir}/ > /dev/null 2>&1
 
   if [ $? = 0 ]; then
@@ -514,6 +522,18 @@ list_pkg() {
      _exit 0
 }
 
+check_cached_packages(){
+for PKG in $(echo ${TCOS_PKG_CACHE_LIST} | sed 's/,/ /g'); do
+    CANDIDATE=$(LC_ALL=C apt-cache policy ${PKG} | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
+    VER=""
+    [ -e ${TCOS_PKG_CACHE}/${PKG}/VERSION ] && VER=$(cat ${TCOS_PKG_CACHE}/${PKG}/VERSION)
+    if [ "${CANDIDATE}" != "${VER}" ];then
+        echo "Updating package cache ${PKG} to version ${CANDIDATE}..."
+        tcos_inst_pkg ${PKG}
+    fi
+done
+}
+
 get_pkg_uri() {
   PKG_MIRROR=$(basename $(rgrep "/$1_" /var/lib/apt/ 2>/dev/null| awk -F":" '{print $1}'| head -1) 2>/dev/null)
   if [ $? != 0 ]; then
@@ -530,6 +550,7 @@ tcos_inst_pkg() {
   error=0
   echo "Install PKG \"$@\""
   for PKG in ${@}; do
+    rm -f /var/cache/apt/archives/${PKG}_* 2>/dev/null
     PKG_URI=$(apt-get install -qq --print-uris --reinstall ${PKG}| egrep 'file|http|ftp' \
 	 | grep "/${PKG}_" | awk '{print $1}'| tr -d "'")
 
@@ -550,19 +571,22 @@ tcos_inst_pkg() {
       error=1
       PKG_FILE=""
     fi
-    if [ "${PKG_FILE}" = "" ] ; then
+    dpkg -I ${PKG_FILE} >/dev/null 2>&1
+    if [ $? -ne 0 ] || [ "${PKG_FILE}" = "" ] ; then
       echo "Error: Unknow package: ${PKG}"
       error=1
     else
       echo "Extracting $(basename ${PKG_FILE})..."
+      VER=$(basename ${PKG_FILE} | awk -F"_" '{print $2}')
       rm -rf ${TCOS_PKG_CACHE}/${PKG}
       mkdir -p ${TCOS_PKG_CACHE}/${PKG}
       dpkg --extract "${PKG_FILE}" ${TCOS_PKG_CACHE}/${PKG}
+      echo ${VER} > ${TCOS_PKG_CACHE}/${PKG}/VERSION
       [ -e /tmp/$(basename $PKG_URI) ] && rm -f /tmp/$(basename $PKG_URI)
     fi
   done
-  [ $error = 0 ] && echo "All package installed."
-  [ $error != 0 ] && echo "There are some errors during caching..."
+  [ $error = 0 ] && echo -e "All package installed.\n"
+  [ $error != 0 ] && echo -e "There are some errors during caching or Network is down...\n"
 }
 
 tcos_rm_pkg() {
@@ -718,7 +742,11 @@ if [ $TCOS_ALL_MODULES ]; then
   export TCOS_ALL_MODULES
 fi
 
-
+# Check if cached packages need update only if action is regenerate image
+if [ $TCOS_PKG_CACHE_LIST ];then
+  export TCOS_PKG_CACHE_LIST
+  check_cached_packages
+fi
 
 if [ ! -z $TCOS_CDROM ]; then
  if [ ${TCOS_SQUASHFS} ]; then

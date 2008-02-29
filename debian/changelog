@@ -1,5 +1,6 @@
 initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
 
+  [ Mario Izquierdo (mariodebian) ]
   * Add pxelinux boot menu (normal and vesa mode)
     - Move parse_pxelinux to tcos-generation-functions.sh
     - Add 3 new TCOS vars:
@@ -21,7 +22,19 @@ initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
   * xmlrpc/Makefile
     - Install tcos-last in TCOS_BINS dir
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 29 Feb 2008 17:41:26 +0100
+  [ Ignacio Vidal ]
+  * Discard more eth not required in TCOS_NET_DEVS
+  * conf/tcos.conf
+    - Add TCOS_PKG_CACHE_LIST list of packages to cache for Tcos
+    - Change TCOS_WEP to TCOS_WIRELESS_KEY for WEP/WPA key
+  * scripts/tcos-top/05network hooks-addons/03wireless
+    - Update support for wifi cards
+  * xmlrpc/sh/soundctl.sh
+    - Fix not show correctly sound controls depending version of distro
+  * bin/gentcos
+    - Check cached packages if need updates when generate thin client images
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 29 Feb 2008 23:26:23 +0100
 
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 
