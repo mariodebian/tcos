@@ -1,0 +1,155 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+##########################################################################
+# TcosMonitor writen by MarioDebian <mariodebian@gmail.com>
+#
+#    TcosMonitor version __VERSION__
+#
+# Copyright (c) 2006 Mario Izquierdo <mariodebian@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+###########################################################################
+
+import sys, os
+import getopt
+import socket
+from time import time, ctime, localtime
+
+import pwd
+
+import utmp
+from UTMPCONST import *
+
+debug=False
+
+def print_debug(txt):
+    if debug:
+        print >> sys.stderr, "DEBUG: %s"%(txt)
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["host=", "debug", "tcosdisplay", "user", "userid", "time", "pid"])
+except getopt.error, msg:
+    print msg
+    print "for command line options use tcos-last --help"
+    sys.exit(2)
+
+ACTION=None
+HOST=""
+# process options
+for o, a in opts:
+    if o == "--debug":
+        debug=True
+    if o == "--host":
+        HOST=a
+    if o == "--tcosdisplay":
+        HOST=os.environ['DISPLAY'].split(":")[0]
+    
+    if o == "--user":
+        ACTION="user"
+    elif o == "--userid":
+        ACTION="userid"
+    elif o == "--time":
+        ACTION="time"
+    elif o == "--pid":
+        ACTION="pid"
+
+
+def ipValid(ip):
+    # ip is XXX.XXX.XXX.XXX
+    # http://mail.python.org/pipermail/python-list/2006-March/333963.html
+    try:
+        xip=ip.split('.')
+        if len(xip) != 4:
+            return False
+        for block in xip:
+            if int(block) < 0 or int(block) >= 255:
+                return False
+        return True
+    except:
+        return False
+
+    
+def GetIpAddress(hostname):
+    print_debug("GetIpAddress() hostname=%s "%(hostname) )
+    try:
+        return socket.getaddrinfo(hostname, None)[0][4][0]  
+    except:
+        return None
+
+
+def GetHostname(ip):
+    print_debug("GetHostname() ip=%s "%(ip) )
+    try:
+        hostname = socket.gethostbyaddr(ip)[0]
+        return hostname
+    except:
+        return None
+
+def GetLast(ip):
+    last=[]
+    data={}
+    if ip != "" and not ipValid(ip):
+        ip=GetIpAddress(ip)
+        
+    print_debug("GetLast() ip=%s hostname=%s "%(ip, GetHostname(ip)))
+    a = utmp.UtmpRecord(WTMP_FILE)
+    while 1:
+        b=a.getutent()
+        if not b: break
+        if b[0] == USER_PROCESS:
+            #print_debug("Searching for host \"%s:0\" found %s"%(ip, b.ut_host))
+            if b.ut_host == "%s:0"%(ip):
+                last=b
+    
+    if last and os.path.isdir("/proc/%s"%last.ut_pid):
+        (year,month,day,hours,minutes,seconds,weekday,jday,DST )=localtime(time()-last.ut_tv[0])
+        # we have date like 1 Jan 1970 1 hour 30 minutes
+        # real hours = hours -1
+        # real days = days -1
+        if day > 1:
+            timelogged="%dd %02d:%02d"%(day-1,hours-1,minutes)
+        else:
+            timelogged="%02d:%02d"%(hours-1,minutes)
+        uid=pwd.getpwnam(last.ut_user)[2]
+        print_debug("username %s uid=%s"%(last.ut_user, uid))
+        data={"pid":last.ut_pid, "userid":uid, "user":last.ut_user, "host":last.ut_host.split(":")[0], "time":last.ut_tv[0], "timelogged":timelogged}
+        print_debug(data)
+    return data
+
+data=GetLast(HOST)
+
+# print data
+if not data:
+    print_debug("Error: no data")
+    sys.exit(1)
+
+elif not ACTION:
+    print_debug("Error need something to retrieve: --user, --uid, --time or --pid")
+    sys.exit(1)
+
+elif ACTION == "user":
+    print data['user']
+
+elif ACTION == "userid":
+    print data['userid']
+
+elif ACTION == "time":
+    print data['timelogged']
+
+elif ACTION == "pid":
+    print data['pid']
+
+

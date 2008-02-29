@@ -24,13 +24,24 @@
 
 
 IFCONFIG="busybox ifconfig"
-IFDEV=$(grep 'interface' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $2}' | sed s/";"//g | sed s/\"//g)
+# not DHCP try with static ip
+for dev in $(ls /sys/class/net/|grep -v lo|grep -v sit0); do
+     LINK=$(cat /sys/class/net/$dev/carrier 2>/dev/null)
+     if [ "$LINK" = "1" ] && \
+        [ "$(busybox ifconfig $dev | grep 'inet addr:'| awk '{print $2}'| awk -F ":" '{print $2}')" != "" ]; then
+            IFDEV=$dev
+            break
+     fi
+done
+
 if [ "$IFDEV" = "" ]; then
   IFDEV="eth0"
 fi
-KVER=$(uname -r)
-TCOS_CONF=/conf/tcos.conf
-STANDALONE=0
+
+
+ KVER=$(uname -r)
+ TCOS_CONF=/conf/tcos.conf
+ STANDALONE=0
 if [ ! -e ${TCOS_CONF} ]; then
  TCOS_CONF=/var/lib/tcos/standalone/etc/tcos.conf
  STANDALONE=1
@@ -114,7 +125,8 @@ echo $(head -$1 /tmp/ps.aux | tail -1)
 
 get_process() {
 if [ "$STANDALONE" = "1" ]; then
-  user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
+  #user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
+  user=$(/usr/lib/tcos/tcos-last --userid)
   if [ "$user" = "root" ]; then
     echo "PID COMMAND" > /tmp/ps.aux
     echo "66000 User root not allowed to show process" >> /tmp/ps.aux
@@ -163,15 +175,15 @@ case $VARNAME in
 
 # CPU methods 
 CPU_MODEL)
-grep "^model name" /proc/cpuinfo | awk -F ": " '{print $2}'
+grep "^model name" /proc/cpuinfo | awk -F ": " '{print $2}' |head -1
 ;;
 
 CPU_SPEED)
-grep "^cpu MHz" /proc/cpuinfo | awk -F ": " '{print $2" MHz"}'
+grep "^cpu MHz" /proc/cpuinfo | awk -F ": " '{print $2" MHz"}' | head -1
 ;;
 
 CPU_VENDOR)
-grep "^vendor_id" /proc/cpuinfo | awk -F ": " '{print $2}'
+grep "^vendor_id" /proc/cpuinfo | awk -F ": " '{print $2}' | head -1
 ;;
 
 # RAM methods

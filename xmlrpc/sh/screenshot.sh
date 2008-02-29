@@ -29,7 +29,8 @@ if [ -e /conf/tcos-run-functions ]; then
   export XAUTHORITY=/root/.Xauthority
 else
   _www=/var/lib/tcos/standalone/www
-  user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
+  #user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
+  user=$(/usr/lib/tcos/tcos-last --user)
   if [ "$user" = "root" ]; then echo -n "error: root not allowed"; exit 1; fi
   export XAUTHORITY=/home/$user/.Xauthority
   export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos

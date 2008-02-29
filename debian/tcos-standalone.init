@@ -77,6 +77,24 @@ do_stop()
 	return 0
 }
 
+#
+# Function that enable WakeOnLan in all network devices
+#
+do_wakeonlan()
+{
+	# get list of network interfaces
+	TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0)
+	
+	# search for network interfaces with link ok status
+	for dev in $TCOS_NET_DEVS; do
+    	# have link ???
+    		if [ -e /sys/class/net/$dev/carrier ] && \
+       	   	   [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
+		   [ "$(/usr/sbin/ethtool $dev| grep -c "Wake-on: g")" = "1" ]; then
+      			/usr/sbin/ethtool -s $dev wol g > /dev/null 2>&1
+    		fi
+	done
+}
 
 case "$1" in
   start)
@@ -90,6 +108,8 @@ case "$1" in
 	;;
   stop)
 	log_daemon_msg "Stopping $DESC" "$NAME"
+	# enable WAKEONLAN in ethernet devices (only needed during poweroff/reboot)
+	do_wakeonlan
 	do_stop
 	case "$?" in
 		0|1) log_end_msg 0 ;;

@@ -6,8 +6,20 @@ initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
       TCOS_NETBOOT_MENU, TCOS_NETBOOT_MENU_VESA, and TCOS_NETBOOT_HIDE_INSTALL
   * tcos/pxetcos.png and tcos/pxetcos.jpg
     - vesamenu.c32 images (better jpg, less size)
+  * common.mk:
+    - Update Ubuntu hardy kernel to 2.6.24-10
+  * debian/tcos-standalone.init:
+    - Exec ethtool in shutdown to enable wakeonlan
+  * scripts/tcos-bottom/70wakeonlan
+    - Check if network device is wakeonlan compatible before enabling
+  * xmlrpc/sh/tcos-last xmlrpc/standalone.h xmlrpc/sh/screenshot.sh
+    xmlrpc/sh/getinfo.sh xmlrpc/sh/vnc-controller.sh
+    - Change last or w with tcos-last (a python script that reads /var/log/utmp)
+      Only work in STANDALONE MODE
+  * xmlrpc/sh/getinfo.sh
+    - Change IFDEV detection, use /sys/class/net instead of DHCP lease file
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 26 Feb 2008 19:23:46 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 29 Feb 2008 17:39:12 +0100
 
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 

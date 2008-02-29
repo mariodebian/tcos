@@ -45,7 +45,8 @@ if [ -e /conf/tcos-run-functions ]; then
   export XAUTHORITY=/root/.Xauthority
 else
   STANDALONE=1
-  STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
+  #STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
+  STANDALONE_USER=$(/usr/lib/tcos/tcos-last --user)
   if [ "${STANDALONE_USER}" = "" ]; then echo "error: no standalone user connected"; exit 1; fi
   DBUS_HANDLER="/usr/lib/tcos/tcos-dbus-helper --username=${STANDALONE_USER} "
 fi
