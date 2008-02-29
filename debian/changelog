@@ -18,8 +18,10 @@ initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
       Only work in STANDALONE MODE
   * xmlrpc/sh/getinfo.sh
     - Change IFDEV detection, use /sys/class/net instead of DHCP lease file
+  * xmlrpc/Makefile
+    - Install tcos-last in TCOS_BINS dir
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 29 Feb 2008 17:39:12 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 29 Feb 2008 17:41:26 +0100
 
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 
