@@ -33,8 +33,10 @@ initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
     - Fix not show correctly sound controls depending version of distro
   * bin/gentcos
     - Check cached packages if need updates when generate thin client images
+  * debian/tcos-standalone.init
+    - Remove tcos-standalone log if exceed 5M
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 29 Feb 2008 23:26:23 +0100
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Sat, 01 Mar 2008 01:37:52 +0100
 
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 

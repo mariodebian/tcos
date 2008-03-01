@@ -88,6 +88,11 @@ EOF
       _echo "   WIFI: Copying firmware of rt73"
       cp -ra ${firmwaredir}/rt7* ${DESTDIR}${firmwaredir}
 
+    elif [ "$mod" = "bcm43xx" -o "$mod" = "broadcom" ]; then
+      _echo "   WIFI: Copying firmware of bcm43xx"
+      [ -e /lib/firmware/bcm43* ] && cp -ra /lib/firmware/bcm43* ${DESTDIR}/lib/firmware
+      cp -ra ${firmwaredir}/bcm43* ${DESTDIR}${firmwaredir}
+
     else
       _echo "   WIFI: Trying to copy unknow firmware"
       cp -ra ${firmwaredir}/$mod* ${DESTDIR}${firmwaredir} 2>/dev/null

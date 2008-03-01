@@ -85,6 +85,8 @@ if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
         modprobe -q rt61pci 2>/dev/null
       elif [ "$kmod" = "rt73" -o "$kmod" = "rt73usb" ]; then
         modprobe -q rt73usb 2>/dev/null
+      elif [ "$kmod" = "bcm43xx" -o "$kmod" = "broadcom" ]; then
+        modprobe -q bcm43xx 2>/dev/null
       else
         modprobe -q $kmod 2>/dev/null
       fi

@@ -83,7 +83,7 @@ do_stop()
 do_wakeonlan()
 {
 	# get list of network interfaces
-	TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster|grep -v vmnet)
+	TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster|grep -v vmnet|grep -v vbox)
 	
 	# search for network interfaces with link ok status
 	for dev in $TCOS_NET_DEVS; do
@@ -95,6 +95,14 @@ do_wakeonlan()
     		fi
 	done
 }
+
+do_checklog_size()
+{
+	if [ $(ls -lk /var/lib/tcos/standalone/log/tcos-standalone.log | awk '{print $5}') -gt 5000 ];then
+		rm -f /var/lib/tcos/standalone/log/tcos-standalone.log
+	fi
+}
+
 
 case "$1" in
   start)
@@ -111,6 +119,7 @@ case "$1" in
 	# enable WAKEONLAN in ethernet devices (only needed during poweroff/reboot)
 	do_wakeonlan
 	do_stop
+	do_checklog_size
 	case "$?" in
 		0|1) log_end_msg 0 ;;
 		2)  log_end_msg 1 ;;
