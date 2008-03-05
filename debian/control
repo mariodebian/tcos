@@ -15,7 +15,8 @@ Architecture: any
 Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
          console-data, libnss-db, iftop, strace, twm, debootstrap, mbr, 
          libltdl3, tinylogin, debconf, grub, syslinux, squashfs-tools, 
-         mknbi, dropbear, ltspfs-client | ltspfsd, ${misc:Depends}, ${shlibs:Depends}
+         mknbi, dropbear, ltspfs-client | ltspfsd, genisoimage | mkisofs ,
+         ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2)
 Recommends: pulseaudio, pulseaudio-utils
 Description: tools for generating a thin client bootable image: TCOS
@@ -31,7 +32,7 @@ Description: tools for generating a thin client bootable image: TCOS
 Package: tcos-core
 Architecture: any
 Depends: busybox, xterm, x11vnc, xvnc4viewer | xvncviewer, vlc, dosfstools, cdparanoia, 
-         scrot, eject, netpipes, libnotify-bin, python, 
+         scrot, eject, netpipes, libnotify-bin, python, python-utmp, 
          python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
 XB-Python-Version: ${python:Versions}

@@ -40,8 +40,13 @@ initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
   * xmlrpc/sh/tcos-last:
     - Fix time diff
   * Update Ubuntu hardy kernel to 2.6.24-11
+  * debian/tcos-standalone.init
+    - Clean all logs of tcos-standalone not only tcos-standalone.log 
+  * debian/control
+    - Add python-utmp to tcos-core Depends (needs tcos-last script)
+    - Add genisoimage|mkisofs to initramfs-tools-tcos Depends
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Mar 2008 11:53:34 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Mar 2008 11:57:52 +0100
 
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 

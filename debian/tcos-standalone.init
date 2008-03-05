@@ -98,9 +98,11 @@ do_wakeonlan()
 
 do_checklog_size()
 {
-	if [ $(ls -lk /var/lib/tcos/standalone/log/tcos-standalone.log | awk '{print $5}') -gt 5000 ];then
-		rm -f /var/lib/tcos/standalone/log/tcos-standalone.log
-	fi
+    # clean logs when size > 5 MB
+    for logfile in /var/lib/tcos/standalone/log/*; do
+        [ $(du $logfile| awk '{print $1}') -gt 5000 ] && \
+            cat /dev/null > $logfile
+    done
 }
 
 
