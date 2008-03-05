@@ -113,9 +113,13 @@ clean:
 	$(Q) - find . -type f -name '*.o' -print0     | xargs -0r rm -f
 	$(Q) - find . -type f -name '*.so' -print0    | xargs -0r rm -f
 #	$(Q) - find . -type f -name 'cmap.*' -print0   | xargs -0r rm -f
-	$(Q) - find . -type f -name 'background_*' -print0   | xargs -0r rm -f
-	$(Q) - find . -type f -name 'progressfg_*' -print0   | xargs -0r rm -f
-	$(Q) - find . -type f -name 'progressbg_*' -print0   | xargs -0r rm -f
+#	$(Q) - find . -type f -name 'background_*' -print0   | xargs -0r rm -f
+#	$(Q) - find . -type f -name 'progressfg_*' -print0   | xargs -0r rm -f
+#	$(Q) - find . -type f -name 'progressbg_*' -print0   | xargs -0r rm -f
+
+	$(Q) - find . -type f -name 'background_*.c' -print0   | xargs -0r rm -f
+	$(Q) - find . -type f -name 'progressfg_*.c' -print0   | xargs -0r rm -f
+	$(Q) - find . -type f -name 'progressbg_*.c' -print0   | xargs -0r rm -f
 	$(Q) - rm -f theme.h
 .PHONY: clean
 

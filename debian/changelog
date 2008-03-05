@@ -45,8 +45,10 @@ initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
   * debian/control
     - Add python-utmp to tcos-core Depends (needs tcos-last script)
     - Add genisoimage|mkisofs to initramfs-tools-tcos Depends
+  * usplash/0.4.1
+    - Add png files (ImageMagick bug don't create correct colormap)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Mar 2008 11:57:52 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Mar 2008 21:50:42 +0100
 
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 
