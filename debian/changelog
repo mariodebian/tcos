@@ -36,7 +36,12 @@ initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
   * debian/tcos-standalone.init
     - Remove tcos-standalone log if exceed 5M
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Sat, 01 Mar 2008 01:37:52 +0100
+  [ Mario Izquierdo (mariodebian) ]
+  * xmlrpc/sh/tcos-last:
+    - Fix time diff
+  * Update Ubuntu hardy kernel to 2.6.24-11
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 05 Mar 2008 11:53:34 +0100
 
 initramfs-tools-tcos (0.88.15.1) unstable; urgency=low
 
