@@ -1,11 +1,38 @@
 #!/bin/sh
 
+if [ ! -f /conf/tcos.conf ]; then
+  echo "ERROR"
+  echo "     This script must be exec in thin client "
+  echo "     not standalone or server"
+  exit 1
+fi
+
 . /conf/tcos.conf
 . /scripts/functions
 . /conf/tcos-run-functions
 
 # size of vfat partition
-hda1_size=100
+vfat_size=100
+
+HDD=/dev/hda
+HDD1=/dev/hda1
+HDD2=/dev/hda2
+
+# get_hdd
+for dev in $(ls /dev/[sh]d[a-z]); do
+devname=$(basename $dev)
+if [ "$(cat /sys/block/$devname/removable)" != "1" ]; then
+    HDD=$dev
+    HDD1=${dev}1
+    HDD2=${dev}2
+    break
+fi
+done
+
+if [ "$HDD" = "" ] || [ ! -e "$HDD" ]; then
+  echo "No hdd found"
+  exit 1
+fi
 
 
 FDISK=/sbin/fdisk
@@ -17,7 +44,7 @@ MSG_WELCOME="Welcome to TCOS hdd installer.\nDo you want to install TCOS in thin
 MSG_CANCEL="Cancelled, exiting now..."
 MSG_NOHDD="Not hard disk detected. Check if TCOS_DISABLE_IDE is set in tcos.conf."
 MSG_HDD_DETECTED="Detected partitions:\n\n"
-MSG_DELETE_ALL_DISK="Do you want to delete entire first hard disk?\n\nThis installer will create 2 parts:\n* /dev/hda1 vfat with kernel\n* /dev/hda2 swap (hdd memory)\nRECOMENDED: yes"
+MSG_DELETE_ALL_DISK="Do you want to delete entire first hard disk?\n\nThis installer will create 2 parts:\n* $HDD1 vfat with kernel\n* $HDD2 swap (hdd memory)\nRECOMENDED: yes"
 MSG_NOPARTIIONS="No partitions detected, please rerun installer.sh and select all disk."
 
 EXIT () {
@@ -35,13 +62,15 @@ whiptail --title "$MSG_TITLE" "$@" 20 80
 }
 
 
+
+
 umount_all () {
-  log_begin_msg "Umounting all parts in  /dev/hda"
-    data=$(grep ^/dev/hda /proc/mounts | awk '{print $1}')
+  log_begin_msg "Umounting all parts in  $HDD"
+    data=$(grep ^$HDD /proc/mounts | awk '{print $1}')
     for part in $data; do
       umount -l $part > /dev/null 2>&1
     done
-    swaps=$(grep ^/dev/hda /proc/swaps | awk '{print $1}')
+    swaps=$(grep ^$HDD /proc/swaps | awk '{print $1}')
     for part in $swaps; do
       swapoff $part > /dev/null 2>&1
     done
@@ -49,8 +78,8 @@ umount_all () {
 }
 
 mount_swap () {
-  log_begin_msg "Mount swap /dev/hda2"
-    swapon /dev/hda2 > /dev/null 2>&1
+  log_begin_msg "Mount swap $HDD2"
+    swapon $HDD2 > /dev/null 2>&1
   log_end_msg $?
 }
 
@@ -59,32 +88,27 @@ make_all_parts () {
 
   umount_all
 
-  # hda hdd size (in MB)
-  hda_size=$(LANG=C $FDISK -l|grep ^Disk|head -1 | awk '{print $5/1000000}')
+  # $HDD1 hdd size (in MB)
+  vfat_size=$(LANG=C $FDISK -l $HDD|grep ^Disk|head -1 | awk '{print $5/1000000}')
 
   # swap (in MB) = Total_RAM (kB) * 2 / 1000
   swap_size=$(awk '/MemTotal/ {print int($2*2/1000)}' /proc/meminfo)
 
-  # ext3=rest
-  #hda1_size=$(echo "$hda_size $swap_size" | awk '{print int($1-$2)}')
-
-
   # clean MBR
-  log_begin_msg "Cleaning MBR of /dev/hda"
-    dd if=/dev/zero of=/dev/hda bsize=512 count=1 >/dev/null 2>&1
-    $INSTALL_MBR --force /dev/hda
+  log_begin_msg "Cleaning MBR of $HDD"
+    dd if=/dev/zero of=$HDD bsize=512 count=1 >/dev/null 2>&1
+    $INSTALL_MBR --force $HDD
   log_end_msg $?
 
-  log_begin_msg "Making 2 partitions in /dev/hda"
-    #echo -n "   hda1=${hda1_size}M hda2=${swap_size}M ...(please wait)"
-    # call fdisk
-$FDISK /dev/hda << EOF 2>/dev/null >/dev/null
+  log_begin_msg "Making 2 partitions in $HDD"
+  # call fdisk
+$FDISK $HDD << EOF 2>/dev/null >/dev/null
 o
 n
 p
 1
 1
-+${hda1_size}M
++${vfat_size}M
 n
 p
 2
@@ -103,12 +127,12 @@ EOF
   log_end_msg $?
 
   # format parts
-  log_begin_msg "Format hda1 as vfat (${hda1_size}M)"
-    mkfs.vfat /dev/hda1 >/dev/null 2>&1
+  log_begin_msg "Format $HDD1 as vfat (${vfat_size}M)"
+    mkfs.vfat $HDD1 >/dev/null 2>&1
   log_end_msg $?
 
-  log_begin_msg "Format hda2 as swap (${swap_size}M)"
-    mkswap /dev/hda2 >/dev/null 2>&1
+  log_begin_msg "Format $HDD2 as swap (${swap_size}M)"
+    mkswap $HDD2 >/dev/null 2>&1
   log_end_msg $?
 
   mount_swap
@@ -117,13 +141,13 @@ EOF
 
 
 install_kernel () {
-  # mount hda1
+  # mount $HDD1
   mkdir -p /target
-  mount -tvfat /dev/hda1 /target > /dev/null 2>&1
+  mount -tvfat $HDD1 /target > /dev/null 2>&1
 
-  if [ $(grep -c /dev/hda1 /proc/mounts) -lt 1 ]; then
+  if [ $(grep -c $HDD1 /proc/mounts) -lt 1 ]; then
      echo ""
-     echo "    ERROR: Can't mount /dev/hda1 in /target"
+     echo "    ERROR: Can't mount $HDD1 in /target"
      echo ""
      exit 1
   fi
@@ -151,12 +175,12 @@ install_kernel () {
     done
 
     if [ -d /cdrom/boot/grub ]; then
-    log_begin_msg "Copying grub files to /dev/hda1"
+    log_begin_msg "Copying grub files to $HDD1"
       cp /cdrom/boot/vmlinuz      /target/vmlinuz
       cp /cdrom/boot/initrd.cdrom /target/initrd.gz
     log_end_msg $?
     elif [ -d /cdrom/isolinux ]; then
-    log_begin_msg "Copying isolinux files to /dev/hda1"
+    log_begin_msg "Copying isolinux files to $HDD1"
       cp /cdrom/isolinux/vmlinuz       /target/vmlinuz
       cp /cdrom/isolinux/initrd.cdrom  /target/initrd.gz
       cp /cdrom/isolinux/tcos.msg      /target/tcos.msg
@@ -218,8 +242,8 @@ F2 help2.msg
   fi
 
   log_begin_msg "Installing syslinux"
-    [ -f /usr/lib/syslinux/mbr.bin ] && cat /usr/lib/syslinux/mbr.bin  > /dev/hda
-    syslinux /dev/hda1
+    [ -f /usr/lib/syslinux/mbr.bin ] && cat /usr/lib/syslinux/mbr.bin  > $HDD
+    syslinux $HDD1
 
 cat << EOF > /target/syslinux.cfg
 DEFAULT $DEFAULT
@@ -249,7 +273,7 @@ EOF
 
   # umount vfat partition
   sync
-  umount /dev/hda1
+  umount /target
 }
 
 
