@@ -103,15 +103,16 @@ def GetLast(ip):
     data={}
     if ip != "" and not ipValid(ip):
         ip=GetIpAddress(ip)
-        
-    print_debug("GetLast() ip=%s hostname=%s "%(ip, GetHostname(ip)))
+
+    hostname=GetHostname(ip)        
+    print_debug("GetLast() ip=%s hostname=%s "%(ip,hostname))
     a = utmp.UtmpRecord(WTMP_FILE)
     while 1:
         b=a.getutent()
         if not b: break
         if b[0] == USER_PROCESS:
             #print_debug("Searching for host \"%s:0\" found %s"%(ip, b.ut_host))
-            if b.ut_host == "%s:0"%(ip):
+            if b.ut_host == "%s:0"%(ip) or b.ut_host == "%s"%hostname :
                 last=b
     
     if last and os.path.isdir("/proc/%s"%last.ut_pid):
