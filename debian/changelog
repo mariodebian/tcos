@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.88.15.3) unstable; urgency=low
+
+  * scripts/tcos-top/05network hooks-addons/03wireless:
+    - Update support WPA for wifi, also works with WPA2 and other driver cards not generics 
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Thu, 06 Mar 2008 21:23:58 +0100
+
 initramfs-tools-tcos (0.88.15.2) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]

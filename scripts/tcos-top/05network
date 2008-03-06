@@ -63,10 +63,11 @@ if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
   log_begin_msg "Loading wireless kernel modules"
     modprobe -q arc4
     modprobe -q ecb
+    modprobe -q mac80211
+    modprobe -q ieee80211_crypt
     modprobe -q ieee80211
-    modprobe -q rc80211_simple
-    modprobe -q ieee80211-crypt-wep
-    modprobe -q ieee80211-crypt-tkip
+    modprobe -q ieee80211softmac
+    #modprobe -q rc80211_simple
 
     for kmod in $TCOS_WIRELESS_MODS; do
       if [ "$kmod" = "madwifi" ]; then
@@ -151,7 +152,8 @@ else
     panic "ERROR: No link network detected, check cable."
 fi
 
-
+ # break for wireless
+ maybe_break wireless
 
  if [ $TCOS_NET_WIFI ]; then
 
@@ -171,12 +173,18 @@ fi
     # associate if ap cmdline var is set
     if [ "$TCOS_NET_WIFI_ESSID" != "" ]; then
        if [ "$TCOS_WIRELESS_ENC" = "WPA" ]; then
+           modprobe -q michael_mic
+           modprobe -q blkcipher
+           modprobe -q aes
+           modprobe -q ieee80211_crypt_tkip
+           modprobe -q ieee80211_crypt_ccmp
            log_begin_msg "Wireless WPA mode"
              /sbin/start-wpa.sh "${TCOS_NET_ACTIVE}"
            log_end_msg $?
        fi
        
        if [ "$TCOS_WIRELESS_ENC" = "WEP" ]; then
+           modprobe -q ieee80211_crypt_wep
            log_begin_msg "Wireless WEP mode setting key"
              if [ ! -z $TCOS_WIRELESS_KEY ];then
                iwconfig $TCOS_NET_ACTIVE key $TCOS_NET_WIFI_KEYMODE $TCOS_WIRELESS_KEY
@@ -194,8 +202,6 @@ fi
  #   ifconfig $TCOS_NET_ACTIVE up
  fi
  
- # break for wireless
- maybe_break wireless
  
  log_begin_msg "Sending DHCP request on $TCOS_NET_LINK"
   _log "DHCLIENT $TCOS_NET_LINK"

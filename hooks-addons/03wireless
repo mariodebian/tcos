@@ -29,13 +29,15 @@ if [ $TCOS_WIRELESS ]; then
 
   manual_add_modules arc4
   manual_add_modules ecb
+  manual_add_modules michael_mic
   manual_add_modules ieee80211
-  manual_add_modules rc80211_simple
+  #manual_add_modules rc80211_simple
   manual_add_modules mac80211
-  manual_add_modules ieee80211-crypt-tkip
   manual_add_modules ieee80211_crypt
-  manual_add_modules ieee80211-crypt-wep
   manual_add_modules ieee80211softmac
+  manual_add_modules ieee80211_crypt_tkip
+  manual_add_modules ieee80211_crypt_wep
+  manual_add_modules ieee80211_crypt_ccmp
 
   # copy kernel modules
   for mod in $TCOS_WIRELESS_MODS; do
@@ -118,7 +120,7 @@ EOF
       cpifexists /sbin/wpa_supplicant  /sbin/
       cpifexists /usr/bin/wpa_passphrase   /sbin/
       # need linked libs in /lib not /usr/lib
-      for lib in $(ldd /sbin/wpa_supplicant /sbin/wpa_action /sbin/wpa_cli | awk '{print $3}' |grep ^/); do
+      for lib in $(ldd /sbin/wpa_supplicant /sbin/wpa_action /sbin/wpa_cli /usr/bin/wpa_passphrase | awk '{print $3}' |grep ^/); do
         newlib=$(echo $lib | sed s/"\/i686\/cmov"//g | sed s/"\/tls"//g )
         #_echo "   DEBUG: WPA: copying lib=$lib newlib=$newlib"
         if [ -e $newlib ]; then
@@ -152,18 +154,25 @@ fi
 
 WPA_CONF=\$(ls /etc/wpa_supplicant/*conf 2>/dev/null)
 if [ "\$WPA_CONF" = "" ]; then
-   echo "Error: need a wpa conf file..."
-   echo "Generating it..."
-   echo ""
-   echo "Please enter the (plain) WPA passphrase of \${TCOS_NET_WIFI_ESSID} network"
-   wpa_passphrase "\${TCOS_NET_WIFI_ESSID}" "\${TCOS_WIRELESS_KEY}" > /etc/wpa_supplicant/wpa.conf
-   WPA_CONF=/etc/wpa_supplicant/wpa.conf
+   psk=\$(wpa_passphrase "\${TCOS_NET_WIFI_ESSID}" "\${TCOS_WIRELESS_KEY}" | sed 's/[[:blank:]]//g' | awk -F"=" '/^psk=/ {print \$2}')
+
+   WPA_CONF=/etc/wpa_supplicant/wpa_supplicant.conf
+   cat << EOC > \$WPA_CONF
+ctrl_interface=/var/run/wpa_supplicant
+network={
+ssid="\${TCOS_NET_WIFI_ESSID}"
+proto=\${TCOS_WIRELESS_ENC}
+key_mgmt=WPA-PSK
+psk=\$psk
+}
+EOC
+
 fi
 
 PID=/var/run/wpa_supplicant.\${TCOS_WIRELESS_DEV}.pid
-WPA_RUN=/var/run/wpa_supplicant
+#WPA_RUN=/var/run/wpa_supplicant
 
-wpa_supplicant -B -P \$PID -i \${TCOS_WIRELESS_DEV} -D wext -c \${WPA_CONF} -C \${WPA_RUN}
+wpa_supplicant -B -P\$PID -i\${TCOS_WIRELESS_DEV} -c\${WPA_CONF}
 
 EOF
      chmod +x $DESTDIR/sbin/start-wpa.sh
