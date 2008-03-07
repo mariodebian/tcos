@@ -97,7 +97,7 @@ fi
 
 # get list of network interfaces
 TCOS_NET_ACTIVE="eth0"
-TCOS_NET_WIFI=
+TCOS_NET_WIFI=0
 TCOS_NET_WIFI_ESSID=""
 TCOS_NET_WIFI_KEYMODE=""
 TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster)
@@ -155,7 +155,7 @@ fi
  # break for wireless
  maybe_break wireless
 
- if [ $TCOS_NET_WIFI ]; then
+ if [ $TCOS_NET_WIFI = 1 ]; then
 
     #ifconfig $TCOS_NET_ACTIVE down
     #ifconfig $TCOS_NET_ACTIVE up
