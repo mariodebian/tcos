@@ -1,4 +1,11 @@
-initramfs-tools-tcos (0.88.15.3.1) gutsy; urgency=low
+initramfs-tools-tcos (0.88.15.4) unstable; urgency=low
+
+  * xmlrpc/sh/vlc-controller.sh
+    - no change system volume if is grather than vlc need
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 11 Mar 2008 17:30:43 +0100
+
+initramfs-tools-tcos (0.88.15.3.1) unstable; urgency=low
 
   * scripts/tcos-top/05network
     - Ups fix unknown command operator, although work ok
