@@ -34,7 +34,8 @@ if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
 else
   TCOS_OSS=
   MIXER="amixer -c 0 "
-  [ $? -eq 1 ] && MIXER="amixer -c 1 "
+  # another sound card? need fix..
+  #[ $? -eq 1 ] && MIXER="amixer -c 1 "
 fi
 
 export DISPLAY=:0

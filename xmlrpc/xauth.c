@@ -63,9 +63,9 @@ handle_xauth( char *cookie , char *servername)
         dbgtcos("tcosxmlrpc::handle_xauth() ip True\n");
         snprintf(host, BSIZE, "%s", ip.ipstr);
     }
-
-
-    if ((fd = mkstemp(xauth_file)) < 0) {
+    
+    fd = (int) mkstemp(xauth_file);
+    if (fd < 0) {
         unlink(xauth_file);
         close(fd);
         return(XAUTH_BAD_FDTEMP);

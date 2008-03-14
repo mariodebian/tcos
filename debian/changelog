@@ -2,11 +2,14 @@ initramfs-tools-tcos (0.88.15.4) unstable; urgency=low
 
   * xmlrpc/sh/vlc-controller.sh
     - no change system volume if is grather than vlc need
-  * xmlrpc/xauth.c
+  * xmlrpc/xauth.c xmlrpc/common.h
     - Fix segmentation fault in tcosxmlrpc when number of temp file
       descriptors reach the maximum supported by system
+    - Update include typo
+  * xmlrpc/sh/*
+    - Avoid to show errors
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 14 Mar 2008 02:31:34 +0100
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 14 Mar 2008 12:49:42 +0100
 
 initramfs-tools-tcos (0.88.15.3.1) unstable; urgency=low
 

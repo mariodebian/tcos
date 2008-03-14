@@ -22,10 +22,10 @@
 /* xmlrpc methods to export thin client info */
 
 /*#define STANDALONE_USER    "w | awk '{ if ($3 == \":0\" || $2 == \":0\") print $1 }' |head -1"*/
-#define STANDALONE_USER    "/usr/lib/tcos/tcos-last --user"
+#define STANDALONE_USER    "/usr/lib/tcos/tcos-last --user 2>/dev/null"
 #define STANDALONE_PROCESS "ps aux |grep -c \"^$("STANDALONE_USER") \""
 /*#define STANDALONE_TIME    "LC_ALL=C LC_MESSAGES=C last| grep \"[[:blank:]]:0[[:blank:]].*still\" | awk '{print $(NF-5)\" \"$(NF-4)\" \"$(NF-3)}'"*/
-#define STANDALONE_TIME    "/usr/lib/tcos/tcos-last --time"
+#define STANDALONE_TIME    "/usr/lib/tcos/tcos-last --time 2>/dev/null"
 
 #ifdef IS_STANDALONE
   #define STANDALONE_SERVER  "tail -1 /var/lib/tcos/standalone/log/access.log | awk '{print $1}'"

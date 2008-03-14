@@ -47,7 +47,7 @@ int gethostname(char *name, size_t len);
 int setenv(const char *nombre, const char *valor, int sobrescribir);
 void unsetenv(const char *nombre);
 
-char *mkstemp(char *template);
+int *mkstemp(char *template);
 int snprintf(char *str, size_t size, const char *format, ...);
 
 
