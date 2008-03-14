@@ -39,6 +39,7 @@ handle_xauth( char *cookie , char *servername)
     char cmd[BSIZE];
     struct ip_address ip;
     char xauth_file[]="/tmp/.tmpxauthXXXXXX";
+    int fd;
     FILE *fp;
 
     dbgtcos("tcosxmlrpc::handle_auth() cookie=%s server=%s\n" ,cookie, servername);
@@ -64,7 +65,11 @@ handle_xauth( char *cookie , char *servername)
     }
 
 
-    mkstemp(xauth_file);
+    if ((fd = mkstemp(xauth_file)) < 0) {
+        unlink(xauth_file);
+        close(fd);
+        return(XAUTH_BAD_FDTEMP);
+    }
 
     /*dbgtcos("tcosxmlrpc::handle_xauth() xauth_file=%s\n", xauth_file);*/
 
@@ -72,7 +77,7 @@ handle_xauth( char *cookie , char *servername)
 
     dbgtcos("tcosxmlrpc::handle_xauth() cmd=\"%s\"\n", cmd);
 
-    unlink(xauth_file);
+    /*unlink(xauth_file);*/
     fp=(FILE*)popen(cmd, "r");
     pclose(fp);
 
@@ -89,7 +94,8 @@ handle_xauth( char *cookie , char *servername)
       XCloseDisplay(displ);                           /* close display */
     }
 
-    unlink(xauth_file);					/* delete XAUTHORITY temp file */
+    unlink(xauth_file); 				/* delete XAUTHORITY temp file */
+    close(fd);
     unsetenv("XAUTHORITY");				/* unset environment XAUTH */
 
     if (!found) {

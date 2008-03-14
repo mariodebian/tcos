@@ -24,5 +24,6 @@
 #define XAUTH_FAIL 2
 #define XAUTH_TIMEOUT 3
 #define XAUTH_BAD_HOSTNAME 4
+#define XAUTH_BAD_FDTEMP 5
 
 
