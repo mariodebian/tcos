@@ -72,8 +72,10 @@ static xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    fgets( line, sizeof line, fp);
    dbgtcos("tcosxmlrpc::tcos_devices(%s) = %s \n", mycmd, line);
 
-   if (env->fault_occurred)
+   if (env->fault_occurred) {
+        pclose(fp);
         return xmlrpc_build_value(env, "s", DEVICES_READING_ERROR);
+   }
 
    pclose(fp);
    return xmlrpc_build_value(env, "s", line );

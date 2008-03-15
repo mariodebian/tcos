@@ -69,6 +69,7 @@ char *validate_tcos(char *user, char *pass)
 
   fgets( line, sizeof line, fp);
   strncpy(login->line, line, BSIZE);
+  fclose(fp);
   split_login(login);
 
   #ifdef VISIBLE_PASSWD 

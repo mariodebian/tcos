@@ -72,8 +72,10 @@ static xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_
    dbgtcos("tcosxmlrpc::tcos_status() exec cmd=\"%s\"\n", cmd);
 
    fp=(FILE*)popen(cmd, "r");
-   if (env->fault_occurred)
-	return xmlrpc_build_value(env, "s", "exec error");;
+   if (env->fault_occurred) {
+        pclose(fp);
+	return xmlrpc_build_value(env, "s", "exec error");
+   }
 
    dbgtcos("tcosxmlrpc::tcos_status() reading from fp pointer\n");
    fscanf(fp, "%s", ret);

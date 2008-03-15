@@ -8,8 +8,11 @@ initramfs-tools-tcos (0.88.15.4) unstable; urgency=low
     - Update include typo
   * xmlrpc/sh/*
     - Avoid to show errors
+    - Search var HOME in standalone for exports
+  * hooks-addons/90usplash
+    - Create usplash.conf to avoid crashes in thin clients (thks mariodebian)
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 14 Mar 2008 12:49:42 +0100
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Sat, 15 Mar 2008 17:09:07 +0100
 
 initramfs-tools-tcos (0.88.15.3.1) unstable; urgency=low
 

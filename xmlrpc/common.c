@@ -50,14 +50,14 @@ check_for_file(char *fname)
 /* return 0 if not found or cant read or 1 if found */
 
  FILE *fptemp;
- fptemp = fopen(fname,"r");
- if (!fptemp) {
-    dbgtcos("info check_for_file(): File \"%s\" not found or cant read.\n", fname);
-    return 0;
- }
- else
+ if ((fptemp = fopen(fname,"r"))) {
+    fclose(fptemp);
     dbgtcos("info check_for_file(): File \"%s\" found.\n", fname);
-   return 1;
+    return 1;
+ }
+
+   dbgtcos("info check_for_file(): File \"%s\" not found or cant read.\n", fname);
+   return 0;
 }
 
 

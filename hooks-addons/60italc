@@ -60,7 +60,8 @@ EOF
       if [ "${TCOS_ADMIN_USER}" = "root" ]; then
         key=/root/.italc/id_rsa.public
       else
-        key=/home/${TCOS_ADMIN_USER}/.italc/id_rsa.public
+	home=$(getent passwd | grep "^${TCOS_ADMIN_USER}:" | awk -F":" '{print $6}')
+        key=${home}/.italc/id_rsa.public
       fi
     else
       key=/etc/italc-client/public-keys/${TCOS_ADMIN_USER}.public

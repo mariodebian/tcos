@@ -13,3 +13,9 @@ if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
 else
   cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
 fi
+
+cat << EOF > $DESTDIR/etc/usplash.conf
+# Usplash configuration file for tcos
+xres=1024
+yres=768
+EOF

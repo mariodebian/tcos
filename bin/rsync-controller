@@ -20,26 +20,26 @@
 # --------
 set -e 
 
-
+home=$(getent passwd | grep "^${USER}:" | awk -F":" '{print $6}')
 DESKTOP_DIR="Desktop"
 
 if [ -r /etc/xdg/user-dirs.conf ];then
 
-enabled=`awk -F "=" '/^enabled=/ {print $2}' /etc/xdg/user-dirs.conf`
+enabled=$(awk -F "=" '/^enabled=/ {print $2}' /etc/xdg/user-dirs.conf)
 
   if [ ! -z ${enabled} -a ${enabled} = "True" ];then
 
-    XDG_CONFIG_HOME=`awk -F "=" '/^XDG_CONFIG_HOME=/ {print $2}' /etc/xdg/user-dirs.conf`
-    XDG_CONFIG_DIRS=`awk -F "=" '/^XDG_CONFIG_DIRS=/ {print $2}' /etc/xdg/user-dirs.conf`
+    XDG_CONFIG_HOME=$(awk -F "=" '/^XDG_CONFIG_HOME=/ {print $2}' /etc/xdg/user-dirs.conf)
+    XDG_CONFIG_DIRS=$(awk -F "=" '/^XDG_CONFIG_DIRS=/ {print $2}' /etc/xdg/user-dirs.conf)
 
     # if not custom config-path found in /etc/xdg/users-dirs.conf use default config in users home
-    [ -z ${XDG_CONFIG_HOME} ] && XDG_CONFIG_HOME="${HOME}/.config"
+    [ -z ${XDG_CONFIG_HOME} ] && XDG_CONFIG_HOME="${home}/.config"
     [ -z ${XDG_CONFIG_DIRS} ] && XDG_CONFIG_DIRS="/user-dirs.dirs"
 
     XDG_PATH="${XDG_CONFIG_HOME}${XDG_CONFIG_DIRS}"
     
     # obtain path to real Desktop 
-    [ -r ${XDG_PATH} ] && DESKTOP_DIR=$(basename `awk -F "=" '/^XDG_DESKTOP_DIR=/ {print $2}' ${XDG_PATH} | sed s/\"//g`)
+    [ -r ${XDG_PATH} ] && DESKTOP_DIR=$(basename $(awk -F "=" '/^XDG_DESKTOP_DIR=/ {print $2}' ${XDG_PATH} | sed s/\"//g))
 
     if [ -z ${DESKTOP_DIR} ];then
         # if var not specified in config try defaults dirs for var Desktop, this file only contain basenames
@@ -56,7 +56,7 @@ fi
 
 
 if [ "$#" -lt 3 ];then
-  echo ${HOME}/${DESKTOP_DIR}
+  echo ${home}/${DESKTOP_DIR}
   exit 0
 fi
 
@@ -66,10 +66,10 @@ shift
 SERVER_IP=$1
 shift
 
-[ -d ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR} ] || mkdir -p ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
+[ -d ${home}/${DESKTOP_DIR}/${RECEIVE_DIR} ] || mkdir -p ${home}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
 
-rsync -avx --timeout=30 --ignore-existing ${SERVER_IP}::"$*" ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
+rsync -avx --timeout=30 --ignore-existing ${SERVER_IP}::"$*" ${home}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
 
-chmod -R 644 ${HOME}/${DESKTOP_DIR}/${RECEIVE_DIR}/*
+chmod -R 644 ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/*
 
 exit 0

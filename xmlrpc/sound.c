@@ -83,8 +83,10 @@ static xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    strncpy(line, SOUND_ERROR, BSIZE);
 
    fgets( line, sizeof line, fp);
-   if (env->fault_occurred)
+   if (env->fault_occurred) {
+        pclose(fp);
         return xmlrpc_build_value(env, "s", SOUND_READING_ERROR);
+   }
 
    pclose(fp);
    return xmlrpc_build_value(env, "s", line );

@@ -35,8 +35,9 @@ if [ $TCOS_SSH ] ;then
         pkey=/root/.ssh/id_rsa.pub
 	key=/root/.ssh/id_rsa
       else
-        pkey=/home/${TCOS_ADMIN_USER}/.ssh/id_rsa.pub
-	key=/home/${TCOS_ADMIN_USER}/.ssh/id_rsa
+	home=$(getent passwd | grep "^${TCOS_ADMIN_USER}:" | awk -F":" '{print $6}')
+        pkey=${home}/.ssh/id_rsa.pub
+	key=${home}/.ssh/id_rsa
       fi
       
         #### key exists? ###
