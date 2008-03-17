@@ -1,5 +1,5 @@
 etc/dbus-1/system.d/tcosmonitor.conf
-etc/X11/Xsession.d/82export_pulseaudio
+etc/X11/Xsession.d/80export_pulseaudio
 usr/lib/tcos/*
 usr/share/tcos-core/lockscreen.png
 usr/sbin/update-tcospasswd

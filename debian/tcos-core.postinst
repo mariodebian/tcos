@@ -1,6 +1,13 @@
 #!/bin/bash
 #set -e
 
+# Rename 82export_pulseaudio => 80export_pulseaudio
+# need to remove old file
+if [ -f /etc/X11/Xsession.d/82export_pulseaudio ]; then
+  echo " * Remove obsolete file /etc/X11/Xsession.d/82export_pulseaudio"
+  rm -f /etc/X11/Xsession.d/82export_pulseaudio
+fi
+
 
 # tcosmonitor dbus
 case "$1" in

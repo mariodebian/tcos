@@ -128,7 +128,7 @@ install:
 	install -m 644 conf/tcos-run-functions.sh        $(DESTDIR)$(TCOS_DIR)/tcos-run-functions.sh
 	install -m 644 conf/branding.info                $(DESTDIR)$(TCOS_CONF)/conf.d/
 
-	install -m 644 conf/82export_pulseaudio  $(DESTDIR)$(X11_CONF)/
+	install -m 644 conf/80export_pulseaudio  $(DESTDIR)$(X11_CONF)/
 
 	install -m 644 conf/initramfs.conf $(DESTDIR)$(TCOS_CONF)/initramfs.conf
 	install -m 644 conf/template $(DESTDIR)$(TCOS_CONF)/hacking/template
