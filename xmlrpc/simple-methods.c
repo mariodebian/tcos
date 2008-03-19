@@ -68,7 +68,7 @@ static xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_
 	return xmlrpc_build_value(env, "s", "params error");
 
    dbgtcos("tcosxmlrpc::tcos_status() pidof %s\n", app);
-   snprintf( (char*) &cmd, BUFF_SIZE, "pidof %s| grep [1234567890] | wc -l" ,app);
+   snprintf( (char*) &cmd, BUFF_SIZE, "pidof %s| grep -c \"[1234567890]\"",app);
    dbgtcos("tcosxmlrpc::tcos_status() exec cmd=\"%s\"\n", cmd);
 
    fp=(FILE*)popen(cmd, "r");
