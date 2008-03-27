@@ -47,6 +47,9 @@ TCOS_STANDALONE_START=1
 #
 do_start()
 {
+        # don't start if start-stop-daemon isn't a ELF file (installing in chroot)
+        file /sbin/start-stop-daemon |grep -q ELF || return 0 
+
         # start httpd on 8081 port
         /usr/lib/tcos/starthttpd.sh
 
@@ -87,7 +90,7 @@ do_wakeonlan()
 	
 	# search for network interfaces with link ok status
 	for dev in $TCOS_NET_DEVS; do
-    	# have link ???
+    	        # have link ???
     		if [ -e /sys/class/net/$dev/carrier ] && \
        	   	   [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
 		   [ "$(/usr/sbin/ethtool $dev| grep -c "Wake-on: g")" = "1" ]; then

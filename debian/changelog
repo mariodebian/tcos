@@ -9,7 +9,10 @@ initramfs-tools-tcos (0.88.15.5) unstable; urgency=low
   * xmlrpc/simple-methods.c
     - Update command
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 19 Mar 2008 17:38:26 +0100
+  [ Mario Izquierdo (mariodebian) ]
+  * don't start tcos-standalone if start-stop-daemon is a fake script
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 27 Mar 2008 18:41:31 +0100
 
 initramfs-tools-tcos (0.88.15.4) unstable; urgency=low
 
