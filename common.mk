@@ -17,7 +17,7 @@ USPLASH_feisty=0.4.1
 KERNEL_etch="2.6.18-6-486"
 USPLASH_etch=0.3
 
-KERNEL_testing="2.6.22-3-486"
+KERNEL_testing="2.6.24-1-486"
 USPLASH_testing=0.4.1
 
 KERNEL_unstable="2.6.24-1-486"
@@ -29,10 +29,10 @@ USPLASH_experimental=0.4.1
 KERNEL_gutsy="2.6.22-14-generic"
 USPLASH_gutsy=0.4.1
 
-KERNEL_max="2.6.22-14-generic"
+KERNEL_max="2.6.24-12-generic"
 USPLASH_max=0.4.1
 
-KERNEL_hardy="2.6.24-11-generic"
+KERNEL_hardy="2.6.24-12-generic"
 USPLASH_hardy=0.4.1
 ##################################
 

@@ -6,6 +6,8 @@ initramfs-tools-tcos (0.88.15.6) unstable; urgency=low
     - Remove extra shell call after panic action (panic call a shell)
   * hooks-addons/01busybox:
     - Add another test (losetup)
+  * common.mk:
+    - Update kernel versions of Debian testing, Ubuntu hardy and Max40
 
   [ Patches by Ignacio]
   * xmlrpc/sh/tcos-last:
@@ -15,7 +17,7 @@ initramfs-tools-tcos (0.88.15.6) unstable; urgency=low
   * xmlrpc/standalone.h:
     - Get user process with ps U $USER instead of ps aux|grep USER
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 30 Mar 2008 17:19:10 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 30 Mar 2008 17:23:02 +0200
 
 initramfs-tools-tcos (0.88.15.5) unstable; urgency=low
 
