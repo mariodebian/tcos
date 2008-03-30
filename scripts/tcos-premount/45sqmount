@@ -66,11 +66,16 @@ fi
 
 # Mount squashfs filesystems
 log_begin_msg "Mounting usr filesystem"
- mount -r -o loop -t squashfs ${USR_SQUASH} /usr >> /tmp/initramfs.debug 2>&1
+ FIRST_LOOP=$(losetup -f 2>/dev/null)
+ if [ ${FIRST_LOOP} != "" ]; then
+   losetup $FIRST_LOOP ${USR_SQUASH}
+   mount -r -o loop -t squashfs ${FIRST_LOOP} /usr >> /tmp/initramfs.debug 2>&1
+ else
+   mount -r -o loop -t squashfs ${USR_SQUASH} /usr >> /tmp/initramfs.debug 2>&1
+ fi
  # check if squashfs mount give an error
  if [ $? != 0 ]; then
    panic "Error mounting usr.squashfs check squashfs module or bugs"
-   FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
  else
    log_end_msg 0
 fi
@@ -87,7 +92,13 @@ TCOS_ALL_MODULES=$(read_cmdline_var "allmodules" "0")
 if [ "$TCOS_ALL_MODULES" = "1" ] && [ -f ${MOD_SQUASH} ]; then
 
   log_begin_msg "Mounting allmodules.squashfs"
-    mount -r -o loop -t squashfs ${MOD_SQUASH} /lib/modules/$(uname -r)/ >> /tmp/initramfs.debug 2>&1
+    FIRST_LOOP=$(losetup -f 2>/dev/null)
+    if [ ${FIRST_LOOP} != "" ]; then
+      losetup $FIRST_LOOP ${MOD_SQUASH}
+      mount -r -o loop -t squashfs ${FISRT_LOOP} /lib/modules/$(uname -r)/ >> /tmp/initramfs.debug 2>&1
+    else
+      mount -r -o loop -t squashfs ${MOD_SQUASH} /lib/modules/$(uname -r)/ >> /tmp/initramfs.debug 2>&1
+    fi
   log_end_msg $?
 
 fi

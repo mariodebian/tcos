@@ -24,7 +24,7 @@
 /*#define STANDALONE_USER    "w | awk '{ if ($3 == \":0\" || $2 == \":0\") print $1 }' |head -1"*/
 #define STANDALONE_USER    "/usr/lib/tcos/tcos-last --user 2>/dev/null"
 #define STANDALONE_HOME    "getent passwd | grep \"^$("STANDALONE_USER"):\" | awk -F\":\" '{print $6}'"
-#define STANDALONE_PROCESS "ps aux |grep -c \"^$("STANDALONE_USER") \""
+#define STANDALONE_PROCESS "ps U "STANDALONE_USER" -o pid | sed 's/[[:blank:]]//g' | grep -c ^[0-9]"
 /*#define STANDALONE_TIME    "LC_ALL=C LC_MESSAGES=C last| grep \"[[:blank:]]:0[[:blank:]].*still\" | awk '{print $(NF-5)\" \"$(NF-4)\" \"$(NF-3)}'"*/
 #define STANDALONE_TIME    "/usr/lib/tcos/tcos-last --time 2>/dev/null"
 

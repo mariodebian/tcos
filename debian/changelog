@@ -1,3 +1,22 @@
+initramfs-tools-tcos (0.88.15.6) unstable; urgency=low
+
+  * scripts/*:
+    - Mount squashfs file using loop device (losetup)
+    - Preserver old mount line if losetup return empty string
+    - Remove extra shell call after panic action (panic call a shell)
+  * hooks-addons/01busybox:
+    - Add another test (losetup)
+
+  [ Patches by Ignacio]
+  * xmlrpc/sh/tcos-last:
+    - Change format to time 00:00 => 00h:00m
+  * xmlrpc/sh/devicesctl.sh:
+    - Exec mount.ntfs-3g with start-stop-daemon (avoid to use threads in tcos-devices-ng)
+  * xmlrpc/standalone.h:
+    - Get user process with ps U $USER instead of ps aux|grep USER
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 30 Mar 2008 17:19:10 +0200
+
 initramfs-tools-tcos (0.88.15.5) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]

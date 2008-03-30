@@ -59,7 +59,6 @@ if [ ! -e /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/usr.squashfs ];
 
   if [ "$(if_is_zero /mnt/tmp/usr-$(uname -r).squashfs)" = "0" ]; then
     panic "Error downloading extra data from server $(read_server "tftp-server")"
-    FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
   fi
 else
   log_begin_msg "usr-$(uname -r).squashfs not downloaded"

@@ -33,7 +33,6 @@ maybe_break unionfs
 log_begin_msg "Mounting UNIONFS usr filesystem"
  if [ ! -d /usr/share ]; then
    panic "Error mounting usr.squashfs check squashfs module or bugs"
-   FS1='(initramfs) ' exec /bin/sh </dev/console >/dev/console 2>&1
  fi
  mount_unionfs /mnt/ram /.usr /usr
 log_end_msg $?

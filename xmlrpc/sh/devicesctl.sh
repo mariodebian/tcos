@@ -125,12 +125,19 @@ if [ "$1" = "--mount" ]; then
         return
       fi
       ###############
+      count=0
       if [ "$(get_fs_type $2)" = "ntfs-3g" ]; then
         /sbin/mount.ntfs-3g $2 /mnt/$mnt
+         ln -s /sbin/mount.ntfs-3g /sbin/mount.ntfs-3g.$mnt 2>/dev/null
+        /sbin/start-stop-daemon --quiet --background --start --startas /sbin/mount.ntfs-3g.$mnt --name /sbin/mount.ntfs-3g.$mnt -- $2 /mnt/$mnt
+        while [ $(grep -c "^$2" /proc/mounts) -eq 0 -a $count -lt 5 ];do
+           sleep 1
+           count=$(($count+1))
+        done
       else
         mount $fs $2 /mnt/$mnt 2>/dev/null
       fi
-      if [ $? = 0 ]; then
+      if [ $? = 0 -a $count -ne 5 ]; then
         output="/mnt/$mnt"
       else
         output="error: mounting device"
@@ -146,6 +153,7 @@ if [ "$1" = "--umount" ]; then
     mnt=$(basename $2)
     umount /mnt/$mnt 2>/dev/null
     if [ $? = 0 ]; then
+      [ -e /sbin/mount.ntfs-3g.$mnt ] && rm -f /sbin/mount.ntfs-3g.$mnt 2>/dev/null
       output="/mnt/$mnt"
     else
       output="error: umounting device"

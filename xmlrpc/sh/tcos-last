@@ -137,9 +137,9 @@ def GetLast(ip):
 
         # only print days if > 0    
         if days == 0:
-            timelogged="%02d:%02d"%(hours,minutes)
+            timelogged="%02dh:%02dm"%(hours,minutes)
         else:
-            timelogged="%dd %02d:%02d"%(days,hours,minutes)
+            timelogged="%dd %02dh:%02dm"%(days,hours,minutes)
             
         uid=pwd.getpwnam(last.ut_user)[2]
         print_debug("username %s uid=%s"%(last.ut_user, uid))
