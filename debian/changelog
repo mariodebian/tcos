@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
+
+  * debian/control:
+    - add rtptools depends to tcos-core package (RTP sound multicast)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 02 Apr 2008 13:02:50 +0200
+
 initramfs-tools-tcos (0.88.15.6) unstable; urgency=low
 
   * scripts/*:
