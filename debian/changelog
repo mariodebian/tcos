@@ -14,7 +14,17 @@ initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
   * xmlrpc/sh/vnc-controller.sh:
     - Fix not show in demo mode cursor of server in higher version of vnc
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 04 Apr 2008 15:16:12 +0200
+  [ Mario Izquierdo (mariodebian) ]
+  * hooks-addons/00init:
+    - Move real reboot and poweroff to /lib/cmds (avoid crash when unionfs is not umounted)
+  * scripts/tcos-top/01busybox:
+    - Delete mount and umount (klibc-utils) bins, not compatible with busybox mount
+  * scripts/tcos-premount/45sqmount:
+    - Revert last version change
+  * conf/tcos-run-functions.sh:
+    - Read mounted with /proc/mounts and awk script magic
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 04 Apr 2008 18:18:47 +0200
 
 initramfs-tools-tcos (0.88.15.6) unstable; urgency=low
 

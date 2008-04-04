@@ -7,14 +7,16 @@ if [ "${TCOS_INCLUDE_INIT}" = "1" ]; then
 
     stat_before
     mkdir -p $DESTDIR/usr/sbin >/dev/null 2>&1
+    mkdir -p $DESTDIR/lib/cmds >/dev/null 2>&1
     # init reboot poweroff
-    cpifexists /sbin/reboot       /usr/sbin/
-    cpifexists /sbin/poweroff     /usr/sbin/
+    cpifexists /sbin/reboot       /lib/cmds/
+    cpifexists /sbin/poweroff     /lib/cmds/
     cpifexists ${TCOS_BINS}/down-controller  /sbin/
 
     rm -f $DESTDIR/bin/reboot
     rm -f $DESTDIR/bin/poweroff
     rm -f $DESTDIR/bin/halt
+
 
     ###
     ### add usplash support to reboot and poweroff scripts
@@ -41,7 +43,7 @@ umount_swap
 
 umount_all
 
-/usr/sbin/reboot -f
+/lib/cmds/reboot -f
 EOF
     chmod +x ${DESTDIR}/sbin/reboot
 
@@ -65,7 +67,7 @@ umount_swap
 
 umount_all
 
-/usr/sbin/poweroff -f
+/lib/cmds/poweroff -f
 EOF
     chmod +x $DESTDIR/sbin/poweroff
 

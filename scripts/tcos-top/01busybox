@@ -50,6 +50,12 @@ create_links "logger"
 create_links "ulimit"
 create_links "ifconfig"
 
+rm -f /bin/mount
+create_links "mount"
+
+rm -f /bin/umount
+create_links "umount"
+
 # start syslogd (busybox embeded)
 killall syslogd 2>/dev/null
 syslogd 2>/dev/null 
