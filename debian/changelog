@@ -23,8 +23,11 @@ initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
     - Revert last version change
   * conf/tcos-run-functions.sh:
     - Read mounted with /proc/mounts and awk script magic
+  * hooks-addons/52intel scripts/tcos-bottom/21intel:
+    - Add support for old i810 intel graphic cards chipset
+    - Thanks to Rubén Gómez Antolí <listas at mucharuina [.] com>
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 04 Apr 2008 18:18:47 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 04 Apr 2008 19:11:34 +0200
 
 initramfs-tools-tcos (0.88.15.6) unstable; urgency=low
 

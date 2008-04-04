@@ -1,0 +1,34 @@
+# hook for intel graphics card
+# Copyright Rubén Gómez Antolí <listas at mucharuina [.] com>
+
+# test if we have intel-drv or i810
+if [ ! -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
+
+    # we have OLD driver, need 915resolution
+    if [ -x /usr/sbin/915resolution ]; then
+        if [ ! -e /etc/tcos/disable915 ]; then
+            echo "    WARNING:"
+            echo "      Detected old INTEL graphic driver (i810)"
+            echo ""
+            echo "      Install 915resolution to support full resolutions for intel cards"
+            echo ""
+            echo "      If you don't want to see this warning again, create "
+            echo        "and empty file  =>  /etc/tcos/disable915"
+            echo ""
+        fi
+    else
+        stat_before
+        cpifexists /usr/sbin/915resolution    /usr/bin/
+        cpifexists /usr/sbin/vbetool          /usr/bin/
+        cpifexists /usr/bin/tac               /usr/bin/
+        
+        if [ -f /etc/tcos/915resolution ]; then
+            cpifexists /etc/tcos/915resolution    /etc/default/
+        else
+            cpifexists /etc/default/915resolution /etc/default/
+        fi
+        
+        stat_after "Intel 915 resolution hack"
+    fi
+fi
+
