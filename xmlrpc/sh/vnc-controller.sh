@@ -83,7 +83,7 @@ for arg in $1; do
         VNC_NEW_VERSION=$(vncviewer --version 2>&1| grep built |grep -c "4.1")
         if [ $STANDALONE = 0 ]; then
             if [ $VNC_NEW_VERSION = 1 ]; then
-               /sbin/daemonize.sh "vncviewer" "$2 -ViewOnly -FullScreen -geometry \$(screensize)+0+0 -passwd $3"
+               /sbin/daemonize.sh "vncviewer" "$2 -ViewOnly -FullScreen -geometry \$(screensize)+0+0 -UseLocalCursor=0 -passwd $3"
                if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
             else
                /sbin/daemonize.sh "vncviewer" "$2 -viewonly -fullscreen -geometry \$(screensize)+0+0 -passwd $3"
@@ -91,7 +91,7 @@ for arg in $1; do
             fi
         else
             if [ $VNC_NEW_VERSION = 1 ]; then
-               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -geometry \$(/usr/lib/tcos/screensize)+0+0 -passwd $3"
+               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -geometry \$(/usr/lib/tcos/screensize)+0+0 -UseLocalCursor=0 -passwd $3"
             else
                $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -viewonly -fullscreen -geometry \$(/usr/lib/tcos/screensize)+0+0 -passwd $3"
             fi

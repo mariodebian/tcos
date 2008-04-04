@@ -22,6 +22,7 @@ cpifexists ${TCOS_BINS}/useallmodules.sh   /sbin/
 cpifexists ${TCOS_BINS}/devicesctl.sh      /sbin/
 cpifexists ${TCOS_BINS}/vnc-controller.sh  /sbin/
 cpifexists ${TCOS_BINS}/vlc-controller.sh  /sbin/
+cpifexists ${TCOS_BINS}/rtp-controller.sh  /sbin/
 cpifexists /usr/bin/vncviewer              /usr/bin/
 
 cpifexists ${TCOS_BINS}/soundctl.sh /sbin/

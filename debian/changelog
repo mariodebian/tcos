@@ -1,9 +1,20 @@
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 
+  [ Mario Izquierdo (mariodebian) ]
   * debian/control:
     - add rtptools depends to tcos-core package (RTP sound multicast)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 02 Apr 2008 13:02:50 +0200
+  [ Ignacio Vidal ]
+  * xmlrpc/* xmlrpc/sh/rtp-controller.sh hooks-addons/25tcosmonitor:
+    - Add support for RTP sound multicast
+  * xmlrpc/standalone.h:
+    - Fix last change in get user process
+  * scripts/tcos-bottom/40initsound:
+    - In some thin clients only work sound in headphone
+  * xmlrpc/sh/vnc-controller.sh:
+    - Fix not show in demo mode cursor of server in higher version of vnc
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 04 Apr 2008 15:16:12 +0200
 
 initramfs-tools-tcos (0.88.15.6) unstable; urgency=low
 
