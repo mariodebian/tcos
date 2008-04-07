@@ -59,6 +59,7 @@ TMPNBI=/tmp/nbi-$$
 
 EXTRA_APPEND=""
 TCOS_SUFFIX=
+MKVERBOSE=""
 
 
 # BASH COLORS
@@ -111,9 +112,8 @@ _exit () {
 
 call_mkinitramfs() {
  NEWINITRAMFS=$1
- mkinitramfs -d ${TCOS_CONF} -o ${NEWINITRAMFS} ${TCOS_KERNEL}
+ mkinitramfs $MKVERBOSE -d ${TCOS_CONF} -o ${NEWINITRAMFS} ${TCOS_KERNEL}
 
- echo -n "Cleaning initramfs..."
 
  # uncompress
  DESTDIR2="$(mktemp -t -d mkinitramfs_XXXXXX)" || exit 1
@@ -132,7 +132,6 @@ call_mkinitramfs() {
  (cd "${DESTDIR2}" && find . | cpio --quiet -o -H newc | gzip -9 >"${NEWINITRAMFS}") || exit 1
 
  rm -rf "${DESTDIR2}"
- echo " done."
 }
 
 
@@ -341,6 +340,7 @@ echo -e "Usage:
       [${RED}-vmlinux=${WHITE}vmlinuz-x.x.x${RED}|${WHITE}/boot/vmlinuz-x.x.x${NORMAL}] kernel version
       [${RED}-suffix=${WHITE}foo${NORMAL}] ( suffix for filenames )
       [${RED}-size${NORMAL}]       ( print ramdisk size )
+      [${RED}-v${NORMAL}]          ( show verbose output of mkinitramfs )
       [${RED}-allmodules${NORMAL}] ( generate allmodules-${TCOS_KERNEL}.squashfs to
                               know what kernel modules need )
       [${RED}-extramodules=${WHITE}"foo,bar"${NORMAL}] ( add coma separated list of modules )
@@ -660,6 +660,8 @@ for opt in $@ ; do
         -suffix=*) TCOS_SUFFIX=${opt#-suffix=}
             ;;
         -f) TCOS_FORCE=1
+            ;;
+        -v) MKVERBOSE="-v"
             ;;
         -force) TCOS_FORCE=1
             ;;

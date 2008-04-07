@@ -1,19 +1,10 @@
 #!/bin/bash
 
-PREREQ=""
-
-prereqs()
-{
-	echo "$PREREQ"
-}
-
-case $1 in
-# get pre-requisites
-prereqs)
-	prereqs
-	exit 0
-	;;
-esac
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
 
 # Hooks for loading necesary modules for the tcos system into the initramfs
@@ -33,6 +24,16 @@ if [ "${BOOT}" = "tcos" ]; then
 . $CONFDIR/tcos.conf
 . $TCOS_CONF/tcos-modules.conf
 . $TCOS_DIR/tcos-generation-functions.sh
+
+. $TCOS_TEMPLATES_DIR/base.conf
+
+# load template
+. $(get_template)
+
+# load /etc templates
+for file in $CONFDIR/templates/*.conf; do
+  [ -f $file ] && . $file
+done
 
 # load forced settings for derivatives
 if [ -d $CONFDIR/conf.d/ ]; then
@@ -95,18 +96,20 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
 
     if [ "$TCOS_DISABLE_USB" = "1" ] ;then
        # delete some SCSI and USB stuff because we boot from network
-       _echo "   TCOS_DISABLE_USB : deleting some SCSI and USB kernel modules..."
+       _echo "   * DISABLE USB : deleting some SCSI and USB kernel modules..."
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/usb/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/scsi/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ieee1394/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/md/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/cdrom/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/block/
+       # restore deleted loop module
+       tcos_manual_add_modules loop
     fi
 
     if [ "$TCOS_DISABLE_IDE" = "1" ] ;then
        # delete some IDE and filesystem modules
-       _echo "   TCOS_DISABLE_IDE : deleting some IDE and FS kernel modules..."
+       _echo "   * DISABLE IDE : deleting some IDE and FS kernel modules..."
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/reiserfs/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/xfs/
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/fs/ext3/

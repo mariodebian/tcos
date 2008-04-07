@@ -2,7 +2,7 @@ etc/tcos/*
 var/lib/tcos/tftp/*
 usr/sbin/gentcos
 usr/sbin/tcos-buildchroot
-usr/share/initramfs-tools-tcos/tcos.conf
+usr/share/initramfs-tools-tcos/templates/*
 usr/share/initramfs-tools-tcos/xmlrpc/*
 usr/share/initramfs-tools-tcos/hooks/*
 usr/share/initramfs-tools-tcos/hooks-addons/*

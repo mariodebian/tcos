@@ -1,19 +1,10 @@
 #!/bin/bash
 
-PREREQ=""
-
-prereqs()
-{
-	echo "$PREREQ"
-}
-
-case $1 in
-# get pre-requisites
-prereqs)
-	prereqs
-	exit 0
-	;;
-esac
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
 
 
@@ -37,13 +28,22 @@ if [ "${BOOT}" = "tcos" ]; then
 [ -f $CONFDIR/version.conf ] && . $CONFDIR/version.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
+. $TCOS_TEMPLATES_DIR/base.conf
+
+# load template
+. $(get_template)
+
+# load /etc templates
+for file in $CONFDIR/templates/*.conf; do
+  [ -f $file ] && . $file
+done
+
 # load forced settings for derivatives
 if [ -d $CONFDIR/conf.d/ ]; then
   for file in $CONFDIR/conf.d/tcos*conf; do
     [ -e $file ] && . $file
   done
 fi
-
 
 
 # load hooks-addons (small files with group of packages inside)

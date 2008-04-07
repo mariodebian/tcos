@@ -1,20 +1,12 @@
 #!/bin/sh
 #
 
-PREREQ=""
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
-prereqs()
-{
-        echo "$PREREQ"
-}
-
-case $1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
 
 quiet=n
 . /conf/tcos.conf

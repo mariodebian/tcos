@@ -11,6 +11,24 @@ _echo () {
   fi
 }
 
+get_template() {
+  if [ "$TCOS_TEMPLATES_DIR" != "" ] && [ -d $TCOS_TEMPLATES_DIR ]; then
+    if [ -f $TCOS_TEMPLATES_DIR/$TCOS_TEMPLATE ]; then
+      echo " Using template => $TCOS_TEMPLATES_DIR/$TCOS_TEMPLATE" >&2
+      echo "$TCOS_TEMPLATES_DIR/$TCOS_TEMPLATE"
+      return
+    else
+      echo " Using default template => $TCOS_TEMPLATES_DIR/tcos.conf.all" >&2
+      echo "$TCOS_TEMPLATES_DIR/tcos.conf.all"
+    fi
+  else
+     echo "  ** ERROR ** Templates dir not found, please update tcos.conf" >&2
+     # ugly but necesary
+     killall gentcos
+  fi
+}
+
+
 convert_links2files () {
 # convert all links in $DESTDIR to linked files
 # needed to calculate initramfs space

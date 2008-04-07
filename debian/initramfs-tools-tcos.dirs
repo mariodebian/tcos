@@ -1,6 +1,7 @@
 /etc
 /etc/tcos
 /etc/tcos/hacking
+/etc/tcos/templates
 /etc/tcos/scripts
 /etc/tcos/scripts/tcos-bottom
 /etc/tcos/scripts/tcos-nfs-top

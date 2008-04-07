@@ -7,19 +7,12 @@ if [ -e $DESTDIR/scripts/init-top/usplash ]; then
 cat << EOF > $DESTDIR/scripts/init-top/00_nousplash
 #!/bin/sh
 
-PREREQ=""
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
-prereqs()
-{
-        echo "\$PREREQ"
-}
-
-case \$1 in
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
 
 # kill usplash if cmdline have "nousplash" or "nosplash"
 for x in \$(cat /proc/cmdline); do

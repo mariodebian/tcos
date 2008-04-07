@@ -1,19 +1,11 @@
 #!/bin/bash
 
-PREREQ=""
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
-prereqs()
-{
-	echo "$PREREQ"
-}
-
-case $1 in
-# get pre-requisites
-prereqs)
-	prereqs
-	exit 0
-	;;
-esac
 
 
 . /usr/share/initramfs-tools/hook-functions
@@ -31,6 +23,17 @@ if [ "${BOOT}" = "tcos" -o "${BOOT}" = "tcos-nfs" ]; then
 
 . $CONFDIR/tcos.conf
 . $TCOS_DIR/tcos-generation-functions.sh
+
+  . $TCOS_TEMPLATES_DIR/base.conf
+
+  # load template
+  . $(get_template)
+
+  # load /etc templates
+  for file in $CONFDIR/templates/*.conf; do
+    [ -f $file ] && . $file
+  done
+
 
   # load forced settings for derivatives
   if [ -d $CONFDIR/conf.d/ ]; then

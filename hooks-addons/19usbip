@@ -23,20 +23,11 @@ if [ -x /usr/bin/usbipd-noexists ]; then
 #!/bin/sh
 #
 
-PREREQ=""
-
-prereqs()
-{
-        echo "\$PREREQ"
-}
-
-case \$1 in
-# get pre-requisites
-prereqs)
-        prereqs
-        exit 0
-        ;;
-esac
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
 
 quiet=n

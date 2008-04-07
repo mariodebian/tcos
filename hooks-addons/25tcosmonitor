@@ -1,6 +1,8 @@
 # this file copies tcosxmlrpc server into initramfs
 # and adds startup scripts of tcosxmlrpc server
 
+if [ $TCOS_MONITOR ]; then
+
 stat_before
 
 # EJECT for mount/umount cdrom
@@ -123,3 +125,7 @@ chmod +x $DESTDIR/sbin/startxmlrpc
 
 
 stat_after "TcosMonitor"
+
+else
+   _echo "  * TcosMonitor Disabled"
+fi

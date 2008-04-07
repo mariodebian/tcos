@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
+
+  * NOT RELEASE, alfa stage
+  * Add tcos.conf template system:
+    - Avalaible templates: base.conf tcos.conf.all tcos.conf.low
+    - Add template dir in /etc/tcos for user defined templates
+  * Replace PREREQ header in all boot scripts with a simple if condition
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun,  6 Apr 2008 13:20:21 +0200
+
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]

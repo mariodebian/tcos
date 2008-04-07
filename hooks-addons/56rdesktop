@@ -1,8 +1,12 @@
 # hook for windows rdesktop
 
-if [ ! -e /usr/bin/rdesktop ]; then
-  _echo "   * rDesktop not installed"
+
+if [ ! $TCOS_RDESKTOP ]; then
+  _echo "   * rDesktop disabled"
 else
+  if [ ! -e /usr/bin/rdesktop ]; then
+    _echo "   * rDesktop not installed"
+  fi
   stat_before
     cpifexists /usr/bin/rdesktop   /usr/bin/
     mkdir -p $DESTDIR/usr/share/

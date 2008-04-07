@@ -5,21 +5,11 @@
 # Copyright Rubén Gómez Antolí <listas at mucharuina [.] com>
 
 
-PREREQ=""
-
-prereqs()
-{
-	echo "$PREREQ"
-}
-
-case $1 in
-# get pre-requisites
-prereqs)
-	prereqs
-	exit 0
-	;;
-esac
-
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
 quiet=n
 . /scripts/functions
@@ -73,7 +63,7 @@ auto_select_modes()
     # mode to be a lower resolution it will no longer be the highest.
     # If this has changed over a suspend cycle, that consequences
     # might not be so good.  -Paul Sladen
-    target_modes=$(echo "$bios_list" | awk '/^Mode [^T]/{sub(",","",\$4); print $5,$4,$2}' | tac | sort -n -u | cut -d' ' -f3)
+    target_modes=$(echo "$bios_list" | awk '/^Mode [^T]/{sub(",","",$4); print $5,$4,$2}' | tac | sort -n -u | cut -d' ' -f3)
 
     for m in $target_modes ; do
         # The 'tr' converts '1024x768' -> '1024' '768'

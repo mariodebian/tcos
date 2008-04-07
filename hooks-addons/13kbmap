@@ -2,21 +2,22 @@
 
 if [ -e $DESTDIR/bin/loadkeys ] && [ -f $DESTDIR/etc/console/boottime.kmap.gz ]; then
   # don't copy again if exists
-  exit 0
+  NO_COPY=1
+else
+
+
+  # server kbmap
+  cpifexists /bin/loadkeys /bin
+
+  if [ -f /etc/console/boottime.kmap.gz ]; then
+    mkdir -p $DESTDIR/etc/console
+    cp -ra /etc/console/boottime.kmap.gz $DESTDIR/etc/console
+  fi
+
+  # for ubuntu
+  if [ -f /etc/console-setup/boottime.kmap.gz ]; then
+    mkdir -p $DESTDIR/etc/console
+    cp -ra /etc/console-setup/boottime.kmap.gz $DESTDIR/etc/console
+  fi
+
 fi
-
-
-# server kbmap
-cpifexists /bin/loadkeys /bin
-
-if [ -f /etc/console/boottime.kmap.gz ]; then
-  mkdir -p $DESTDIR/etc/console
-  cp -ra /etc/console/boottime.kmap.gz $DESTDIR/etc/console
-fi
-
-# for ubuntu
-if [ -f /etc/console-setup/boottime.kmap.gz ]; then
-  mkdir -p $DESTDIR/etc/console
-  cp -ra /etc/console-setup/boottime.kmap.gz $DESTDIR/etc/console
-fi
-

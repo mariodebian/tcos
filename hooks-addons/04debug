@@ -3,7 +3,7 @@
 
 
 # for debug purposes
-if [ $TCOS_DEBUG ]; then
+if [ $TCOS_DEBUG_TOOLS ]; then
 
  stat_before
 

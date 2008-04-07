@@ -110,7 +110,7 @@ install:
 	chmod -x $(DESTDIR)$(TCOS_DIR)/scripts/tcos
 
 
-	install -m 600 conf/tcos.conf $(DESTDIR)$(TCOS_CONF)/tcos.conf
+	install -m 600 conf/tcos.conf.etc $(DESTDIR)$(TCOS_CONF)/tcos.conf
 	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 
 	install -m 644 conf/version.conf $(DESTDIR)$(TCOS_CONF)/version.conf
@@ -119,8 +119,15 @@ install:
 	sed -i 's/__DISTRIBUTION__/$(DISTRO)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
 	sed -i 's/__TCOS_ARCH__/$(TCOS_ARCH)/g'        $(DESTDIR)$(TCOS_CONF)/version.conf
 
+
+	# tcos.conf templates
+	install -d $(DESTDIR)$(TCOS_DIR)/templates/
+
 	# copy tcos.conf to have a default config
-	install -m 644 $(DESTDIR)$(TCOS_CONF)/tcos.conf $(DESTDIR)$(TCOS_DIR)/tcos.conf
+	install -m 644 conf/base.conf     $(DESTDIR)$(TCOS_DIR)/templates/base.conf
+	install -m 644 conf/tcos.conf.all $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.all
+	install -m 644 conf/tcos.conf.low $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.low
+
 
 	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
 

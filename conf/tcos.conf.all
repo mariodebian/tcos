@@ -1,0 +1,11 @@
+# template enabling all recomended features
+TEMPLATE_DESCRIPTION="Enabled most of features"
+TEMPLATE_DESCRIPTION_ES="Activadas la mayoría de las características"
+
+TCOS_DEBUG_TOOLS=1
+TCOS_XORG_ALLDRIVERS=1
+TCOS_XORG_OPENGL=1
+TCOS_PRINTER=1
+TCOS_X11VNC=1
+TCOS_RDESKTOP=1
+TCOS_INSTALLER=1

@@ -2,19 +2,25 @@
 
 . /etc/tcos/tcos.conf
 . /usr/share/initramfs-tools/hook-functions
+. $TCOS_DIR/tcos-generation-functions.sh
+
+# load template
+. $(get_template)
+
+_echo "  * Cleaning initramfs..."
 
 
 
-if [ "${DESTDIR}" = "" ]; then
-  echo "ERROR: DESTDIR var not set. not cleaning initramfs..."
+if [ "${DESTDIR}" = "" ] || [ "$DESTDIR" = "/" ]; then
+  _echo "  * ERROR: DESTDIR var not set. not cleaning initramfs..."
   exit 1
 fi
 
 
-if [ $TCOS_DISABLE_ACPI ] && [ "${DESTDIR}" != "" ] ; then
+if [ $TCOS_DISABLE_ACPI ] ; then
 
-  rm -rf $DESTDIR/bin/sh*
-  ( cd ${DESTDIR}/bin/ && ln -s busybox sh )
+  #rm -rf $DESTDIR/bin/sh*
+  #( cd ${DESTDIR}/bin/ && ln -s busybox sh )
 
   rm -rf $DESTDIR/scripts/usb*
   rm -rf $DESTDIR/scripts/live*
@@ -40,3 +46,10 @@ if [ $TCOS_DISABLE_ACPI ] && [ "${DESTDIR}" != "" ] ; then
 fi
 
 
+if [ "$TCOS_DISABLE_USPLASH" = "1" ]; then
+  _echo "  * Remove usplash"
+  rm -f ${DESTDIR}/lib/usplash
+  rm -f ${DESTDIR}/sbin/usplash
+  rm -f ${DESTDIR}/sbin/usplash_write
+  rm -f ${DESTDIR}/scripts/init-top/*usplash*
+fi

@@ -1,20 +1,12 @@
 #!/bin/sh
 # 
 
-PREREQ=""
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
 
-prereqs()
-{
-	echo "$PREREQ"
-}
-
-case $1 in
-# get pre-requisites
-prereqs)
-	prereqs
-	exit 0
-	;;
-esac
 
 quiet=n
 
@@ -93,10 +85,11 @@ modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
 modprobe nfs 2>/dev/null
 modprobe af_packet 2>/dev/null
 
-# load cdrom and HDD modules
-modprobe -q ide_disk >> /tmp/initramfs.debug 2>&1
-modprobe -q ide_cd   >> /tmp/initramfs.debug 2>&1
-
+if [ ! $TCOS_DISABLE_IDE ]; then
+  # load cdrom and HDD modules
+  modprobe -q ide_disk >> /tmp/initramfs.debug 2>&1
+  modprobe -q ide_cd   >> /tmp/initramfs.debug 2>&1
+fi
 
 if [ "$(read_cmdline_var "aufs" "0")" = "1" ] && [ $(modprobe aufs -q ; echo $?) != 1  ]; then
   _log "BUSYBOX loaded aufs module"

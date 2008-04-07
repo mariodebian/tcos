@@ -1,21 +1,28 @@
 # hook-addon for usplash support
 
-
-# usplash support
-mkdir -p $DESTDIR/usr/lib/usplash/
-
-# delete theme if exists
-[ -e $DESTDIR/usr/lib/usplash/usplash-artwork.so ] && \
-    rm -f $DESTDIR/usr/lib/usplash/usplash-artwork.so
-
-if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
-  cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+if [ "$TCOS_DISABLE_UPLASH" = "1" ]; then
+  rm -f ${DESTDIR}/lib/usplash
+  rm -f ${DESTDIR}/sbin/usplash      
+  rm -f ${DESTDIR}/sbin/usplash_write      
 else
-  cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
-fi
 
-cat << EOF > $DESTDIR/etc/usplash.conf
+  # usplash support
+  mkdir -p $DESTDIR/usr/lib/usplash/
+
+  # delete theme if exists
+  [ -e $DESTDIR/usr/lib/usplash/usplash-artwork.so ] && \
+      rm -f $DESTDIR/usr/lib/usplash/usplash-artwork.so
+
+  if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
+    cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+  else
+    cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
+  fi
+
+  cat << EOF > $DESTDIR/etc/usplash.conf
 # Usplash configuration file for tcos
 xres=1024
 yres=768
 EOF
+
+fi

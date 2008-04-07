@@ -2,7 +2,7 @@
 # need cdparanoia
 
 
-if [ -x /usr/bin/cdparanoia ]; then
+if [ $TCOS_SOUND ] && [ -x /usr/bin/cdparanoia ]; then
 
    stat_before
 
