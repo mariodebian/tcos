@@ -30,6 +30,10 @@ fi
 . ${TCOS_DIR}/tcos-generation-functions.sh
 . /usr/share/initramfs-tools/hook-functions
 
+for tpl in $(tcos_get_templates); do
+  . $tpl
+done
+
 # load forced settings for derivatives
 if [ -d /etc/tcos/conf.d/ ]; then
   for file in /etc/tcos/conf.d/tcos*conf; do

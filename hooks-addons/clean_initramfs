@@ -4,9 +4,6 @@
 . /usr/share/initramfs-tools/hook-functions
 . $TCOS_DIR/tcos-generation-functions.sh
 
-# load template
-. $(get_template)
-
 _echo "  * Cleaning initramfs..."
 
 

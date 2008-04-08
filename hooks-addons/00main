@@ -3,22 +3,19 @@
 # copy internal tcos conf
 cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
 cp $CONFDIR/tcos.conf                $DESTDIR/conf/
-cat $TCOS_TEMPLATES_DIR/base.conf >> $DESTDIR/conf/tcos.conf
 
-# load /etc templates
-for file in $CONFDIR/templates/*.conf; do
-  [ -f $file ]  cat $file         >> $DESTDIR/conf/tcos.conf
+for tpl in $(tcos_get_templates); do
+  cat $tpl                          >> $DESTDIR/conf/tcos.conf
 done
+
 
 # load forced settings for derivatives
 if [ -d $CONFDIR/conf.d/ ]; then
   for file in $CONFDIR/conf.d/tcos*conf; do
-    [ -e $file ] cat $file        >> $DESTDIR/conf/tcos.conf
-  fi
+    [ -e $file ] && cat $file    >> $DESTDIR/conf/tcos.conf
   done
 fi
 
-cat $(get_template)               >> $DESTDIR/conf/tcos.conf
 
 # make some dirs
 [ -d $DESTDIR/dev ]  || mkdir -m 0755 $DESTDIR/dev

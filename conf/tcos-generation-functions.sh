@@ -5,26 +5,52 @@
 # functions used by tcos hooks
 
 _echo () {
- # wrapper to echo in scripts, only print if debug is enabled
-  if [ ${TCOS_DEBUG} ]; then
+ # wrapper to echo in scripts
     echo "$@"
+}
+
+_debug() {
+  if [ ${TCOS_DEBUG} ]; then
+    echo "   DEBUG :: $@" >&2
   fi
 }
 
-get_template() {
-  if [ "$TCOS_TEMPLATES_DIR" != "" ] && [ -d $TCOS_TEMPLATES_DIR ]; then
-    if [ -f $TCOS_TEMPLATES_DIR/$TCOS_TEMPLATE ]; then
-      echo " Using template => $TCOS_TEMPLATES_DIR/$TCOS_TEMPLATE" >&2
-      echo "$TCOS_TEMPLATES_DIR/$TCOS_TEMPLATE"
-      return
+read_template() {
+  [ ! -e "$1" ] && return
+  tpl=$(awk -F"=" '/^TCOS_TEMPLATE=/ {print $2}' $1)
+  if [ "$tpl" = "" ]; then
+    #_debug "Not found TEMPLATE in $1, searching BASED_TEMPLATE"
+    tpl=$(awk -F"=" '/^TCOS_BASED_TEMPLATE=/ {print $2}' $1)
+  fi
+  [ "$tpl" = "" ] && _debug "$tpl not found" && return
+  #_debug "Template $tpl"
+  for tdir in /usr/share/initramfs-tools-tcos/templates /etc/tcos/templates; do
+    #_debug "Searching in dir $tdir"
+    [ -f $tdir/$tpl ] && echo "$tdir/$tpl" && break
+  done
+}
+
+tcos_get_templates() {
+  # read template from tcos.conf
+  tpl1=$(read_template /etc/tcos/tcos.conf)
+  tpl2=""
+  personalized=""
+  _debug "Default template $tpl"
+  for tfile in $(find /etc/tcos/templates -type f -name "*.conf"); do
+    if [ -f $tfile ]; then
+      #_debug "$tfile file exists, adding to tpl2"
+      tpl2="$tpl2 $(read_template $tfile)"
+      personalized=$tfile
     else
-      echo " Using default template => $TCOS_TEMPLATES_DIR/tcos.conf.all" >&2
-      echo "$TCOS_TEMPLATES_DIR/tcos.conf.all"
+      _debug "Based template $tfile not found, ignoring"
     fi
+  done
+  if [ "$( echo $tpl2 | sed 's/[[:blank:]]//g' )" != "" ]; then
+    _debug "return tpl2='base.conf $tpl2 $personalized'"
+    echo "/usr/share/initramfs-tools-tcos/templates/base.conf $tpl2 $personalized"
   else
-     echo "  ** ERROR ** Templates dir not found, please update tcos.conf" >&2
-     # ugly but necesary
-     killall gentcos
+    _debug "return tpl1='base.conf $tpl1'"
+    echo "/usr/share/initramfs-tools-tcos/templates/base.conf $tpl1"
   fi
 }
 

@@ -28,15 +28,11 @@ if [ "${BOOT}" = "tcos" ]; then
 [ -f $CONFDIR/version.conf ] && . $CONFDIR/version.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
-. $TCOS_TEMPLATES_DIR/base.conf
-
-# load template
-. $(get_template)
-
-# load /etc templates
-for file in $CONFDIR/templates/*.conf; do
-  [ -f $file ] && . $file
+for tpl in $(tcos_get_templates); do
+  _echo "   * Loading (tcosbin) template $(basename $tpl)"
+  . $tpl
 done
+
 
 # load forced settings for derivatives
 if [ -d $CONFDIR/conf.d/ ]; then

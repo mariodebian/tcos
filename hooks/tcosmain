@@ -24,16 +24,10 @@ if [ "${BOOT}" = "tcos" -o "${BOOT}" = "tcos-nfs" ]; then
 . $CONFDIR/tcos.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
-  . $TCOS_TEMPLATES_DIR/base.conf
-
-  # load template
-  . $(get_template)
-
-  # load /etc templates
-  for file in $CONFDIR/templates/*.conf; do
-    [ -f $file ] && . $file
-  done
-
+  #for tpl in $(tcos_get_templates); do
+  #  _debug " * Loading (tcosmain) template $(basename $tpl)"
+  #  . $tpl
+  #done
 
   # load forced settings for derivatives
   if [ -d $CONFDIR/conf.d/ ]; then
