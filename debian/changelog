@@ -17,8 +17,11 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
     (enable verbose: TCOS_VERBOSE=1 gentcos -tftp)
   * hooks-addons/52intel
     - Fix if condition (if file don't exists warn, else copy)
+  * show more info in get_all_tcos_vars.sh
+  * Disable verbose in tcosmods modules
+  * Fix info in tcosbin verbose
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 08 Apr 2008 14:12:21 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 08 Apr 2008 16:22:54 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 

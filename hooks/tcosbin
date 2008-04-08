@@ -45,7 +45,7 @@ fi
 # load hooks-addons (small files with group of packages inside)
 _files=$(ls -1 ${TCOS_DIR}/hooks-addons/ | grep -v -e .dpkg -e .svn)
 for addon in $_files ; do
-  _verbose "(tcosbin)  LOADING: system addon: ${TCOS_DIR}/hooks-addons/${addon}"
+  _verbose "(tcosbin)  LOADING: system addon: ${addon}"
   . ${TCOS_DIR}/hooks-addons/${addon}
 done
 
