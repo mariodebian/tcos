@@ -2,7 +2,9 @@
 # need wireless-tools (firmware....)
 
 
-if [ $TCOS_WIRELESS ]; then
+if [ ! $TCOS_WIRELESS ]; then
+  _verbose "(03wireless) TCOS_WIRELESS disabled"
+else
   stat_before
 
   # copy wireless utils (some aren't necesary)

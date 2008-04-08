@@ -1,9 +1,9 @@
 # debootstrap hook-addon
 
 
-if [ $TCOS_DEBOOTSTRAP ]; then
-
-
+if [ ! $TCOS_DEBOOTSTRAP ]; then
+  _verbose "(16debootstrap) TCOS_DEBOOTSTRAP disabled"
+else
   stat_before
 
   ##########   debootstarp stuff....   ########

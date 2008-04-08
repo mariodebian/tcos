@@ -2,7 +2,7 @@
 
 
 if [ ! $TCOS_RDESKTOP ]; then
-  _echo "   * rDesktop disabled"
+  _verbose "(56rdesktop) TCOS_RDESKTOP"
 else
   if [ ! -e /usr/bin/rdesktop ]; then
     _echo "   * rDesktop not installed"

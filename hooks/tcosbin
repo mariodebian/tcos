@@ -29,7 +29,7 @@ if [ "${BOOT}" = "tcos" ]; then
 . $TCOS_DIR/tcos-generation-functions.sh
 
 for tpl in $(tcos_get_templates); do
-  _echo "   * Loading (tcosbin) template $(basename $tpl)"
+  _verbose "(tcosbin) loading template $(basename $tpl)"
   . $tpl
 done
 
@@ -45,7 +45,7 @@ fi
 # load hooks-addons (small files with group of packages inside)
 _files=$(ls -1 ${TCOS_DIR}/hooks-addons/ | grep -v -e .dpkg -e .svn)
 for addon in $_files ; do
-  #_echo "  LOADING: system addon: ${TCOS_DIR}/hooks-addons/${addon}"
+  _verbose "(tcosbin)  LOADING: system addon: ${TCOS_DIR}/hooks-addons/${addon}"
   . ${TCOS_DIR}/hooks-addons/${addon}
 done
 
@@ -93,7 +93,7 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
   SQUASHFS_FILE="usr${TCOS_SUFFIX}-${version}.squashfs"
   _echo "     Creating ${SQUASHFS_FILE} of /usr"
   mkdir -p $DESTDIR/mnt/tmp
-  $MKSQUASHFS $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /tmp/tcos-mksquashfs.log 2>&1
+  $MKSQUASHFS $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} -no-progress > /tmp/tcos-mksquashfs.log 2>&1
   
   # check for mksquashfs errors
   if [ $? != 0 ]; then
@@ -196,6 +196,8 @@ if [ $TCOS_DISABLE_ACPI ]; then
   manual_add_modules sr_mod
 
   stat_after "Disable ACPI and RAID support"
+else
+  _verbose "(tcosbin)TCOS_DISABLE_ACPI not set"
 fi
 
 
@@ -210,7 +212,7 @@ if [ $TCOS_ALL_MODULES ]; then
   depmod -ae ${version}
   _echo "     Creating allmodules-${version}.squashfs file"
   mkdir -p $DESTDIR/mnt/tmp > /dev/null 2>&1
-  $MKSQUASHFS /lib/modules/${version}/ $DESTDIR/mnt/tmp/allmodules-${version}.squashfs > /dev/null 2>&1
+  $MKSQUASHFS /lib/modules/${version}/ $DESTDIR/mnt/tmp/allmodules-${version}.squashfs -no-progress > /dev/null 2>&1
   # mksquashfs create files with 700 rights, change to 644
   chmod 644 ${DESTDIR}/mnt/tmp/allmodules-${version}.squashfs
   _echo "    Moving allmodules-${version}.squashfs to ${TFTP_DIR}"

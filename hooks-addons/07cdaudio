@@ -11,6 +11,7 @@ if [ $TCOS_SOUND ] && [ -x /usr/bin/cdparanoia ]; then
     manual_add_modules cdfs
 
    stat_after "CD-AUDIO support"
-
+else
+  _verbose "(07cdaudio) TCOS_SOUND && cdparanoia disabled"
 fi
 

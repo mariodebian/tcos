@@ -2,8 +2,9 @@
 
 
 
-if [ $TCOS_HTTPFS ]; then
-
+if [ ! $TCOS_HTTPFS ]; then
+  _verbose "(19httpfs) TCOS_HTTPFS disabled"
+else
   stat_before
 
    cpifexists ${TCOS_BINS}/httpfs /bin

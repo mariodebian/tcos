@@ -3,7 +3,9 @@
 
 
 
-if [ $TCOS_SSH ] ;then
+if [ ! $TCOS_SSH ] ;then
+  _verbose "(14ssh) TCOS_SSH disabled"
+else
  stat_before
  if [ ! -d /usr/share/doc/dropbear ]; then
         echo "WARNING"
@@ -53,6 +55,8 @@ if [ $TCOS_SSH ] ;then
           _echo "    => $ ssh-keygen -t rsa"
         fi
         ####################
+   else
+     _verbose "(14ssh) TCOS_ADMIN_USER is empty"
    fi
 
  fi

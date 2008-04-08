@@ -26,7 +26,7 @@ if [ "${BOOT}" = "tcos" ]; then
 . $TCOS_DIR/tcos-generation-functions.sh
 
 for tpl in $(tcos_get_templates); do
-  _echo "   * Loading (tcosmods) template $(basename $tpl)"
+  _verbose "(tcosmods) loading template $(basename $tpl)"
   . $tpl
 done
 
@@ -75,7 +75,7 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
     MODULES="${MODULES} ${XORG_MODULES} ${SOUND_MODULES} ${SOUNDISA_MODULES} ${MYTCOS_MODULES} "
 
     for x in ${MODULES} ; do
-      #_echo "Adding module ${x}"
+      _verbose "(tcosmods) Adding module ${x}"
       #manual_add_modules ${x}
       tcos_manual_add_modules ${x} 
       force_add_module ${x}

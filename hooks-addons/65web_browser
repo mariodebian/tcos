@@ -46,3 +46,6 @@ if [ "${TCOS_WEB_BROWSER}" = "links2" ]; then
   fi
 fi
 
+if [ ! $TCOS_WEB_BROWSER ]; then
+  _verbose "(65web_browser) TCOS_WEB_BROWSER disabled"
+fi

@@ -2,7 +2,9 @@
 # need x11vnc package
 
 
-if [ ${TCOS_X11VNC} ]; then
+if [ ! ${TCOS_X11VNC} ]; then
+  _verbose "(55vnc) TCOS_X11VNC disabled"
+else
  if [ ! -d /usr/share/doc/x11vnc ]; then
    echo "WARNING:"
    echo ""

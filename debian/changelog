@@ -1,5 +1,9 @@
 initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
 
+  [ Ignacio Vidal ]
+  * xmlrpc/sh/tcos-last:
+    - Fix typo
+
   [ Mario Izquierdo (mariodebian) ]
   * NOT RELEASE, alfa stage
   * Add tcos.conf template system:
@@ -9,12 +13,12 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
   * Add new function tcos_get_templates (return templates in correct order to load)
   * Add tcos_get_templates to gentcos hooks/[tcosbin|tcosnfs|tcosmods]
   * get_all_tcos_vars.sh (search if all TCOS_* are in base.conf)
+  * Add _verbose log output function and replace some _echo => _verbose
+    (enable verbose: TCOS_VERBOSE=1 gentcos -tftp)
+  * hooks-addons/52intel
+    - Fix if condition (if file don't exists warn, else copy)
 
-  [ Ignacio Vidal ]
-  * xmlrpc/sh/tcos-last:
-    - Fix typo
-
- -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 08 Apr 2008 12:07:39 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 08 Apr 2008 14:12:21 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 

@@ -1,7 +1,9 @@
 # hooks addon of inetd
 # need inetd package
 
-if [ $TCOS_INETD ]; then
+if [ ! $TCOS_INETD ]; then
+  _verbose "(15inetd) TCOS_INETD disabled"
+else
  stat_before
  # inetd and telnet
  #copy_exec /usr/sbin/in.telnetd /usr/bin

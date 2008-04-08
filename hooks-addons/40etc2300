@@ -9,5 +9,6 @@ if [ $TCOS_ETC2300 ]; then
     manual_add_modules sis7019
 
   stat_after "eTC2300 modules support"
-
+else
+  _verbose "(40etc2300) TCOS_ETC2300 disabled"
 fi

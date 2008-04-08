@@ -9,8 +9,9 @@ function add_lp_modules() {
 
 
 
-if [ $TCOS_PRINTER ] ;then
-    
+if [ ! $TCOS_PRINTER ] ;then
+    _verbose "(09printer) TCOS_PRINTER disabled"
+else
     stat_before
 
     if [ -e /usr/bin/lp_server ]; then

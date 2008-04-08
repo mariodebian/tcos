@@ -2,19 +2,20 @@
 # Copyright Rubén Gómez Antolí <listas at mucharuina [.] com>
 
 # test if we have intel-drv or i810
-if [ ! -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
+if [ -e /usr/lib/xorg/modules/drivers/i810_drv.so ] && \
+   [ ! -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
 
     # we have OLD driver, need 915resolution
-    if [ -x /usr/sbin/915resolution ]; then
+    if [ ! -x /usr/sbin/915resolution ]; then
         if [ ! -e /etc/tcos/disable915 ]; then
-            echo "    WARNING:"
-            echo "      Detected old INTEL graphic driver (i810)"
-            echo ""
-            echo "      Install 915resolution to support full resolutions for intel cards"
-            echo ""
-            echo "      If you don't want to see this warning again, create "
-            echo        "and empty file  =>  /etc/tcos/disable915"
-            echo ""
+            _echo "    WARNING:"
+            _echo "      Detected old INTEL graphic driver (i810)"
+            _echo ""
+            _echo "      Install 915resolution to support full resolutions for intel cards"
+            _echo ""
+            _echo "      If you don't want to see this warning again,"
+            _echo "      create and empty file  =>  /etc/tcos/disable915"
+            _echo ""
         fi
     else
         stat_before
@@ -24,11 +25,15 @@ if [ ! -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
         
         if [ -f /etc/tcos/915resolution ]; then
             cpifexists /etc/tcos/915resolution    /etc/default/
+            _echo "    * INTEL, using /etc/tcos/915resolution as conf file"
         else
             cpifexists /etc/default/915resolution /etc/default/
+            _echo "    * INTEL, using /etc/default/915resolution as conf file"
         fi
         
         stat_after "Intel 915 resolution hack"
     fi
+else
+  _verbose "(52intel) Not doing INTEL hack "
 fi
 

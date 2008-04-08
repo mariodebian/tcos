@@ -3,8 +3,9 @@
 # works good with discover
 
 
-if [ $TCOS_DISCOVER ] ;then
-    
+if [ ! $TCOS_DISCOVER ] ;then
+    _verbose "(08discover) TCOS_DISCOVER disabled"
+else    
     # check if discover is discover or discover1
     
     if [ -d ${TCOS_PKG_CACHE}/discover ] && [ -d ${TCOS_PKG_CACHE}/discover-data ] && [ -d ${TCOS_PKG_CACHE}/libdiscover2 ] ; then

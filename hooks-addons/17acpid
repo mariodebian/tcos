@@ -1,6 +1,8 @@
 # hooks addon of acpid
 
-if [ $TCOS_ACPID ]; then
+if [ ! $TCOS_ACPID ]; then
+  _verbose "(17acpi) TCOS_ACPI disabled"
+else
  stat_before
 
  manual_add_modules button

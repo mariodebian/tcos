@@ -2,7 +2,9 @@
 # need alsa-utils (amixer)
 
 
-if [ $TCOS_SOUND ]; then
+if [ ! $TCOS_SOUND ]; then
+  _verbose "(20alsa) TCOS_SOUND disabled"
+else
 
   if [ ! -d /usr/share/doc/alsa-utils ]; then
         echo "WARNING:"

@@ -2,7 +2,9 @@
 # need nxclient installed
 
 
-if [ ${TCOS_FREENX} ]; then
+if [ ! ${TCOS_FREENX} ]; then
+  _verbose "(59freenx) TCOS_FREENX disabled"
+else
  stat_before
  mkdir -p $DESTDIR/usr/NX/bin
  mkdir -p $DESTDIR/usr/NX/lib

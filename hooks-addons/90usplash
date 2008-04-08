@@ -1,9 +1,10 @@
 # hook-addon for usplash support
 
-if [ "$TCOS_DISABLE_UPLASH" = "1" ]; then
+if [ $TCOS_DISABLE_UPLASH ]; then
   rm -f ${DESTDIR}/lib/usplash
-  rm -f ${DESTDIR}/sbin/usplash      
-  rm -f ${DESTDIR}/sbin/usplash_write      
+  rm -f ${DESTDIR}/sbin/usplash
+  rm -f ${DESTDIR}/sbin/usplash_write
+  _verbose "(90usplash) TCOS_DISABLE_USPLASH enabled !!!"
 else
 
   # usplash support

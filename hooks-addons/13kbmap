@@ -2,7 +2,7 @@
 
 if [ -e $DESTDIR/bin/loadkeys ] && [ -f $DESTDIR/etc/console/boottime.kmap.gz ]; then
   # don't copy again if exists
-  NO_COPY=1
+  _verbose "(13kbmap) No copy keymaps again"
 else
 
 

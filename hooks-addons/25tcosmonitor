@@ -127,5 +127,5 @@ chmod +x $DESTDIR/sbin/startxmlrpc
 stat_after "TcosMonitor"
 
 else
-   _echo "  * TcosMonitor Disabled"
+   _verbose "(25tcosmonitor) TCOS_TCOSMONITOR Disabled"
 fi

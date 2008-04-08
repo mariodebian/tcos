@@ -73,5 +73,6 @@ if [ $TCOS_SOUND ]; then
     stat_after "ESound Daemon (sound server)"
 
   fi # end of sound_error
-
+else
+  _verbose "(22esd) TCOS_SOUND disabled"
 fi # end of TCOS_SOUND

@@ -3,8 +3,9 @@
 
 
 # for debug purposes
-if [ $TCOS_DEBUG_TOOLS ]; then
-
+if [ ! $TCOS_DEBUG_TOOLS ]; then
+ _verbose "(04debug) TCOS_DEBUG_TOOLS disabled"
+else
  stat_before
 
  cpifexists /usr/sbin/iftop /usr/bin/
@@ -35,4 +36,4 @@ EOF
  chmod +x $DESTDIR/bin/ldd
  
  stat_after "Debug tools"
-fi # end of TCOS_DEBUG
+fi # end of TCOS_DEBUG_TOOLS

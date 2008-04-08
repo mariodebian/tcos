@@ -3,7 +3,9 @@
 # also copy xmessage instead of messageviewer
 # that don't need qt libs
 
-if [ ${TCOS_ITALC} ]; then
+if [ ! ${TCOS_ITALC} ]; then
+  _verbose "(60italc) TCOS_ITALC disabled"
+else
 
  if [ -x /usr/bin/ica ]; then
   # new italc 1.0.0 version

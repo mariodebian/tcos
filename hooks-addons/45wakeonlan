@@ -12,5 +12,6 @@ if [ $TCOS_WAKEONLAN ]; then
   else
     cpifexists /usr/sbin/ethtool /usr/sbin
   fi
-
+else
+  _verbose "(45wakeonlan) TCOS_WAKEONLAN disabled"
 fi

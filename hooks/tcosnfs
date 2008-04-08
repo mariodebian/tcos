@@ -26,7 +26,7 @@ if [ "${BOOT}" = "tcos-nfs" ]; then
 . $TCOS_DIR/tcos-generation-functions.sh
 
 for tpl in $(tcos_get_templates); do
-  _echo "   * Loading (tcosnfs) template $(basename $tpl)"
+  _verbose "(tcosnfs) loading template $(basename $tpl)"
   . $tpl
 done
 

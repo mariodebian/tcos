@@ -50,7 +50,9 @@ if [ "${TCOS_INCLUDE_INIT}" != "1" ]; then
     # ubuntu hack for ldconfig
     if [ -e /sbin/ldconfig.real ]; then
      cpifexists /sbin/ldconfig.real /usr/sbin/
-     ( cd $DESTDIR/usr/sbin/ && mv ldconfig.real ldconfig )
+     # rename
+     rm -f $DESTDIR/usr/sbin/ldconfig.real
+     cp -a /sbin/ldconfig.real $DESTDIR/usr/sbin/ldconfig
     else
       cpifexists /sbin/ldconfig    /usr/sbin/
     fi

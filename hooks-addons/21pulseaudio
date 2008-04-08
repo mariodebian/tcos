@@ -168,4 +168,6 @@ EOF
 
 fi # end of else of /usr/bin/pulseaudio
 
+else
+  _verbose "(21pulseaudio) TCOS_PULSEAUDIO && sound disabled"
 fi # end of TCOS_PULSEAUDIO

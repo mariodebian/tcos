@@ -4,7 +4,7 @@
 . /usr/share/initramfs-tools/hook-functions
 . $TCOS_DIR/tcos-generation-functions.sh
 
-_echo "  * Cleaning initramfs..."
+_verbose "(clean_initramfs) Cleaning initramfs..."
 
 
 
