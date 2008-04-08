@@ -1,5 +1,6 @@
 initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
 
+  [ Mario Izquierdo (mariodebian) ]
   * NOT RELEASE, alfa stage
   * Add tcos.conf template system:
     - Avalaible templates: base.conf tcos.conf.all tcos.conf.low
@@ -9,7 +10,11 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
   * Add tcos_get_templates to gentcos hooks/[tcosbin|tcosnfs|tcosmods]
   * get_all_tcos_vars.sh (search if all TCOS_* are in base.conf)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 08 Apr 2008 09:24:37 +0200
+  [ Ignacio Vidal ]
+  * xmlrpc/sh/tcos-last:
+    - Fix typo
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 08 Apr 2008 12:07:39 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 
