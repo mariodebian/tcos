@@ -25,8 +25,9 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
     - Only copy libwfb.so if exists (some nvidia versions don't have this file)
   * Update tcos/dhcpd*.conf:
     - Change dhcpd example configurations to be more clear
+  * Fix typo in hooks-addons/50xorg
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 11 Apr 2008 09:37:36 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 11 Apr 2008 09:51:39 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 
