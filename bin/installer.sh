@@ -88,11 +88,15 @@ make_all_parts () {
 
   umount_all
 
-  # $HDD1 hdd size (in MB)
-  vfat_size=$(LANG=C $FDISK -l $HDD|grep ^Disk|head -1 | awk '{print $5/1000000}')
+  # $HDD total size (in MB)
+  total_size=$(LANG=C $FDISK -l $HDD|grep ^Disk|head -1 | awk '{print int($5/1000000)}')
 
   # swap (in MB) = Total_RAM (kB) * 2 / 1000
   swap_size=$(awk '/MemTotal/ {print int($2*2/1000)}' /proc/meminfo)
+
+  # $HDD1 hdd size (in MB) = total - swap - 10
+  vfat_size=$(echo $total_size $swap_size 10 | awk '{print int($1-$2-$3)}')
+  
 
   # clean MBR
   log_begin_msg "Cleaning MBR of $HDD"

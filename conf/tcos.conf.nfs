@@ -1,0 +1,19 @@
+#
+TEMPLATE_DESCRIPTION="NFS force boot, disabled USB, sound, tcosmonitor, IDE, SATA"
+TEMPLATE_DESCRIPTION_ES="Arranque NFS forzado, desactivado USB, sonido, tcosmonitor, dispositivos IDE o SATA"
+
+# force 4 Gb of RAM to boot without NFS
+TCOS_MIN_RAM=4096
+TCOS_METHOD="-nfs -rootfs"
+
+TCOS_DISABLE_USPLASH=1
+TCOS_INETD=
+TCOS_REMOTEFS="none"
+TCOS_USB=
+TCOS_DISABLE_USB=1
+TCOS_DISABLE_IDE=1
+TCOS_DISCOVER=
+TCOS_SOUND=
+TCOS_SOUND_ISA=
+TCOS_PULSEAUDIO=
+

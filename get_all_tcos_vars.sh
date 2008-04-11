@@ -1,11 +1,18 @@
 #!/bin/bash
 
-ALL_VARS=$(rgrep "\$TCOS_" * |grep -v svn | awk -F'TCOS_' '{print "TCOS_"$2}' | \
+ALL_VARS1=$(rgrep "\$TCOS_" * |grep -v svn | awk -F'TCOS_' '{print "TCOS_"$2}' | \
  awk '{print $1}' | awk -F"=" '{print $1}' | awk -F"/" '{print $1}' | \
  sed 's/)//g' | sed 's/}//g' | sed 's/"//g'| sed 's/;//g' |sort | uniq)
 
+ALL_VARS2=$(rgrep "^TCOS_" conf/ |grep -v svn | awk -F":" '{print $2}' |awk -F"=" '{print $1}' |sort | uniq)
 
-TEMPLATES="conf/tcos.conf.all conf/tcos.conf.low"
+ALL_VARS=$(echo $ALL_VARS1 $ALL_VARS2 | sort | uniq)
+
+eline(){
+  echo "------------------------------------------------------------------------------------------------------------------"
+}
+
+TEMPLATES="conf/tcos.conf.all conf/tcos.conf.low conf/tcos.conf.nfs"
 
 is_in_template() {
   value=""
@@ -19,8 +26,8 @@ is_in_template() {
 }
 
 
-printf "%30s %5s %8s\n" "VARNAME" "base" "value"
-echo "-------------------------------------------------"
+printf "%30s |%5s| %8s| %10s| %5s| %36s|\n" "VARNAME" "base" "value" "" "needed in base" "in templates"
+eline
 
 
 number=0
@@ -36,6 +43,6 @@ for VAR in $ALL_VARS; do
   fi
   printf "%30s |%5s| %8s| %15s| %5s| %40s|\n" "$VAR" "$base" "$basevalue" "" "$needbase" "$iit"
   tnumber=$((number/5))
-  [ $number = $((tnumber*5)) ] && echo "-------------------------------------------------------------------------------------------------------------------"
+  [ $number = $((tnumber*5)) ] && eline
   number=$((number+1))
 done

@@ -39,11 +39,6 @@ if [ -d $CONFDIR/conf.d/ ]; then
 fi
 
 
-# copy internal tcos conf
-cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
-cp $CONFDIR/tcos.conf                $DESTDIR/conf/
-cat $TCOS_TEMPLATES_DIR/base.conf >> $DESTDIR/conf/tcos.conf
-cat $(get_template)               >> $DESTDIR/conf/tcos.conf
 
 
 # load some hook-addons (not all needed here, we need a minimal image)

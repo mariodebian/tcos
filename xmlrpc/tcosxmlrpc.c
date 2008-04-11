@@ -67,6 +67,7 @@
 #include "rtp.c"
 
 #include "get_screenshot.c"
+#include "reboot_poweroff.c"
 
 #include "simple-methods.c"
 
@@ -127,6 +128,7 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.getscreenshot", &tcos_get_screenshot, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.vlc", &tcos_vlc, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.rtp", &tcos_rtp, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.rebootpoweroff", &tcos_reboot_poweroff, NULL);
 #else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
@@ -221,6 +223,9 @@ Info methods:\n\
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.rtp", &tcos_rtp, NULL,
     "ssss:s", "Tcos, manage rtp params.");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.rebootpoweroff", &tcos_reboot_poweroff, NULL,
+    "sss:s", "Tcos, Reboot or Poweroff using Xorg cookie.");
 #endif
 
     /*  end of add methods */

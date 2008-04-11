@@ -67,7 +67,7 @@ fi
 # PCIIDS
 if [ $XORG = 7 ] && [ -d /usr/share/xserver-xorg/pci ] ; then
  mkdir -p $DESTDIR/usr/share/xserver-xorg/
- copydir /usr/share/xserver-xorg/pci $DESTDIR/usr/share/xserver-xorg/
+ copydir /usr/share/xserver-xorg/pci /usr/share/xserver-xorg/
 fi
 
 

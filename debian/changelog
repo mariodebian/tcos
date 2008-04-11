@@ -26,8 +26,14 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
   * Update tcos/dhcpd*.conf:
     - Change dhcpd example configurations to be more clear
   * Fix typo in hooks-addons/50xorg
+  * xmlrpc/reboot_poweroff.c xmlrpc/reboot_poweroff.h
+    - New method to reboot or poweroff using Xorg cookie
+  * hooks-addons/50xorg
+    - Fix typo
+  * conf/tcos.conf.nfs
+    - New template, force to boot with NFS
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 11 Apr 2008 09:51:39 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 12 Apr 2008 00:13:13 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 
