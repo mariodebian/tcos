@@ -20,8 +20,13 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
   * show more info in get_all_tcos_vars.sh
   * Disable verbose in tcosmods modules
   * Fix info in tcosbin verbose
+  * hooks-addons/50xorg
+    - Copy /usr/share/xserver-corg/pci directory
+    - Only copy libwfb.so if exists (some nvidia versions don't have this file)
+  * Update tcos/dhcpd*.conf:
+    - Change dhcpd example configurations to be more clear
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 08 Apr 2008 16:22:54 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 11 Apr 2008 09:37:36 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 

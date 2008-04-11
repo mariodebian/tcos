@@ -64,6 +64,13 @@ else
 fi
 
 
+# PCIIDS
+if [ $XORG = 7 ] && [ -d /usr/share/xserver/xorg/pci ] ; then
+ mkdir -p $DESTDIR/usr/share/xserver-xorg/
+ copydir /usr/share/xserver/xorg/pci $DESTDIR/usr/share/xserver-xorg/
+fi
+
+
 # FIXME need light initramfs not fonts....
 #if [ $XORG = 6 ]; then
 # mkdir -p $DESTDIR/usr/X11R6/lib/X11/fonts
@@ -91,7 +98,7 @@ if [ $XORG = 6 ]; then
 else
  mkdir -p $DESTDIR/usr/lib/xorg/modules/input/
  cp -ra /usr/lib/xorg/modules/lib*so $DESTDIR/usr/lib/xorg/modules/
- cp -ra /usr/lib/xorg/modules/input/* $DESTDIR/usr/lib/xorg/modules/
+ cp -ra /usr/lib/xorg/modules/input/* $DESTDIR/usr/lib/xorg/modules/input/
  mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
  cp -ra /usr/lib/xorg/modules/linux/lib*so $DESTDIR/usr/lib/xorg/modules/linux/
 fi
@@ -128,7 +135,8 @@ if [ $XORG = 6 ]; then
        if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/X11R6/lib/modules/extensions
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/X11R6/lib/modules/extensions
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/X11R6/lib/modules/
+          [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
+              cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so /usr/X11R6/lib/modules/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
           #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
           _echo "       * OpenGL use cached fix-nvidia-ati libs"
@@ -186,7 +194,8 @@ else # Xorg 7.x
           rm -rf $DESTDIR/usr/lib/libGL.so*
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
+          [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
+              cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
           #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
           _echo "       * OpenGL use cached fix-nvidia-ati libs"
