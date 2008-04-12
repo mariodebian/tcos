@@ -38,8 +38,10 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
     debian/tcos-standalone.init tcos-standalone/tcos-standalone.py tcos-
     standalone/tcos-standalone.glade
     - Delete busybox httpd process, fix screenshots path and update tcos-standalone app
+  * common.mk
+    - Update Ubuntu hardy and Max40 kernel version to 2.6.24-16-generic
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 12 Apr 2008 11:59:35 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 12 Apr 2008 12:14:12 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 
