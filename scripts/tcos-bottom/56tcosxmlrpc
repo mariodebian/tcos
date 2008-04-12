@@ -27,17 +27,10 @@ fi
 
 # start daemon
 log_begin_msg "Starting tcosxmlrpc server"
-  _log "START-XML-RC starting startxmlrpc...."
+  _log "START-XMLRCP starting startxmlrpc...."
   startxmlrpc &
 log_end_msg $?
 
-
-
-# start daemon
-log_begin_msg "Starting httpd server"
-  _log "HTTPD starting starthttpd...."
-  starthttpd.sh &
-log_end_msg $?
 
 
 exit 0

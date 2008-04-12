@@ -68,7 +68,7 @@ install:
 	# Install tcosxmlrpc utils
 	install -m 755 sh/screenshot.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/soundctl.sh      $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 sh/starthttpd.sh    $(DESTDIR)/$(TCOS_BINS)/
+	#install -m 755 sh/starthttpd.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/getinfo.sh       $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/useallmodules.sh $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/devicesctl.sh    $(DESTDIR)/$(TCOS_BINS)/
@@ -78,7 +78,7 @@ install:
 	install -m 755 sh/rtp-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/tcos-last          $(DESTDIR)/$(TCOS_BINS)/
 
-	install -m 644 var/etc/httpd2.conf $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
+	#install -m 644 var/etc/httpd2.conf $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
 	install -m 644 var/etc/mime.types  $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
 
 
@@ -103,4 +103,4 @@ install:
 
 	install -m 644 var/etc/mime.types       $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/
 
-	install -m 644 var/etc/httpd2.conf $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/httpd.conf
+	#install -m 644 var/etc/httpd2.conf $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/httpd.conf

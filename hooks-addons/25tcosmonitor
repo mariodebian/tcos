@@ -29,8 +29,8 @@ cpifexists /usr/bin/vncviewer              /usr/bin/
 
 cpifexists ${TCOS_BINS}/soundctl.sh /sbin/
 
-cpifexists ${TCOS_BINS}/starthttpd.sh        /sbin/
-cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/httpd2.conf       /etc/
+#cpifexists ${TCOS_BINS}/starthttpd.sh        /sbin/
+#cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/httpd2.conf       /etc/
 
 # udev process
 cpifexists ${TCOS_BINS}/tcos-udevd.sh           /sbin/
@@ -66,6 +66,21 @@ if [ -e /sbin/start-stop-daemon.original ]; then
   copy_exec /sbin/start-stop-daemon.original  /sbin/
   rm -f $DESTDIR/sbin/start-stop-daemon.original
   cp -a /sbin/start-stop-daemon.original $DESTDIR/sbin/start-stop-daemon
+  if [ "$(file ${DESTDIR}/sbin/start-stop-daemon | grep -c ELF)" = "0" ]; then
+    _echo "   * WARNING:"
+    _echo "          /sbin/start-stop-daemon is not a ELF (binary) file"
+    _echo "          Some apps will not work."
+  fi
+else
+  copy_exec /sbin/start-stop-daemon  /sbin/
+fi
+
+# in ubiquity use start-stop-daemon.REAL
+if [ -e /sbin/start-stop-daemon.REAL ]; then
+  copy_exec /sbin/start-stop-daemon.REAL  /sbin/
+  rm -f $DESTDIR/sbin/start-stop-daemon.REAL
+  rm -f $DESTDIR/sbin/start-stop-daemon
+  cp -a /sbin/start-stop-daemon.REAL $DESTDIR/sbin/start-stop-daemon
   if [ "$(file ${DESTDIR}/sbin/start-stop-daemon | grep -c ELF)" = "0" ]; then
     _echo "   * WARNING:"
     _echo "          /sbin/start-stop-daemon is not a ELF (binary) file"

@@ -51,6 +51,9 @@ cd $_www
 
 scrot 'capture.jpg' -t $_thumb_size
 
+# new Base64 getscreenshot don't need html files
+exit 0
+
 _files=$(ls *jpg)
 
 

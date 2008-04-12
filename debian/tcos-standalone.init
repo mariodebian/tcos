@@ -47,18 +47,13 @@ TCOS_STANDALONE_START=1
 #
 do_start()
 {
-        # don't start if start-stop-daemon isn't a ELF file (installing in chroot)
-        file /sbin/start-stop-daemon |grep -q ELF || return 0 
+        # don't start if start-stop-daemon is a ELF file (installing in chroot)
+        if [ $(file /sbin/start-stop-daemon |grep -c ELF) != "1" ] ; then
+          log_begin_msg "Fake start-stop-daemon detected, not starting "
+          return 0 
+        fi
 
-        # start httpd on 8081 port
-        /usr/lib/tcos/starthttpd.sh
-
-	# Return
-	#   0 if daemon has been started
-	#   1 if daemon was already running
-	#   2 if daemon could not be started
         $DAEMON $DAEMON_ARGS >> /var/lib/tcos/standalone/log/tcos-standalone.log 2>&1 || return 2
-        return 0
 }
 
 #
@@ -160,12 +155,6 @@ case "$1" in
        else
            echo "tcosxmlrpc stopped"
        fi
-
-       if [ "$(pidof busybox)" != "" ] || [ "$(ps aux|egrep "httpd.*standalone" |grep -c -v grep)" != "0" ]; then
-          echo "busybox running"
-       else
-          echo "busybox stopped"
-       fi
        ;;
   *)
 	echo "Usage: $SCRIPTNAME {start|stop|restart|status}" >&2
@@ -173,4 +162,4 @@ case "$1" in
 	;;
 esac
 
-:
+exit 0

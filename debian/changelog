@@ -32,8 +32,14 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
     - Fix typo
   * conf/tcos.conf.nfs
     - New template, force to boot with NFS
+  * hooks-addons/01busybox hooks-addons/25tcosmonitor
+    xmlrpc/sh/screenshot.sh xmlrpc/Makefile xmlrpc/screenshot.h
+    xmlrpc/get_screenshot.c scripts/tcos-bottom/56tcosxmlrpc
+    debian/tcos-standalone.init tcos-standalone/tcos-standalone.py tcos-
+    standalone/tcos-standalone.glade
+    - Delete busybox httpd process, fix screenshots path and update tcos-standalone app
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 12 Apr 2008 00:13:13 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 12 Apr 2008 11:59:35 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 

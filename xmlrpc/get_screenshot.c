@@ -63,6 +63,7 @@ static xmlrpc_value *tcos_get_screenshot(xmlrpc_env *env, xmlrpc_value *in, void
     fclose(fp);
 
     /* convert base64 string */
+    dbgtcos("tcosxmlrpc::getscreenshot() reading file=%s\n", SCREENSHOT_FILE);
     buf = readfile(SCREENSHOT_FILE, &len);
 	if (buf == NULL)
 		return xmlrpc_build_value(env, "(ss)", SCROT_ERROR, SCROT_EMPTY );

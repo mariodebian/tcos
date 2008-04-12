@@ -129,8 +129,11 @@ class TcosStandalone:
         self.v["daemon_enabled"]=self.read_conf(tcos_standalone_file, "TCOS_STANDALONE_START", 1, '=')
         self.v["username"]=self.read_conf(tcos_standalone_pass, "root", 0, ':')
         daemons=self.exe_cmd(daemon_cmd + " status")
-        for daemon in daemons:
-            self.v["daemon_running"][daemon.split(' ')[0]]=daemon.split(' ')[1]
+        self.v['daemon_running'][daemons.split(' ')[0]]=daemons.split(' ')[1]
+        
+        #for daemon in daemons:
+        #    print_debug("daemon %s"%daemon)
+        #    #self.v["daemon_running"][daemon.split(' ')[0]]=daemon.split(' ')[1]
         
         # widgets
         self.w={}
@@ -139,9 +142,9 @@ class TcosStandalone:
         self.w["lb_status"] = self.ui.get_widget('lb_status')
         self.w["ck_standalone_start"] = self.ui.get_widget('ck_standalone_start')
         self.w["lb_tcosxmlrpc"] = self.ui.get_widget('lb_tcosxmlrpc')
-        self.w["lb_busybox"] = self.ui.get_widget('lb_busybox')
+        #self.w["lb_busybox"] = self.ui.get_widget('lb_busybox')
         self.w["img_tcosxmlrpc"] = self.ui.get_widget('img_tcosxmlrpc')
-        self.w["img_busybox"] = self.ui.get_widget('img_busybox')
+        #self.w["img_busybox"] = self.ui.get_widget('img_busybox')
         self.w["bt_apply"] = self.ui.get_widget('bt_apply')
         self.w["bt_stop"] = self.ui.get_widget('bt_stop')
         self.w["bt_start"] = self.ui.get_widget('bt_start')
@@ -238,8 +241,9 @@ class TcosStandalone:
 
     def update_images(self):
         daemons=self.exe_cmd(daemon_cmd + " status")
-        for daemon in daemons:
-            self.v["daemon_running"][daemon.split(' ')[0]]=daemon.split(' ')[1]
+        self.v['daemon_running'][daemons.split(' ')[0]]=daemons.split(' ')[1]
+        #for daemon in daemons:
+        #    self.v["daemon_running"][daemon.split(' ')[0]]=daemon.split(' ')[1]
             
         if self.v["daemon_running"]["tcosxmlrpc"] == "running":
             self.w["img_tcosxmlrpc"].set_from_stock(gtk.STOCK_YES, 4)
@@ -252,12 +256,12 @@ class TcosStandalone:
             self.w["bt_stop"].set_sensitive(False)
             self.w["bt_start"].set_sensitive(True)
         
-        if self.v["daemon_running"]["busybox"] == "running":
-            self.w["img_busybox"].set_from_stock(gtk.STOCK_YES, 4)
-            self.w["lb_busybox"].set_text( _("busybox running") )
-        else:
-            self.w["img_busybox"].set_from_stock(gtk.STOCK_NO, 4)
-            self.w["lb_busybox"].set_text( _("busybox stopped") )
+        #if self.v["daemon_running"]["busybox"] == "running":
+        #    self.w["img_busybox"].set_from_stock(gtk.STOCK_YES, 4)
+        #    self.w["lb_busybox"].set_text( _("busybox running") )
+        #else:
+        #    self.w["img_busybox"].set_from_stock(gtk.STOCK_NO, 4)
+        #    self.w["lb_busybox"].set_text( _("busybox stopped") )
 
 
     def read_conf(self, fname, fvar, item=0, sep='='):

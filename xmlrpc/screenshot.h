@@ -24,7 +24,7 @@
 #define SCROT_CMD     TCOS_PATH"/screenshot.sh"
 
 #ifdef IS_STANDALONE
-#define SCREENSHOT_FILE TCOS_PATH"/var/www/capture-thumb.jpg"
+#define SCREENSHOT_FILE "/var/lib/tcos/standalone/www/capture-thumb.jpg"
 #else
 #define SCREENSHOT_FILE "/var/www/capture-thumb.jpg"
 #endif
