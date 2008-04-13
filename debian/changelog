@@ -40,8 +40,10 @@ initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
     - Delete busybox httpd process, fix screenshots path and update tcos-standalone app
   * common.mk
     - Update Ubuntu hardy and Max40 kernel version to 2.6.24-16-generic
+  * conf/tcos-run-functions.sh
+    - Fix typo in awk command
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 12 Apr 2008 12:14:12 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 13 Apr 2008 11:37:43 +0200
 
 initramfs-tools-tcos (0.88.15.7) unstable; urgency=low
 
