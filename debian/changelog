@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.89~rc1) unstable; urgency=low
+
+  * New Release uploaded to experimental
+  * debian/control: depends con console-setup|console-data
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 15 Apr 2008 10:25:11 +0200
+
 initramfs-tools-tcos (0.89~rc0.1) unstable; urgency=low
 
   [ Ignacio Vidal ]

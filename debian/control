@@ -13,7 +13,7 @@ XS-Vcs-Svn: https://www.tcosproject.org/svn/tcos/trunk/initramfs-tools-tcos
 Package: initramfs-tools-tcos
 Architecture: any
 Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
-         console-data, libnss-db, iftop, strace, twm, debootstrap, mbr, 
+         console-setup | console-data, libnss-db, iftop, strace, twm, debootstrap, mbr, 
          libltdl3, tinylogin, debconf, grub, syslinux, squashfs-tools, 
          mknbi, dropbear, ltspfs-client | ltspfsd, genisoimage | mkisofs ,
          ${misc:Depends}, ${shlibs:Depends}
