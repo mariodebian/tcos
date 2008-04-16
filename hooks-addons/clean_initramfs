@@ -13,6 +13,12 @@ if [ "${DESTDIR}" = "" ] || [ "$DESTDIR" = "/" ]; then
   exit 1
 fi
 
+find $DESTDIR/etc/ -name "*dpkg-old" | xargs rm -f
+
+# replace /bin/sh => /bin/busybox
+rm -f $DESTDIR/bin/sh
+(cd $DESTDIR/bin && ln -s busybox sh)
+
 
 if [ $TCOS_DISABLE_ACPI ] ; then
 

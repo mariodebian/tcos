@@ -52,15 +52,20 @@ static xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, voi
 
   ip=check_ip_address(ip_string);
 
-  dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() option=%s user=%s pass=%s\n", option, user, pass);
+  /*dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() option=%s user=%s pass=%s hostname=%s ip=%s\n", option, user, pass, hostname, ip.ipstr);
+  dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() (strcmp(pass, hostname)=%d\n",strcmp(pass,hostname) );
+  dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() (strcmp(pass, ip.ipstr)=%d\n",strcmp(pass,ip.ipstr) );*/
+
 
   if ( (strcmp(pass, hostname ) == 0) || (strcmp(pass, ip.ipstr) == 0) ) {
+    dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() using xauth\n");
     /* need XAUTH first */
     xauth_ok=handle_xauth(user,pass);
     if( xauth_ok != XAUTH_OK )
       return xmlrpc_build_value(env, "s", "error: xauth access denied" );
   }
   else {
+    dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() using login\n");
     /* need login first */
     login_ok=validate_login(user,pass);
     if( strcmp(login_ok,  LOGIN_OK ) != 0 )

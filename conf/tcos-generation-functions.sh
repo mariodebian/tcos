@@ -21,6 +21,13 @@ _verbose() {
   fi
 }
 
+_warning() {
+  # always show
+  echo "## WARNING ## '$@'" >&2
+}
+
+
+
 read_template() {
   [ ! -e "$1" ] && return
   tpl=$(awk -F"=" '/^TCOS_TEMPLATE=/ {print $2}' $1)
@@ -28,7 +35,7 @@ read_template() {
     _verbose "(t-g-f) Not found TEMPLATE in $1, searching BASED_TEMPLATE"
     tpl=$(awk -F"=" '/^TCOS_BASED_TEMPLATE=/ {print $2}' $1)
   fi
-  [ "$tpl" = "" ] && _verbose "(t-g-f) $tpl not found" && return
+  [ "$tpl" = "" ] && _warning "(t-g-f) template don't have TCOS_TEMPLATE or TCOS_BASED_TEMPLATE. BUG???" && return
   #_debug "Template $tpl"
   for tdir in /usr/share/initramfs-tools-tcos/templates /etc/tcos/templates; do
     _verbose "(t-g-f) Searching in dir $tdir"

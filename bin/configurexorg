@@ -92,8 +92,8 @@ done
 
 
 # default xorg settings
-xdriver="vesa"
-xres="1024x768"
+xdriver="$TCOS_XORG_VIDEO_DRIVER"
+xres="$TCOS_XORG_VIDEO_RES"
 xdepth="16"
 xhorizsync="28-49"
 xvertsync="43-72"

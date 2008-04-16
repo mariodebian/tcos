@@ -207,7 +207,12 @@ tcos: clean
 	debuild -us -uc; true
 	sudo dpkg -i ../initramfs-tools-tcos*deb ../gentcos*deb ../tcos-server-utils*deb ../tcos-usplash*deb ../tcos_*deb
 
-patch_amd64:
+patch_version:
+	# PATCHING VERSION
+	sed -i 's/__VERSION__/$(VERSION)/g' tcos-standalone/tcos-standalone.py
+	sed -i 's/__VERSION__/$(VERSION)/g' xmlrpc/sh/tcos-last
+
+patch_amd64: patch_version
 	if [ "$(shell dpkg-architecture -qDEB_BUILD_ARCH)" != "i386" ]; then sed -i 's/mknbi,//g' debian/control ; fi
 
 patch_dapper: patch_amd64

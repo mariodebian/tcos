@@ -5,6 +5,7 @@ cp $TCOS_DIR/tcos-run-functions.sh   $DESTDIR/conf/tcos-run-functions
 cp $CONFDIR/tcos.conf                $DESTDIR/conf/
 
 for tpl in $(tcos_get_templates); do
+  _verbose "(00main) cat $tpl >> $DESTDIR/conf/tcos.conf"
   cat $tpl                          >> $DESTDIR/conf/tcos.conf
 done
 
@@ -15,6 +16,11 @@ if [ -d $CONFDIR/conf.d/ ]; then
     [ -e $file ] && cat $file    >> $DESTDIR/conf/tcos.conf
   done
 fi
+
+
+# clean tcos.conf file (delete empty lines and comments)
+grep -v "^#" $DESTDIR/conf/tcos.conf | grep "=" | grep -v "^TEMPLATE" > $DESTDIR/conf/tcos.conf.tmp
+mv $DESTDIR/conf/tcos.conf.tmp $DESTDIR/conf/tcos.conf
 
 
 # make some dirs

@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
+
+  * Add TCOS_XORG_VIDEO_DRIVER and TCOS_XORG_VIDEO_RES to base.conf
+  * bin/configurexorg:
+    - load this vars as default
+  * bin/gentcos:
+    - dont gzip initramfs with -9
+  * conf/tcos-generation-functions.sh
+    - warn about lost TCOS_BASE_TEMPLATE var in tcosconfig.conf
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 17 Apr 2008 00:11:03 +0200
+
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 
   * Disable mksquashfs -no-progress option

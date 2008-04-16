@@ -133,7 +133,7 @@ call_mkinitramfs() {
 
  # compress again
  rm -f ${NEWINITRAMFS}
- (cd "${DESTDIR2}" && find . | cpio --quiet -o -H newc | gzip -9 >"${NEWINITRAMFS}") || exit 1
+ (cd "${DESTDIR2}" && find . | cpio --quiet -o -H newc | gzip >"${NEWINITRAMFS}") || exit 1
 
  rm -rf "${DESTDIR2}"
 }

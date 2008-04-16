@@ -54,10 +54,17 @@ install: build
 	# support of pxelinux menu
 	dh_link /usr/lib/syslinux/menu.c32       /var/lib/tcos/tftp/menu.c32
 	dh_link /usr/lib/syslinux/vesamenu.c32   /var/lib/tcos/tftp/vesamenu.c32
+	dh_link /usr/lib/syslinux/chain.c32      /var/lib/tcos/tftp/chain.c32
 
 
 	@# remove SVN dirs
 	@find $(CURDIR)/debian/tmp -type d -name ".svn" | xargs rm -rf --
+
+	@if [ `find $(CURDIR)/debian/ -name "*.py" | xargs grep __VERSION__ | wc -l` != 0 ]; then \
+		echo "__VERSION__ unparsed"; \
+		find *.py | xargs grep __VERSION__;\
+		exit 1; \
+	fi
 
 
 # Build architecture-independent files here.
