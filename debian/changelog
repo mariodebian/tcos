@@ -7,8 +7,10 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
     - dont gzip initramfs with -9
   * conf/tcos-generation-functions.sh
     - warn about lost TCOS_BASE_TEMPLATE var in tcosconfig.conf
+  * hooks-addons/50xorg
+    - Disable dpms when starting Xorg (thanks to Santiago Castillo)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 17 Apr 2008 00:11:03 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 17 Apr 2008 14:49:23 +0200
 
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 

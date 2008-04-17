@@ -351,6 +351,10 @@ fi
 
 /sbin/tryXorg --fontserver=\${FONT_SERVER} --server=\${SERVER} --xorgopts="\${TCOS_XORG_OPTS} -query \${SERVER}" &
 
+# disable dpms
+sleep 5
+xset -dpms
+
 EOF
 chmod +x $DESTDIR/sbin/startremotex
 
