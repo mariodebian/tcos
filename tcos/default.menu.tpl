@@ -21,6 +21,13 @@ label nfs
   KERNEL vmlinuz-__TCOS_KERNEL__
   APPEND ramdisk_size=32768 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash
 
+label local
+  __TCOS_NETBOOT_HIDE_LOCAL__MENU HIDE
+  MENU LABEL LOCAL ( boot from ^local HDD)
+  KERNEL chain.c32
+  APPEND hd0 0
+
+
 label install
   __TCOS_NETBOOT_HIDE_INSTALL__MENU HIDE
   MENU LABEL TCOS ( ^install images on HDD)

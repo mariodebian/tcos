@@ -9,8 +9,11 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
     - warn about lost TCOS_BASE_TEMPLATE var in tcosconfig.conf
   * hooks-addons/50xorg
     - Disable dpms when starting Xorg (thanks to Santiago Castillo)
+  * tcos/default.menu.tpl conf/base.conf conf/tcos-generation-
+    functions.sh
+    - Add TCOS_NETBOOT_HIDE_LOCAL 
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 17 Apr 2008 14:49:23 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 20 Apr 2008 16:28:32 +0200
 
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 
