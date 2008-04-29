@@ -73,7 +73,7 @@ umount_swap() {
 
 umount_all() {
  log_begin_msg "Umounting all"
-   devices=$(grep -v ^none /proc/mounts | awk '{if ($2 != "" && $2 != "/dev" && $2 != "/dev/shm") print $2}')
+   devices=$(grep -v ^none /proc/mounts | awk '{if ($2 != "" && $2 != "/dev" && $2 != "/dev/shm" && $2 != "/") print $2}')
 
    # Soft umount
    for dev in ${devices}; do

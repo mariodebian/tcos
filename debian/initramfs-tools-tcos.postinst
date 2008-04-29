@@ -1,8 +1,14 @@
 #!/bin/bash
 #set -e
 
+# create group tcos
+if ! getent group tcos >/dev/null; then
+  addgroup --quiet --system tcos
+fi
+
 # make sure that tcos.conf is not all readable
-chmod 600 /etc/tcos/tcos.conf
+chmod 640 /etc/tcos/tcos.conf
+chown root:tcos /etc/tcos/tcos.conf
 
 # create file
 touch /etc/tcos/modules

@@ -1,5 +1,6 @@
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 
+  [ Mario Izquierdo (mariodebian) ]
   * Add TCOS_XORG_VIDEO_DRIVER and TCOS_XORG_VIDEO_RES to base.conf
   * bin/configurexorg:
     - load this vars as default
@@ -11,9 +12,23 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
     - Disable dpms when starting Xorg (thanks to Santiago Castillo)
   * tcos/default.menu.tpl conf/base.conf conf/tcos-generation-
     functions.sh
-    - Add TCOS_NETBOOT_HIDE_LOCAL 
+    - Add TCOS_NETBOOT_HIDE_LOCAL
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 20 Apr 2008 16:28:32 +0200
+  [ Ignacio Vidal ]
+  * debian/initramfs-tools-tcos.prerm debian/initramfs-tools-tcos.postinst:
+    - Pre add create/delete group tcos
+  * conf/tcos-run-functions.sh:
+    - Fix umount segmentation fault in poweroff/reboot
+  * scripts/tcos-bottom/40initsound
+    - Probe channels
+  * xmlrpc/tcosxmlrpc.c xmlrpc/reboot_poweroff.c
+    - Update method reboot-poweroff for down-controller
+  * bin/gentcos:
+    - Check libwfb.so mv
+  * hooks-addons/21pulseaudio:
+    - Fix pulseaudio hack for cpu < 800
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 29 Apr 2008 15:38:14 +0200
 
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 

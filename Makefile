@@ -110,7 +110,7 @@ install:
 	chmod -x $(DESTDIR)$(TCOS_DIR)/scripts/tcos
 
 
-	install -m 600 conf/tcos.conf.etc $(DESTDIR)$(TCOS_CONF)/tcos.conf
+	install -m 640 conf/tcos.conf.etc $(DESTDIR)$(TCOS_CONF)/tcos.conf
 	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 
 	install -m 644 conf/version.conf $(DESTDIR)$(TCOS_CONF)/version.conf

@@ -617,7 +617,8 @@ fix_nvidia_ati() {
     mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libGLcore.so \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so
 
-    mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/libwfb.so \
+    [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/libwfb.so ] && \
+       mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/libwfb.so \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so
        
     mv ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/libGL.so.1.2 \

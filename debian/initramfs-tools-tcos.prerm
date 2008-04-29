@@ -8,6 +8,7 @@ if [ "$1" = "purge" ]; then
   rm -rf /var/lib/tcos/tftp
   rm -rf /var/lib/tcos/files
   rm -rf /var/lib/tcos/fs-*
+  delgroup --quiet --system tcos > /dev/null || true
 
 fi
 

@@ -30,6 +30,7 @@ static xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, voi
  {
   FILE *fp;
   char *option;
+  char *timeout;
   char *user;
   char *pass;
   char *login_ok;
@@ -37,11 +38,12 @@ static xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, voi
   int xauth_ok;
   struct ip_address ip;
   char ip_string[BSIZE];
+  char cmd[BIG_BUFFER];
 
   dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() Init \n");
 
   /* read what option and cmdline params need */
-  xmlrpc_parse_value(env, in, "(sss)", &option, &user, &pass);
+  xmlrpc_parse_value(env, in, "(ssss)", &option, &timeout, &user, &pass);
   if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", "params error");
 
@@ -72,15 +74,13 @@ static xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, voi
       return xmlrpc_build_value(env, "s", login_ok );
   }
 
+   /* prepare action */
+   sprintf( cmd , "down-controller %s %s", option, timeout);
 
-   dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() exec=\"%s\"\n", option);
+   dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() exec=\"%s\"\n", cmd);
 
-   if (strcmp(option, "reboot") == 0 )
-       job_exe("reboot");
-
-   else if (strcmp(option, "poweroff") == 0 )
-       job_exe("poweroff");
-
+   if ( (strcmp(option, "reboot") == 0) || (strcmp(option, "poweroff") == 0) )
+       job_exe(cmd);
    else
        return xmlrpc_build_value(env, "s", RP_UNKNOW );
 
