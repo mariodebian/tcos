@@ -78,6 +78,10 @@ if [ ${XORG_MAYOR} -lt 7 ]; then
  ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
 else
  _log "LDCONFIG Updating links in Xorg 7.x mode"
+ [ ! -e /usr/lib/libGLcore.so.1 -a -e /usr/lib/libGLcore.so ] && ln -sf /usr/lib/libGLcore.so /usr/lib/libGLcore.so.1
+ [ ! -e /usr/lib/libGL.so.1 -a -e /usr/lib/libGL.so.1.2 ] && ln -sf /usr/lib/libGL.so.1.2 /usr/lib/libGL.so.1
+ [ ! -e /usr/lib/libGL.so -a -e /usr/lib/libGL.so.1 ] && ln -sf /usr/lib/libGL.so.1 /usr/lib/libGL.so
+ [ ! -e /usr/lib/libGLU.so.1 -a -e /usr/lib/libGLU.so ] && ln -sf /usr/lib/libGLU.so /usr/lib/libGLU.so.1
  mkdir -p /usr/share/X11/
  ln -s /etc/X11/rgb.txt /usr/share/X11/rgb.txt
  ln -s /usr/share/X11/xkb /etc/X11/xkb

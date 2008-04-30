@@ -179,9 +179,12 @@ else # Xorg 7.x
  cp -ra /usr/lib/xorg/modules/extensions/lib*.so $DESTDIR/usr/lib/xorg/modules/extensions/
  # delete nvidia/ati glx module
  rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so
- rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so
+ rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so >/dev/null 2>&1
+ rm -f $DESTDIR/usr/lib/xorg/modules/libnvidia-wfb.so.* >/dev/null 2>&1
  rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
- 
+ # delete linked nvidia driver (10Mb)
+ rm -f $DESTDIR/usr/lib/libGL*
+
  # delete vnc extension
  rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so
 
@@ -191,13 +194,18 @@ else # Xorg 7.x
        [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
 
        if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
-          rm -rf $DESTDIR/usr/lib/libGL.so*
+          #rm -rf $DESTDIR/usr/lib/libGL.so*
+          #rm -rf $DESTDIR/usr/lib/libGLcore.so*
+ 	  rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2   /usr/lib/
+      	  cp -ra /usr/lib/libGLU.so $DESTDIR/usr/lib/
+      	  cp -ra /usr/lib/libGLU.a $DESTDIR/usr/lib/
           [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
               cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
-          #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
           _echo "       * OpenGL use cached fix-nvidia-ati libs"
        else
           _echo " ********************************************** "
@@ -214,9 +222,9 @@ else # Xorg 7.x
       cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
       cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
       cpifexists /usr/lib/libGL.so.1  /usr/lib/
-      cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
-      # delete linked nvidia driver (10Mb)
-      rm -f $DESTDIR/usr/lib/libGLcore.so*
+      cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
+      cp -ra /usr/lib/libGLU.so $DESTDIR/usr/lib/
+      cp -ra /usr/lib/libGLU.a $DESTDIR/usr/lib/
     fi
  else
     _echo "    * OpenGL support is not enabled!!"
