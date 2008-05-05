@@ -528,12 +528,25 @@ list_pkg() {
 
 check_cached_packages(){
 for PKG in $(echo ${TCOS_PKG_CACHE_LIST} | sed 's/,/ /g'); do
-    CANDIDATE=$(LC_ALL=C apt-cache policy ${PKG} | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
-    VER=""
-    [ -e ${TCOS_PKG_CACHE}/${PKG}/VERSION ] && VER=$(cat ${TCOS_PKG_CACHE}/${PKG}/VERSION)
-    if [ "${CANDIDATE}" != "${VER}" ];then
-        echo "Updating package cache ${PKG} to version ${CANDIDATE}..."
-        tcos_inst_pkg ${PKG}
+    if [ ${PKG} = "fix-nvidia-ati" ];then
+         CANDIDATE1=$(LC_ALL=C apt-cache policy xserver-xorg-core | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
+         CANDIDATE2=$(LC_ALL=C apt-cache policy libgl1-mesa-glx | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
+         VER1=""
+         VER2=""
+         [ -e ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.xserver ] && VER1=$(cat ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.xserver)
+         [ -e ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.glx ] && VER2=$(cat ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.glx)
+         if [ "${CANDIDATE1}" != "${VER1}" -o "${CANDIDATE2}" != "${VER2}" ];then
+             echo "Updating package cache fix-nvidia-ati..."
+             fix_nvidia_ati
+         fi
+    else
+         CANDIDATE=$(LC_ALL=C apt-cache policy ${PKG} | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
+         VER=""
+         [ -e ${TCOS_PKG_CACHE}/${PKG}/VERSION ] && VER=$(cat ${TCOS_PKG_CACHE}/${PKG}/VERSION)
+         if [ "${CANDIDATE}" != "${VER}" ];then
+             echo "Updating package cache ${PKG} to version ${CANDIDATE}..."
+             tcos_inst_pkg ${PKG}
+         fi
     fi
 done
 }
@@ -585,7 +598,13 @@ tcos_inst_pkg() {
       rm -rf ${TCOS_PKG_CACHE}/${PKG}
       mkdir -p ${TCOS_PKG_CACHE}/${PKG}
       dpkg --extract "${PKG_FILE}" ${TCOS_PKG_CACHE}/${PKG}
-      echo ${VER} > ${TCOS_PKG_CACHE}/${PKG}/VERSION
+      if [ "${PKG}" = "xserver-xorg-core" ];then
+           echo ${VER} > ${TCOS_PKG_CACHE}/${PKG}/VERSION.xserver
+      elif [ "${PKG}" = "libgl1-mesa-glx" ];then
+           echo ${VER} > ${TCOS_PKG_CACHE}/${PKG}/VERSION.glx
+      else
+           echo ${VER} > ${TCOS_PKG_CACHE}/${PKG}/VERSION
+      fi
       [ -e /tmp/$(basename $PKG_URI) ] && rm -f /tmp/$(basename $PKG_URI)
     fi
   done
@@ -623,6 +642,14 @@ fix_nvidia_ati() {
        
     mv ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/libGL.so.1.2 \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2
+
+    [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.xserver ] && \
+       mv ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.xserver \
+       ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.xserver
+
+    [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.glx ] && \
+       mv ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.glx \
+       ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.glx
        
     rm -rf ${TCOS_PKG_CACHE}/xserver-xorg-core
     rm -rf ${TCOS_PKG_CACHE}/libgl1-mesa-glx

@@ -25,12 +25,16 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
     - Update method reboot-poweroff for down-controller
   * bin/gentcos:
     - Check libwfb.so mv
+    - Support fix-nvidia-ati as pkg cached list
   * hooks-addons/21pulseaudio:
     - Fix pulseaudio hack for cpu < 800
   * scripts/tcos-bottom/10ldconfig hooks-addons/50xorg
     - Update OpenGl support
+  * conf/base.conf hooks-addons/51dri hooks-addons/51via_openchrome
+    - Update dri xorg support
+    - Update VIA Openchrome support
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 30 Apr 2008 12:59:29 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Mon, 05 May 2008 15:23:06 +0200
 
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 

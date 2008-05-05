@@ -1,0 +1,22 @@
+# hook addon for enable direct rendering
+
+
+
+if [ $TCOS_XORG_DRI ]; then
+  stat_before
+ 
+    mkdir -p ${DESTDIR}/usr/lib/dri
+
+    cpifexists /usr/lib/dri/i810_dri.so /usr/lib/dri
+    cpifexists /usr/lib/dri/i915_dri.so /usr/lib/dri
+    cpifexists /usr/lib/dri/i965_dri.so /usr/lib/dri
+    cpifexists /usr/lib/dri/sis_dri.so /usr/lib/dri
+    cpifexists /usr/lib/dri/s3v_dri.so /usr/lib/dri
+
+
+    [ $TCOS_XORG_DRI_RADEON ] && cp -ra /usr/lib/dri/r* ${DESTDIR}/usr/lib/dri
+
+  stat_after "Direct Rendering support"
+
+fi
+

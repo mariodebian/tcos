@@ -1,7 +1,7 @@
-# hook addon for EPATEC eTC3800
+# hook addon for thin clients with chip VIA
 
 make_launcher() {
-cat << EOF > ${DESTDIR}/scripts/tcos-bottom/15etc3800
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/15via_openchrome
 #!/bin/sh
 #
 
@@ -18,33 +18,39 @@ quiet=n
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
-# check if we are in etc3800 machine
+#test1=0
+#test1=\$(grep -c "VIA Nehemiah" /proc/cpuinfo)
+
 test1=0
-test1=\$(grep -c "VIA Nehemiah" /proc/cpuinfo)
+test1=\$(lspci|grep -c UniChrome)
 
 test2=0
 test2=\$(lspci|grep -c CLE266)
 
-if [ "\$test1" = "0" ] || [ "\$test2" = "0" ] ; then
-   # not in eTC3800
+test3=0
+test3=\$(lspci|grep -c Chrome9)
+
+
+if [ "\$test1" = "0" ] && [ "\$test2" = "0" ] && [ "\$test3" = "0" ]; then
+   # not in client with chip VIA unichrome
    exit 0
 fi
 
-log_begin_msg "Loading eTC 3800 modules"
+log_begin_msg "Loading Via Openchrome drivers"
 
   modprobe drm
   modprobe via
 
-  if [ -f /usr/lib/xorg/modules/drivers/openchrome_drv.so ]; then
+  if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ -f /usr/lib/xorg/modules/drivers/openchrome_drv.so ]; then
     configurexorg --newsettings --xdriver=openchrome --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
-  else
+  elif [ $TCOS_XORG_DRIVER_OPENCHROME ];
     configurexorg --newsettings --xdriver=via --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
   fi
 
 log_end_msg $?
 
 EOF
-chmod +x ${DESTDIR}/scripts/tcos-bottom/15etc3800
+chmod +x ${DESTDIR}/scripts/tcos-bottom/15via_openchrome
 
 }
 
@@ -52,41 +58,48 @@ chmod +x ${DESTDIR}/scripts/tcos-bottom/15etc3800
 test_driver1=$(strings /usr/lib/xorg/modules/drivers/via_drv.so 2> /dev/null| grep -c openchrome)
 test_driver2=$(strings /usr/lib/xorg/modules/drivers/openchrome_drv.so 2> /dev/null | grep -c openchrome)
 
-if [ $TCOS_ETC3800 ] && [ "$test_driver1" != 0 ] ; then
+if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" != 0 ] ; then
   stat_before
  
     manual_add_modules drm
     manual_add_modules via-agp
     manual_add_modules via
+    manual_add_modules i2c-viapro
 
     cpifexists /usr/lib/libviaXvMC.so /usr/lib
     cpifexists /usr/lib/libviaXvMCPro.so /usr/lib
+    cpifexists /usr/lib/libviaXvMC.la /usr/lib
+    cpifexists /usr/lib/libviaXvMCPro.la /usr/lib
+
 
     mkdir -p ${DESTDIR}/usr/lib/dri
     cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
     make_launcher
 
-  stat_after "eTC3800 drivers support"
+  stat_after "VIA Openchrome driver support"
 
-elif [ $TCOS_ETC3800 ] && [ "$test_driver2" != 0 ] ; then
+elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver2" != 0 ] ; then
  stat_before
     manual_add_modules drm
     manual_add_modules via-agp
     manual_add_modules via
+    manual_add_modules i2c-viapro
 
     cpifexists /usr/lib/libchromeXvMC.so /usr/lib
     cpifexists /usr/lib/libchromeXvMCPro.so /usr/lib
+    cpifexists /usr/lib/libchromeXvMC.la /usr/lib
+    cpifexists /usr/lib/libchromeXvMCPro.la /usr/lib
 
     mkdir -p ${DESTDIR}/usr/lib/dri
     cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
     make_launcher
 
- stat_after "eTC3800 Openchrome driver"
+ stat_after "Openchrome driver support"
 
 
-elif [ $TCOS_ETC3800 ] && [ "$test_driver1" = 0 ] && [ "$test_driver2" = 0 ]; then
+elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" = 0 ] && [ "$test_driver2" = 0 ]; then
   echo ""
-  echo "   WARNING: EPATEC 3800 enabled but don't have installed via/openchrome package"
+  echo "   WARNING: Use Openchrome drivers enabled but don't have installed via/openchrome package"
   echo ""
   echo "            Please install openchrome VIA drivers package"
   echo ""
