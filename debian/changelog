@@ -33,6 +33,8 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
   * conf/base.conf hooks-addons/51dri hooks-addons/51via_openchrome
     - Update dri xorg support
     - Update VIA Openchrome support
+  * xmlrpc/sh/tcos-last
+    - Use who instead last to avoid problems with users much time connected
 
   [ Mario Izquierdo (mariodebian) ]
   * bin/tryXorg.sh hooks-addons/52intel hooks-addons/50xorg
@@ -40,7 +42,7 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
   * hooks-addons/50xorg hooks-addons/51via_openchrome
     - Don't copy .la|.a files, and don't copy nvidia libs (not nvidia thin client support)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 06 May 2008 10:04:00 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 06 May 2008 16:56:58 +0200
 
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 
