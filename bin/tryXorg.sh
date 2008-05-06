@@ -5,6 +5,20 @@
 # try to launch Xorg or return error
 
 MAX_XORG_RETRY=3
+XORG_FORCE_AUTO=0
+
+export XAUTHORITY=/root/.Xauthority
+export HOME=/root
+export DISPLAY=:0
+
+
+run_scripts() {
+    [ ! -d $1 ] && return
+    for src in $1/*; do
+      [ -f $src ] && . $src
+    done
+}
+
 
 for x in "$@"; do
         case $x in
@@ -22,6 +36,7 @@ done
 
 counter=1
 while [ $counter -le $MAX_XORG_RETRY ]; do
+ run_scripts /etc/X11/PreRun
  # start Xorg at vt7 to avoid getty keyboard conflicts
  Xorg vt7 ${TCOS_XORG_OPTS} > /dev/null 2>&1
  counter=$((counter+1))
@@ -51,6 +66,9 @@ sed -i "/kbd/i\
 \	Option     \"XkbLayout\"     \"${TCOS_XORG_XKB}\"\
 " /etc/X11/xorg.conf.auto
 
+XORG_FORCE_AUTO=1
+
+run_scripts /etc/X11/PreRun
 # start Xorg at vt7 to avoid getty keyboard conflicts
 Xorg vt7 -config /etc/X11/xorg.conf.auto ${TCOS_XORG_OPTS}  > /dev/null 2>&1
 
@@ -61,7 +79,7 @@ echo ""
 echo ""
 echo "Error launching Xorg, check /var/log/Xorg.0.log for errors"
 echo ""
-echo "   Is font server (xfs) running at ${FONT_SERVER}?"
+echo "   Perhaps font server (xfs) is not running at ${FONT_SERVER}?"
 echo ""
 echo "   These are the lasts lines of Xorg.0.log"
 echo ""

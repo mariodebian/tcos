@@ -38,6 +38,8 @@ mkdir -p $DESTDIR/var/log
 
 mkdir -p $DESTDIR/etc/X11/xserver
 
+mkdir -p $DESTDIR/etc/X11/PreRun
+
 # no anymore in Xorg 7.0 ??
 #copydir /etc/X11/xserver/      /etc/X11/
 
@@ -196,14 +198,13 @@ else # Xorg 7.x
        if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
           #rm -rf $DESTDIR/usr/lib/libGL.so*
           #rm -rf $DESTDIR/usr/lib/libGLcore.so*
- 	  rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
+ 	      rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/
+          #cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/
+          #cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2   /usr/lib/
-      	  cp -ra /usr/lib/libGLU.so $DESTDIR/usr/lib/
-      	  cp -ra /usr/lib/libGLU.a $DESTDIR/usr/lib/
+      	  [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
           [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
               cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
           _echo "       * OpenGL use cached fix-nvidia-ati libs"
@@ -222,9 +223,8 @@ else # Xorg 7.x
       cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
       cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
       cpifexists /usr/lib/libGL.so.1  /usr/lib/
-      cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
-      cp -ra /usr/lib/libGLU.so $DESTDIR/usr/lib/
-      cp -ra /usr/lib/libGLU.a $DESTDIR/usr/lib/
+      [ -e /usr/lib/libGLcore.so.1 ] && cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
+      [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
     fi
  else
     _echo "    * OpenGL support is not enabled!!"
@@ -358,10 +358,6 @@ if [ -f \$XAUTHORITY ]; then
 fi
 
 /sbin/tryXorg --fontserver=\${FONT_SERVER} --server=\${SERVER} --xorgopts="\${TCOS_XORG_OPTS} -query \${SERVER}" &
-
-# disable dpms
-sleep 5
-xset -dpms
 
 EOF
 chmod +x $DESTDIR/sbin/startremotex

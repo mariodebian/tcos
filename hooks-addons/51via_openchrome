@@ -68,8 +68,7 @@ if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" != 0 ] ; then
 
     cpifexists /usr/lib/libviaXvMC.so /usr/lib
     cpifexists /usr/lib/libviaXvMCPro.so /usr/lib
-    cpifexists /usr/lib/libviaXvMC.la /usr/lib
-    cpifexists /usr/lib/libviaXvMCPro.la /usr/lib
+    cpifexists /etc/X11/XvMCConfig       /etc/X11
 
 
     mkdir -p ${DESTDIR}/usr/lib/dri
@@ -87,8 +86,7 @@ elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver2" != 0 ] ; then
 
     cpifexists /usr/lib/libchromeXvMC.so /usr/lib
     cpifexists /usr/lib/libchromeXvMCPro.so /usr/lib
-    cpifexists /usr/lib/libchromeXvMC.la /usr/lib
-    cpifexists /usr/lib/libchromeXvMCPro.la /usr/lib
+    cpifexists /etc/X11/XvMCConfig       /etc/X11
 
     mkdir -p ${DESTDIR}/usr/lib/dri
     cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri

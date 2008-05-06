@@ -37,3 +37,29 @@ else
   _verbose "(52intel) Not doing INTEL hack "
 fi
 
+
+cat << EOF > $DESTDIR/sbin/disable_dpms
+#!/bin/sh
+
+# wait for Xorg
+while [ "\$(pidof Xorg)" = "" ] ; do
+ sleep 2
+done
+
+# disable dpms
+sleep 2
+xset -dpms
+
+EOF
+chmod +x $DESTDIR/sbin/disable_dpms
+
+
+cat << EOF > $DESTDIR/etc/X11/PreRun/30intel_dpms
+#!/bin/sh
+
+if [ "$(lspci |grep VGA|grep -i intel)"]; then
+  /sbin/disable_dpms &
+fi
+
+EOF
+

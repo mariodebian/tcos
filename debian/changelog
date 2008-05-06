@@ -34,7 +34,13 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
     - Update dri xorg support
     - Update VIA Openchrome support
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Mon, 05 May 2008 15:23:06 +0200
+  [ Mario Izquierdo (mariodebian) ]
+  * bin/tryXorg.sh hooks-addons/52intel hooks-addons/50xorg
+    - Create /etc/X11/PreRun to be exec before launch Xorg
+  * hooks-addons/50xorg hooks-addons/51via_openchrome
+    - Don't copy .la|.a files, and don't copy nvidia libs (not nvidia thin client support)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 06 May 2008 10:04:00 +0200
 
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 
