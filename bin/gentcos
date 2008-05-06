@@ -529,18 +529,18 @@ list_pkg() {
 check_cached_packages(){
 for PKG in $(echo ${TCOS_PKG_CACHE_LIST} | sed 's/,/ /g'); do
     if [ ${PKG} = "fix-nvidia-ati" ];then
-         CANDIDATE1=$(LC_ALL=C apt-cache policy xserver-xorg-core | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
-         CANDIDATE2=$(LC_ALL=C apt-cache policy libgl1-mesa-glx | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
+         CANDIDATE1=$(LC_ALL=C apt-cache policy xserver-xorg-core | awk -F"Candidate: " '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
+         CANDIDATE2=$(LC_ALL=C apt-cache policy libgl1-mesa-glx | awk -F"Candidate: " '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
          VER1=""
          VER2=""
          [ -e ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.xserver ] && VER1=$(cat ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.xserver)
          [ -e ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.glx ] && VER2=$(cat ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.glx)
          if [ "${CANDIDATE1}" != "${VER1}" -o "${CANDIDATE2}" != "${VER2}" ];then
              echo "Updating package cache fix-nvidia-ati..."
-             fix_nvidia_ati
+             fix_nvidia_ati "1"
          fi
     else
-         CANDIDATE=$(LC_ALL=C apt-cache policy ${PKG} | awk -F":" '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
+         CANDIDATE=$(LC_ALL=C apt-cache policy ${PKG} | awk -F"Candidate: " '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
          VER=""
          [ -e ${TCOS_PKG_CACHE}/${PKG}/VERSION ] && VER=$(cat ${TCOS_PKG_CACHE}/${PKG}/VERSION)
          if [ "${CANDIDATE}" != "${VER}" ];then
@@ -594,7 +594,7 @@ tcos_inst_pkg() {
       error=1
     else
       echo "Extracting $(basename ${PKG_FILE})..."
-      VER=$(basename ${PKG_FILE} | awk -F"_" '{print $2}')
+      VER=$(LC_ALL=C apt-cache policy ${PKG} | awk -F"Candidate: " '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
       rm -rf ${TCOS_PKG_CACHE}/${PKG}
       mkdir -p ${TCOS_PKG_CACHE}/${PKG}
       dpkg --extract "${PKG_FILE}" ${TCOS_PKG_CACHE}/${PKG}
@@ -647,14 +647,14 @@ fix_nvidia_ati() {
        mv ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.xserver \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.xserver
 
-    [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.glx ] && \
-       mv ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.glx \
+    [ -e ${TCOS_PKG_CACHE}/libgl1-mesa-glx/VERSION.glx ] && \
+       mv ${TCOS_PKG_CACHE}/libgl1-mesa-glx/VERSION.glx \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.glx
        
     rm -rf ${TCOS_PKG_CACHE}/xserver-xorg-core
     rm -rf ${TCOS_PKG_CACHE}/libgl1-mesa-glx
     echo "NVIDIA/ATI cache done"
-    _exit 0
+    [ ! -z $1 ] || _exit 0
 }
 
 for opt in $@ ; do

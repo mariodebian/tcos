@@ -41,9 +41,9 @@ log_begin_msg "Loading Via Openchrome drivers"
   modprobe drm
   modprobe via
 
-  if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ -f /usr/lib/xorg/modules/drivers/openchrome_drv.so ]; then
+  if [ -f /usr/lib/xorg/modules/drivers/openchrome_drv.so ]; then
     configurexorg --newsettings --xdriver=openchrome --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
-  elif [ $TCOS_XORG_DRIVER_OPENCHROME ];
+  else
     configurexorg --newsettings --xdriver=via --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
   fi
 

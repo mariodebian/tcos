@@ -198,7 +198,7 @@ else # Xorg 7.x
        if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
           #rm -rf $DESTDIR/usr/lib/libGL.so*
           #rm -rf $DESTDIR/usr/lib/libGLcore.so*
- 	      rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
+ 	  rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
           #cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/
           #cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/
@@ -226,6 +226,21 @@ else # Xorg 7.x
       [ -e /usr/lib/libGLcore.so.1 ] && cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
       [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
     fi
+
+    if [ -e $DESTDIR/usr/lib/libGL.so.1 ];then
+      if [ "$(strings $DESTDIR/usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
+        [ "$(strings $DESTDIR/usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
+        rm -rf $DESTDIR/usr/lib/libGL.so.1
+      fi
+    fi
+
+    if [ -e $DESTDIR/usr/lib/libGLcore.so.1 ];then
+      if [ "$(strings $DESTDIR/usr/lib/libGLcore.so.1|grep -c NVIDIA)" != 0 ] || \
+        [ "$(strings $DESTDIR/usr/lib/libGLcore.so.1|grep -c -i fgl)" != 0 ]; then
+        rm -rf $DESTDIR/usr/lib/libGLcore.so.1
+      fi
+    fi
+
  else
     _echo "    * OpenGL support is not enabled!!"
  fi
