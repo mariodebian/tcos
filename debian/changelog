@@ -44,8 +44,10 @@ initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
     - Create /etc/X11/PreRun to be exec before launch Xorg
   * hooks-addons/50xorg hooks-addons/51via_openchrome
     - Don't copy .la|.a files, and don't copy nvidia libs (not nvidia thin client support) 
+  * hooks-addons/25tcosmonitor:
+    - Copi pci.ids.gz if found (instead of simple pci.ids)
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 07 May 2008 21:48:07 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 08 May 2008 00:21:25 +0200
 
 initramfs-tools-tcos (0.89~rc2) unstable; urgency=low
 

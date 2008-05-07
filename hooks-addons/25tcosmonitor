@@ -111,7 +111,8 @@ chmod +x $DESTDIR/sbin/restartx
 # pci database
 copy_exec /usr/bin/lspci /usr/bin/
 mkdir -p $DESTDIR/usr/share/misc/
-cpifexists /usr/share/misc/pci.ids /usr/share/misc/
+[ -f /usr/share/misc/pci.ids ]    && cpifexists /usr/share/misc/pci.ids    /usr/share/misc/
+[ -f /usr/share/misc/pci.ids.gz ] && cpifexists /usr/share/misc/pci.ids.gz /usr/share/misc/
 
 
 
