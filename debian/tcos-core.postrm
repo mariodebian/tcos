@@ -20,6 +20,7 @@ case "$1" in
       reload_dbus
     ;;
     purge)
+       delgroup --quiet --system tcosmonitor-exclude > /dev/null || true
        rm -f /etc/dbus/system.d/tcosmonitor.conf
        reload_dbus
     ;;

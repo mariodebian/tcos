@@ -30,16 +30,21 @@ static xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud
   FILE *fp;
   char line[BIG_BUFFER];
   char *info;
+  char *group;
   size_t *len;
 
   /* read what info search */
-  xmlrpc_parse_value(env, in, "(s#)", &info, &len);
+  xmlrpc_parse_value(env, in, "(ss#)", &info, &group, &len);
 
   dbgtcos("tcosxmlrpc::tcos_standalone() searching for standalone=\"%s\"\n", info);
 
   if ( strcmp(info, "get_user") == 0 )
       fp=(FILE*)popen(STANDALONE_USER, "r");
 
+  else if ( strcmp(info, "get_exclude") == 0 ) {
+      snprintf( line, BSIZE, "%s=%s 2>/dev/null", STANDALONE_EXCLUDE, group);
+      fp=(FILE*)popen(line, "r");
+  }
   else if ( strcmp(info, "get_process") == 0 )
       fp=(FILE*)popen(STANDALONE_PROCESS, "r");
 

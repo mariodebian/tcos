@@ -149,7 +149,7 @@ int main (int argc, char **argv)
     "ss:s", "Tcos, authenticate with X cookies.");
     
     xmlrpc_server_abyss_add_method_w_doc("tcos.standalone", &tcos_standalone, NULL,
-    "s:s", "Tcos, Standalone. Return standalone values (no auth needed)");
+    "ss:s", "Tcos, Standalone. Return standalone values (no auth needed)");
     
     xmlrpc_server_abyss_add_method_w_doc("tcos.dbus", &tcos_dbus, NULL,
     "s:s", "Tcos, DBus. Exe with a wrapper some dbus events (auth needed)");

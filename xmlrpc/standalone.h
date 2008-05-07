@@ -27,6 +27,7 @@
 #define STANDALONE_PROCESS "ps U $("STANDALONE_USER") -o pid | sed 's/[[:blank:]]//g' | grep -c ^[0-9]"
 /*#define STANDALONE_TIME    "LC_ALL=C LC_MESSAGES=C last| grep \"[[:blank:]]:0[[:blank:]].*still\" | awk '{print $(NF-5)\" \"$(NF-4)\" \"$(NF-3)}'"*/
 #define STANDALONE_TIME    "/usr/lib/tcos/tcos-last --time 2>/dev/null"
+#define STANDALONE_EXCLUDE    "/usr/lib/tcos/tcos-last --ingroup"
 
 #ifdef IS_STANDALONE
   #define STANDALONE_SERVER  "tail -1 /var/lib/tcos/standalone/log/access.log | awk '{print $1}'"

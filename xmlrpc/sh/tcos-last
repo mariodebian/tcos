@@ -28,7 +28,7 @@ import getopt
 import socket
 from time import time, ctime, localtime
 
-import pwd
+import pwd,grp
 
 import utmp
 from UTMPCONST import *
@@ -40,7 +40,7 @@ def print_debug(txt):
         print >> sys.stderr, "tcos-last DEBUG: %s"%(txt)
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["host=", "debug", "tcosdisplay", "user", "userid", "time", "pid"])
+    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["host=", "debug", "tcosdisplay", "user", "userid", "time", "pid", "ingroup="])
 except getopt.error, msg:
     print msg
     print "for command line options use tcos-last --help"
@@ -48,6 +48,7 @@ except getopt.error, msg:
 
 ACTION=None
 HOST=""
+INGROUP=""
 # process options
 for o, a in opts:
     if o == "--debug":
@@ -59,6 +60,9 @@ for o, a in opts:
     
     if o == "--user":
         ACTION="user"
+    elif o == "--ingroup":
+        ACTION="ingroup"
+        INGROUP=a
     elif o == "--userid":
         ACTION="userid"
     elif o == "--time":
@@ -167,5 +171,19 @@ elif ACTION == "time":
 
 elif ACTION == "pid":
     print data['pid']
+
+elif ACTION == "ingroup":
+    try:
+        usersingroup=grp.getgrnam(INGROUP)[3]
+    except Exception, err:
+        usersingroup=[]
+
+    exclude="noexclude"
+    for user in usersingroup:
+        if data['user'] == user:
+            exclude="exclude"
+
+    print exclude
+
 
 
