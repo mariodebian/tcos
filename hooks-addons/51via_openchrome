@@ -54,52 +54,65 @@ chmod +x ${DESTDIR}/scripts/tcos-bottom/15via_openchrome
 
 }
 
+if [ $TCOS_ETC_GENERIC ]; then
+	  stat_before
+	 
+	    manual_add_modules drm
+	    manual_add_modules via-agp
+	    manual_add_modules via
+	    manual_add_modules i2c-viapro
 
-test_driver1=$(strings /usr/lib/xorg/modules/drivers/via_drv.so 2> /dev/null| grep -c openchrome)
-test_driver2=$(strings /usr/lib/xorg/modules/drivers/openchrome_drv.so 2> /dev/null | grep -c openchrome)
+	  stat_after "Generic eTC modules support"
 
-if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" != 0 ] ; then
-  stat_before
- 
-    manual_add_modules drm
-    manual_add_modules via-agp
-    manual_add_modules via
-    manual_add_modules i2c-viapro
+else
 
-    cpifexists /usr/lib/libviaXvMC.so /usr/lib
-    cpifexists /usr/lib/libviaXvMCPro.so /usr/lib
-    cpifexists /etc/X11/XvMCConfig       /etc/X11
+	test_driver1=$(strings /usr/lib/xorg/modules/drivers/via_drv.so 2> /dev/null| grep -c openchrome)
+	test_driver2=$(strings /usr/lib/xorg/modules/drivers/openchrome_drv.so 2> /dev/null | grep -c openchrome)
 
+	if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" != 0 ] ; then
+	  stat_before
+	 
+	    manual_add_modules drm
+	    manual_add_modules via-agp
+	    manual_add_modules via
+	    manual_add_modules i2c-viapro
 
-    mkdir -p ${DESTDIR}/usr/lib/dri
-    cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
-    make_launcher
-
-  stat_after "VIA Openchrome driver support"
-
-elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver2" != 0 ] ; then
- stat_before
-    manual_add_modules drm
-    manual_add_modules via-agp
-    manual_add_modules via
-    manual_add_modules i2c-viapro
-
-    cpifexists /usr/lib/libchromeXvMC.so /usr/lib
-    cpifexists /usr/lib/libchromeXvMCPro.so /usr/lib
-    cpifexists /etc/X11/XvMCConfig       /etc/X11
-
-    mkdir -p ${DESTDIR}/usr/lib/dri
-    cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
-    make_launcher
-
- stat_after "Openchrome driver support"
+	    cpifexists /usr/lib/libviaXvMC.so /usr/lib
+	    cpifexists /usr/lib/libviaXvMCPro.so /usr/lib
+	    cpifexists /etc/X11/XvMCConfig       /etc/X11
 
 
-elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" = 0 ] && [ "$test_driver2" = 0 ]; then
-  echo ""
-  echo "   WARNING: Use Openchrome drivers enabled but don't have installed via/openchrome package"
-  echo ""
-  echo "            Please install openchrome VIA drivers package"
-  echo ""
+	    mkdir -p ${DESTDIR}/usr/lib/dri
+	    cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
+	    make_launcher
+
+	  stat_after "VIA Openchrome driver support"
+
+	elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver2" != 0 ] ; then
+	 stat_before
+	    manual_add_modules drm
+	    manual_add_modules via-agp
+	    manual_add_modules via
+	    manual_add_modules i2c-viapro
+
+	    cpifexists /usr/lib/libchromeXvMC.so /usr/lib
+	    cpifexists /usr/lib/libchromeXvMCPro.so /usr/lib
+	    cpifexists /etc/X11/XvMCConfig       /etc/X11
+
+	    mkdir -p ${DESTDIR}/usr/lib/dri
+	    cpifexists /usr/lib/dri/unichrome_dri.so /usr/lib/dri
+	    make_launcher
+
+	 stat_after "Openchrome driver support"
+
+
+	elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" = 0 ] && [ "$test_driver2" = 0 ]; then
+	  echo ""
+	  echo "   WARNING: Use Openchrome drivers enabled but don't have installed via/openchrome package"
+	  echo ""
+	  echo "            Please install openchrome VIA drivers package"
+	  echo ""
+	fi
+
 fi
 
