@@ -49,19 +49,17 @@ import gobject
 debug=False
 PACKAGE="tcos-standalone"
 
+tcos_standalone_file="/etc/default/tcos-standalone"
+tcos_standalone_pass="/etc/tcospasswd"
+daemon_cmd="/etc/init.d/tcos-standalone"
+
 # if exec from svn or sources dir
 if os.path.isdir('../debian'):
     LOCALE_DIR = "./po/"
     GLADE_DIR = "./"
     IMG_DIR = "./images/"
-    tcos_standalone_file="../debian/tcos-standalone.default"
-    tcos_standalone_pass="/etc/tcospasswd"
-    daemon_cmd="sh ../debian/tcos-standalone.init"
     print "exec in sources dir"
 else:
-    tcos_standalone_file="/etc/default/tcos-standalone"
-    tcos_standalone_pass="/etc/tcospasswd"
-    daemon_cmd="/etc/init.d/tcos-standalone"
     GLADE_DIR = "/usr/share/tcos-standalone/"
     IMG_DIR = "/usr/share/tcos-standalone/images/"
     LOCALE_DIR = "/usr/share/locale"
@@ -127,6 +125,7 @@ class TcosStandalone:
         
         # read vars
         self.v["daemon_enabled"]=self.read_conf(tcos_standalone_file, "TCOS_STANDALONE_START", 1, '=')
+        self.v["ssl_enabled"]=self.read_conf(tcos_standalone_file, "TCOS_XMLRPC_SSL", 0, '=')
         self.v["username"]=self.read_conf(tcos_standalone_pass, "root", 0, ':')
         daemons=self.exe_cmd(daemon_cmd + " status")
         self.v['daemon_running'][daemons.split(' ')[0]]=daemons.split(' ')[1]
@@ -141,6 +140,7 @@ class TcosStandalone:
         self.w["txt_password"] = self.ui.get_widget('txt_password')
         self.w["lb_status"] = self.ui.get_widget('lb_status')
         self.w["ck_standalone_start"] = self.ui.get_widget('ck_standalone_start')
+        self.w["ck_enable_ssl"] = self.ui.get_widget('ck_enable_ssl')
         self.w["lb_tcosxmlrpc"] = self.ui.get_widget('lb_tcosxmlrpc')
         #self.w["lb_busybox"] = self.ui.get_widget('lb_busybox')
         self.w["img_tcosxmlrpc"] = self.ui.get_widget('img_tcosxmlrpc')
@@ -150,12 +150,17 @@ class TcosStandalone:
         self.w["bt_start"] = self.ui.get_widget('bt_start')
         
         self.w["ck_standalone_start"].connect('toggled', self.ck_change )
+        self.w["ck_enable_ssl"].connect('toggled', self.ck_change )
         
         if self.v["daemon_enabled"] == '1':
             self.w["ck_standalone_start"].set_active(True)
         else:
             self.w["ck_standalone_start"].set_active(False)
         
+        if self.v["ssl_enabled"] == '1':
+            self.w["ck_enable_ssl"].set_active(True)
+        else:
+            self.w["ck_enable_ssl"].set_active(False)
         
         
         self.w["txt_username"].connect('changed', self.pass_change )
@@ -203,6 +208,20 @@ class TcosStandalone:
         if self.v["newconfig"]:
             print_debug("apply_changes() newconfig")
             # daemon enabled when open app
+            
+            if self.w["ck_enable_ssl"].get_active() != 1:
+                self.save_conf(tcos_standalone_file, "TCOS_XMLRPC_SSL", 0, '=')
+                if self.v["daemon_enabled"] != '0':
+                    self.exe_cmd(daemon_cmd + " stop")
+                    self.exe_cmd(daemon_cmd + " start")
+                print_debug("apply_changes() disabling SSL")
+            else:
+                self.save_conf(tcos_standalone_file, "TCOS_XMLRPC_SSL", 1, '=')
+                if self.v["daemon_enabled"] != '0':
+                    self.exe_cmd(daemon_cmd + " stop")
+                    self.exe_cmd(daemon_cmd + " start")
+                print_debug("apply_changes() enabling SSL")
+                
             if self.v["daemon_enabled"] != '0':
                 if self.w["ck_standalone_start"].get_active() != 1:
                     # disable daemon
@@ -278,7 +297,7 @@ class TcosStandalone:
         f=open(fname, 'r')
         data=f.readlines()
         f.close()
-        
+        print_debug("save_conf() fname=%s fvar=%s value=%s" %(fname, fvar, value))
         fw=file(fname, 'w')
         for i in range(len(data)):
             if data[i].startswith(fvar):

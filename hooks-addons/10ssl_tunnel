@@ -1,0 +1,78 @@
+# hooks addon for stunnel4
+# need stunnel4 package
+
+if [ ! $TCOS_ENABLE_SSL ]; then
+  _verbose "(10ssl_tunnel) TCOS_ENABLE_SSL disabled"
+else
+ stat_before
+
+   [ -x /usr/bin/stunnel4 ]  && cpifexists /usr/bin/stunnel4   /usr/bin/
+   [ -x /usr/sbin/stunnel4 ]  && cpifexists /usr/sbin/stunnel4   /usr/bin/
+
+   mkdir -p $DESTDIR/etc/stunnel
+
+cat << EOF > ${DESTDIR}/etc/stunnel/stunnel.conf
+cert = /etc/stunnel/tcos.pem
+sslVersion = SSLv2
+TIMEOUTclose=0
+TIMEOUTconnect=2
+TIMEOUTidle=2
+foreground=yes
+syslog=no
+session=1
+delay=no
+chroot=/var/lib/stunnel4/
+setuid=root
+setgid=root
+pid=/stunnel4.pid
+socket=l:TCP_NODELAY=1
+socket=r:TCP_NODELAY=1
+;socket=a:SO_REUSEADDR=0
+;compression=rle
+;debug=7
+output=/var/log/stunnel.log
+pty=no
+;transparent=yes
+;verify=1
+
+[tcosxmlrpc]
+accept=8999
+connect=8998
+
+EOF
+
+   if [ -e /etc/tcos/ssl/tcos-custom.pem ]; then
+     cp /etc/tcos/ssl/tcos-custom.pem  ${DESTDIR}/etc/stunnel/tcos.pem
+   else
+     cp /etc/tcos/ssl/tcos.pem         ${DESTDIR}/etc/stunnel/tcos.pem
+   fi
+   chmod 600 $DESTDIR/etc/stunnel/tcos.pem
+   mkdir -p $DESTDIR/var/lib/stunnel4/
+
+
+   cat << EOF > ${DESTDIR}/scripts/tcos-bottom/60stunnel
+#!/bin/sh
+#
+
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+
+quiet=n
+
+. /scripts/functions
+
+  stunnel4 >/dev/null 2>&1 &
+exit 0
+
+EOF
+
+   chmod +x  ${DESTDIR}/scripts/tcos-bottom/60stunnel
+
+ stat_after "SSL secure XMLRPC connection"
+
+fi # end of TCOS_ENABLE_SSL
+

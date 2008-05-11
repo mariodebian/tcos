@@ -104,3 +104,10 @@ install:
 	install -m 644 var/etc/mime.types       $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/
 
 	#install -m 644 var/etc/httpd2.conf $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/httpd.conf
+
+
+	# stunnel4
+	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/stunnel
+	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/lib/stunnel4/
+	install -m 644 var/etc/stunnel/stunnel.conf         $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/stunnel
+	install -m 644 var/etc/stunnel/stunnel-custom.conf  $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/stunnel

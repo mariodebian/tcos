@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
+
+  * hooks-addons/10ssl_tunnel xmlrpc/var/etc/stunnel conf/base.conf
+    conf/tcos.pem debian/tcos-standalone README.ssl
+    - Add support for tunnelize XMLRPC connection ussing stunnel4
+  * tcos-standalone/
+    - Update tcos-standalone GUI to allow enabling SSL
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 11 May 2008 12:06:25 +0200
+
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]

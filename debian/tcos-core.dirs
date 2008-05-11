@@ -1,2 +1,3 @@
 /etc/init.d
 /usr/lib/tcos
+/etc/tcos/ssl

@@ -59,6 +59,7 @@ config_svn:
 install:
 	#  Creating directories
 	install -d $(DESTDIR)/$(TCOS_CONF)
+	install -d $(DESTDIR)/$(TCOS_CONF)/ssl
 	install -d $(DESTDIR)/$(TCOS_CONF)/hooks-addons/
 	install -d $(DESTDIR)/$(TCOS_CONF)/conf.d/
 	install -d $(DESTDIR)/$(TCOS_DIR)
@@ -119,6 +120,8 @@ install:
 	sed -i 's/__DISTRIBUTION__/$(DISTRO)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
 	sed -i 's/__TCOS_ARCH__/$(TCOS_ARCH)/g'        $(DESTDIR)$(TCOS_CONF)/version.conf
 
+	install -m 600 conf/tcos.pem                   $(DESTDIR)/$(TCOS_CONF)/ssl
+
 
 	# tcos.conf templates
 	install -d $(DESTDIR)$(TCOS_DIR)/templates/
@@ -159,6 +162,7 @@ install:
 	install -m 755 bin/clear-logs      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/rsync-controller  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/down-controller   $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/get_server      $(DESTDIR)/$(TCOS_BINS)/
 
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 

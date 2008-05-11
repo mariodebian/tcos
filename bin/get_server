@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#
+#  Returns XMLRPC caller IP (tcosmonitor IP)
+#
+
+
+if [ -e /conf/tcos-run-functions ]; then
+  STANDALONE=/var
+else
+  STANDALONE=/var/lib/tcos/standalone
+fi
+
+
+# SSL enabled
+if [ -f $STANDALONE/log/stunnel.log ]; then
+    grep "tcosxmlrpc accepted connection" $STANDALONE/log/stunnel.log |tail -1 | awk '{print $NF}'| awk -F ":" '{print $1}'
+    exit 0
+fi
+
+# SSL disabled (not stunnel4 logs) read XMLRPC abyss log
+if [ -f $STANDALONE/log/access.log ]; then
+    tail -1 $STANDALONE/log/access.log | awk '{print $1}'
+    exit 0
+fi  
+
+
+

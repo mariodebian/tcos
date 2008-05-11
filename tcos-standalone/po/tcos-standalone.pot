@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-29 16:20+0100\n"
+"POT-Creation-Date: 2008-05-10 18:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,56 +24,52 @@ msgstr ""
 msgid "<span size=\"x-large\">Configure TCOS standalone mode</span>"
 msgstr ""
 
-#: tcos-standalone.glade:199
+#: tcos-standalone.glade:126
 msgid "Stop"
 msgstr ""
 
-#: tcos-standalone.glade:277
+#: tcos-standalone.glade:204
 msgid "Start"
 msgstr ""
 
-#: tcos-standalone.glade:355
+#: tcos-standalone.glade:282
 msgid "Apply"
 msgstr ""
 
-#: tcos-standalone.glade:417
+#: tcos-standalone.glade:344
 msgid "Enable tcos-standalone daemon"
 msgstr ""
 
-#: tcos-standalone.glade:438
+#: tcos-standalone.glade:365
 msgid "Username (root):"
 msgstr ""
 
-#: tcos-standalone.glade:487
+#: tcos-standalone.glade:414
 msgid "Password (not visible):"
 msgstr ""
 
-#: tcos-standalone.glade:551
+#: tcos-standalone.glade:521
+msgid "Enable SSL over XMLRPC"
+msgstr ""
+
+#: tcos-standalone.glade:562
 msgid "Options"
 msgstr ""
 
-#: tcos-standalone.py:162
+#: tcos-standalone.py:170
 msgid ""
 "Not user and password configured.\n"
 "Using root system user."
 msgstr ""
 
-#: tcos-standalone.py:224
+#: tcos-standalone.py:246
 msgid "New username and password used.\n"
 msgstr ""
 
-#: tcos-standalone.py:246
+#: tcos-standalone.py:269
 msgid "tcosxmlrpc running"
 msgstr ""
 
-#: tcos-standalone.py:251
+#: tcos-standalone.py:274
 msgid "tcosxmlrpc stopped"
-msgstr ""
-
-#: tcos-standalone.py:257
-msgid "busybox running"
-msgstr ""
-
-#: tcos-standalone.py:260
-msgid "busybox stopped"
 msgstr ""

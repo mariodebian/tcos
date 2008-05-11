@@ -53,6 +53,19 @@ do_start()
           return 0 
         fi
 
+        # start stunnel4
+        if [ "$TCOS_XMLRPC_SSL" = "1" ] && [ -x $(which stunnel4) ] ; then
+           # fix permissions
+           chown -R stunnel4:stunnel4 /var/lib/tcos/standalone/lib/stunnel4/
+           chown stunnel4:stunnel4 /var/lib/tcos/standalone/log/stunnel.log
+
+           # start with custom certificate or tcos.pem
+           if [ -f /etc/tcos/ssl/tcos-custom.pem ]; then
+             stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel-custom.conf > /dev/null 2>&1 &
+           else
+             stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
+           fi
+        fi
         $DAEMON $DAEMON_ARGS >> /var/lib/tcos/standalone/log/tcos-standalone.log 2>&1 || return 2
 }
 
@@ -61,6 +74,15 @@ do_start()
 #
 do_stop()
 {
+
+        # stop stunnel4
+	if [ -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid ] ; then
+          kill $(cat /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid)
+          rm -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid
+          # empty log file
+          :> /var/lib/tcos/standalone/log/stunnel.log
+        fi
+
         # kill busybox httpd
         kill $(ps aux|grep "busybox httpd" |grep -v grep | awk '{print $2}') 2>/dev/null
         

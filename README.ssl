@@ -1,0 +1,70 @@
+
+  #####################################################
+
+           SSL over TCOSXMLRPC Readme
+
+  #####################################################
+
+
+  TcosXMLRPC server receive a lot of info like others HTTP 
+  servers in plain text.
+
+  Some of this info is user and password strings that are used
+  to allow exec some danger actions (reboot or poweroff for example).
+
+  If you want to protect this traffic data, you can enable SSL 
+  over TcosXMLRPC (require more CPU and TcosMonitor will work a bit slow).
+
+
+  1.- Install stunnel4 package
+      (need a package with "TIMEOUTclose=0" patch enabled, see
+       http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=480496 for more info)
+
+  (FOR THIN CLIENTS)
+  2a.- In Tcosconfig, enable SSL support in services expander, and remake images.
+
+  (FOR STANDALONE)
+  2a.- In tcos-standalone app (or /etc/default/tcos-standalone)
+       enable SSL checkbox/var.
+
+
+  (FOR ALL)
+  3.- In TcosMonitor -> Preferences, enable SSL over XMLRPC checkbox.
+
+
+  From now all traffic between TcosMonitor and thin clients /standalone
+  hosts will pass throuth SSL layer.
+
+  You can check it with tcpdump, wireshark, or ssldump.
+
+  ##########################################################################
+
+  * How to create SSL keys for stunnel (from README.Debian stunnel4 package)
+
+  ##########################################################################
+
+
+   The certificates default directory is /etc/tcos/ssl, so cd into that dir 
+   and issue the command:
+
+     cd /etc/tcos/ssl
+     openssl req -new -x509 -nodes -days 365 -out tcos-custom.pem -keyout tcos-custom.pem
+
+   Fill in the info requested. 
+
+     chmod 600 tcos-custom.pem
+
+   Now you need to append the DH parameters to the certificate.
+
+   First you need to generate some amount of random data:
+
+     dd if=/dev/urandom of=temp_file count=2
+
+   And now make openssl generate the DH parameters and append them to the
+   certificate file:
+
+     openssl dhparam -rand temp_file 512 >> tcos-custom.pem
+     rm -f temp_file
+
+   IMPORTANT:
+     Certificate name need to be tcos-custom.pem (don't use another name)

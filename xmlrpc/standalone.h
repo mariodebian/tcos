@@ -29,10 +29,15 @@
 #define STANDALONE_TIME    "/usr/lib/tcos/tcos-last --time 2>/dev/null"
 #define STANDALONE_EXCLUDE    "/usr/lib/tcos/tcos-last --ingroup"
 
+/*
+stunnel4 break STANDALONE_SERVER
+#define STANDALONE_SERVER grep "tcosxmlrpc accepted connection" /var/log/stunnel.log |tail -1 | awk '{print $NF}'| awk -F ":" '{print $1}'
+*/
+
 #ifdef IS_STANDALONE
-  #define STANDALONE_SERVER  "tail -1 /var/lib/tcos/standalone/log/access.log | awk '{print $1}'"
+  #define STANDALONE_SERVER  "/usr/lib/tcos/get_server"
 #else
-  #define STANDALONE_SERVER  "tail -1 /var/log/access.log | awk '{print $1}'"
+  #define STANDALONE_SERVER  "/bin/get_server"
 #endif
 
 /* messages */

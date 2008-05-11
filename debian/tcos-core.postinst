@@ -1,6 +1,8 @@
 #!/bin/bash
 #set -e
 
+[ -e /etc/tcos/ssl/tcos.pem ] && chmod 600 /etc/tcos/ssl/tcos.pem
+
 # Rename 82export_pulseaudio => 80export_pulseaudio
 # need to remove old file
 
