@@ -28,30 +28,13 @@
 #include "validate.h"
 
 
-void
-split_login( struct info *login )
-{
-int i;
-char *p;
-  p = strtok (login->line,":");
-  i=0;
-  while (p != NULL)
-  {
-    if(i==0){
-      login->user=p;
-      i++;
-    }
-    else if(i==1){
-      login->pass=p;
-      i++;
-    }
-    p = strtok (NULL, "");
+void free_tokens( char **tokens) {
+  int i=0;
+  for(i = 0; tokens[i] != NULL; i++) {
+    free(tokens[i]);
   }
- /* clean last char of password */
- login->pass[strlen(login->pass)-1]='\0';
+  free(tokens);
 }
-
-
 
 
 char *validate_tcos(char *user, char *pass)
@@ -60,6 +43,8 @@ char *validate_tcos(char *user, char *pass)
   char *cryptpass;
   FILE *fp;
   char line[BSIZE];
+  char **tokens = NULL;
+  int i=0;
   struct info *login=malloc(sizeof(struct info));
   fp = fopen ("/etc/tcospasswd", "r" );
   if (fp == NULL) {
@@ -70,16 +55,33 @@ char *validate_tcos(char *user, char *pass)
   fgets( line, sizeof line, fp);
   strncpy(login->line, line, BSIZE);
   fclose(fp);
-  split_login(login);
+  
+  /* split using ':' */
+  tokens = split(login->line, ":");
+
+  for(i = 0; tokens[i] != NULL; i++){
+      if (i==0) {
+        login->user=tokens[i];
+        dbgtcos("split_login() USER FOUND tokens[%d]='%s' user='%s'\n",i,tokens[i], login->user);
+      }
+      if (i == 1) {
+        login->pass=tokens[i];
+        login->pass[strlen(login->pass)-1]='\0';
+        #ifdef VISIBLE_PASSWD
+          dbgtcos("split_login() PASSWD FOUND tokens[%d]='%s', pass='%s'\n",i,tokens[i], login->pass);
+        #endif
+      }
+  }
 
   #ifdef VISIBLE_PASSWD 
-    dbgtcos( "validate_tcos() user=\"%s\" pass=\"%s\"\n", login->user, login->pass);
+    dbgtcos( "validate_tcos() login->user=\"%s\" login->pass=\"%s\"\n", login->user, login->pass);
   #endif
 
   dbgtcos( "validate_tcos() check users user=\"%s\" my_user=\"%s\"\n", user, login->user);
 
   if ( strcmp(login->user, user) != 0 ) {
-     dbgtcos("error validate_passwd(): BAD USER.\n");  
+     dbgtcos("error validate_passwd(): BAD USER.\n");
+     free_tokens(tokens);
      return LOGIN_NOUSER;
   }
 
@@ -92,10 +94,12 @@ char *validate_tcos(char *user, char *pass)
   if ( strcmp(login->pass, cryptpass) == 0 ) {
      dbgtcos("info validate_passwd(): LOGIN OK.\n");
      free(login);
+     free_tokens(tokens);
      return LOGIN_OK;
   }
   dbgtcos("info validate_passwd(): BAD PASSWORD.\n");
   free(login);
+  free_tokens(tokens);
   return LOGIN_NOPASS;
 }
 

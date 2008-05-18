@@ -30,6 +30,10 @@
 #define FILE_CONTENT_ERROR_MEM  "error: unable to malloc memory"
 #define FILE_CONTENT_ERROR_FILE "error: file not found"
 
+/* for split function */
+#define MAXTOKENS 256
+
+
 typedef struct ip_address {
   int data[4] ;
   int is_ip;

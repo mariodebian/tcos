@@ -5,8 +5,12 @@ initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
     - Add support for tunnelize XMLRPC connection ussing stunnel4
   * tcos-standalone/
     - Update tcos-standalone GUI to allow enabling SSL
+  * xmlrpc/common.h xmlrpc/common.c xmlrpc/validate-tcos.c
+    xmlrpc/Makefile
+    - Use split function (common.c) instead of insecure strtok
+      Remember to free tokens after work with data.
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 11 May 2008 12:06:25 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 May 2008 18:23:20 +0200
 
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 
