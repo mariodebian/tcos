@@ -41,7 +41,7 @@ void *malloc(size_t size);
 
 int getgroups(int size, gid_t list[]);
 
-int strcmp(const char *s1, const char *s2);
+/* int strcmp(const char *str1, const char *str2); */
 char *strtok( char *str1, const char *str2 );
 
 #define MAXTOKENS       256
