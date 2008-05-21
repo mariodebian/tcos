@@ -7,8 +7,19 @@ if ! getent group tcos >/dev/null; then
 fi
 
 # make sure that tcos.conf is not all readable
-chmod 640 /etc/tcos/tcos.conf
-chown root:tcos /etc/tcos/tcos.conf
+chmod -f 640 /etc/tcos/tcos.conf
+chown -f root:tcos /etc/tcos/tcos.conf
+
+chmod -f 775 /var/lib/tcos/tftp/conf
+chown -f root:tcos /var/lib/tcos/tftp/conf
+
+chown -f root:tcos /etc/tcos/secrets
+chmod -f 770 /etc/tcos/secrets
+
+if [ -e /usr/lib/tcos/tnc ];then
+   chown -f root:tcos /usr/lib/tcos/tnc
+   chmod -f 4750 /usr/lib/tcos/tnc
+fi
 
 # create file
 touch /etc/tcos/modules

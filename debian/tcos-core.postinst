@@ -3,6 +3,11 @@
 
 [ -e /etc/tcos/ssl/tcos.pem ] && chmod 600 /etc/tcos/ssl/tcos.pem
 
+if [ -e /usr/lib/tcos/tnc ];then
+   chown -f root:root /usr/lib/tcos/tnc
+   chmod -f 0700 /usr/lib/tcos/tnc
+fi
+
 # Rename 82export_pulseaudio => 80export_pulseaudio
 # need to remove old file
 

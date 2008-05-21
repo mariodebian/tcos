@@ -52,6 +52,7 @@ cpifexists ${TCOS_BINS}/lockscreen  /usr/bin/
 cpifexists ${TCOS_BINS}/screensize  /usr/bin/
 cpifexists ${TCOS_BINS}/lockvlc     /usr/bin/
 cpifexists ${TCOS_BINS}/lockvnc     /usr/bin/
+cpifexists ${TCOS_BINS}/get_server  /usr/bin/
 
 # copy locked image
 mkdir -p ${DESTDIR}/usr/share/tcos-core/

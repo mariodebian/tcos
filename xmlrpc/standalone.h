@@ -37,7 +37,7 @@ stunnel4 break STANDALONE_SERVER
 #ifdef IS_STANDALONE
   #define STANDALONE_SERVER  "/usr/lib/tcos/get_server"
 #else
-  #define STANDALONE_SERVER  "/bin/get_server"
+  #define STANDALONE_SERVER  "/usr/bin/get_server"
 #endif
 
 /* messages */

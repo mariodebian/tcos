@@ -1,5 +1,6 @@
 initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
 
+  [ Mario Izquierdo (mariodebian) ]
   * hooks-addons/10ssl_tunnel xmlrpc/var/etc/stunnel conf/base.conf
     conf/tcos.pem debian/tcos-standalone README.ssl
     - Add support for tunnelize XMLRPC connection ussing stunnel4
@@ -10,7 +11,20 @@ initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
     - Use split function (common.c) instead of insecure strtok
       Remember to free tokens after work with data.
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 18 May 2008 18:23:20 +0200
+  [ Ignacio Vidal ]
+  * debian/control debian/tcos-core.postinst debian/initramfs-tools-tcos.postinst
+    - Add stunnel4 depend
+    - Control permissions
+  * tnc/* xmlrpc/tcosxmlrpc.c xmlrpc/tnc.c xmlrpc/tnc.h
+    - Add Tcos net controller for iptables
+  * xmlrpc/sh/vnc-controller.sh
+    - Fix demo mode?
+  * xmlrpc/sh/update-tcospasswd.sh
+    - Support more params for automatic actions
+  * xmlrpc/standalone.h hooks-addons/25tcosmonitor
+    - Update support get_server
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 21 May 2008 16:39:53 +0200
 
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 

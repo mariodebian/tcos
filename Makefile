@@ -12,6 +12,7 @@ all:
 	cd xmlrpc      && make
 	cd udev        && make
 	cd lockscreen  && make
+	cd tnc         && make
 	cd dbus        && make
 	cd session-cmd && make
 	cd tcos-standalone && make
@@ -31,6 +32,7 @@ clean:
 	cd xmlrpc      && make clean
 	cd udev        && make clean
 	cd lockscreen  && make clean
+	cd tnc         && make clean
 	cd dbus        && make clean
 	cd session-cmd && make clean
 	cd tcos-standalone && make clean
@@ -62,6 +64,7 @@ install:
 	install -d $(DESTDIR)/$(TCOS_CONF)/ssl
 	install -d $(DESTDIR)/$(TCOS_CONF)/hooks-addons/
 	install -d $(DESTDIR)/$(TCOS_CONF)/conf.d/
+	install -d $(DESTDIR)/$(TCOS_CONF)/secrets/
 	install -d $(DESTDIR)/$(TCOS_DIR)
 	install -d $(DESTDIR)/$(TCOS_DIR)/hooks
 	install -d $(DESTDIR)/$(TCOS_DIR)/hooks-addons
@@ -184,6 +187,9 @@ install:
 
 	# lockscreen
 	cd lockscreen && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
+
+	# tcos net controller
+	cd tnc && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
 
 	# dbus conf file
 	cd dbus && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
