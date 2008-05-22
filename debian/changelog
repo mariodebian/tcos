@@ -23,8 +23,10 @@ initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
     - Support more params for automatic actions
   * xmlrpc/standalone.h hooks-addons/25tcosmonitor
     - Update support get_server
+  * xmlrpc/sh/getinfo.sh
+    - Fix broken xmlrpc data broken by accents
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 21 May 2008 16:39:53 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Thu, 22 May 2008 15:26:40 +0200
 
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 

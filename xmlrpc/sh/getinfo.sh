@@ -138,7 +138,7 @@ else
 fi
 num_lines=$(cat /tmp/ps.aux | wc -l)
 for i in $(seq 1 $num_lines); do
-  echo -n "$(get_line $i)|"
+  echo -n "$(get_line $i)|" | unaccent UTF8
 done
 echo
 rm -f /tmp/ps.aux
