@@ -10,6 +10,10 @@ initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
     xmlrpc/Makefile
     - Use split function (common.c) instead of insecure strtok
       Remember to free tokens after work with data.
+  * bin/clean_string.sh xmlrpc/sh/getinfo.sh debian/control:
+    - Revert unaccent change, add script with sed to replace
+      some accents and strange characters
+  * Update conf/tcos.pem with a new openssl key
 
   [ Ignacio Vidal ]
   * debian/control debian/tcos-core.postinst debian/initramfs-tools-tcos.postinst
@@ -26,7 +30,7 @@ initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
   * xmlrpc/sh/getinfo.sh
     - Fix broken xmlrpc data broken by accents
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Thu, 22 May 2008 15:26:40 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 22 May 2008 23:03:13 +0200
 
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 

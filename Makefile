@@ -165,7 +165,8 @@ install:
 	install -m 755 bin/clear-logs      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/rsync-controller  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/down-controller   $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 bin/get_server      $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/get_server        $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/clean_string.sh   $(DESTDIR)/$(TCOS_BINS)/
 
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 

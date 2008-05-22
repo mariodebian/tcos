@@ -131,14 +131,15 @@ if [ "$STANDALONE" = "1" ]; then
     echo "PID COMMAND" > /tmp/ps.aux
     echo "66000 User root not allowed to show process" >> /tmp/ps.aux
   else
-    LANG=C ps U ${user} -o pid,command > /tmp/ps.aux
+    LANG=C ps U ${user} -o pid,command | /usr/lib/tcos/clean_string.sh > /tmp/ps.aux
   fi
 else
+  # FIXME Thin client need clean_string.sh???
   ps aux > /tmp/ps.aux
 fi
 num_lines=$(cat /tmp/ps.aux | wc -l)
 for i in $(seq 1 $num_lines); do
-  echo -n "$(get_line $i)|" | unaccent UTF8
+  echo -n "$(get_line $i)|"
 done
 echo
 rm -f /tmp/ps.aux
