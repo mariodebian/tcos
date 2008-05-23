@@ -14,7 +14,7 @@ chmod -f 775 /var/lib/tcos/tftp/conf
 chown -f root:tcos /var/lib/tcos/tftp/conf
 
 chown -f root:tcos /etc/tcos/secrets
-chmod -f 770 /etc/tcos/secrets
+chmod -f 775 /etc/tcos/secrets
 
 if [ -e /usr/lib/tcos/tnc ];then
    chown -f root:tcos /usr/lib/tcos/tnc

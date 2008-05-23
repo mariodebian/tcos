@@ -2,11 +2,11 @@
 
 set -e
 
-
 # on purge delete tcos-standalone daemon
 case "$1" in
-    purge)
+    purge|remove)
        update-rc.d -f tcos-standalone remove >/dev/null ||true
+       rm -rf /var/lib/tcos/standalone/*
     ;;
 esac
 

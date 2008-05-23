@@ -29,8 +29,10 @@ initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
     - Update support get_server
   * xmlrpc/sh/getinfo.sh
     - Fix broken xmlrpc data broken by accents
+  * debian/*
+    - Fix postrm and prerm
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 22 May 2008 23:03:13 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 23 May 2008 10:53:08 +0200
 
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 

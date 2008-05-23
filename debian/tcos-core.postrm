@@ -19,8 +19,10 @@ case "$1" in
     configure|reconfigure)
       reload_dbus
     ;;
-    purge)
-       delgroup --quiet --system tcosmonitor-exclude > /dev/null || true
+    purge|remove)
+       if getent group tcosmonitor-exclude >/dev/null; then
+           delgroup --quiet --system tcosmonitor-exclude > /dev/null || true
+       fi
        rm -f /etc/dbus/system.d/tcosmonitor.conf
        reload_dbus
     ;;
