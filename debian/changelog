@@ -2,8 +2,9 @@ initramfs-tools-tcos (0.89~rc5) unstable; urgency=low
 
   * bin/clean_string.sh
     - Use /bin/bash as shell, dash read don't have -t param
+  * Update Debian unstable kernel to 2.6.25-2-486
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 May 2008 16:35:19 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 May 2008 16:36:53 +0200
 
 initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
 

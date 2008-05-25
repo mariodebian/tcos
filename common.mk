@@ -20,7 +20,7 @@ USPLASH_etch=0.3
 KERNEL_testing="2.6.24-1-486"
 USPLASH_testing=0.4.1
 
-KERNEL_unstable="2.6.24-1-486"
+KERNEL_unstable="2.6.25-2-486"
 USPLASH_unstable=0.4.1
 
 KERNEL_experimental="2.6.24-1-486"
