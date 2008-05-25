@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.89~rc5) unstable; urgency=low
+
+  * bin/clean_string.sh
+    - Use /bin/bash as shell, dash read don't have -t param
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 May 2008 16:35:19 +0200
+
 initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]
@@ -32,7 +39,10 @@ initramfs-tools-tcos (0.89~rc4) unstable; urgency=low
   * debian/*
     - Fix postrm and prerm
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 23 May 2008 10:53:08 +0200
+  [ Mario Izquierdo (mariodebian) ]
+  * bin/clean_string.sh
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 May 2008 16:34:41 +0200
 
 initramfs-tools-tcos (0.89~rc3) unstable; urgency=low
 

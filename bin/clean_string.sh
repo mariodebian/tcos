@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #  Replace accents and other stuff
 #  (break xmlrpc and xml.sax parser)
