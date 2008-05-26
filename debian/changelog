@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.89~rc6) unstable; urgency=low
+
+  * xmlrpc/sh/tcos-last
+    - Use while 1 loop to retrieve last users connected
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 26 May 2008 17:09:33 +0200
+
 initramfs-tools-tcos (0.89~rc5) unstable; urgency=low
 
   * bin/clean_string.sh

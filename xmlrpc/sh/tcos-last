@@ -32,6 +32,23 @@ import pwd,grp
 
 import utmp
 from UTMPCONST import *
+"""
+ACCOUNTING = 9
+BOOT_TIME = 2
+DEAD_PROCESS = 8
+EMPTY = 0
+INIT_PROCESS = 5
+LOGIN_PROCESS = 6
+NEW_TIME = 3
+OLD_TIME = 4
+RUN_LVL = 1
+USER_PROCESS = 7
+UT_HOSTSIZE = 256
+UT_IDSIZE = 4
+UT_LINESIZE = 32
+UT_NAMESIZE = 32
+UT_UNKNOWN = 0
+"""
 
 debug=False
 
@@ -110,13 +127,18 @@ def GetLast(ip):
 
     hostname=GetHostname(ip)        
     print_debug("GetLast() ip=%s hostname=%s "%(ip,hostname))
-    a = utmp.UtmpRecord()
-    for b in a:
-        if b.ut_type == USER_PROCESS:
-            #print_debug("Searching for host \"%s:0\" found %s"%(ip, b.ut_host))
+
+    a = utmp.UtmpRecord(WTMP_FILE)
+    while 1:
+        b = a.getutent()
+        if not b:
+            break
+        if b[0] == USER_PROCESS:
+            #print_debug("  => Searching for host \"%s:0\" found host=%s ut_line=%s"%(ip, b.ut_host,b.ut_line))
             if b.ut_host == "%s:0"%(ip) or b.ut_line == "%s:0"%(ip) or b.ut_host == "%s"%hostname :
                 last=b
     a.endutent()
+
     if last and os.path.isdir("/proc/%s"%last.ut_pid):
         print_debug ("diff times now %s - old %s"%(ctime(time()), ctime(last.ut_tv[0])))
         
