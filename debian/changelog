@@ -10,7 +10,10 @@ initramfs-tools-tcos (0.89~rc6) unstable; urgency=low
   * xmlrpc/sh/vnc-controller.sh
     - Fix vnc typo
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 27 May 2008 14:20:56 +0200
+  [ Mario Izquierdo (mariodebian) ]
+  * Update Ubuntu hardy kernel to 2.6.24-17-generic
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 27 May 2008 15:02:33 +0200
 
 initramfs-tools-tcos (0.89~rc5) unstable; urgency=low
 
