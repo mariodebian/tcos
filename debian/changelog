@@ -7,8 +7,10 @@ initramfs-tools-tcos (0.89~rc6) unstable; urgency=low
   [ Ignacio Vidal ]
   * xmlrpc/sh/tcos-last
     - With method last fix problem with users much time logged
+  * xmlrpc/sh/vnc-controller.sh
+    - Fix vnc typo
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 27 May 2008 13:10:48 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 27 May 2008 14:20:56 +0200
 
 initramfs-tools-tcos (0.89~rc5) unstable; urgency=low
 
