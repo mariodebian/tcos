@@ -305,14 +305,14 @@ create_isolinux_iso() {
  create_initramfs
  cp ${INITRAMFS} ${dir}/isolinux/initrd.cdrom
 
- parse_pxelinuxcfg ${dir}/isolinux/isolinux.cfg
+ parse_pxelinuxcfg ${dir}/isolinux/isolinux.cfg isolinux
  sed -i s/"vmlinuz-${TCOS_KERNEL}"/"vmlinuz"/g ${dir}/isolinux/isolinux.cfg
  sed -i s/"initramfs-${TCOS_KERNEL}"/"initrd.cdrom"/g ${dir}/isolinux/isolinux.cfg
 
- cp ${TFTP_DIR}/logo.lss ${dir}/isolinux/
- cp ${TFTP_DIR}/tcos.msg ${dir}/isolinux/
- cp ${TFTP_DIR}/help.msg ${dir}/isolinux/
- cp ${TFTP_DIR}/help2.msg ${dir}/isolinux/
+ cp ${TFTP_DIR}/${TFTP_LOGO_LSS} ${dir}/isolinux/
+ cp ${TFTP_DIR}/${TFTP_MSG} ${dir}/isolinux/
+ cp ${TFTP_DIR}/${TFTP_MSG_HELP1} ${dir}/isolinux/
+ cp ${TFTP_DIR}/${TFTP_MSG_HELP2} ${dir}/isolinux/
 
  cp /usr/lib/syslinux/isolinux.bin ${dir}/isolinux/
  cp /boot/vmlinuz-${TCOS_KERNEL} ${dir}/isolinux/vmlinuz

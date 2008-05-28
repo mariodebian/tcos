@@ -226,7 +226,7 @@ force_add_module() {
 }
 
 function parse_pxelinuxcfg(){
-        if [ $TCOS_NETBOOT_MENU ]; then
+        if [ $TCOS_NETBOOT_MENU ] && [ -z $2 ]; then
           TEMPLATE=${TCOS_CONF}/pxelinux.menu.cfg.tpl
           _verbose "(t-g-f) BOOT_MENU=1"
         else
@@ -265,6 +265,9 @@ function parse_pxelinuxcfg(){
             -e "s/__TCOS_NETBOOT_HIDE_INSTALL__/${TCOS_NETBOOT_HIDE_INSTALL_STRING}/g" \
             -e "s/__TCOS_NETBOOT_HIDE_LOCAL__/${TCOS_NETBOOT_HIDE_LOCAL_STRING}/g" \
             -e "s/__TCOS_MENU_PASSWD__/${TCOS_ROOT_PASSWD}/g" \
+            -e "s/__TFTP_LOGO_JPG__/${TFTP_LOGO_JPG}/g" \
+            -e "s/__TFTP_MSG_HELP1__/${TFTP_MSG_HELP1}/g" \
+            -e "s/__TFTP_MSG_HELP2__/${TFTP_MSG_HELP2}/g" \
             -e "s/__TFTP_MSG__/${TFTP_MSG}/g" ${TEMPLATE}                            >> ${DESTFILE}
         _verbose "(t-g-f) MENU_FILE=$(cat ${DESTFILE})"
 }

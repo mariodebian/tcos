@@ -2,8 +2,11 @@ initramfs-tools-tcos (0.89~rc7) unstable; urgency=low
 
   * xmlrpc/sh/tcos-last
     - Fix break
+  * conf/tcos-generation-functions.sh tcos/default.tpl tcos/default.menu.tpl bin/gentcos
+    - Parse custom msg and logo in boot menu
+    - On create cdrom iso not parse or overwrite pxe vesa menu
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 28 May 2008 09:48:33 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 28 May 2008 13:46:18 +0200
 
 initramfs-tools-tcos (0.89~rc6) unstable; urgency=low
 

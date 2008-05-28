@@ -2,9 +2,9 @@ default tcos
 prompt 1
 timeout 200
 display __TFTP_MSG__
-F0 tcos.msg
-F1 help.msg
-F2 help2.msg
+F0 __TFTP_MSG__
+F1 __TFTP_MSG_HELP1__
+F2 __TFTP_MSG_HELP2__
 
 label tcos
   kernel vmlinuz-__TCOS_KERNEL__
