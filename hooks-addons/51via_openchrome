@@ -62,21 +62,24 @@ if [ $TCOS_ETC_GENERIC ]; then
 	    manual_add_modules via
 	    manual_add_modules i2c-viapro
 
-	  stat_after "Generic eTC modules support"
+	  stat_after "Generic VIA modules support"
 
-else
+fi
+
+if [ $TCOS_XORG_DRIVER_OPENCHROME ];then
 
 	test_driver1=$(strings /usr/lib/xorg/modules/drivers/via_drv.so 2> /dev/null| grep -c openchrome)
 	test_driver2=$(strings /usr/lib/xorg/modules/drivers/openchrome_drv.so 2> /dev/null | grep -c openchrome)
 
-	if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" != 0 ] ; then
-	  stat_before
-	 
+	if [ -z $TCOS_ETC_GENERIC ];then
 	    manual_add_modules drm
 	    manual_add_modules via-agp
 	    manual_add_modules via
 	    manual_add_modules i2c-viapro
+	fi
 
+	if [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver1" != 0 ] ; then
+	  stat_before
 	    cpifexists /usr/lib/libviaXvMC.so /usr/lib
 	    cpifexists /usr/lib/libviaXvMCPro.so /usr/lib
 	    cpifexists /etc/X11/XvMCConfig       /etc/X11
@@ -90,11 +93,6 @@ else
 
 	elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver2" != 0 ] ; then
 	 stat_before
-	    manual_add_modules drm
-	    manual_add_modules via-agp
-	    manual_add_modules via
-	    manual_add_modules i2c-viapro
-
 	    cpifexists /usr/lib/libchromeXvMC.so /usr/lib
 	    cpifexists /usr/lib/libchromeXvMCPro.so /usr/lib
 	    cpifexists /etc/X11/XvMCConfig       /etc/X11

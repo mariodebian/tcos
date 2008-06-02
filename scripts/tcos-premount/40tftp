@@ -59,9 +59,9 @@ fi
 
 
 # DOCUMENTME allmodules | download with tftp allmodules.squashfs to test what modules need thin client
-TCOS_ALL_MODULES=$(read_cmdline_var "allmodules" "0")
+TCOS_ALL_MODULES_CMD=$(read_cmdline_var "allmodules" "0")
 
-if [ "$TCOS_ALL_MODULES" = "1" ]; then
+if [ "$TCOS_ALL_MODULES_CMD" = "1" ] || [ ! -z $TCOS_ALL_MODULES_DOWNLOAD ]; then
 
   if [ ! -e /mnt/tmp/allmodules-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/allmodules.squashfs ]; then
 
@@ -73,11 +73,12 @@ if [ "$TCOS_ALL_MODULES" = "1" ]; then
     _log "SQMOUNT Downloading allmodules-$(uname -r).squashfs"
     log_begin_msg "Downloading all kernel modules: allmodules-$(uname -r).squashfs"
     download_file /tcos/allmodules-$(uname -r).squashfs /mnt/tmp/allmodules-$(uname -r).squashfs
+    sync
     if [ "$(if_is_zero /mnt/tmp/allmodules-$(uname -r).squashfs)" = "0" ]; then
        echo -e "Error downloading allmodules"
        log_end_msg 1
        exit 0
-     fi
+    fi
     log_end_msg 0
   fi
   

@@ -5,8 +5,16 @@ initramfs-tools-tcos (0.89~rc7) unstable; urgency=low
   * conf/tcos-generation-functions.sh tcos/default.tpl tcos/default.menu.tpl bin/gentcos
     - Parse custom msg and logo in boot menu
     - On create cdrom iso not parse or overwrite pxe vesa menu
+  * debian/tcos-standalone.init
+    - Fix permissions
+  * scripts/tcos-premount/* xmlrpc/sh/useallmodules.sh
+    - Update allmodules support
+  * hooks-addons/40etc2300 hooks-addons/90usplash
+    - Fix disable usplash warnings
+  * hooks-addons/51via_openchrome
+    - Fix vars preference
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 28 May 2008 13:46:18 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Mon, 02 Jun 2008 15:14:04 +0200
 
 initramfs-tools-tcos (0.89~rc6) unstable; urgency=low
 

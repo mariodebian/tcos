@@ -36,7 +36,7 @@ fi
 
 log_begin_msg "Loading Intel Dot Station (Paquito) modules"
 
-  PAQUITO_MODULES=${PAQUITO_MODULES}
+  PAQUITO_MODULES="${PAQUITO_MODULES}"
   _log "PAQUITO loading modules: \${PAQUITO_MODULES}"
 
   for mod in \${PAQUITO_MODULES); do
@@ -58,6 +58,12 @@ chmod +x ${DESTDIR}/scripts/tcos-bottom/16paquito
 
 }
 
+if [ "$(pathof Xorg)" = /usr/bin/Xorg ]; then
+   XORG=7
+else
+   XORG=6
+fi
+
 # test if we have intel-drv or i810
 if [ -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
   intel_driver=intel
@@ -78,8 +84,14 @@ if [ $TCOS_PAQUITO ] && [ "$intel_driver" = "i810" ] ; then
     mkdir -p ${DESTDIR}/usr/lib/dri
     cpifexists /usr/lib/dri/i810_dri.so /usr/lib/dri
 
-    if [ ! -e $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so ]; then
-       cpifexists /usr/lib/xorg/modules/drivers/i810_drv.so /usr/lib/xorg/modules/drivers
+    if [ $XORG = 6 ];then
+        if [ ! -e $DESTDIR/usr/X11R6/lib/modules/drivers/i810_drv.so ]; then
+          cp -ra /usr/X11R6/lib/modules/drivers/i810_drv.so $DESTDIR/usr/X11R6/lib/modules/drivers
+       fi
+    else
+       if [ ! -e $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so ]; then
+          cp -ra /usr/lib/xorg/modules/drivers/i810_drv.so $DESTDIR/usr/lib/xorg/modules/drivers
+       fi
     fi
     make_launcher
 
@@ -96,8 +108,14 @@ elif [ $TCOS_PAQUITO ] && [ "$intel_driver" = "intel" ] ; then
 
     mkdir -p ${DESTDIR}/usr/lib/dri
     cpifexists /usr/lib/dri/i810_dri.so /usr/lib/dri
-    if [ ! -e $DESTDIR/usr/lib/xorg/modules/drivers/intel_drv.so ]; then
-       cpifexists /usr/lib/xorg/modules/drivers/intel_drv.so /usr/lib/xorg/modules/drivers
+    if [ $XORG = 6 ];then
+        if [ ! -e $DESTDIR/usr/X11R6/lib/modules/drivers/intel_drv.so ]; then
+          cp -ra /usr/X11R6/lib/modules/drivers/intel_drv.so $DESTDIR/usr/X11R6/lib/modules/drivers
+       fi
+    else
+       if [ ! -e $DESTDIR/usr/lib/xorg/modules/drivers/intel_drv.so ]; then
+          cp -ra /usr/lib/xorg/modules/drivers/intel_drv.so $DESTDIR/usr/lib/xorg/modules/drivers
+       fi
     fi
     make_launcher
 

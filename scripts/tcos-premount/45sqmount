@@ -73,14 +73,14 @@ fi
 
 
 # DOCUMENTME allmodules | download with tftp allmodules.squashfs to test what modules need thin client
-TCOS_ALL_MODULES=$(read_cmdline_var "allmodules" "0")
+TCOS_ALL_MODULES_CMD=$(read_cmdline_var "allmodules" "0")
 
-if [ "$TCOS_ALL_MODULES" = "1" ] && [ -f ${MOD_SQUASH} ]; then
-
+if [ "$TCOS_ALL_MODULES_CMD" = "1" ] || [ ! -z $TCOS_ALL_MODULES_DOWNLOAD ]; then
+  if [ -f ${MOD_SQUASH} ]; then
   log_begin_msg "Mounting allmodules.squashfs"
     mount -r -o loop -t squashfs ${MOD_SQUASH} /lib/modules/$(uname -r)/ >> /tmp/initramfs.debug 2>&1
   log_end_msg $?
-
+  fi
 fi
 
 

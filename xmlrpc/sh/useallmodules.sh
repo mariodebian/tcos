@@ -26,7 +26,10 @@ if [ ! -e /conf/tcos.conf ]; then
    exit 1
 fi
 
-[ -f /tmp/allmodules_done ] && echo "OK"; exit 0
+if [ -f /tmp/allmodules_done ];then
+   echo "OK"
+   exit 0
+fi
 
 touch /tmp/allmodules_done
 
@@ -37,7 +40,9 @@ touch /tmp/allmodules_done
 
 allmodules=/mnt/tmp/allmodules.squashfs
 
+
 download_file /tcos/allmodules-$(uname -r).squashfs ${allmodules}
+
 if [ "$(if_is_zero ${allmodules})" = "0" ]; then
    echo "error: allmodules-$(uname -r).squashfs not found, generate it with gentcos -tftp -allmodules"
    exit 0

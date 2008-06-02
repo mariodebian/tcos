@@ -5,7 +5,17 @@ if [ $TCOS_ETC2300 ]; then
   rm -f ${DESTDIR}/lib/usplash
   rm -f ${DESTDIR}/sbin/usplash
   rm -f ${DESTDIR}/sbin/usplash_write
-
+  rm -f $DESTDIR/usr/lib/usplash/*.so
+  cat << EOF > ${DESTDIR}/sbin/usplash
+#!/bin/sh
+exit 0
+EOF
+  chmod +x ${DESTDIR}/sbin/usplash
+  cat << EOF > ${DESTDIR}/sbin/usplash_write
+#!/bin/sh
+exit 0
+EOF
+  chmod +x ${DESTDIR}/sbin/usplash_write
   stat_before
  
     manual_add_modules ac97_codec

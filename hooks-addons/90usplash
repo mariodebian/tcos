@@ -4,6 +4,17 @@ if [ $TCOS_DISABLE_UPLASH ]; then
   rm -f ${DESTDIR}/lib/usplash
   rm -f ${DESTDIR}/sbin/usplash
   rm -f ${DESTDIR}/sbin/usplash_write
+  rm -f $DESTDIR/usr/lib/usplash/*.so
+  cat << EOF > ${DESTDIR}/sbin/usplash
+#!/bin/sh
+exit 0
+EOF
+  chmod +x ${DESTDIR}/sbin/usplash
+  cat << EOF > ${DESTDIR}/sbin/usplash_write
+#!/bin/sh
+exit 0
+EOF
+  chmod +x ${DESTDIR}/sbin/usplash_write
   _verbose "(90usplash) TCOS_DISABLE_USPLASH enabled !!!"
 else
 
