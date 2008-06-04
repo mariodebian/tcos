@@ -31,8 +31,6 @@ if [ -f /tmp/allmodules_done ];then
    exit 0
 fi
 
-touch /tmp/allmodules_done
-
 . /scripts/functions
 
 . /conf/tcos.conf
@@ -48,6 +46,7 @@ if [ "$(if_is_zero ${allmodules})" = "0" ]; then
    exit 0
 fi
 
+touch /tmp/allmodules_done
 
 # mount
 mount -r -o loop -t squashfs ${allmodules} /lib/modules/$(uname -r)/

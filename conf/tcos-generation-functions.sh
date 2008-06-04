@@ -227,10 +227,10 @@ force_add_module() {
 
 function parse_pxelinuxcfg(){
         if [ $TCOS_NETBOOT_MENU ] && [ -z $2 ]; then
-          TEMPLATE=${TCOS_CONF}/pxelinux.menu.cfg.tpl
+          TEMPLATE=${TCOS_CONF}/${TCOS_PXECFG_MENU}
           _verbose "(t-g-f) BOOT_MENU=1"
         else
-          TEMPLATE=${TCOS_CONF}/pxelinux.cfg.tpl
+          TEMPLATE=${TCOS_CONF}/${TCOS_PXECFG}
           _verbose "(t-g-f) BOOT_MENU=0"
         fi
 

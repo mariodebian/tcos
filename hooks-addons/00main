@@ -23,6 +23,14 @@ grep -v "^#" $DESTDIR/conf/tcos.conf | grep "=" | grep -v "^TEMPLATE" > $DESTDIR
 mv $DESTDIR/conf/tcos.conf.tmp $DESTDIR/conf/tcos.conf
 
 
+# create /etc/tcospasswd if exists tcosmonitor secret passwd
+if [ -e /etc/tcos/secrets/tcosmonitor-secret ]; then
+   secret1="$(cat /etc/tcos/secrets/tcosmonitor-secret | awk -F":" '{print $1}')"
+   secret2="$(cat /etc/tcos/secrets/tcosmonitor-secret | awk -F":" '{print $2}' | xargs tcospasswd)"
+   echo "$secret1:$secret2" > $DESTDIR/etc/tcospasswd
+fi
+
+
 # make some dirs
 [ -d $DESTDIR/dev ]  || mkdir -m 0755 $DESTDIR/dev
 [ -d $DESTDIR/root ] || mkdir --mode=0700 $DESTDIR/root

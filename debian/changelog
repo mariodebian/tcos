@@ -5,8 +5,14 @@ initramfs-tools-tcos (0.89~rc8) unstable; urgency=low
     - Move prerm to postrm to fix purge problem
   * xmlrpc/sh/screenshot.sh
     - Disable temporarily system beep on get screenshot in standalone
+  * conf/*
+    - Also allow personalize template pxelinux
+  * hooks/tcosbin
+    - Fix creation of allmodules squashfs (mariodebian)
+  * hooks-addons/00main
+    - Create /etc/tcospasswd if exists generic user and passwd secret file
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 04 Jun 2008 09:39:25 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 04 Jun 2008 15:15:21 +0200
 
 initramfs-tools-tcos (0.89~rc7) unstable; urgency=low
 

@@ -11,6 +11,8 @@ TFTP_MSG_HELP1=help.msg
 TFTP_MSG_HELP2=help2.msg
 TFTP_LOGO_LSS=logo.lss
 TFTP_LOGO_JPG=pxetcos.jpg
+TCOS_PXECFG=pxelinux.cfg.tpl
+TCOS_PXECFG_MENU=pxelinux.menu.cfg.tpl
 TCOS_TEMPLATES_DIR=/usr/share/initramfs-tools-tcos/templates
 
 ISOS="/var/lib/tcos/isos"
