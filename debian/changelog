@@ -3,8 +3,10 @@ initramfs-tools-tcos (0.89~rc8) unstable; urgency=low
   * debian/tcos-core.postrm debian/initramfs-tools-tcos.prerm
     - Fix delete of group tcos in upgrades
     - Move prerm to postrm to fix purge problem
+  * xmlrpc/sh/screenshot.sh
+    - Disable temporarily system beep on get screenshot in standalone
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 03 Jun 2008 12:23:00 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 04 Jun 2008 09:39:25 +0200
 
 initramfs-tools-tcos (0.89~rc7) unstable; urgency=low
 

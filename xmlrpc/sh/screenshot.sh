@@ -23,6 +23,8 @@
 
 export DISPLAY=:0
 
+beepoff=""
+beepon=""
 
 if [ -e /conf/tcos-run-functions ]; then
   _www=/var/www
@@ -35,6 +37,8 @@ else
   if [ "$user" = "root" ]; then echo -n "error: root not allowed"; exit 1; fi
   export XAUTHORITY=$home/.Xauthority
   export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
+  beepoff="xset b off"
+  beepon="xset b on"
 fi
 
 
@@ -48,9 +52,9 @@ fi
 mkdir -p $_www
 rm -rf $_www/*
 cd $_www
-
+$($beepoff)
 scrot 'capture.jpg' -t $_thumb_size
-
+$($beepon)
 # new Base64 getscreenshot don't need html files
 exit 0
 
