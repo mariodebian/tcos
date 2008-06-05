@@ -9,10 +9,12 @@ initramfs-tools-tcos (0.89~rc8) unstable; urgency=low
     - Also allow personalize template pxelinux
   * hooks/tcosbin
     - Fix creation of allmodules squashfs (mariodebian)
-  * hooks-addons/00main
+  * hooks-addons/00main hooks-addons/00users
     - Create /etc/tcospasswd if exists generic user and passwd secret file
+    - Moved to 00users and update password root with this secret method to avoid 
+      plain password of root in tcos.conf
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 04 Jun 2008 15:15:21 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Thu, 05 Jun 2008 17:04:38 +0200
 
 initramfs-tools-tcos (0.89~rc7) unstable; urgency=low
 

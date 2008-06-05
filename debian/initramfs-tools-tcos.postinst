@@ -10,11 +10,19 @@ fi
 chmod -f 640 /etc/tcos/tcos.conf
 chown -f root:tcos /etc/tcos/tcos.conf
 
+chown -f -R root:tcos /var/lib/tcos/tftp/conf
 chmod -f 775 /var/lib/tcos/tftp/conf
-chown -f root:tcos /var/lib/tcos/tftp/conf
+chmod -f -R 664 /var/lib/tcos/tftp/conf/*
 
-chown -f root:tcos /etc/tcos/secrets
-chmod -f 775 /etc/tcos/secrets
+chown -f -R root:tcos /etc/tcos/secrets
+chmod -f 755 /etc/tcos/secrets
+chmod -f -R 640 /etc/tcos/secrets/*
+
+if [ -d /etc/tcos/templates ];then
+   chown -f -R root:tcos /etc/tcos/templates
+   chmod -f 755 /etc/tcos/templates
+   chmod -f -R 640 /etc/tcos/templates/*
+fi
 
 if [ -e /usr/lib/tcos/tnc ];then
    chown -f root:tcos /usr/lib/tcos/tnc

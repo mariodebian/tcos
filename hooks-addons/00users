@@ -6,6 +6,18 @@ if [ "${TCOS_INCLUDE_INIT}" != "1" ]; then
 fi
 cpifexists /etc/login.defs    /etc
 
+root_shadow="root:QIO6IpW6SDbVI:13562:0:99999:7:::"
+
+# create /etc/tcospasswd if exists tcosmonitor secret passwd
+if [ -e /etc/tcos/secrets/tcosmonitor-secret ]; then
+   secret1="$(cat /etc/tcos/secrets/tcosmonitor-secret | awk -F":" '{print $1}')"
+   secret2="$(cat /etc/tcos/secrets/tcosmonitor-secret | awk -F":" '{print $2}')"
+   secret2_tcospasswd="$(echo "$secret2" | xargs tcospasswd)"
+   secret2_passwd="$(echo "$secret2" | xargs mkpasswd)"
+   echo "$secret1:$secret2_tcospasswd" > $DESTDIR/etc/tcospasswd
+   root_shadow="root:${secret2_passwd}:13562:0:99999:7:::"
+fi
+
 
 # create /etc/passwd /etc/shadow and /etc/group
 
@@ -22,7 +34,7 @@ EOF
 
 # default password for root user is "root"
 cat << EOF >> $DESTDIR/etc/shadow
-root:QIO6IpW6SDbVI:13562:0:99999:7:::
+${root_shadow}
 daemon:*:13250:0:99999:7:::
 bin:*:13250:0:99999:7:::
 sys:*:13250:0:99999:7:::
