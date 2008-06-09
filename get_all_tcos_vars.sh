@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ALL_VARS1=$(rgrep "\$TCOS_" * |grep -v svn | awk -F'TCOS_' '{print "TCOS_"$2}' | \
+ALL_VARS1=$(rgrep "\$TCOS_" * |grep -v svn |grep -v "\.py" |grep -v "debian/" | awk -F'TCOS_' '{print "TCOS_"$2}' | \
  awk '{print $1}' | awk -F"=" '{print $1}' | awk -F"/" '{print $1}' | \
  sed 's/)//g' | sed 's/}//g' | sed 's/"//g'| sed 's/;//g' |sort | uniq)
 

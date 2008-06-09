@@ -10,6 +10,10 @@ fi
 chmod -f 640 /etc/tcos/tcos.conf
 chown -f root:tcos /etc/tcos/tcos.conf
 
+chmod -f 775 /var/lib/tcos/tftp/pxelinux.cfg
+chown -f -R root:tcos /var/lib/tcos/tftp/pxelinux.cfg
+chmod -f -R 640 /var/lib/tcos/tftp/pxelinux.cfg/* 2>/dev/null || true
+
 chown -f -R root:tcos /etc/tcos/secrets
 chmod -f 755 /etc/tcos/secrets
 chmod -f -R 640 /etc/tcos/secrets/* 2>/dev/null || true
