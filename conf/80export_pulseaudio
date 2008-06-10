@@ -4,7 +4,7 @@
 
 DISPLAY_HOST=$(echo $DISPLAY| awk -F ":" '{print $1}')
 
-if [ "x${DISPLAY_HOST}" != "x" ]; then
+if [ ! -z ${DISPLAY_HOST} ]; then
   # export PulseAudio server
   export PULSE_SERVER="${DISPLAY_HOST}"
   export ESPEAKER="${DISPLAY_HOST}"

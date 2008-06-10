@@ -231,7 +231,7 @@ if [ $(echo $hostname | awk '{print split($1, A, ":")}') -gt 1 ]; then
   fi
 fi
 
-if [ "x{$hostname}" = "x" ] || [ "x{$hostname}" = "x " ]; then
+if [ -z $hostname ] || [ "x{$hostname}" = "x " ]; then
   panic "ERROR: DHCP server don't give me a hostname !!! Edit /etc/hosts in dhcp server"
 fi
 

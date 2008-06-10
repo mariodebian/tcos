@@ -170,7 +170,7 @@ read_cmdline_var() {
                 ;;
         esac
  done
- if [ "x${var}" != "x" ]; then
+ if [ ! -z ${var} ]; then
   echo "${var}"
   _log "read_cmdline() reading $1 cmdline=${var}"
  else

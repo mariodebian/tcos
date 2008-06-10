@@ -23,7 +23,7 @@
 [ -e /etc/default/tcos-standalone ] && . /etc/default/tcos-standalone
 
 DISPLAY_HOST=$(echo $DISPLAY| awk -F ":" '{print $1}')
-if [ "x${DISPLAY_HOST}" = "x" ] && [ "${TCOS_STANDALONE_START}" != "1" ]; then
+if [ -z ${DISPLAY_HOST} ] && [ "${TCOS_STANDALONE_START}" != "1" ]; then
   exit 0
 fi
 ################# end ####################
