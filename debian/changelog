@@ -4,8 +4,16 @@ initramfs-tools-tcos (0.89~rc9) unstable; urgency=low
   * bin/tcos-buildchroot:
     - Fix new template parse
     - Add new preseed var to kernel (>2.6.25 need it)
+    - Add standalone xauth package to new distros
+    - Copy console keymap
+  * hooks-addons/25tcosmonitor
+    - Delete start-stop-daemon of image before copying
+  * common.mk
+    - Update Ubuntu hardy and MaX4.0 kernel version
+  * hooks/tcosmods
+    - Search sound/isa patch, don't use debian default path
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 18 Jun 2008 16:57:22 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 18 Jun 2008 18:06:14 +0200
 
 initramfs-tools-tcos (0.89~rc8) unstable; urgency=low
 

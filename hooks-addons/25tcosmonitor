@@ -62,6 +62,9 @@ else
   cp /usr/share/tcos-core/lockscreen.png ${DESTDIR}/usr/share/tcos-core/
 fi
 
+# delete (if exists) start-stop-daemon and copy again
+rm -f $DESTDIR/sbin/start-stop-daemon
+
 # in tcos-buildchroot we save this exe file in start-stop-daemon.original
 if [ -e /sbin/start-stop-daemon.original ]; then
   copy_exec /sbin/start-stop-daemon.original  /sbin/

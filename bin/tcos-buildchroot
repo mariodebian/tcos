@@ -80,10 +80,11 @@ set_conf() {
       if [ ! $MIRROR ]; then MIRROR=$DEBIAN_DEF_MIRROR ; fi
       DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools "
       DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi "
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
-      if [ ${TCOS_DISTRO} = "testing" -o ${TCOS_DISTRO} = "lenny" -o ${TCOS_DISTRO} = "unstable" ];then
-        TCOS_PACKAGES="${TCOS_PACKAGES} xauth openbsd-inetd"
-      fi
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools openbsd-inetd"
+    fi
+
+    if [ ${TCOS_DISTRO} = "testing" -o ${TCOS_DISTRO} = "lenny" -o ${TCOS_DISTRO} = "unstable" -o ${TCOS_DISTRO} = "hardy" ];then
+      TCOS_PACKAGES="${TCOS_PACKAGES} xauth"
     fi
 }
 
@@ -201,10 +202,7 @@ CMD
 chmod +x ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
 
 cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-export DEBCONF_FRONTEND="noninteractive"
-export DEBIAN_FRONTEND="noninteractive"
+export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get $APT_OPTS update
 apt-get install $APT_OPTS tcos-keyring
 apt-get $APT_OPTS update
@@ -220,25 +218,22 @@ EOC
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
 
 cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-export DEBCONF_FRONTEND="noninteractive"
-export DEBIAN_FRONTEND="noninteractive"
-
+export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} linux-restricted-modules-${TCOS_KERNEL} ${TCOS_PACKAGES} tcos-extra-modules-${TCOS_KERNEL}
 apt-get clean
 /etc/init.d/dropbear stop || true
 EOC
+
 # need umount this directory to allow remove later chroot from distros grather than gutsy
-[ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
+#if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ]; then
+if [ -d ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ ]; then
+  umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ >/dev/null 2>&1
+fi
   
 ######################################
 else # DISTRO != ubuntu
 cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-export DEBCONF_FRONTEND="noninteractive"
-export DEBIAN_FRONTEND="noninteractive"
+export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} tcos-extra-modules-${TCOS_KERNEL} ${TCOS_PACKAGES}
 apt-get clean
 /etc/init.d/dropbear stop || true
@@ -254,24 +249,34 @@ umount -l ${TCOS_CHROOT}/sys
 
 chrootupdate() {
   cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
+[ ! -e ${TCOS_CHROOT}/sbin/start-stop-daemon ] && cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
+#!/bin/sh
+exit 0
+CMD
+
+[ ! -e ${TCOS_CHROOT}/usr/sbin/invoke-rc.d ] && cat << CMD > ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+#!/bin/sh
+exit 0
+CMD
+chmod +x ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+
+# copy console keymap
+if [ -e /etc/console/boottime.kmap.gz ]; then
+	mkdir -p ${TCOS_CHROOT}/etc/console
+	cp /etc/console/boottime.kmap.gz ${TCOS_CHROOT}/etc/console
+fi
+if [ -e /etc/console-setup/boottime.kmap.gz ]; then
+	mkdir -p ${TCOS_CHROOT}/etc/console-setup
+	cp /etc/console-setup/boottime.kmap.gz ${TCOS_CHROOT}/etc/console-setup/
+fi
+
   cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-export DEBCONF_FRONTEND="dialog"
-export DEBIAN_FRONTEND="dialog"
-[ ! -e /sbin/start-stop-daemon ] && cat << CMD > /sbin/start-stop-daemon
-#!/bin/sh
-CMD
-[ ! -e /usr/sbin/invoke-rc.d ] && cat << CMD > /usr/sbin/invoke-rc.d
-#!/bin/sh
-CMD
-chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
+export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="dialog" export DEBIAN_FRONTEND="dialog"
 apt-get update
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
     apt-get $APT_OPTS dist-upgrade
     apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
     # need umount this directory to allow remove later chroot from distros grather than gutsy
-    [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ] && umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/
 else
     apt-get install $APT_OPTS cdebootstrap
     dpkg -i /usr/share/cdebootstrap/cdebootstrap-helper-diverts.deb
@@ -281,25 +286,30 @@ else
 fi
 apt-get clean
 EOC
+
+if [ -d ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ ]; then
+  umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ >/dev/null 2>&1
+fi
+
 touch ${TCOS_CHROOT}/etc/tcos/chroot
 }
 
 chrootinstallpkg() {
   cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
-  cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-export DEBCONF_FRONTEND="noninteractive"
-export DEBIAN_FRONTEND="noninteractive"
-[ ! -e /sbin/start-stop-daemon ] && cat << CMD > /sbin/start-stop-daemon
+[ ! -e ${TCOS_CHROOT}/sbin/start-stop-daemon ] && cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
 #!/bin/sh
+exit 0
 CMD
-[ ! -e /usr/sbin/invoke-rc.d ] && cat << CMD > /usr/sbin/invoke-rc.d
-#!/bin/sh
-CMD
-chmod +x /sbin/start-stop-daemon /usr/sbin/invoke-rc.d
-apt-get update
 
+[ ! -e ${TCOS_CHROOT}/usr/sbin/invoke-rc.d ] && cat << CMD > ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+#!/bin/sh
+exit 0
+CMD
+chmod +x ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+
+  cat << EOC | chroot ${TCOS_CHROOT}
+export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
+apt-get update
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
     apt-get $APT_OPTS install $@
 else
@@ -323,21 +333,26 @@ if [ -f /etc/tcos/templates/tcosconfig.conf ]; then
   fi
 fi
 
-mount --bind /proc ${TCOS_CHROOT}/proc
 
-  cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C
-export LC_MESSAGES=C
-[ ! -d /var/cache/tcos/packages/pulseaudio-esound-compat ] && gentcos -instpkg pulseaudio-esound-compat
-[ ! -d /var/cache/tcos/packages/libesd0 ] && gentcos -instpkg libesd0
-[ ! -d /var/cache/tcos/packages/esound ] && gentcos -instpkg esound
+[ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/pulseaudio-esound-compat ] && \
+	chroot ${TCOS_CHROOT} gentcos -instpkg pulseaudio-esound-compat
+
+[ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/libesd0 ] && \
+	chroot ${TCOS_CHROOT} gentcos -instpkg libesd0
+
+[ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/esound ] && \
+	chroot ${TCOS_CHROOT} gentcos -instpkg esound
 
 # need for Tcos but conflicts with discover1 required by Lliurex
 if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-    [ ! -d /var/cache/tcos/packages/discover ] && gentcos -instpkg discover discover-data libdiscover2
+    [ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/discover ] && \
+	chroot ${TCOS_CHROOT} gentcos -instpkg discover discover-data libdiscover2
 fi
 
-gentcos ${GENTCOS_OPT}
+mount --bind /proc ${TCOS_CHROOT}/proc
+
+  cat << EOC | chroot ${TCOS_CHROOT}
+LC_ALL=C LC_MESSAGES=C gentcos ${GENTCOS_OPT}
 EOC
 
 umount -l ${TCOS_CHROOT}/proc

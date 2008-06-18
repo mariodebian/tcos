@@ -68,17 +68,18 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
        _echo "   * Not Sound ISA modules"
        SOUNDISA_MODULES=""
     else
-       SOUNDISA_MODULES=$(find /lib/modules/${TCOS_KERNEL}/kernel/sound/isa/ -type f -exec basename '{}' \; | sed s/".ko"//g)
+       ISADIR=$(find /lib/modules/${TCOS_KERNEL}/ -type d -name isa)
+       SOUNDISA_MODULES=$(find ${ISADIR} -type f -exec basename '{}' \; | sed s/".ko"//g)
     fi
 
     MODULES="${CORE_MODULES} ${USB_MODULES} ${LIVE_MODULES} ${NETWORK_MODULES}"
     MODULES="${MODULES} ${XORG_MODULES} ${SOUND_MODULES} ${SOUNDISA_MODULES} ${MYTCOS_MODULES} "
 
     for x in ${MODULES} ; do
-      #_verbose "(tcosmods) Adding module ${x}"
+      _verbose "(tcosmods) Adding module ${x}"
       #manual_add_modules ${x}
       tcos_manual_add_modules ${x} 
-      force_add_module ${x}
+      #force_add_module ${x}
     done
 
 
