@@ -29,6 +29,18 @@ fi
 . /etc/tcos/version.conf
 . ${TCOS_DIR}/tcos-generation-functions.sh
 
+for tpl in $(tcos_get_templates); do
+  . $tpl
+done
+
+# load forced settings for derivatives
+if [ -d /etc/tcos/conf.d/ ]; then
+  for file in /etc/tcos/conf.d/tcos*conf; do
+    [ -e $file ] && . $file
+  done
+fi
+
+
 # default settings
 TCOS_ARCH=i386
 TCOS_FLAVOUR=standard
@@ -69,6 +81,9 @@ set_conf() {
       DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools "
       DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi "
       DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
+      if [ ${TCOS_DISTRO} = "testing" -o ${TCOS_DISTRO} = "lenny" -o ${TCOS_DISTRO} = "unstable" ];then
+        TCOS_PACKAGES="${TCOS_PACKAGES} xauth openbsd-inetd"
+      fi
     fi
 }
 
@@ -159,12 +174,20 @@ chrootcreate() {
   fi
 
 
+cat << EOF > ${TCOS_CHROOT}/etc/apt/apt.conf
+APT::Install-Recommends "false";
+APT::Install-Suggests "false";
+EOF
+
 mount --bind /proc ${TCOS_CHROOT}/proc
 mount --bind /sys ${TCOS_CHROOT}/sys
 
 # pressed linux-image message
 cat << EOF > ${TCOS_CHROOT}/pressed
 linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/lilo-initrd-${TCOS_KERNEL}	boolean	false
+linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/bootloader-initrd-${TCOS_KERNEL}	boolean	false
+linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/postinst/create-kimage-link-${TCOS_KERNEL}	boolean	false
+linux-image-${TCOS_KERNEL}	shared/kernel-image/really-run-bootloader	boolean	false
 EOF
 
 cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
@@ -292,6 +315,16 @@ EOC
 chrootupdateimages() {
 cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
 TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/tcos.conf | sed 's/"//g')
+if [ -f /etc/tcos/templates/tcosconfig.conf ]; then
+  mkdir -p ${TCOS_CHROOT}/etc/tcos/templates/
+  cp /etc/tcos/templates/tcosconfig.conf ${TCOS_CHROOT}/etc/tcos/templates/
+  if grep -q "TCOS_KERNEL" ${TCOS_CHROOT}/etc/tcos/templates/tcosconfig.conf; then
+    TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/templates/tcosconfig.conf | sed 's/"//g')
+  fi
+fi
+
+mount --bind /proc ${TCOS_CHROOT}/proc
+
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C
 export LC_MESSAGES=C
@@ -306,6 +339,9 @@ fi
 
 gentcos ${GENTCOS_OPT}
 EOC
+
+umount -l ${TCOS_CHROOT}/proc
+
 # this is exec outside chroot
 rm -rf /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} \
        /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs \
