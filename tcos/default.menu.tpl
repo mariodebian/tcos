@@ -19,13 +19,12 @@ label tcos
 label nfs
   MENU LABEL TCOS ^NFS     ( RAM < 40 Mb)
   KERNEL vmlinuz-__TCOS_KERNEL__
-  APPEND ramdisk_size=32768 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash
+  APPEND ramdisk_size=32768 initrd=initramfs-__TCOS_KERNEL__-nfs root=/dev/ram0 boot=tcos quiet splash
 
 label local
   __TCOS_NETBOOT_HIDE_LOCAL__MENU HIDE
   MENU LABEL LOCAL ( boot from ^local HDD)
-  KERNEL chain.c32
-  APPEND hd0 0
+  LOCALBOOT 0x80
 
 
 label install

@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.89~rc10) unstable; urgency=low
+
+  * scripts/tcos-top/50fstab:
+    - Mount /proc/bus/usb
+  * tcos/default.menu.tpl:
+    - Fix NFS initramfs fielname
+    - Use localbot instead of chain.c32
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 26 Jun 2008 11:20:53 +0200
+
 initramfs-tools-tcos (0.89~rc9) unstable; urgency=low
 
   * Set /var/lib/tcos/tftp/pxelinux.cfg as tcos group owner

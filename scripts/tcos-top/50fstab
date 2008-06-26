@@ -32,6 +32,13 @@ if [ ! -d /dev/pts ]; then
   mount /dev/pts >> /tmp/initramfs.debug 2>&1
 fi
 
+# mount usbfs
+if [ "$(grep -c usbfs /proc/filesystems)" != "0" ] && [ ! -e /proc/bus/usb/devices ]; then
+  log_begin_msg "Mounting /proc/bus/usb"
+    mount -t usbfs procbususb /proc/bus/usb/
+  log_end_msg $?
+fi
+
 
 # DOCUMENTME uselocal | enable use of local disks
 uselocal=$(read_cmdline_var "uselocal" "1")
