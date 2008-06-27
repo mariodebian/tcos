@@ -3,6 +3,10 @@
 
 [ -e /etc/tcos/ssl/tcos.pem ] && chmod 600 /etc/tcos/ssl/tcos.pem
 
+if ! getent group tcos >/dev/null; then
+  addgroup --quiet --system tcos
+fi
+
 if [ -e /usr/lib/tcos/tnc ];then
    chown -f root:root /usr/lib/tcos/tnc
    chmod -f 0700 /usr/lib/tcos/tnc

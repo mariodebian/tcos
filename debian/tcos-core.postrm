@@ -23,6 +23,9 @@ case "$1" in
        if getent group tcosmonitor-exclude >/dev/null; then
            delgroup --quiet --system tcosmonitor-exclude > /dev/null || true
        fi
+       if getent group tcos >/dev/null; then
+      	   delgroup --quiet --system tcos > /dev/null || true
+       fi
     ;;
     remove)
        rm -f /etc/dbus/system.d/tcosmonitor.conf
