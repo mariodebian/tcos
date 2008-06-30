@@ -13,8 +13,10 @@ initramfs-tools-tcos (0.89~rc10) unstable; urgency=low
   * debian/tcos-core.postrm debian/tcos-core.postinst
     - In standalone not found group tcos
   * Add valencian translation by Lliurex
+  * debian/tcos-standalone.init hooks-addons/10ssl_tunnel
+    - Use random certificates for ssl connection
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Mon, 30 Jun 2008 10:02:39 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Mon, 30 Jun 2008 14:36:19 +0200
 
 initramfs-tools-tcos (0.89~rc9) unstable; urgency=low
 

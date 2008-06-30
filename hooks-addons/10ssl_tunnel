@@ -8,8 +8,11 @@ else
 
    [ -x /usr/bin/stunnel4 ]  && cpifexists /usr/bin/stunnel4   /usr/bin/
    [ -x /usr/sbin/stunnel4 ]  && cpifexists /usr/sbin/stunnel4   /usr/bin/
+   [ -x /usr/bin/openssl ]  && cpifexists /usr/bin/openssl   /usr/bin/
 
    mkdir -p $DESTDIR/etc/stunnel
+   mkdir -p $DESTDIR/usr/lib/ssl
+   cpifexists /usr/lib/ssl/openssl.cnf /usr/lib/ssl
 
 cat << EOF > ${DESTDIR}/etc/stunnel/stunnel.conf
 cert = /etc/stunnel/tcos.pem
@@ -41,12 +44,12 @@ connect=8998
 
 EOF
 
-   if [ -e /etc/tcos/ssl/tcos-custom.pem ]; then
-     cp /etc/tcos/ssl/tcos-custom.pem  ${DESTDIR}/etc/stunnel/tcos.pem
-   else
-     cp /etc/tcos/ssl/tcos.pem         ${DESTDIR}/etc/stunnel/tcos.pem
-   fi
-   chmod 600 $DESTDIR/etc/stunnel/tcos.pem
+   #if [ -e /etc/tcos/ssl/tcos-custom.pem ]; then
+   #  cp /etc/tcos/ssl/tcos-custom.pem  ${DESTDIR}/etc/stunnel/tcos.pem
+   #else
+   #  cp /etc/tcos/ssl/tcos.pem         ${DESTDIR}/etc/stunnel/tcos.pem
+   #fi
+   #chmod 600 $DESTDIR/etc/stunnel/tcos.pem
    mkdir -p $DESTDIR/var/lib/stunnel4/
 
 
@@ -64,6 +67,13 @@ fi
 quiet=n
 
 . /scripts/functions
+
+  [ -e /etc/stunnel/tcos.pem ] && rm -f /etc/stunnel/tcos.pem
+  openssl req -new -x509 -nodes -days 365 -out /etc/stunnel/tcos.pem -keyout /etc/stunnel/tcos.pem -subj "/C=/ST=/L=/CN=localhost/emailAddress=root@localhost" 2>/dev/null
+  chmod 600 /etc/stunnel/tcos.pem
+  dd if=/dev/urandom of=/tmp/temp_file_ssl count=2
+  openssl dhparam -rand /tmp/temp_file_ssl 256 >> /etc/stunnel/tcos.pem 2>/dev/null
+  rm -f /tmp/temp_file_ssl
 
   stunnel4 >/dev/null 2>&1 &
 exit 0

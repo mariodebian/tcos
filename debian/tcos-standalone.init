@@ -60,11 +60,18 @@ do_start()
            [ -e /var/lib/tcos/standalone/log/stunnel.log ] && chown stunnel4:stunnel4 /var/lib/tcos/standalone/log/stunnel.log
 
            # start with custom certificate or tcos.pem
-           if [ -f /etc/tcos/ssl/tcos-custom.pem ]; then
-             stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel-custom.conf > /dev/null 2>&1 &
-           else
-             stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
-           fi
+           #if [ -f /etc/tcos/ssl/tcos-custom.pem ]; then
+           #  stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel-custom.conf > /dev/null 2>&1 &
+           #else
+           #  stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
+           #fi
+	   [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
+           openssl req -new -x509 -nodes -days 365 -out /var/lib/tcos/standalone/etc/stunnel/tcos.pem -keyout /var/lib/tcos/standalone/etc/stunnel/tcos.pem -subj "/C=/ST=/L=/CN=localhost/emailAddress=root@localhost" 2>/dev/null
+           chmod 600 /var/lib/tcos/standalone/etc/stunnel/tcos.pem
+           dd if=/dev/urandom of=/tmp/temp_file_ssl count=2
+           openssl dhparam -rand /tmp/temp_file_ssl 256 >> /var/lib/tcos/standalone/etc/stunnel/tcos.pem 2>/dev/null
+           rm -f /tmp/temp_file_ssl
+           stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
         fi
         $DAEMON $DAEMON_ARGS >> /var/lib/tcos/standalone/log/tcos-standalone.log 2>&1 || return 2
 }
@@ -79,6 +86,7 @@ do_stop()
 	if [ -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid ] ; then
           kill -9 $(cat /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid) 2>/dev/null
           rm -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid
+          [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
           # empty log file
           :> /var/lib/tcos/standalone/log/stunnel.log
         fi
