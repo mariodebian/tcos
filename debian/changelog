@@ -12,8 +12,9 @@ initramfs-tools-tcos (0.89~rc10) unstable; urgency=low
     - Update kernel vars
   * debian/tcos-core.postrm debian/tcos-core.postinst
     - In standalone not found group tcos
+  * Add valencian translation by Lliurex
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Fri, 27 Jun 2008 09:53:39 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Mon, 30 Jun 2008 10:02:39 +0200
 
 initramfs-tools-tcos (0.89~rc9) unstable; urgency=low
 

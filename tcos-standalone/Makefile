@@ -1,11 +1,16 @@
+LANGUAGES=es ca@valencia
+
 all:
 	#none
 
 clean:
 	rm -f *~ *glade.* *gladep*
-	rm -rf po/es
+	@for lang in $(LANGUAGES); do \
+		echo " **CLEANDIR** po/$$lang"; \
+		rm -rf po/$$lang;\
+	done
 
-install: es.gmo
+install: gmo
 	install -d $(DESTDIR)/$(PREFIX)/sbin
 	install -m 755 tcos-standalone.py $(DESTDIR)/$(PREFIX)/sbin/tcos-standalone
 
@@ -19,23 +24,33 @@ install: es.gmo
 	install -m 644 tcos-standalone.desktop $(DESTDIR)/$(PREFIX)/share/applications/
 
 	# locales
-	install -d $(DESTDIR)/$(PREFIX)/share/locale/es/LC_MESSAGES/
-	install -m 644 po/es/LC_MESSAGES/tcos-standalone.mo $(DESTDIR)/$(PREFIX)/share/locale/es/LC_MESSAGES/tcos-standalone.mo
+	@for lang in $(LANGUAGES); do \
+		install -d $(DESTDIR)/$(PREFIX)/share/locale/$$lang/LC_MESSAGES/; \
+		install -m 644 po/$$lang/LC_MESSAGES/tcos-standalone.mo $(DESTDIR)/$(PREFIX)/share/locale/$$lang/LC_MESSAGES/tcos-standalone.mo; \
+	done
 
 
 pot:
 	xgettext  -o po/tcos-standalone.pot --files-from=po/FILES
 
-es.po:
-	msginit --input po/tcos-standalone.pot -o po/es-new.po
-	msgmerge -o po/es-new.po po/es.po po/tcos-standalone.pot
-	##################################################
-	#           translate po/es-new.po               #
-	##################################################
 
-es.gmo:
-	if [ -f po/es-new.po ]; then  mv po/es-new.po po/es.po ; fi
-	mkdir -p po/es/LC_MESSAGES/
-	msgfmt -o po/es/LC_MESSAGES/tcos-standalone.mo po/es.po
+po:
+	@for lang in $(LANGUAGES); do \
+		echo " **PO** po/$$lang"; \
+		if [ ! -f po/$$lang.po ]; then \
+			msginit --input po/tcos-standalone.pot -o po/$$lang-old.po;\
+		else \
+			mv po/$$lang.po po/$$lang-old.po; \
+		fi ; \
+		msgmerge -o po/$$lang.po po/$$lang-old.po po/tcos-standalone.pot; \
+		rm -f po/$$lang-old.po; \
+	done
 
+gmo:
+	@echo " **COMPILING** languages: $(LANGUAGES)"
+	@for lang in $(LANGUAGES); do \
+		echo " **COMPILEMO** po/$$lang" ; \
+		mkdir -p po/$$lang/LC_MESSAGES/; \
+		msgfmt --verbose -o po/$$lang/LC_MESSAGES/tcos-standalone.mo po/$$lang.po; \
+	done
 

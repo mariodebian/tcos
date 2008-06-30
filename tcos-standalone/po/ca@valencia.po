@@ -3,73 +3,80 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tcos-standalone\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-30 10:10+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-05-10 18:16+0200\n"
+"PO-Revision-Date: 2008-06-27 14:03+0100\n"
+"Last-Translator: \n"
+"Language-Team: Valencian <lliurex@gva.es>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: tcos-standalone.glade:9
 msgid "TCOS Standalone"
-msgstr ""
+msgstr "Sistema autònom del TCOS"
 
 #: tcos-standalone.glade:32
 msgid "<span size=\"x-large\">Configure TCOS standalone mode</span>"
-msgstr ""
+msgstr "<span size=\"x-large\">Configura el mode de sistema autònom del TCOS</span>"
 
 #: tcos-standalone.glade:126
 msgid "Stop"
-msgstr ""
+msgstr "Para"
 
 #: tcos-standalone.glade:204
 msgid "Start"
-msgstr ""
+msgstr "Inici"
 
 #: tcos-standalone.glade:282
 msgid "Apply"
-msgstr ""
+msgstr "Aplica"
 
 #: tcos-standalone.glade:344
 msgid "Enable tcos-standalone daemon"
-msgstr ""
+msgstr "Habilita el dimoni del sistema autònom del Tcos"
 
 #: tcos-standalone.glade:365
 msgid "Username (root):"
-msgstr ""
+msgstr "Nom d'usuari (superusuari):"
 
 #: tcos-standalone.glade:414
 msgid "Password (not visible):"
-msgstr ""
+msgstr "Contrasenya (no visible):"
 
 #: tcos-standalone.glade:521
 msgid "Enable SSL over XMLRPC"
-msgstr ""
+msgstr "Habilita el SSL damunt d'XMLRPC"
 
 #: tcos-standalone.glade:562
 msgid "Options"
-msgstr ""
+msgstr "Opcions"
 
 #: tcos-standalone.py:170
 msgid ""
 "Not user and password configured.\n"
 "Using root system user."
 msgstr ""
+"No s'ha configurat l'usuari i la contrasenya.\n"
+"S'utilitzarà l'usuari root del sistema. "
 
 #: tcos-standalone.py:246
 msgid "New username and password used.\n"
-msgstr ""
+msgstr "S'ha utilitzat un nom d'usuari i contrasenya nous.\n"
 
 #: tcos-standalone.py:269
 msgid "tcosxmlrpc running"
-msgstr ""
+msgstr "execució del tcosxmlrpc"
 
 #: tcos-standalone.py:274
 msgid "tcosxmlrpc stopped"
-msgstr ""
+msgstr "el tcosxmlrpc està parat"
+
+#~ msgid "busybox running"
+#~ msgstr "execució del busybox"
+#~ msgid "busybox stopped"
+#~ msgstr "el busybox està parat"
+
