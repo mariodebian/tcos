@@ -1,8 +1,17 @@
 initramfs-tools-tcos (0.89~rc11) unstable; urgency=low
 
+  [ Ignacio Vidal ]
   * Update translation
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 01 Jul 2008 14:48:05 +0200
+  [ Mario Izquierdo (mariodebian) ]
+  * debian/tcos-core.install debian/tcos-core.postinst conf/tcos.pem
+    Makefile
+    - Don't provide SSL cert, create using openssl
+    - Add openssl to depends
+  * hooks-addons/00main hooks-addons/25tcosmonitor
+    - Move start-stop-daemon to 00main and check for *.original and *.REAL
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 03 Jul 2008 16:20:04 +0200
 
 initramfs-tools-tcos (0.89~rc10) unstable; urgency=low
 

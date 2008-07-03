@@ -123,8 +123,6 @@ install:
 	sed -i 's/__DISTRIBUTION__/$(DISTRO)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
 	sed -i 's/__TCOS_ARCH__/$(TCOS_ARCH)/g'        $(DESTDIR)$(TCOS_CONF)/version.conf
 
-	install -m 600 conf/tcos.pem                   $(DESTDIR)/$(TCOS_CONF)/ssl
-
 
 	# tcos.conf templates
 	install -d $(DESTDIR)$(TCOS_DIR)/templates/

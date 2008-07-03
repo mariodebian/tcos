@@ -32,7 +32,7 @@ Description: tools for generating a thin client bootable image: TCOS
 Package: tcos-core
 Architecture: any
 Depends: busybox, xterm, x11vnc, xvnc4viewer | xvncviewer, vlc, dosfstools, cdparanoia, 
-         scrot, eject, netpipes, libnotify-bin, python, python-utmp, rtptools, stunnel4, 
+         scrot, eject, netpipes, libnotify-bin, python, python-utmp, rtptools, stunnel4, openssl, 
          python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
 XB-Python-Version: ${python:Versions}
