@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.89.2) unstable; urgency=low
+
+  * conf/tcos-modules.conf:
+    - Add modules: nls_base nls_utf8 snd-hda-intel snd-atiixp snd-usb-audio fat
+  * bin/installer.sh
+    - Use BusyBox dd instead of klibc dd (and use bs argument)
+  * hooks-addons/40etc2300
+    - If found, use snd-sis7019 instead of OSS sis7019 module
+  * hooks-addons/56rdesktop hooks-addons/50xorg
+    - Escape var XAUTHORITY in launchers
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 20 Jul 2008 23:58:25 +0200
+
 initramfs-tools-tcos (0.89.1) unstable; urgency=low
 
   * New release 0.89.1

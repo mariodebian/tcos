@@ -100,7 +100,7 @@ make_all_parts () {
 
   # clean MBR
   log_begin_msg "Cleaning MBR of $HDD"
-    dd if=/dev/zero of=$HDD bsize=512 count=1 >/dev/null 2>&1
+    busybox dd if=/dev/zero of=$HDD bs=512 count=1 >/dev/null 2>&1
     $INSTALL_MBR --force $HDD
   log_end_msg $?
 

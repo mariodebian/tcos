@@ -390,7 +390,7 @@ export DISPLAY=:0
 export HOME=/root
 
 if [ -f \$XAUTHORITY ]; then
-  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth $XAUTHORITY"
+  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
 /sbin/tryXorg --fontserver=\${FONT_SERVER} --xorgopts="\${TCOS_XORG_OPTS}" &
