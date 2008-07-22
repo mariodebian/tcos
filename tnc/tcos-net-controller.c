@@ -116,17 +116,18 @@ check_port (char* port)
 }
 
 
-static char
-*get_uid (const char* user)
+static unsigned int
+get_uid (const char* user)
 {
   struct passwd *pw = NULL;
+  uid_t value=0;
 
   pw = getpwnam(user);
 
   if (pw == NULL)
-    return "";
+    return value;
   else
-    return (char*) pw->pw_uid;
+    return pw->pw_uid;
 }
 
 
