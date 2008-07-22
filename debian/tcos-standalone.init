@@ -68,7 +68,7 @@ do_start()
 	   [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
            openssl req -new -x509 -nodes -days 365 -out /var/lib/tcos/standalone/etc/stunnel/tcos.pem -keyout /var/lib/tcos/standalone/etc/stunnel/tcos.pem -subj "/C=/ST=/L=/CN=localhost/emailAddress=root@localhost" 2>/dev/null
            chmod 600 /var/lib/tcos/standalone/etc/stunnel/tcos.pem
-           dd if=/dev/urandom of=/tmp/temp_file_ssl count=2
+           dd if=/dev/urandom of=/tmp/temp_file_ssl count=2 2>/dev/null
            openssl dhparam -rand /tmp/temp_file_ssl 256 >> /var/lib/tcos/standalone/etc/stunnel/tcos.pem 2>/dev/null
            rm -f /tmp/temp_file_ssl
            stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
