@@ -12,6 +12,10 @@ include ../common.mk
 compile:
 	$(CC) $(SOURCE) $(LDADD) -o $(TNC)
 
+debug:
+	$(CC) $(SOURCE) $(LDADD) -o $(TNC) -DDEVNULL="\"\"" -DDEBUG
+
+
 clean:
 	rm -f $(TNC) *~
 

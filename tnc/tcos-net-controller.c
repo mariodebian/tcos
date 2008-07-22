@@ -26,11 +26,16 @@
 #include <pwd.h>
 #include <grp.h>
 #include <stdlib.h>
+#include <stdarg.h>
+
 #define GROUP "tcos"
 #define IPTABLES "/sbin/iptables"
 #define BLACKLIST_PORTS "8998,8999"
 #define BSIZE 1024
+
+#ifndef DEVNULL
 #define DEVNULL "2>/dev/null"
+#endif
 
 char *strncpy( char *to, const char *from, size_t count );
 
@@ -85,6 +90,17 @@ char **split(char *string, char *delim) {
  return tokens;
 }
 
+#ifdef DEBUG
+/* debug print to stderr */
+void debug( const char *format_str, ... ) {
+    va_list ap;
+    va_start( ap, format_str );
+    va_end( ap );
+    fprintf(stderr, "TNC-DEBUG::");
+    vfprintf(stderr, format_str , ap);
+}
+#endif
+
 
 int
 check_port (char* port)
@@ -95,14 +111,18 @@ check_port (char* port)
   int i=0,j;
 
   if (atoi(port) > 65535 || atoi(port) < 1) {
-     /* printf("Incorrect port: %s\n", port); */
+#ifdef DEBUG
+     debug("check_port() Incorrect port: %s\n", port);
+#endif
      i=1;
      return(i);
   }
 
   tokens = split(blacklist, delim);
   for(j = 0; tokens[j] != NULL; j++){
-      /* printf("check: token=%s ¿=? port=%s\n", tokens[j], port); */
+#ifdef DEBUG
+      debug("check_port(): token=%s ¿=? port=%s\n", tokens[j], port);
+#endif
       if (atoi(port) == atoi(tokens[j])) {
           i=1;
       }
@@ -158,7 +178,9 @@ check_user ()
 
   list = (gid_t*)malloc(sizeof (gid_t) * (n + 1));
   if (!list) {
-    /*fprintf(stderr, "out of memory!\n");*/
+#ifdef DEBUG
+    debug("check_user() out of memory!\n");
+#endif
     found=0;
   }
 
@@ -172,12 +194,14 @@ check_user ()
   }
   else {
      for (i = 0; i < n; i++)  {
-          /*fprintf(stderr, "%lu (%s) %d %d\n", (unsigned long)list[i], get_group(list[i]), uid, euid);*/
+#ifdef DEBUG
+          debug("check_user() %lu (%s) %d %d\n", (unsigned long)list[i], get_group(list[i]), uid, euid);
+#endif
           if ( (strcmp( get_group(list[i]), GROUP) == 0) && (euid == 0) ) {
             /* Only work if euid is root */
-	    found=1;
-	  }
-      }
+            found=1;
+         }
+    }
   }
   free(list);
   return(found);
@@ -192,7 +216,9 @@ status_iptables_user(char *args) {
    char line[BSIZE];
 
     sprintf( cmd, "iptables -L OUTPUT --line-numbers -n %s | awk 'BEGIN{count=0}{if ($NF == %d || $NF == \"%s\") count++}END{print count}'", DEVNULL, (int)get_uid(args), args);
-    /* printf("DEBUG: status() %s\n",cmd); */
+#ifdef DEBUG
+    debug("status_iptables_user() %s\n",cmd); 
+#endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
        fgets( line, sizeof line, fp);
        pclose(fp);
@@ -228,8 +254,10 @@ flush_iptables_user(char *args) {
 
        tokens = split(line, delim);
        for(i = 0; tokens[i] != NULL; i++){
-          sprintf( cmd, "%s -D OUTPUT %s %sl", IPTABLES, tokens[i], DEVNULL);
-          /* printf("DEBUG: flush() %s\n",cmd); */
+          sprintf( cmd, "%s -D OUTPUT %s %s", IPTABLES, tokens[i], DEVNULL);
+#ifdef DEBUG
+          debug("flush_iptables_user() %s\n",cmd);
+#endif
           if ((fp=(FILE*)popen(cmd, "r")) != NULL) 
              pclose(fp);
        }
@@ -261,7 +289,9 @@ add_iptables_user(char **args) {
 
     /* Obtain network destination */
     sprintf( cmd, "ip route %s | awk '{if ($3 == \"%s\") print $1}'", DEVNULL, args[3]);
-    /* printf("add() dired cmd=%s\n",cmd); */
+#ifdef DEBUG
+    debug("add_iptables_user() dired cmd=%s\n",cmd);
+#endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
        fgets( dirred, sizeof dirred, fp);
        pclose(fp);
@@ -276,13 +306,17 @@ add_iptables_user(char **args) {
     if(strstr(args[2], "--ports=")) {
        substring = (char*) malloc(strlen(args[2]));
        strncpy(substring, args[2]+8, strlen(args[2]));
-       /* printf("DEBUG: add() substring='%s'\n",substring); */
+#ifdef DEBUG
+       debug("add_iptables_user() substring='%s'\n",substring);
+#endif
        
        tokens = split(substring, delim);
        for(j = 0; tokens[j] != NULL; j++){
             if (check_port(tokens[j]) == 0) {
                sprintf( cmd, "%s -A OUTPUT -p tcp --dport %s -m owner --uid-owner %s -j DROP %s", IPTABLES, tokens[j], args[4], DEVNULL);
-               /* printf("DEBUG: add() cmd=%s\n",cmd); */
+#ifdef DEBUG
+               debug("add_iptables_user() cmd=%s\n",cmd);
+#endif
                if ((fp=(FILE*)popen(cmd, "r")) != NULL) 
                   pclose(fp);
             }
@@ -297,7 +331,9 @@ add_iptables_user(char **args) {
     
     /* Allow loopback for user*/
     sprintf( cmd, "%s -A OUTPUT -d 127.0.0.0/255.0.0.0 -m owner --uid-owner %s -j ACCEPT %s", IPTABLES, args[4], DEVNULL);
-    /* printf("DEBUG: add() cmd=%s\n",cmd); */
+#ifdef DEBUG
+    debug("add_iptables_user() cmd=%s\n",cmd);
+#endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
       i=1;
       pclose(fp);
@@ -308,7 +344,9 @@ add_iptables_user(char **args) {
     
     /* Block output ! network*/
     sprintf( cmd, "%s -A OUTPUT -d ! %s -m owner --uid-owner %s -j DROP %s", IPTABLES,  dirred, args[4], DEVNULL);
-    /* printf("DEBUG: add() cmd=%s\n",cmd); */
+#ifdef DEBUG
+    debug("add_iptables_user() cmd=%s\n",cmd);
+#endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
       i=1;
       pclose(fp);
@@ -321,10 +359,9 @@ add_iptables_user(char **args) {
 
 }
 
-int main(int argc, char **argv) {
-   char *result = "denied";
-   int i=0;
 
+int main(int argc, char **argv) {
+   int i=0;
    i = check_user();
    
    if (argc < 2) {
@@ -332,7 +369,7 @@ int main(int argc, char **argv) {
    }
 
    if (i == 0) {
-     printf("%s", result);
+     printf("denied");
      return(1);
    }
 
@@ -367,6 +404,11 @@ int main(int argc, char **argv) {
      }
   }
   else {
+    fprintf(stderr, "ERROR => Bad command line arguments\n");
+    fprintf(stderr, "tnc :: tcos-net-controller usage\n");
+    fprintf(stderr, "\t tnc disable-internet --ports=[AA,BB,CC] eth0 username\n");
+    fprintf(stderr, "\t tnc enable-internet username\n");
+    fprintf(stderr, "\t tnc status username\n");
     return(1);
   }
 

@@ -10,8 +10,10 @@ initramfs-tools-tcos (0.89.2) unstable; urgency=low
     - Escape var XAUTHORITY in launchers
   * tnc/tcos-net-controller.c
     - Fix get_uid() function (return unsigned int not char pointer)
+    - Add debug function, and clean code
+    - Remove not needed vars
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 22 Jul 2008 10:23:57 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 22 Jul 2008 11:04:03 +0200
 
 initramfs-tools-tcos (0.89.1) unstable; urgency=low
 
