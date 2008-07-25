@@ -122,7 +122,7 @@ EOF
       cpifexists /sbin/wpa_supplicant  /sbin/
       cpifexists /usr/bin/wpa_passphrase   /sbin/
       # need linked libs in /lib not /usr/lib
-      for lib in $(ldd /sbin/wpa_supplicant /sbin/wpa_action /sbin/wpa_cli /usr/bin/wpa_passphrase | awk '{print $3}' |grep ^/); do
+      for lib in $(_ldd /sbin/wpa_supplicant /sbin/wpa_action /sbin/wpa_cli /usr/bin/wpa_passphrase | awk '{print $3}' |grep ^/); do
         newlib=$(echo $lib | sed s/"\/i686\/cmov"//g | sed s/"\/tls"//g )
         #_echo "   DEBUG: WPA: copying lib=$lib newlib=$newlib"
         if [ -e $newlib ]; then

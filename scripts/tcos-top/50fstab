@@ -35,7 +35,7 @@ fi
 # mount usbfs
 if [ "$(grep -c usbfs /proc/filesystems)" != "0" ] && [ ! -e /proc/bus/usb/devices ]; then
   log_begin_msg "Mounting /proc/bus/usb"
-    mount -t usbfs procbususb /proc/bus/usb/
+    mount -t usbfs procbususb /proc/bus/usb/ 2>/dev/null
   log_end_msg $?
 fi
 

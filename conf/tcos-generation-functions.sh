@@ -4,6 +4,12 @@
 
 # functions used by tcos hooks
 
+_ldd () {
+  # wrapper to ldd
+  LC_ALL=C ldd $@ 2>/dev/null || return 1
+  return 0
+}
+
 _echo () {
  # wrapper to echo in scripts
     echo "$@"

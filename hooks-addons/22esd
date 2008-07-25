@@ -24,7 +24,7 @@ function copy_esd_libs() {
 function copy_libesd0() {
      if [ -d  ${TCOS_PKG_CACHE}/libesd0 ]; then
         rm -f $DESTDIR/usr/lib/libesd.so*
-	cp  ${TCOS_PKG_CACHE}/libesd0/usr/lib/libesd.so.0.*   $DESTDIR/usr/lib/libesd.so.0
+	copy_exec  ${TCOS_PKG_CACHE}/libesd0/usr/lib/libesd.so.0.*   /usr/lib/libesd.so.0
         _echo "    * libesd0 enabled OSS compatibility layer."
      else
         _echo ""
@@ -41,7 +41,7 @@ if [ $TCOS_SOUND ]; then
      _echo "  Warning: eSound not installed."
      exit 0
 
-   elif [ "$(LC_ALL=C ldd /usr/bin/esd 2>/dev/null | grep -c dynamic)" = "1"  ]; then
+   elif [ "$(_ldd /usr/bin/esd ; echo $? )" = "1"  ]; then
      stat_before
      mkdir -p $DESTDIR/etc/esound
 

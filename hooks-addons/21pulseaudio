@@ -69,7 +69,7 @@ else
   _echo "    * PulseAudio copying esound compat [cached] modules..."
   # warn about OLD cached version
   PULSE_LIB_FILE=${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/libprotocol-esound.so
-  if [ $(LC_ALL=C ldd ${PULSE_LIB_FILE} 2>&1 | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
+  if [ $(_ldd ${PULSE_LIB_FILE} | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
     _echo ""
     _echo "    *** WARNING ***"
     _echo ""
