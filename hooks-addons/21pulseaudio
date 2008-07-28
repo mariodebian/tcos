@@ -118,7 +118,8 @@ cat << FIN > /etc/pulse/default.pa
 
 load-module module-detect
 
-load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
+# don't listen on esound port, eats a lot of bandwich
+load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
 load-module module-esound-protocol-unix

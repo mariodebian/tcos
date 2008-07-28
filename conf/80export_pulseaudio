@@ -7,7 +7,8 @@ DISPLAY_HOST=$(echo $DISPLAY| awk -F ":" '{print $1}')
 if [ ! -z ${DISPLAY_HOST} ]; then
   # export PulseAudio server
   export PULSE_SERVER="${DISPLAY_HOST}"
-  export ESPEAKER="${DISPLAY_HOST}"
+  # don't export ESPEAKER VAR, eats a lot of bandwich if detected
+  #export ESPEAKER="${DISPLAY_HOST}"
 
   # FIXME load spanish kbmap
   #if [ -x /usr/bin/xmodmap ] && [ -e /usr/share/xmodmap/xmodmap.es ] ; then
