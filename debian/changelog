@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.89.3) unstable; urgency=low
+
+  * xmlrpc/tcosxmlrpc.c xmlrpc/reboot_poweroff.c xmlrpc/screenshot.c 
+    xmlrpc/xorg.c xmlrpc/devices.c xmlrpc/tnc.c xmlrpc/vnc.c 
+    xmlrpc/sound.c xmlrpc/info.c xmlrpc/validate-tcos.c xmlrpc/rtp.c 
+    xmlrpc/pci.c xmlrpc/standalone.c xmlrpc/common.c
+    - Use remove_line_break function to clean '\n' returned fgets line
+  * xmlrpc/dpms.c xmlrpc/dpms.h
+    - New method to control DPMS Monitor features
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 Jul 2008 11:37:40 +0200
+
 initramfs-tools-tcos (0.89.2) unstable; urgency=low
 
   * conf/tcos-modules.conf:

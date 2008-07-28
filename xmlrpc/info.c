@@ -116,10 +116,11 @@ static xmlrpc_value *tcos_info(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   strncpy(line, INFO_ERROR, BSIZE);
 
   fgets( line, sizeof line, fp);
+  remove_line_break(line);
+  pclose(fp);
 
   dbgtcos("tcosxmlrpc::tcos_info() line=\"%s\"\n", line);
-
-  pclose(fp);
+  
   return xmlrpc_build_value(env, "s", line );
 }
 

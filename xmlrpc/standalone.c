@@ -65,7 +65,7 @@ static xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud
   strncpy(line, STANDALONE_ERROR, BIG_BUFFER);
 
   fgets( line, sizeof line, fp);
-
+  remove_line_break(line);
   pclose(fp);
 
   dbgtcos("tcosxmlrpc::tcos_standalone() line=\"%s\"\n", line);
@@ -112,8 +112,9 @@ static xmlrpc_value *tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   strncpy(line, DBUS_ERROR, BIG_BUFFER);
 
   fgets( line, sizeof line, fp);
-
+  remove_line_break(line);
   pclose(fp);
+  
   return xmlrpc_build_value(env, "s", line );
 }
 

@@ -67,7 +67,7 @@ static xmlrpc_value *tcos_rtp(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   strncpy(line, RTP_ERROR, BIG_BUFFER);
 
   fgets( line, sizeof line, fp);
-
+  remove_line_break(line);
   pclose(fp);
   dbgtcos("tcosxmlrpc::tcos_rtp() line=\"%s\"", line);
 

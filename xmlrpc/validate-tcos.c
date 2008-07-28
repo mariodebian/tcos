@@ -53,8 +53,9 @@ char *validate_tcos(char *user, char *pass)
   }
 
   fgets( line, sizeof line, fp);
-  strncpy(login->line, line, BSIZE);
+  remove_line_break(line);
   fclose(fp);
+  strncpy(login->line, line, BSIZE);
   
   /* split using ':' */
   tokens = split(login->line, ":");

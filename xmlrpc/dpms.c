@@ -1,6 +1,6 @@
 /*
-* tnc.c part of tcosxmlrpc
-*   => method to lock/unlock internet with iptables rules
+* dpms.c part of tcosxmlrpc
+*   => method to set dpms monitor status
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
 * Copyright (C) 2006,2007,2008  vidal_joshur at gva.es
 *
@@ -19,20 +19,20 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include "tnc.h"
+#include "exe.h"
+#include "dpms.h"
+
 
 
 #if NEWAPI
-static xmlrpc_value *tcos_tnc(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+static xmlrpc_value *tcos_dpms(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+static xmlrpc_value *tcos_dpms(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   FILE *fp;
   char line[BIG_BUFFER];
   char *action;
-  char *ports;
-  char *username;
   char *user;
   char *pass;
   char *login_ok;
@@ -40,7 +40,7 @@ static xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
 
   /* read what info search */
-  xmlrpc_parse_value(env, in, "(sssss)", &action, &ports, &username, &user, &pass);
+  xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
   if (env->fault_occurred)
         return xmlrpc_build_value(env, "s", "params error");
 
@@ -49,33 +49,32 @@ static xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )
     return xmlrpc_build_value(env, "s", login_ok );
 
-  dbgtcos("tcosxmlrpc::tcos_tnc() login ok, action=%s, ports=%s, username=%s, user=%s, pass=**notshow**\n", action, ports, username, user);
+  dbgtcos("tcosxmlrpc::tcos_dpms() login ok, action=%s \n", action);
 
-  /* prepare action */
-  if( strcmp(action, "disable-internet" ) == 0 ) {
-      if ((fp=(FILE*)popen(NETWORK_IFACE, "r")) != NULL) {
-          fgets( line, sizeof line, fp);
-          remove_line_break(line);
-          pclose(fp);
-          sprintf( cmd , "%s %s %s %s %s", TNC_CONTROLLER, action, ports, line, username);
-      }
-   }
-   else {
-      sprintf( cmd , "%s %s %s %s", TNC_CONTROLLER, action, ports, username);
-   }
+  /* read action */
+  if( strcmp(action, "off" ) == 0 ) {
+          sprintf( cmd , "%s dpms force off; echo $?", DPMS_CONTROLLER);
+  }
+  else if( strcmp(action, "on" ) == 0 ) {
+          sprintf( cmd , "%s dpms force on; echo $?", DPMS_CONTROLLER);
+  }
+  else {
+        /* show status */
+       sprintf( cmd , "%s q| awk '/Monitor/ {print $3}'", DPMS_CONTROLLER);
+  }
 
-  dbgtcos("tcosxmlrpc::tcos_tnc() cmd=\"%s\"\n", cmd);
-
-  fp=(FILE*)popen(cmd, "r");
+  dbgtcos("tcosxmlrpc::tcos_dpms() cmd=\"%s\"\n", cmd);
 
   /* put error in line */
-  strncpy(line, TNC_ERROR, BIG_BUFFER);
+  strncpy(line, DPMS_CMD_ERROR, BIG_BUFFER);
 
+  fp=(FILE*)popen(cmd, "r");
   fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
   
-  dbgtcos("tcosxmlrpc::tcos_tnc() line=\"%s\"", line);
+  
+  dbgtcos("tcosxmlrpc::tcos_dpms() line=\"%s\"\n", line);
 
   return xmlrpc_build_value(env, "s", line );
 }

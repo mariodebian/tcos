@@ -54,6 +54,7 @@ static xmlrpc_value *tcos_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud
 
   fp=(FILE*)popen(line, "r");
   fgets( response, sizeof(response), fp);
+  remove_line_break(response);
   pclose(fp);
   return xmlrpc_build_value(env, "s", response );
 

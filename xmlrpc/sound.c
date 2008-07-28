@@ -51,6 +51,7 @@ static xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   gethostname(hostname,BSIZE);
   fp=(FILE*)popen(MY_IP_ADDRESS, "r");
   fgets( ip_string, sizeof ip_string, fp);
+  remove_line_break(ip_string);
   pclose(fp);
 
   ip=check_ip_address(ip_string);
@@ -83,17 +84,14 @@ static xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    strncpy(line, SOUND_ERROR, BSIZE);
 
    fgets( line, sizeof line, fp);
+   remove_line_break(line);
+   pclose(fp);
+   
    if (env->fault_occurred) {
-        pclose(fp);
         return xmlrpc_build_value(env, "s", SOUND_READING_ERROR);
    }
 
-   pclose(fp);
    return xmlrpc_build_value(env, "s", line );
-
-
-  /* never here */
-  return xmlrpc_build_value(env, "s", SOUND_UNKNOW_ERROR );
 }
 
 

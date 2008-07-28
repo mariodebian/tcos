@@ -70,6 +70,8 @@
 #include "get_screenshot.c"
 #include "reboot_poweroff.c"
 
+#include "dpms.c"
+
 #include "simple-methods.c"
 
 
@@ -131,6 +133,7 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.rtp", &tcos_rtp, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.tnc", &tcos_tnc, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.rebootpoweroff", &tcos_reboot_poweroff, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.dpms", &tcos_dpms, NULL);
 #else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
@@ -231,6 +234,9 @@ Info methods:\n\
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.rebootpoweroff", &tcos_reboot_poweroff, NULL,
     "ssss:s", "Tcos, Reboot or Poweroff using Xorg cookie.");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.dpms", &tcos_dpms, NULL,
+    "sss:s", "Tcos, manage DPMS Monitor options.");
 #endif
 
     /*  end of add methods */

@@ -76,7 +76,7 @@ unsigned int getfilesize(char *fname) {
 /*
  * Base64 encoding/decoding (RFC1341)
  * Copyright (c) 2005, Jouni Malinen <j@w1.fi>
- * Addapted to TCOS by Mario Izquierdo (no line breaks output to stdout)
+ * Adapted to TCOS by Mario Izquierdo (no line breaks output to stdout)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -223,3 +223,8 @@ char **split(char *string, char *delim) {
     return tokens;
 }
 
+
+/* replace \n in command output */
+void remove_line_break( char *s ) {
+    s[strcspn ( s, "\n" )] = '\0';
+}

@@ -66,7 +66,7 @@ static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   strncpy(line, VNC_ERROR, BIG_BUFFER);
 
   fgets( line, sizeof line, fp);
-
+  remove_line_break(line);
   pclose(fp);
   dbgtcos("tcosxmlrpc::tcos_vnc() line=\"%s\"", line);
 

@@ -34,11 +34,10 @@ char
 
     #ifdef VISIBLE_PASSWD
        dbgtcos( "info validate_shadow(): user=%s pass=%s\n", user, pw);
-    #endif
-
-    #ifndef VISIBLE_PASSWD
+    #else
        dbgtcos( "info validate_shadow(): user=%s pass=**NOT-SHOW**\n", user);
     #endif
+
 
     ret = getspnam(user);
 

@@ -58,9 +58,10 @@ static xmlrpc_value *tcos_pci(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 	return xmlrpc_build_value(env, "s", PCI_FP_ERROR );
 
       fgets( line, sizeof line, fp);
-      dbgtcos("tcosxmlrpc::tcos_pci() line=\"%s\"\n", line);
-
+      remove_line_break(line);
       pclose(fp);
+      dbgtcos("tcosxmlrpc::tcos_pci() line=\"%s\"\n", line);
+      
       return xmlrpc_build_value(env, "s", line );
   }
   /* default method */
@@ -69,6 +70,7 @@ static xmlrpc_value *tcos_pci(xmlrpc_env *env, xmlrpc_value *in, void *ud)
       /* read all PCI ids and store in allpci */
       fp=(FILE*)popen(PCI_ALL, "r");
       fgets( allpci, sizeof allpci, fp);
+      remove_line_break(line);
       pclose(fp);
       /* search pci in allpci */
 
@@ -84,7 +86,8 @@ static xmlrpc_value *tcos_pci(xmlrpc_env *env, xmlrpc_value *in, void *ud)
         dbgtcos("tcosxmlrpc::tcos_pci() pci_cmd=\"%s\"\n", pci_cmd);
 
         fp=(FILE*)popen(pci_cmd, "r");
-	fgets( line, sizeof line, fp);
+        fgets( line, sizeof line, fp);
+        remove_line_break(line);
         pclose(fp);
         return xmlrpc_build_value(env, "s", line );
       }

@@ -31,7 +31,7 @@ standalone-debug:
 	$(GCC) $(TEST_DEFINES) -o $(STANDALONE) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"$(TCOS_BINS)\" -DIS_STANDALONE=1
 
 debug:
-	$(GCC) $(TEST_DEFINES) -o $(SERVER) $(CFLAGS) $(LIBS) $(SERVER).c
+	$(GCC) $(TEST_DEFINES) -o $(SERVER) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"/sbin\"
 
 
 validate-tcos:
