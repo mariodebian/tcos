@@ -6,8 +6,10 @@ initramfs-tools-tcos (0.89.4) unstable; urgency=low
   * hooks-addons/21pulseaudio
     - Change method to read CPU speed
     - Add --system to pulseaudio options
+    - Remove --system (need pulse user)
+    - Add --realtime only if pulseaudio support it (use --help to know it)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 Jul 2008 20:31:45 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 Jul 2008 21:20:07 +0200
 
 initramfs-tools-tcos (0.89.3) unstable; urgency=low
 

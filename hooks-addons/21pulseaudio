@@ -134,14 +134,20 @@ DISPLAY=:0
 export DISPLAY
 
 cpu=\$(grep MHz /proc/cpuinfo | tail -1 | awk  -F":" '{if(int(\$2) < 700) printf "low"}')
+realtime=\$(pulseaudio --help 2>&1 | grep -c realtime)
 
-OPTS="--log-target=stderr --system"
+OPTS="--log-target=stderr "
 if [ \${TCOS_PULSEAUDIO_RESAMPLE_METHOD} ]; then
  OPTS="\${OPTS} --resample-method=\${TCOS_PULSEAUDIO_RESAMPLE_METHOD}"
 fi
 
+
 if [ \$cpu = "low" ]; then
- OPTS="--no-cpu-limit --realtime \${OPTS}"
+ OPTS="--no-cpu-limit \${OPTS}"
+ # old versions of pulseaudio don't have realtime switch (Etch)
+ if [ \$realtime != "0" ]; then
+   OPTS="\${OPTS} --realtime "
+ fi
 fi
 
 _log "STARTPULSEAUDIO starting pulseaudio server..."
