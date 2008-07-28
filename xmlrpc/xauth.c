@@ -64,7 +64,7 @@ handle_xauth( char *cookie , char *servername)
         snprintf(host, BSIZE, "%s", ip.ipstr);
     }
     
-    fd = (int) mkstemp(xauth_file);
+    fd = mkstemp(xauth_file);
     if (fd < 0) {
         unlink(xauth_file);
         close(fd);
