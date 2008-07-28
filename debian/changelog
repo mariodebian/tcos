@@ -3,8 +3,11 @@ initramfs-tools-tcos (0.89.4) unstable; urgency=low
   * xmlrpc/xauth.c xmlrpc/common.h
     - Change mkstemp prototype, from man page: 'int mkstemp(char *template);'
     - This fix amd64 warning of incompatible types.
+  * hooks-addons/21pulseaudio
+    - Change method to read CPU speed
+    - Add --system to pulseaudio options
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 Jul 2008 15:50:06 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 Jul 2008 20:31:45 +0200
 
 initramfs-tools-tcos (0.89.3) unstable; urgency=low
 

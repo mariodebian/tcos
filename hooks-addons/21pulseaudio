@@ -133,9 +133,9 @@ fi
 DISPLAY=:0
 export DISPLAY
 
-cpu=\$(awk -F":" '{if(\$1 ~ /MHz/ && \$2 < 800) printf "low"}' /proc/cpuinfo | tail -1)
+cpu=\$(grep MHz /proc/cpuinfo | tail -1 | awk  -F":" '{if(int(\$2) < 700) printf "low"}')
 
-OPTS="--log-target=stderr "
+OPTS="--log-target=stderr --system"
 if [ \${TCOS_PULSEAUDIO_RESAMPLE_METHOD} ]; then
  OPTS="\${OPTS} --resample-method=\${TCOS_PULSEAUDIO_RESAMPLE_METHOD}"
 fi
