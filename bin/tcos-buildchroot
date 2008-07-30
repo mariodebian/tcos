@@ -48,7 +48,7 @@ TCOS_MIRROR="http://www.tcosproject.org"
 
 
 TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound"
-TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear aumix console-data discover"
+TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear console-data discover"
 TCOS_PACKAGES="${TCOS_PACKAGES} busybox rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils"
 
 # apt options (force-yes)
@@ -68,7 +68,7 @@ set_conf() {
       if [ ! $MIRROR2 ]; then MIRROR2=$UBUNTU_DEF_MIRROR2 ; fi
       MIRROR_EXTRAS="universe restricted multiverse"
       DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools"
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi"
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux squashfs-tools mknbi"
       DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data "
       DISTRO_PACKAGES="${DISTRO_PACKAGES} console-tools openbsd-inetd tcpd ssh"
       TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
@@ -79,7 +79,7 @@ set_conf() {
     else
       if [ ! $MIRROR ]; then MIRROR=$DEBIAN_DEF_MIRROR ; fi
       DISTRO_PACKAGES="xserver-xorg xutils libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools "
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux alsa-utils squashfs-tools mknbi "
+      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux squashfs-tools mknbi "
       DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools openbsd-inetd"
     fi
 

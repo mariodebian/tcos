@@ -28,15 +28,6 @@ if [ ! -e /dev/dsp ] && [ ! -d /proc/asound ]; then
   exit 1
 fi
 
-if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
-  TCOS_OSS=1
-  MIXER="aumix"
-else
-  TCOS_OSS=
-  MIXER="amixer -c 0 "
-  # another sound card? need fix..
-  #[ $? -eq 1 ] && MIXER="amixer -c 1 "
-fi
 
 export DISPLAY=:0
 
@@ -46,20 +37,19 @@ if [ -e /conf/tcos-run-functions ]; then
   export XAUTHORITY=/root/.Xauthority
   MASTER=$(/sbin/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
   PCM=$(/sbin/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
+  MIXER="tmixer -c 0 "
 else
   MASTER=$(/usr/lib/tcos/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
   PCM=$(/usr/lib/tcos/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
+  MIXER="/usr/lib/tcos/tmixer -c 0 "
 fi
 
 [ "$MASTER" = "unknow" ] && MASTER=100
 [ "$PCM" = "unknow" ] && PCM=100
 
-if [ $TCOS_OSS ]; then
-  [ $PCM -lt ${1} ] && $MIXER -w "${1}" >/dev/null 2>&1
-  [ $MASTER -lt ${1} ] && $MIXER -v "${1}" >/dev/null 2>&1
-else
-  $MIXER set 'PCM' unmute >/dev/null 2>&1
-  $MIXER set 'Master' unmute >/dev/null 2>&1
-  [ $PCM -lt ${1} ] && $MIXER set 'PCM' ${1}% >/dev/null 2>&1
-  [ $MASTER -lt ${1} ] && $MIXER set 'Master' ${1}% >/dev/null 2>&1
-fi
+$MIXER sset 'PCM' 'on'
+$MIXER sset 'Master' 'on'
+[ $PCM -lt ${1} ] && $MIXER sset 'PCM' ${1}
+[ $MASTER -lt ${1} ] && $MIXER sset 'Master' ${1}
+
+

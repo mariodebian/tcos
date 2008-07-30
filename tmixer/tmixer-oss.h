@@ -8,7 +8,10 @@
 
 
 #define OSSMAXLEVEL 100		/* highest level permitted by OSS drivers */
+
 #define OSSUNMUTELEVEL 85	/* level of unmute (no way to get old level) */
+/* you can overwrite this level with TMIXER_OSSMUTELEVEL environment var */
+
 
 #define SOUND_IOCTL(a,b,c)	ioctl(a,b,c)
 

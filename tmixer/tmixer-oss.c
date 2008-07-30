@@ -23,6 +23,7 @@
  
 #include <stdio.h>
 #include <stdlib.h>		/* getenv() */
+#include <getopt.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -126,7 +127,7 @@ int SetShowNoninter(int dev, char *action, char *level) {
 	/* Change or display settings from the command line. */
 	char *devstr;
 	int tmp;
-	if ( strcmp(action, "scontents") == 0 ) {
+	if ( (strcmp(action, "scontents") == 0) || (strcmp(action, "sget") == 0) ) {
 		devstr = dev_name[dev];
 		ErrorExitWarn(ReadLevel(dev, &tmp), 'e');
 		printf("%s,volume|switch|,%i,", dev_name[dev], (tmp & 0xFF) );
@@ -148,10 +149,15 @@ int SetShowNoninter(int dev, char *action, char *level) {
 	}
 	
 	else if ( strcmp(action, "sset") == 0 ) {
+	    /*fprintf(stderr, "DEBUG: sset: level=%s\n", level);*/
 	    if ( (strcmp(level, "mute") == 0) || (strcmp(level, "off") == 0) )
 	        tmp=0;
-	    else if ( (strcmp(level, "unmute") == 0) || (strcmp(level, "on") == 0) )
-	        tmp=OSSUNMUTELEVEL;
+	    else if ( (strcmp(level, "unmute") == 0) || (strcmp(level, "on") == 0) ) {
+	        if (getenv("TMIXER_OSSMUTELEVEL") != NULL)
+	            tmp=atoi(getenv("TMIXER_OSSMUTELEVEL"));
+	        else
+	            tmp=OSSUNMUTELEVEL;
+	    }
 	    else
 		    tmp = atoi(level);
 		tmp = (tmp > OSSMAXLEVEL) ? OSSMAXLEVEL : tmp;
@@ -166,6 +172,18 @@ int SetShowNoninter(int dev, char *action, char *level) {
 	return 0;
 }
 
+void tmixer_oss_help(void)
+{
+	printf("Usage: tmixer-oss [command]\n");
+	printf("\nAvailable commands:\n");
+	printf("  scontrols       show all mixer simple controls\n");
+	printf("  scontents	  show contents of all mixer simple controls (default command)\n");
+	printf("  sset sID P      set contents for one mixer simple control\n");
+	printf("  sget sID        get contents for one mixer simple control\n");
+	printf("\ntmixer-oss output format:\n");
+	printf("  ChannelName,   ChannelType [volume|switch] , Volume in %% , SwitchStatus [on|off] \n\n");
+}
+
 
 #ifdef HAVE_TMIXER_MAIN
 int tmixer_oss(int argc, char *argv[]) {
@@ -174,75 +192,149 @@ int main(int argc, char *argv[]) {
 #endif
 	int ii, index=-1;
 	
+	static struct option long_option[] =
+	{
+		{"help", 0, NULL, 'h'},
+		{"card", 1, NULL, 'c'},
+		{"device", 1, NULL, 'D'},
+		{"quiet", 0, NULL, 'q'},
+		{"inactive", 0, NULL, 'i'},
+		{"debug", 0, NULL, 'd'},
+		{"nocheck", 0, NULL, 'n'},
+		{"version", 0, NULL, 'v'},
+		{"abstract", 1, NULL, 'a'},
+		{"stdin", 0, NULL, 's'},
+		{NULL, 0, NULL, 0},
+	};
+	
+	while (1) {
+		int c;
+
+		if ((c = getopt_long(argc, argv, "hc:D:qidnva:s", long_option, NULL)) < 0)
+			break;
+		switch (c) {
+		case 'h':
+			tmixer_oss_help();
+			return 0;
+		case 'c':
+			fprintf(stderr, "tmixer-oss: WARNING: OSS driver don't support -c (--card) option.\n");
+			break;
+		case 'D':
+			fprintf(stderr, "tmixer-oss: WARNING: OSS driver don't support -D (--device) option.\n");
+			break;
+		case 'q':
+			/* do nothing */
+			break;
+		case 'i':
+			/* do nothing */
+			break;
+		case 'd':
+			/* do nothing */
+			break;
+		case 'n':
+			/* do nothing */
+			break;
+		case 'v':
+			printf("tmixer-oss version (TCOS) " TCOS_VERSION "\n");
+			close(mixer_fd);
+			return 1;
+		case 'a':
+			/* do nothing */
+			break;
+		case 's':
+			/* do nothing */
+			break;
+		default:
+			fprintf(stderr, "tmixer-oss: Invalid switch or option needs an argument.\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+	/*printf("argc=%d optind=%d\n", argc, optind);*/
 	if (mixer_fd == -1)
 		ErrorExitWarn(InitializeMixer(DEVICE_FILENAME), 'e');
-	
-	if( argc == 1 || (argc == 2 && strcmp(argv[1], "scontents") == 0) ) {
-	    /*optarg="q";*/
-	    for (ii = 0; ii < SOUND_MIXER_NRDEVICES; ii++) {
+
+	if (argc - optind <= 0) {
+	    /* default OPTION empty == scontents */
+		for (ii = 0; ii < SOUND_MIXER_NRDEVICES; ii++) {
 			if ((1 << ii) & (devmask | recmask))
 				ErrorExitWarn(SetShowNoninter(ii, "scontents", ""), 'e');
 		}
 		close(mixer_fd);
 		exit(EXIT_SUCCESS);
 	}
-	
-	if( argc == 2 && strcmp(argv[1], "scontrols") == 0 ) {
-	    /*optarg="q";*/
-	    for (ii = 0; ii < SOUND_MIXER_NRDEVICES; ii++) {
+	if (!strcmp(argv[optind], "help")) {
+		tmixer_oss_help();
+		close(mixer_fd);
+		exit(EXIT_SUCCESS);
+		
+	} else if (!strcmp(argv[optind], "scontrols") || !strcmp(argv[optind], "simple")) {
+		for (ii = 0; ii < SOUND_MIXER_NRDEVICES; ii++) {
 			if ((1 << ii) & (devmask | recmask))
 				ErrorExitWarn(SetShowNoninter(ii, "scontrols", ""), 'e');
 		}
 		close(mixer_fd);
 		exit(EXIT_SUCCESS);
-	}
-
-	if ( argc > 3 && strcmp(argv[1], "sset") == 0 ) {
-	    
-	    if( strcmp(argv[2], "Master") == 0 )       index=0;
-	    else if( strcmp(argv[2], "Bass") == 0 )    index=1;
-	    else if( strcmp(argv[2], "Treble") == 0 )  index=2;
-	    else if( strcmp(argv[2], "Synth") == 0 )   index=3;
-	    else if( strcmp(argv[2], "PCM") == 0 )     index=4;
-	    else if( strcmp(argv[2], "Speaker") == 0 ) index=5;
-	    else if( strcmp(argv[2], "Line") == 0 )    index=6;
-	    else if( strcmp(argv[2], "Mic") == 0 )     index=7;
-	    else if( strcmp(argv[2], "CD") == 0 )      index=8;
-	    else if( strcmp(argv[2], "Mix") == 0 )     index=9;
-	    else if( strcmp(argv[2], "PCM2") == 0 )    index=10;
-	    else if( strcmp(argv[2], "Record") == 0 )  index=11;
-	    else if( strcmp(argv[2], "Input") == 0 )   index=12;
-	    else if( strcmp(argv[2], "Output") == 0 )  index=13;
-	    else if( strcmp(argv[2], "Line 1") == 0 )  index=14;
-	    else if( strcmp(argv[2], "Line 2") == 0 )  index=15;
-	    else if( strcmp(argv[2], "Line 3") == 0 )  index=16;
-	    else if( strcmp(argv[2], "Digital1") == 0 ) index=17;
-	    else if( strcmp(argv[2], "Digital2") == 0 ) index=18;
-	    else if( strcmp(argv[2], "Digital3") == 0 ) index=19;
-	    else if( strcmp(argv[2], "Phone In") == 0 ) index=20;
-	    else if( strcmp(argv[2], "PhoneOut") == 0 ) index=21;
-	    else if( strcmp(argv[2], "Video") == 0 )   index=22;
-	    else if( strcmp(argv[2], "Radio") == 0 )   index=23;
-	    else if( strcmp(argv[2], "Monitor") == 0 ) index=24;
+		
+	} else if (!strcmp(argv[optind], "scontents")) {
+		for (ii = 0; ii < SOUND_MIXER_NRDEVICES; ii++) {
+			if ((1 << ii) & (devmask | recmask))
+				ErrorExitWarn(SetShowNoninter(ii, "scontents", ""), 'e');
+		}
+		close(mixer_fd);
+		exit(EXIT_SUCCESS);
+		
+	} else if (!strcmp(argv[optind], "sset") || !strcmp(argv[optind], "sget")) {
+	    /*fprintf(stderr, "DEBUG: argv[optind]=%s argv[optind+1]=%s argv[optind+2]=%s\n", argv[optind], argv[optind+1], argv[optind+2]);
+	    fprintf(stderr, "argc=%d optind=%d strcmp=%d argv[optind]='%s'\n",argc, optind, strcmp(argv[optind], "sget"), argv[optind]);*/
+	    if ( strcmp(argv[optind], "sget") ) {
+	        if (argc < optind +3) {
+	            fprintf(stderr, "tmixer-oss: ERROR: need value to change channel '%s'\n",argv[optind+1]);
+	            close(mixer_fd);
+	            exit(EXIT_FAILURE);
+	        }
+	    }
+	    if( strcmp(argv[optind+1], "Master") == 0 )       index=0;
+	    else if( strcmp(argv[optind+1], "Bass") == 0 )    index=1;
+	    else if( strcmp(argv[optind+1], "Treble") == 0 )  index=2;
+	    else if( strcmp(argv[optind+1], "Synth") == 0 )   index=3;
+	    else if( strcmp(argv[optind+1], "PCM") == 0 )     index=4;
+	    else if( strcmp(argv[optind+1], "Speaker") == 0 ) index=5;
+	    else if( strcmp(argv[optind+1], "Line") == 0 )    index=6;
+	    else if( strcmp(argv[optind+1], "Mic") == 0 )     index=7;
+	    else if( strcmp(argv[optind+1], "CD") == 0 )      index=8;
+	    else if( strcmp(argv[optind+1], "Mix") == 0 )     index=9;
+	    else if( strcmp(argv[optind+1], "PCM2") == 0 )    index=10;
+	    else if( strcmp(argv[optind+1], "Record") == 0 )  index=11;
+	    else if( strcmp(argv[optind+1], "Input") == 0 )   index=12;
+	    else if( strcmp(argv[optind+1], "Output") == 0 )  index=13;
+	    else if( strcmp(argv[optind+1], "Line 1") == 0 )  index=14;
+	    else if( strcmp(argv[optind+1], "Line 2") == 0 )  index=15;
+	    else if( strcmp(argv[optind+1], "Line 3") == 0 )  index=16;
+	    else if( strcmp(argv[optind+1], "Digital1") == 0 ) index=17;
+	    else if( strcmp(argv[optind+1], "Digital2") == 0 ) index=18;
+	    else if( strcmp(argv[optind+1], "Digital3") == 0 ) index=19;
+	    else if( strcmp(argv[optind+1], "Phone In") == 0 ) index=20;
+	    else if( strcmp(argv[optind+1], "PhoneOut") == 0 ) index=21;
+	    else if( strcmp(argv[optind+1], "Video") == 0 )   index=22;
+	    else if( strcmp(argv[optind+1], "Radio") == 0 )   index=23;
+	    else if( strcmp(argv[optind+1], "Monitor") == 0 ) index=24;
 	    
 	    else
-	            fprintf(stderr, "tmixer-oss: unknow channel '%s'\n",argv[3]);
-	            
+	            fprintf(stderr, "tmixer-oss: ERROR: unknow channel '%s'\n",argv[optind+1]);
+	    
+	    
 	    if (index >= 0) {
-	        ErrorExitWarn(SetShowNoninter(index, "sset", argv[3] ), 'e');
+	        /*fprintf(stderr, "DEBUG: argv[optind]=%s argv[optind+1]=%s argv[optind+2]=%s\n", argv[optind], argv[optind+1], argv[optind+2]);*/
+	        ErrorExitWarn(SetShowNoninter(index, argv[optind], argv[optind+2] ), 'e');
 	    }
 	    
 		close(mixer_fd);
 		exit(EXIT_SUCCESS);
+	} else {
+		fprintf(stderr, "tmixer-oss: ERROR: Unknown command '%s'...\n", argv[optind]);
 	}
 	
-	if (argc == 2  && (strcmp(argv[1], "--version") == 0) ) {
-		printf("tmixer-oss version (TCOS) " TCOS_VERSION "\n");
-		close(mixer_fd);
-		exit(EXIT_SUCCESS);
-	}
-	
-
 	ErrorExitWarn(12, 'e');
 	close(mixer_fd);
 	exit(EXIT_FAILURE);

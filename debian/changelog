@@ -8,8 +8,18 @@ initramfs-tools-tcos (0.89.4) unstable; urgency=low
     - Add --system to pulseaudio options
     - Remove --system (need pulse user)
     - Add --realtime only if pulseaudio support it (use --help to know it)
+  * tmixer:
+    - Add new way to get audo channels (mix of aumix and amixer sources)
+  * hooks-addons/20alsa scripts/tcos-bottom/40initsound
+    xmlrpc/sh/soundctl.sh xmlrpc/sh/vlc-controller.sh
+    - Prepare to use new tmixer tool (all is more easy)
+  * Makefile
+    - Install tmixer in /usr/lib/tcos/
+  * debian/control bin/tcos-buildchroot
+    - Build depends on libasound2-dev and remove aumix and alsa-utils depends
+    - Make pulseaudio-esound-compat as alternative of esound
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 28 Jul 2008 21:20:07 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 30 Jul 2008 16:12:32 +0200
 
 initramfs-tools-tcos (0.89.3) unstable; urgency=low
 

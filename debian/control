@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
 Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, 
                libxmlrpc-c3-dev, bc, libxau-dev, libxaw7-dev, 
-               imlib11-dev, python, python-support (>= 0.3), pkg-config
+               imlib11-dev, python, python-support (>= 0.3), pkg-config, libasound2-dev
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.4
 XS-Vcs-Browser: http://trac.tcosproject.org/browser/trunk/initramfs-tools-tcos
@@ -67,9 +67,9 @@ Package: tcos
 Architecture: all
 Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), tcos-usplash (>= 0.84.5), 
          atftpd, dhcp3-server | dhcp-server, tcosmonitor, 
-         openbsd-inetd | netkit-inetd | inetutils-inetd, aumix, pulseaudio, 
+         openbsd-inetd | netkit-inetd | inetutils-inetd, pulseaudio, 
          pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, 
-         ltspfs-server | ltspfs, esound, alsa-utils, cdebootstrap, 
+         ltspfs-server | ltspfs, esound | pulseaudio-esound-compat, cdebootstrap, 
          python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
 Provides: tcos-server-utils
 Replaces: tcos-server-utils

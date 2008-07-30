@@ -26,33 +26,39 @@ if [ ! -e /dev/dsp ] && [ ! -d /proc/asound ]; then
   exit 1
 fi
 
-CMD="amixer -c 0 "
+
 
 output=""
-need_parse="0"
-unmute_level="80"
+tmpfile=/tmp/soundinfo-$$
 
-if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
-  TCOS_OSS=1
-  MIXER="aumix"
+read_line() {
+  head -$1 $tmpfile | tail -1
+}
+
+#####################
+#export TMIXER_FORCE=oss
+#export TMIXER_OSSMUTELEVEL=85
+if [ -x /usr/lib/tcos/tmixer ]; then
+  MIXER="/usr/lib/tcos/tmixer -c 0 "
 else
-  TCOS_OSS=
-  MIXER="amixer -c 0 "
-  # another sound card? need fix..
-  #[ $? -eq 1 ] && MIXER="amixer -c 1 "
+  MIXER="tmixer -c 0 "
 fi
 
-# for debug force OSS
-#TCOS_OSS=1
-#MIXER="aumix"
-#####################
 
 get_controls() {
-  if [ $TCOS_OSS ]; then
-    $MIXER -q | awk '{print $1}'
-  else
-    $MIXER scontrols 2>/dev/null | awk -F " control " '{print $2}'| awk -F "," '{print $1}' | sed s/"'"//g
-  fi
+  $MIXER scontrols
+}
+
+
+
+get_contents() {
+  $MIXER scontents > $tmpfile
+  num_lines=$(cat $tmpfile | wc -l)
+  for i in $(seq 1 $num_lines); do
+    line=$(read_line $i)
+    echo -n "$line#"
+  done
+  rm $tmpfile
 }
 
 get_level() {
@@ -60,14 +66,7 @@ get_level() {
    echo "soundctl error, need a control to retrieve data"
    exit 1
   fi
-  
-  if [ $TCOS_OSS ]; then
-    $MIXER -q | grep $1 | head -1 | awk '{print $3}' | sed s/","//g
-  else
-    var=$($MIXER  sget "$1" 2>/dev/null | grep "^  Front"| head -1 | awk '{print $5}'| sed s/"\["//g| sed s/"\]"//g)
-    [ -z $var ] && var=$($MIXER  sget "$1" 2>/dev/null | grep "^  Mono"| head -1 | awk '{print $4}'| sed s/"\["//g| sed s/"\]"//g)
-    echo $var
-  fi
+  $MIXER sget "$1" | awk -F"," '{print $3}'
 }
 
 set_level() {
@@ -79,26 +78,7 @@ set_level() {
    echo "soundctl error, need a xxx% level or 1-31 int"
    exit 1
  fi
- 
- if [ $TCOS_OSS ]; then
-    if [ "$1" = "vol" ]; then
-      $MIXER -v "$2" ; get_level "$1"
-    elif [ "$1" = "pcm" ]; then
-      $MIXER -w "$2" ; get_level "$1"
-    elif [ "$1" = "line" ]; then
-      $MIXER -l "$2" ; get_level "$1"
-    elif [ "$1" = "mic" ]; then
-      $MIXER -m "$2" ; get_level "$1"
-    elif [ "$1" = "cd" ]; then
-      $MIXER -c "$2" ; get_level "$1"
-    else
-      echo "unknow OSS mixer channel"
-    fi
- else
-    var=$($MIXER  set "$1" "$2" 2>/dev/null | grep "^  Front"| head -1 | awk '{print $5}'| sed s/"\["//g| sed s/"\]"//g)
-    [ -z $var ] && var=$($MIXER  set "$1" "$2" 2>/dev/null | grep "^  Mono"| head -1 | awk '{print $4}'| sed s/"\["//g| sed s/"\]"//g)
-    echo $var
- fi
+ $MIXER sset "$1" "$2"
 }
 
 get_mute() {
@@ -106,21 +86,7 @@ get_mute() {
    echo "soundctl error, need a control to retrieve data"
    exit 1
  fi
- if [ $TCOS_OSS ]; then
-    if [ "$(get_level $1)" = "0" ]; then
-      echo "off"
-    else
-      echo "on"
-    fi
-  else
-    var=$($MIXER  sget $1 2>/dev/null | grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
-    if [ -z $var ];then
-      var=$($MIXER  sget $1 2>/dev/null | grep "^  Mono"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
-    elif [ $var != "on" -a $var != "off" -a $var != "" ];then
-      var=$($MIXER  sget $1 2>/dev/null | grep "^  Front"| head -1 | awk '{print $7}'| sed s/"\["//g| sed s/"\]"//g)
-    fi
-    echo $var
-  fi
+ $MIXER sget "$1" | awk -F"," '{print $4}'
 }
 
 set_mute() {
@@ -128,17 +94,7 @@ set_mute() {
    echo "soundctl error, need a control to retrieve data"
    exit 1
  fi
- if [ $TCOS_OSS ]; then
-    set_level "$1" "0"
-  else
-    var=$($MIXER  set $1 mute 2>/dev/null | grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
-    if [ -z $var ];then
-      var=$($MIXER  set $1 mute 2>/dev/null | grep "^  Mono"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
-    elif [ $var != "on" -a $var != "off" -a $var != "" ];then
-      var=$($MIXER  set $1 mute 2>/dev/null | grep "^  Front"| head -1 | awk '{print $7}'| sed s/"\["//g| sed s/"\]"//g)
-    fi
-    echo $var
-  fi
+ $MIXER sset "$1" "off"
 }
 
 set_unmute() {
@@ -146,38 +102,33 @@ set_unmute() {
    echo "soundctl error, need a control to retrieve data"
    exit 1
  fi
- if [ $TCOS_OSS ]; then
-    set_level "$1" "$unmute_level"
-  else
-    var=$($MIXER  set $1 unmute 2>/dev/null | grep "^  Front"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
-    if [ -z $var ];then
-      var=$($MIXER  set $1 unmute 2>/dev/null | grep "^  Mono"| head -1 | awk '{print $6}'| sed s/"\["//g| sed s/"\]"//g)
-    elif [ $var != "on" -a $var != "off" -a $var != "" ];then
-      var=$($MIXER  set $1 unmute 2>/dev/null | grep "^  Front"| head -1 | awk '{print $7}'| sed s/"\["//g| sed s/"\]"//g)
-    fi
-    echo $var
-  fi
+ $MIXER sset "$1" "on"
 }
 
-read_line() {
-head -$1 /tmp/soundctl | tail -1
-}
+
+
 
 get_serverinfo() {
   if [ "$(pidof pulseaudio)" = "" ]; then
     echo "error: pulseaudio not running"
     exit 1
   fi
-  pactl -s 127.0.0.1 stat > /tmp/soundinfo
-  output=$(cat /tmp/soundinfo)
-  rm /tmp/soundinfo
-  need_parse=1
+  #pactl -s 127.0.0.1 stat > $tmpfile
+  pactl stat > $tmpfile
+  num_lines=$(cat $tmpfile | wc -l)
+  for i in $(seq 1 $num_lines); do
+    line=$(read_line $i)
+    echo -n "$line|"
+  done
+  rm $tmpfile
+  exit 0
 }
 
 usage() {
   echo "Usage:"
   echo "       $0  --help                  ( this help text )"
   echo "       $0  --showcontrols          ( return all mixer channels )"
+  echo "       $0  --showcontents          ( return all mixer channels with data )"
   echo "       $0  --getlevel CHANNEL      ( return CHANNEL level xx% xx% left and right )"
   echo "       $0  --setlevel CHANNEL xx%  ( change and return CHANNEL level xx% xx% left and right )"
   echo "       $0  --getmute CHANNEL       ( return off if mute or on if unmute CHANNEL )"
@@ -191,7 +142,10 @@ usage() {
 for x in $1; do
 	case $x in
 	--showcontrols)
-		output=$(get_controls); need_parse="1"
+		output=$(get_controls); 
+		;;
+	--showcontents)
+		output=$(get_contents); 
 		;;
     --getlevel)
 		output=$(get_level "$2")
@@ -230,16 +184,6 @@ if [ "$output" = "" ]; then
   output="unknow"
 fi
 
-if [ "$need_parse" = "1" ]; then
-  echo "$output" > /tmp/soundctl
-  num_lines=$(cat /tmp/soundctl | wc -l)
-  for i in $(seq 1 $num_lines); do
-    line=$(read_line $i)
-    echo -n "$line|"
-  done
-  rm /tmp/soundctl
-else
-  echo -n $output
-fi
+echo -n $output
 
 exit 0

@@ -16,6 +16,7 @@ all:
 	cd dbus        && make
 	cd session-cmd && make
 	cd tcos-standalone && make
+	cd tmixer       && make
 	#cd httpfs      && make
 
 include common.mk
@@ -36,6 +37,7 @@ clean:
 	cd dbus        && make clean
 	cd session-cmd && make clean
 	cd tcos-standalone && make clean
+	cd tmixer       && make clean
 	#cd httpfs      && make clean
 
 gedit:
@@ -198,6 +200,9 @@ install:
 
 	# tcos-standalone helper
 	cd tcos-standalone && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+
+	# tmixer
+	cd tmixer && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 	# httpfs
 	#cd httpfs && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)

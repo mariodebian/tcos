@@ -44,17 +44,20 @@ cat <<EOF > /etc/esound/esd.conf
 EOF
 
 # setting volumes
-log_begin_msg "Setting volume to ${TCOS_VOLUME}"
+log_begin_msg "Setting audio channel level to ${TCOS_VOLUME}"
   _log "INITSOUND Setting volume to ${TCOS_VOLUME}"
-  [ $(amixer -c 0 | grep -c PCM) -ne 0 ] &&  amixer -c 0 set 'PCM' ${TCOS_VOLUME} unmute >> /tmp/initramfs.debug 2>&1
-  [ $(amixer -c 0 | grep -c Master) -ne 0 ] &&  amixer -c 0 set 'Master' ${TCOS_VOLUME} unmute >> /tmp/initramfs.debug 2>&1
-  [ $(amixer -c 0 | grep -c "Master Front") -ne 0 ] &&  amixer -c 0 set 'Master Front' ${TCOS_VOLUME} unmute >> /tmp/initramfs.debug 2>&1
-  [ $(amixer -c 0 | grep -c "Master Digital") -ne 0 ] &&  amixer -c 0 set 'Master Digital' ${TCOS_VOLUME} unmute >> /tmp/initramfs.debug 2>&1
-  [ $(amixer -c 0 | grep -c Headphone) -ne 0 ] && amixer -c 0 set 'Headphone' ${TCOS_VOLUME} unmute >> /tmp/initramfs.debug 2>&1
-  if [ -x /usr/bin/aumix ]; then
-    aumix -v ${TCOS_VOLUME}
-    aumix -w ${TCOS_VOLUME}
-  fi
+  tmixer -c 0 sset 'PCM' ${TCOS_VOLUME}                  >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'PCM' on                              >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master' ${TCOS_VOLUME}               >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master' on                           >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Mono' ${TCOS_VOLUME}          >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Mono' on                      >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Front' ${TCOS_VOLUME}         >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Front' on                     >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Digital' ${TCOS_VOLUME}       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Digital' on                   >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Headphone' on                        >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Speaker' on                        >> /tmp/initramfs.debug 2>&1
 log_end_msg $?
 
 
