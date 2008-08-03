@@ -53,7 +53,7 @@ char *validate_tcos(char *user, char *pass)
   }
 
   fgets( line, sizeof line, fp);
-  remove_line_break(line);
+  /*remove_line_break(line);*/
   fclose(fp);
   strncpy(login->line, line, BSIZE);
   

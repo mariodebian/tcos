@@ -20,10 +20,10 @@ USPLASH_etch=0.3
 KERNEL_testing="2.6.24-1-486"
 USPLASH_testing=0.4.1
 
-KERNEL_unstable="2.6.25-2-486"
+KERNEL_unstable="2.6.26-1-486"
 USPLASH_unstable=0.4.1
 
-KERNEL_experimental="2.6.24-1-486"
+KERNEL_experimental="2.6.26-1-486"
 USPLASH_experimental=0.4.1
 
 KERNEL_gutsy="2.6.22-15-generic"

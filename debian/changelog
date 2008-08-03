@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.89.5) unstable; urgency=low
+
+  * xmlrpc/validate-tcos.c:
+    - Revert remove_line_break that breaks tcos auth
+  * Update Debian unstable kernel to 2.6.26-1-486
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 03 Aug 2008 19:53:55 +0200
+
 initramfs-tools-tcos (0.89.4) unstable; urgency=low
 
   * xmlrpc/xauth.c xmlrpc/common.h
