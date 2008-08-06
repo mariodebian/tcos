@@ -8,8 +8,10 @@ initramfs-tools-tcos (0.89.5) unstable; urgency=low
   * Update Debian testing default kernel to 2.6.25-2-486
   * xmlrpc/tcosxmlrpc.c
     - Fix typo adding method tcos_tnc in OLD API
+  * tmixer/Makefile
+    - Disable '-ansi -pedantic' compile flags (Debian Etch libasound2-dev don't like it)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Aug 2008 20:03:40 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Aug 2008 20:21:58 +0200
 
 initramfs-tools-tcos (0.89.4) unstable; urgency=low
 

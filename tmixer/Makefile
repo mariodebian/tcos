@@ -1,8 +1,11 @@
-CFLAGS		= -g -O2 -Wall -ansi -pedantic -std=c99 -DTCOS_VERSION="\"$(VERSION)\""
+DEBUGCFLAGS	= -g -O2 -Wall -ansi -pedantic -std=c99 -DTCOS_VERSION="\"$(VERSION)\""
+CFLAGS		= -g -O2 -Wall -DTCOS_VERSION="\"$(VERSION)\""
 LDADD		= -lasound
 bin_PROGRAMS = tmixer
 TMIXER_SOURCES= tmixer-alsa.c tmixer-oss.c
 CC=gcc
+
+all: tmixer
 
 tmixer: tmixer.c tmixer-oss.c tmixer-oss.h tmixer-alsa.c tmixer-alsa.h
 	$(CC) -o $(bin_PROGRAMS) tmixer.c $(LDADD) $(CFLAGS)
@@ -12,6 +15,11 @@ tmixer-alsa: tmixer-alsa.c tmixer-alsa.h
 
 tmixer-oss: tmixer-oss.c tmixer-oss.h
 	$(CC) -o $(bin_PROGRAMS) tmixer-oss.c $(LDADD) $(CFLAGS)
+
+
+debug: tmixer.c tmixer-oss.c tmixer-oss.h tmixer-alsa.c tmixer-alsa.h
+	$(CC) -o $(bin_PROGRAMS) tmixer.c $(LDADD) $(DEBUGCFLAGS)
+
 
 
 include ../common.mk
