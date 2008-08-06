@@ -229,7 +229,7 @@ Info methods:\n\
     xmlrpc_server_abyss_add_method_w_doc("tcos.rtp", &tcos_rtp, NULL,
     "ssss:s", "Tcos, manage rtp params.");
 
-    xmlrpc_server_abyss_add_method_w_doc("tcos.tnc", &tcos_rtp, NULL,
+    xmlrpc_server_abyss_add_method_w_doc("tcos.tnc", &tcos_tnc, NULL,
     "sssss:s", "Tcos, net controller params.");
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.rebootpoweroff", &tcos_reboot_poweroff, NULL,

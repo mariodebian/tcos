@@ -6,8 +6,10 @@ initramfs-tools-tcos (0.89.5) unstable; urgency=low
   * bin/get_server:
     - Read TCOS SSL vars before reading log file
   * Update Debian testing default kernel to 2.6.25-2-486
+  * xmlrpc/tcosxmlrpc.c
+    - Fix typo adding method tcos_tnc in OLD API
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Aug 2008 19:49:43 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Aug 2008 20:03:40 +0200
 
 initramfs-tools-tcos (0.89.4) unstable; urgency=low
 
