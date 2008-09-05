@@ -34,6 +34,9 @@ USPLASH_max=0.4.1
 
 KERNEL_hardy="2.6.24-19-generic"
 USPLASH_hardy=0.4.1
+
+KERNEL_intrepid="2.6.27-2-generic"
+USPLASH_intrepid=0.4.1
 ##################################
 
 

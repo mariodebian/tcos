@@ -253,6 +253,9 @@ patch_max: patch_amd64
 patch_hardy: patch_amd64
 	# nothing to patch
 
+patch_intrepid: patch_amd64
+	# nothing to patch
+
 patch_etch: patch_amd64
 	# PATCHING INITRAMFS_TOOLS_TCOS in Debian etch
 	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control

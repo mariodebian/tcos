@@ -73,7 +73,7 @@ set_conf() {
       DISTRO_PACKAGES="${DISTRO_PACKAGES} console-tools openbsd-inetd tcpd ssh"
       TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
       # need kernel modules unionfs and squashfs in linux-ubuntu-modules from distros grather than gutsy
-      if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ];then
+      if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" -o ${TCOS_DISTRO} = "intrepid" ];then
         TCOS_PACKAGES="linux-ubuntu-modules-${TCOS_KERNEL} ${TCOS_PACKAGES}"
       fi
     else
@@ -83,7 +83,7 @@ set_conf() {
       DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools openbsd-inetd"
     fi
 
-    if [ ${TCOS_DISTRO} = "testing" -o ${TCOS_DISTRO} = "lenny" -o ${TCOS_DISTRO} = "unstable" -o ${TCOS_DISTRO} = "hardy" ];then
+    if [ ${TCOS_DISTRO} = "testing" -o ${TCOS_DISTRO} = "lenny" -o ${TCOS_DISTRO} = "unstable" -o ${TCOS_DISTRO} = "hardy" -o ${TCOS_DISTRO} = "intrepid" ];then
       TCOS_PACKAGES="${TCOS_PACKAGES} xauth"
     fi
 }

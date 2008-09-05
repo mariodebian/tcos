@@ -11,8 +11,12 @@ initramfs-tools-tcos (0.89.6) unstable; urgency=low
     - Add libsox-fmt-all and libasound2-plugins to tcos-core Depends
   * xmlrpc/sh/rtp-controller.sh, hooks-addons/21pulseaudio:
     - Revert creation of /etc/asound.conf in 21pulseaudio because breaks tmixer
+  * common.mk Makefile:
+    - Add Ubuntu intrepid target and kernel version (2.6.27-2-generic)
+  * bin/tcos-buildchroot
+    - Add intrepid in if sentences
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 05 Sep 2008 12:38:28 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 05 Sep 2008 15:10:58 +0200
 
 initramfs-tools-tcos (0.89.5) unstable; urgency=low
 
