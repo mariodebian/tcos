@@ -89,15 +89,6 @@ else
  cpifexists /etc/pulse/client.conf     /etc/pulse/
  cpifexists /etc/pulse/daemon.conf     /etc/pulse/
 
- cat << EOF >> ${DESTDIR}/etc/asound.conf
-pcm.!default {
-    type pulse
-}
-ctl.!default {
-    type pulse
-}
-EOF
-
   mkdir -p ${DESTDIR}/usr/lib/alsa-lib/
   cpifexists /usr/lib/alsa-lib/libasound_module_pcm_pulse.so    /usr/lib/alsa-lib/
   cpifexists /usr/lib/alsa-lib/libasound_module_ctl_pulse.so    /usr/lib/alsa-lib/

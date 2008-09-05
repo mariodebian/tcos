@@ -52,6 +52,14 @@ for arg in $1; do
      startrtp)
         mkfifo /tmp/audiofifo 2>/dev/null
         if [ $STANDALONE = 0 ]; then
+             cat << EOF > /etc/asound.conf
+pcm.!default {
+    type pulse
+}
+ctl.!default {
+    type pulse
+}
+EOF
              /sbin/daemonize.sh "rtpdump" "-F payload -o /tmp/audiofifo $2/1234"
              /sbin/daemonize.sh "play" "-t raw -r 44100 -s -2 -c 2 -B /tmp/audiofifo"
              if [ $? = 0 ]; then echo "ok"; else echo "error: starting rtp play"; fi
@@ -64,7 +72,7 @@ for arg in $1; do
         if [ $STANDALONE = 0 ]; then
             killall -SIGKILL play 2>/dev/null
             killall -SIGKILL rtpdump 2>/dev/null
-            rm -f /tmp/audiofifo
+            rm -f /tmp/audiofifo /etc/asound.conf
             if [ $? = 0 ]; then echo "ok"; else echo "error: stopping rtp play"; fi
         else
             $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL play" 2>/dev/null

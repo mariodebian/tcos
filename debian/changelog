@@ -9,8 +9,10 @@ initramfs-tools-tcos (0.89.6) unstable; urgency=low
     - touch mysettings.conf (newer tftp don't create if no exists)
   * debian/control:
     - Add libsox-fmt-all and libasound2-plugins to tcos-core Depends
+  * xmlrpc/sh/rtp-controller.sh, hooks-addons/21pulseaudio:
+    - Revert creation of /etc/asound.conf in 21pulseaudio because breaks tmixer
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 05 Sep 2008 11:08:42 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 05 Sep 2008 12:38:28 +0200
 
 initramfs-tools-tcos (0.89.5) unstable; urgency=low
 
