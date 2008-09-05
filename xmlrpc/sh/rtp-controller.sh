@@ -29,6 +29,14 @@ if [ -e /conf/tcos-run-functions ]; then
   # running in thin client
   STANDALONE=0
   export XAUTHORITY=/root/.Xauthority
+  if [ -d /usr/lib/sox ]  && [ ! -f /tmp/sox.libs ]; then
+    # update sox libs
+    for lib in $(/usr/lib/sox/ -type f); do
+      ln -s $lib $(echo $lib | awk -F"\.so" '{print $1".so"}')    >> /tmp/sox.libs 2>&1
+      ln -s $lib $(echo $lib | awk -F"\.so" '{print $1".so.0"}')  >> /tmp/sox.libs 2>&1
+    done
+  fi
+
 else
   STANDALONE=1
   STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
@@ -36,6 +44,7 @@ else
   if [ "${STANDALONE_USER}" = "" ]; then echo "error: no standalone user connected"; exit 1; fi
   DBUS_HANDLER="/usr/lib/tcos/tcos-dbus-helper --username=${STANDALONE_USER} "
 fi
+
 
 
 for arg in $1; do

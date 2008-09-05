@@ -54,6 +54,8 @@ tftp_download_again() {
   MYIP=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $2}' | sed s/";"//g)
   debug "downloading file /tcos/conf/${MYIP}.conf"
   download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf
+  # new versions of tftp don't create file
+  touch /conf/mysettings.conf
   . /conf/mysettings.conf
 }
 
