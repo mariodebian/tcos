@@ -39,6 +39,31 @@ else
       cpifexists /etc/modprobe.d/alsa-base /etc/modprobe.d/
     fi
 
+
+    # copy sox if avalaible (needed for RTP)
+    if [ "$(_ldd /usr/bin/play >/dev/null 2>&1 ; echo $? )" = "1"  ]; then
+      # play is a script (Ubuntu dapper => gutsy and Debian etch)
+      cpifexists /usr/bin/play  /usr/bin/
+      cpifexists /usr/bin/sox   /usr/bin/
+    else
+      # play is a binary (or symlink to sox)
+      cpifexists /usr/bin/play  /usr/bin/
+    fi
+
+    if [ -d /usr/lib/sox ]; then
+      mkdir -p ${DESTDIR}/usr/lib/sox/
+      for lib in $(find /usr/lib/sox/ -type f| grep -v -e mp3 -e flac -e sd2 -e fap -e vorbis -e mat5 -e wavpack -e ffmpeg -e mat4 -e pvf); do
+         cpifexists $lib  /usr/lib/sox/
+      done
+    fi
+
+    mkdir -p ${DESTDIR}/usr/lib/alsa-lib/
+    cpifexists /usr/lib/alsa-lib/libasound_module_pcm_pulse.so    /usr/lib/alsa-lib/
+    cpifexists /usr/lib/alsa-lib/libasound_module_ctl_pulse.so    /usr/lib/alsa-lib/
+    cpifexists /usr/lib/alsa-lib/libasound_module_pcm_alsa_dsp.so /usr/lib/alsa-lib/
+
+
+
  
     stat_after "Alsa sound support"
 
