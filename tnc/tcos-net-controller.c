@@ -28,6 +28,14 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#include <net/if.h>
+#include <netinet/in.h>
+#include <linux/if.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <arpa/inet.h>
+#include <net/route.h>
+
 #define GROUP "tcos"
 #define IPTABLES "/sbin/iptables"
 #define BLACKLIST_PORTS "8998,8999"
@@ -36,6 +44,8 @@
 #ifndef DEVNULL
 #define DEVNULL "2>/dev/null"
 #endif
+
+void create_route(struct rtentry *p, char **args);
 
 char *strncpy( char *to, const char *from, size_t count );
 
@@ -214,13 +224,14 @@ status_iptables_user(char *args) {
    FILE *fp;
    char cmd[BSIZE];
    char line[BSIZE];
+   char *fret;
 
     sprintf( cmd, "iptables -L OUTPUT --line-numbers -n %s | awk 'BEGIN{count=0}{if ($NF == %d || $NF == \"%s\") count++}END{print count}'", DEVNULL, (int)get_uid(args), args);
 #ifdef DEBUG
     debug("status_iptables_user() %s\n",cmd); 
 #endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       fgets( line, sizeof line, fp);
+       fret = fgets( line, sizeof line, fp);
        pclose(fp);
        if ( line[strlen(line)-1] == '\n' ) 
          line[strlen(line)-1] = 0;
@@ -238,6 +249,7 @@ flush_iptables_user(char *args) {
    char cmd[BSIZE];
    char line[BSIZE];
    int i;
+   char *fret;
 
    char *delim = " ";
    char **tokens = NULL;
@@ -247,7 +259,7 @@ flush_iptables_user(char *args) {
    
     sprintf( cmd, "iptables -L OUTPUT --line-numbers -n %s | awk '{if ($NF == %d || $NF == \"%s\") print $1}' | tac | tr \"\\n\" \" \"", DEVNULL, (int)get_uid(args), args);
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       fgets( line, sizeof line, fp);
+       fret = fgets( line, sizeof line, fp);
        pclose(fp);
        if( line[strlen(line)-1] == '\n' ) 
          line[strlen(line)-1] = 0;
@@ -279,6 +291,7 @@ add_iptables_user(char **args) {
    char *substring;
    char dirred[BSIZE];
    int i=0,j;
+   char *fret;
 
    char *delim = ",";
    char **tokens = NULL;
@@ -293,7 +306,7 @@ add_iptables_user(char **args) {
     debug("add_iptables_user() dired cmd=%s\n",cmd);
 #endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       fgets( dirred, sizeof dirred, fp);
+       fret = fgets( dirred, sizeof dirred, fp);
        pclose(fp);
        if( dirred[strlen(dirred)-1] == '\n' ) 
           dirred[strlen(dirred)-1] = 0;
@@ -359,6 +372,74 @@ add_iptables_user(char **args) {
 
 }
 
+char 
+*ip_by_eth(char *dev) {
+
+    struct sockaddr_in *sin;
+    struct ifreq ifr;
+    int fd; 
+
+
+    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+        return "error";
+
+    strcpy( ifr.ifr_name, dev );
+
+    if (ioctl( fd, SIOCGIFADDR, &ifr ) == 0) { 
+       sin = (struct sockaddr_in *)&ifr.ifr_addr;
+       close( fd );
+       return inet_ntoa( sin->sin_addr );
+    }
+    return "error";
+
+}
+
+int 
+add_route( char **args ) {
+
+    struct rtentry route;
+    int i = 1;
+    int fd;
+
+    create_route(&route, args);
+
+    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+        return 0;
+
+
+    /* del the route if its set before */
+    ioctl( fd, SIOCDELRT, &route );
+    if( ioctl( fd, SIOCADDRT, &route ) < 0) {
+        i = 0;
+    }
+
+    close( fd );
+    return i;
+}
+
+
+int 
+del_route(char **args) {
+
+    struct rtentry route;
+    int i = 1;
+    int fd;
+
+    create_route(&route, args);
+
+    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+        return 0;
+
+
+    /* del the route if its set before */
+    if (ioctl( fd, SIOCDELRT, &route ) < 0) {
+        i = 0;
+    }
+
+    close( fd );
+    return i;
+}
+
 
 int main(int argc, char **argv) {
    int i=0;
@@ -403,11 +484,31 @@ int main(int argc, char **argv) {
         printf("disabled");
      }
   }
+  else if ( strcmp( argv[1], "route-add") == 0 && argc == 5) {
+     i = add_route(argv);
+     if (i == 0) {
+        printf("error");
+     }
+     else {
+        printf("ok");
+     }
+  }
+  else if ( strcmp( argv[1], "route-del") == 0 && argc == 5) {
+     i = del_route(argv);
+     if (i == 0) {
+        printf("error");
+     }
+     else {
+        printf("ok");
+     }
+  }
   else {
     fprintf(stderr, "ERROR => Bad command line arguments\n");
     fprintf(stderr, "tnc :: tcos-net-controller usage\n");
-    fprintf(stderr, "\t tnc disable-internet --ports=[AA,BB,CC] eth0 username\n");
+    fprintf(stderr, "\t tnc disable-internet --ports=[AA,BB,CC] ethX username\n");
     fprintf(stderr, "\t tnc enable-internet username\n");
+    fprintf(stderr, "\t tnc route-add ip-multicast netmask ethX\n");
+    fprintf(stderr, "\t tnc route-del ip-multicast netmask ethX\n");
     fprintf(stderr, "\t tnc status username\n");
     return(1);
   }
@@ -416,4 +517,27 @@ int main(int argc, char **argv) {
 }
 
 
+void create_route(struct rtentry *p, char **args) {
+
+    struct sockaddr_in singw, sindst, sinmask;
+    /*char mask[]="255.255.0.0";*/
+
+    memset( &singw, 0, sizeof( struct sockaddr ) );
+    memset( &sindst, 0, sizeof( struct sockaddr ) );
+    memset( &sinmask, 0, sizeof( struct sockaddr ) );
+    singw.sin_family = AF_INET;
+    sindst.sin_family = AF_INET;
+    sinmask.sin_family = AF_INET;
+
+    sindst.sin_addr.s_addr = inet_addr( args[2] );
+    singw.sin_addr.s_addr = inet_addr( ip_by_eth(args[4]) );
+    sinmask.sin_addr.s_addr = inet_addr( args[3] );
+
+    memset( p, 0, sizeof( struct rtentry ) );
+    (*p).rt_dst = *(struct sockaddr *)&sindst;
+    (*p).rt_gateway = *(struct sockaddr *)&singw;
+    (*p).rt_genmask = *(struct sockaddr *)&sinmask;
+    (*p).rt_flags = RTF_GATEWAY;
+
+}
 

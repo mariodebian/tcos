@@ -12,7 +12,7 @@ XS-Vcs-Svn: https://www.tcosproject.org/svn/tcos/trunk/initramfs-tools-tcos
 
 Package: initramfs-tools-tcos
 Architecture: any
-Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, 
+Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, atftpd, 
          console-setup | console-data, libnss-db, iftop, strace, twm, debootstrap, mbr, 
          libltdl3, tinylogin, debconf, grub, syslinux, squashfs-tools, 
          mknbi, dropbear, ltspfs-client | ltspfsd, genisoimage | mkisofs , 
@@ -67,7 +67,7 @@ Description: TCOS standalone GUI configurator
 Package: tcos
 Architecture: all
 Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), tcos-usplash (>= 0.84.5), 
-         atftpd, dhcp3-server | dhcp-server, tcosmonitor, 
+         dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd, pulseaudio, 
          pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, 
          ltspfs-server | ltspfs, esound | pulseaudio-esound-compat, cdebootstrap, 
