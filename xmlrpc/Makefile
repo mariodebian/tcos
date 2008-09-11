@@ -7,7 +7,8 @@ include ../common.mk
 
 XMLRPC_VERSION_MAYOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$1}')
 XMLRPC_VERSION_MINOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$2$$3}'| cut -c-4| bc)
-CFLAGS=-Wall -O2 -ansi -pedantic `xmlrpc-c-config abyss-server --cflags`
+#CFLAGS=-Wall -std=c99 -O2 -ansi -pedantic `xmlrpc-c-config abyss-server --cflags`
+CFLAGS=-Wall -O2  `xmlrpc-c-config abyss-server --cflags`
 LIBS=`xmlrpc-c-config abyss-server --libs` -lcrypt -lX11
 DEFINES= -DBSIZE=512 -DVERSION=\"$(VERSION)\" -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
 TEST_DEFINES=-DDEBUG -DVERSION=\"$(VERSION)\" -DBSIZE=512 -DVISIBLE_PASSWD -DXMLRPC_INC=$(XMLRPC_INC) -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
@@ -40,10 +41,11 @@ validate-tcos:
 tcospasswd:
 	$(GCC) $(DEFINES) -o tcospasswd tcospasswd.c -lcrypt -O2
 
+base64:
+	$(GCC) -DTEST_MAIN common.c -o base64 -DTCOS_PATH="/sbin"
 
 clean:
-#	cd md5 && make clean
-	rm -f $(SERVER) $(STANDALONE) tcosmd5 prueba prueba2 prueba3 validate-tcos validate-passwd tcospasswd var/log.txt var/log/* *~ image*.jpg image*png
+	rm -f $(SERVER) $(STANDALONE) tcosmd5 prueba prueba2 prueba3 validate-tcos validate-passwd tcospasswd var/log.txt var/log/* *~ image*.jpg image*png base64
 	rm -f sh/*~
 
 run:
@@ -80,6 +82,7 @@ install:
 	install -m 755 sh/vlc-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/rtp-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/tcos-last          $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 sh/tcos-pam-usb.sh    $(DESTDIR)/$(TCOS_BINS)/
 
 	#install -m 644 var/etc/httpd2.conf $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
 	install -m 644 var/etc/mime.types  $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/

@@ -17,8 +17,29 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include "common.h"
+#include <stdio.h>
 #include <sys/stat.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+#include "common.h"
+
+#ifdef TEST_MAIN
+#include <stdarg.h>
+#define dbgtcos(s, ...) __dbgtcos(__FILE__, __LINE__, s, ##__VA_ARGS__)
+
+void __dbgtcos( const char *format_str, ... ) {
+  if ( getenv("TCOS_DEBUG") == NULL) return;
+  if ( strcmp(getenv("TCOS_DEBUG"), "1" ) == 0  ) {
+    va_list ap;
+    va_start( ap, format_str );
+    va_end( ap );
+    vfprintf(stderr, format_str , ap);
+  }
+}
+#endif
+
 
 struct ip_address check_ip_address(char *data) {
   struct ip_address ip;
@@ -93,6 +114,7 @@ unsigned char *readfile(const char *name, size_t *len)
 {
 	FILE *f;
 	unsigned char *buf;
+	size_t fret;
 
 	f = fopen(name, "rb");
 	if (f == NULL)
@@ -108,7 +130,7 @@ unsigned char *readfile(const char *name, size_t *len)
 		return NULL;
 	}
 
-	fread(buf, 1, *len, f);
+	fret = fread(buf, 1, *len, f);
 	fclose(f);
 
 	return buf;
@@ -122,7 +144,11 @@ void *memset(void *s, int c, size_t n)
 	return s;
 }
 
-
+/*
+ * Base64 code taken from wpasupplicant package
+ * http://www.koders.com/c/fidC4909D9B4301A6E931115BCFD347E5DB79620A7D.aspx?s=base64_table#L20
+ *
+*/
 
 static const unsigned char base64_table[65] =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -184,6 +210,71 @@ unsigned char * base64_encode(const unsigned char *src, size_t len,
 	return out;
 }
 
+/**
+ * base64_decode - Base64 decode
+ * @src: Data to be decoded
+ * @len: Length of the data to be decoded
+ * @out_len: Pointer to output length variable
+ * Returns: Allocated buffer of out_len bytes of decoded data,
+ * or %NULL on failure
+ *
+ * Caller is responsible for freeing the returned buffer.
+ */
+unsigned char * base64_decode(const unsigned char *src, size_t len,
+			      size_t *out_len)
+{
+	unsigned char dtable[256], *out, *pos, in[4], block[4], tmp;
+	size_t i, count, olen;
+
+	memset(dtable, 0x80, 256);
+	for (i = 0; i < sizeof(base64_table) - 1; i++)
+		dtable[base64_table[i]] = (unsigned char) i;
+	dtable['='] = 0;
+
+	count = 0;
+	for (i = 0; i < len; i++) {
+		if (dtable[src[i]] != 0x80)
+			count++;
+	}
+
+	if (count % 4)
+		return NULL;
+
+	olen = count / 4 * 3;
+	pos = out = malloc(olen);
+	if (out == NULL)
+		return NULL;
+
+	count = 0;
+	for (i = 0; i < len; i++) {
+		tmp = dtable[src[i]];
+		if (tmp == 0x80)
+			continue;
+
+		in[count] = src[i];
+		block[count] = tmp;
+		count++;
+		if (count == 4) {
+			*pos++ = (block[0] << 2) | (block[1] >> 4);
+			*pos++ = (block[1] << 4) | (block[2] >> 2);
+			*pos++ = (block[2] << 6) | block[3];
+			count = 0;
+		}
+	}
+
+	if (pos > out) {
+		if (in[2] == '=')
+			pos -= 2;
+		else if (in[3] == '=')
+			pos--;
+	}
+
+	*out_len = pos - out;
+	return out;
+}
+
+
+
 
 
 /* split string into tokens, return token array */
@@ -228,3 +319,38 @@ char **split(char *string, char *delim) {
 void remove_line_break( char *s ) {
     s[strcspn ( s, "\n" )] = '\0';
 }
+
+
+#ifdef TEST_MAIN
+int main(int argc, char *argv[])
+{
+	FILE *f;
+	size_t len, elen;
+	unsigned char *buf, *e;
+
+	if (argc != 4) {
+		printf("Usage: base64 <encode|decode> <in file> <out file>\n");
+		return -1;
+	}
+
+	buf = readfile(argv[2], &len);
+	if (buf == NULL)
+		return -1;
+
+	if (strcmp(argv[1], "encode") == 0)
+		e = base64_encode(buf, len, &elen);
+	else
+		e = base64_decode(buf, len, &elen);
+	if (e == NULL)
+		return -2;
+	f = fopen(argv[3], "w");
+	if (f == NULL)
+		return -3;
+	fwrite(e, 1, elen, f);
+	fclose(f);
+	free(e);
+
+	return 0;
+}
+
+#endif

@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 	FILE *dev;
 	char buf[BUFSIZE];
 	int n_bytes;
+        int fret;
     
 
     if(argc != 2) {
@@ -83,7 +84,7 @@ int main(int argc, char **argv)
             if(n_bytes>0){
                 n_bytes=recv(new_fd, buf, n_bytes, 0);
                 /*printf("print_server: writing into file/device\n");*/
-                fwrite(buf, n_bytes, 1, dev);
+                fret = fwrite(buf, n_bytes, 1, dev);
             }
 
             if (n_bytes == 1 ) {

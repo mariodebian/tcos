@@ -1,3 +1,20 @@
+initramfs-tools-tcos (0.89.8) unstable; urgency=low
+
+  * New XMLRPC method pamusb:
+    - Copy LTSPFS_TOKEN, mount device UUID and get/save PAD (needed by libpam-usb-tcos)
+  * xmlrpc/* printer/* tnc/* tmixer/*:
+    - Read fgets and fwrite value (fix amd64 warning_unused_result)
+  * xmlrpc/common.c:
+    - Redefine dbgtcos as MACRO to show source filename and line number (idea taken from pam-usb)
+    - Add base64_decode (needed by tcos_pam_usb)
+  * xmlrpc/Makefile:
+    - Remove -ansi -pedantic from compiler flags (dbgtcos MACRO use ISO C99)
+  * hooks-addons/05devices:
+    - Always copy xprop and ltsp-set-xprop
+  * Update debian/copyright with base64 origin
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 11 Sep 2008 15:26:01 +0200
+
 initramfs-tools-tcos (0.89.7) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]

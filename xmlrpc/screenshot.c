@@ -34,6 +34,7 @@ static xmlrpc_value *tcos_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud
   char *user;
   char *pass;
   char *login_ok;
+  char *fret;
 
   /* read what info search */
   xmlrpc_parse_value(env, in, "(sss)", &size, &user, &pass);
@@ -53,7 +54,7 @@ static xmlrpc_value *tcos_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud
   dbgtcos("tcosxmlrpc::screenshot() exe=%s\n", line);
 
   fp=(FILE*)popen(line, "r");
-  fgets( response, sizeof(response), fp);
+  fret= fgets( response, sizeof(response), fp);
   remove_line_break(response);
   pclose(fp);
   return xmlrpc_build_value(env, "s", response );

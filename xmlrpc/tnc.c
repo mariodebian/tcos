@@ -37,6 +37,7 @@ static xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
   char cmd[BIG_BUFFER];
+  char *fret;
 
 
   /* read what info search */
@@ -54,7 +55,7 @@ static xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* prepare action */
   if( strcmp(action, "disable-internet" ) == 0 ) {
       if ((fp=(FILE*)popen(NETWORK_IFACE, "r")) != NULL) {
-          fgets( line, sizeof line, fp);
+          fret = fgets( line, sizeof line, fp);
           remove_line_break(line);
           pclose(fp);
           sprintf( cmd , "%s %s %s %s %s", TNC_CONTROLLER, action, ports, line, username);
@@ -71,11 +72,11 @@ static xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error in line */
   strncpy(line, TNC_ERROR, BIG_BUFFER);
 
-  fgets( line, sizeof line, fp);
+  fret = fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
   
-  dbgtcos("tcosxmlrpc::tcos_tnc() line=\"%s\"", line);
+  dbgtcos("tcosxmlrpc::tcos_tnc() line=\"%s\"\n", line);
 
   return xmlrpc_build_value(env, "s", line );
 }

@@ -31,7 +31,7 @@ if [ -e /conf/tcos-run-functions ]; then
   export XAUTHORITY=/root/.Xauthority
   if [ -d /usr/lib/sox ]  && [ ! -f /tmp/sox.libs ]; then
     # update sox libs
-    for lib in $(/usr/lib/sox/ -type f); do
+    for lib in $(find /usr/lib/sox/ -type f); do
       ln -s $lib $(echo $lib | awk -F"\.so" '{print $1".so"}')    >> /tmp/sox.libs 2>&1
       ln -s $lib $(echo $lib | awk -F"\.so" '{print $1".so.0"}')  >> /tmp/sox.libs 2>&1
     done

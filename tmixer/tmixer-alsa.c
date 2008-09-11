@@ -222,6 +222,7 @@ static long get_integer(char **ptr, long min, long max)
 {
 	long val = min;
 	char *p = *ptr, *s;
+	long int ret;
 
 	if (*p == ':')
 		p++;
@@ -232,7 +233,7 @@ static long get_integer(char **ptr, long min, long max)
 	val = strtol(s, &p, 10);
 	if (*p == '.') {
 		p++;
-		strtol(p, &p, 10);
+		ret=strtol(p, &p, 10);
 	}
 	if (*p == '%') {
 		val = (long)convert_prange1(strtod(s, NULL), min, max);
@@ -250,6 +251,7 @@ static long get_integer64(char **ptr, long long min, long long max)
 {
 	long long val = min;
 	char *p = *ptr, *s;
+	long int ret;
 
 	if (*p == ':')
 		p++;
@@ -260,7 +262,7 @@ static long get_integer64(char **ptr, long long min, long long max)
 	val = strtol(s, &p, 10);
 	if (*p == '.') {
 		p++;
-		strtol(p, &p, 10);
+		ret = strtol(p, &p, 10);
 	}
 	if (*p == '%') {
 		val = (long long)convert_prange1(strtod(s, NULL), min, max);
@@ -330,6 +332,7 @@ static int set_volume_simple(snd_mixer_elem_t *elem,
 	long val, orig, pmin, pmax;
 	char *p = *ptr, *s;
 	int invalid = 0, err = 0, vol_type = VOL_RAW;
+	long int ret;
 
 	if (! vol_ops[dir].has_volume(elem))
 		invalid = 1;
@@ -347,7 +350,7 @@ static int set_volume_simple(snd_mixer_elem_t *elem,
 	val = strtol(s, &p, 10);
 	if (*p == '.') {
 		p++;
-		strtol(p, &p, 10);
+		ret = strtol(p, &p, 10);
 	}
 	if (*p == '%') {
 		if (! invalid)

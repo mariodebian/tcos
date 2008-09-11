@@ -72,6 +72,8 @@
 
 #include "dpms.c"
 
+#include "pam-usb.c"
+
 #include "simple-methods.c"
 
 
@@ -134,6 +136,7 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.tnc", &tcos_tnc, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.rebootpoweroff", &tcos_reboot_poweroff, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.dpms", &tcos_dpms, NULL);
+    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.pamusb", &tcos_pam_usb, NULL);
 #else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
@@ -237,6 +240,9 @@ Info methods:\n\
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.dpms", &tcos_dpms, NULL,
     "sss:s", "Tcos, manage DPMS Monitor options.");
+
+    xmlrpc_server_abyss_add_method_w_doc("tcos.pamusb", &tcos_pam_usb, NULL,
+    "ssss:s", "Tcos, manage pam-usb auth.");
 #endif
 
     /*  end of add methods */

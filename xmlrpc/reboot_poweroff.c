@@ -39,6 +39,7 @@ static xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, voi
   struct ip_address ip;
   char ip_string[BSIZE];
   char cmd[BIG_BUFFER];
+  char *fret;
 
   dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() Init \n");
 
@@ -49,7 +50,7 @@ static xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, voi
 
   gethostname(hostname,BSIZE);
   fp=(FILE*)popen(MY_IP_ADDRESS, "r");
-  fgets( ip_string, sizeof ip_string, fp);
+  fret= fgets( ip_string, sizeof ip_string, fp);
   remove_line_break(ip_string);
   pclose(fp);
 

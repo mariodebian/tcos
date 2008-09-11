@@ -35,6 +35,7 @@ static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
   char cmd[BIG_BUFFER];
+  char *fret;
 
 
   /* read what info search */
@@ -65,10 +66,10 @@ static xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error in line */
   strncpy(line, VNC_ERROR, BIG_BUFFER);
 
-  fgets( line, sizeof line, fp);
+  fret = fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
-  dbgtcos("tcosxmlrpc::tcos_vnc() line=\"%s\"", line);
+  dbgtcos("tcosxmlrpc::tcos_vnc() line=\"%s\"\n", line);
 
   if( strcmp(action, "startclient" ) == 0 )
     lockcontroller_exe("lockvnc");

@@ -109,9 +109,9 @@ void ErrorExitWarn(int error, int mode) {
 		
 	if (error > 12) {
 		sprintf(string, "tmixer-oss:  unknown error %i", error);
-		fprintf(stderr, string);
+		fprintf(stderr, "%s", string);
 	} else if (error > 0) {
-		fprintf(stderr, errorlist[error - 1]);
+		fprintf(stderr, "%s", errorlist[error - 1]);
 	}
 	fprintf(stderr, "\n");
 	if (mode == 'e') {	/* exit */

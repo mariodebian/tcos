@@ -48,6 +48,10 @@ cpifexists ${TCOS_BINS}/set-limits     /bin
 # exec and daemonize 
 cpifexists ${TCOS_BINS}/daemonize.sh /sbin
 
+# tcos-pam-usb.sh (tcosxmlrpc helper)
+cpifexists ${TCOS_BINS}/tcos-pam-usb.sh /sbin
+
+
 rm -f $DESTDIR/sbin/start-stop-daemon
 
 # in tcos-buildchroot we save this exe file in start-stop-daemon.original

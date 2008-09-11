@@ -27,15 +27,20 @@
 *     TCOS_DEBUG=1 ./debug  print some debug strings
 */
 
+#include <stdio.h>
 
 /* variable argument list */
 #include <stdarg.h>
 
+
 #ifndef HAVE_DEBUG
-void dbgtcos( const char *format_str, ... ) {
+#define dbgtcos(s, ...) __dbgtcos(__FILE__, __LINE__, s, ##__VA_ARGS__)
+
+void __dbgtcos(const char *file, int line, const char *format_str, ... ) {
   if ( getenv("TCOS_DEBUG") == NULL) return;
   if ( strcmp(getenv("TCOS_DEBUG"), "1" ) == 0  ) {
     va_list ap;
+    fprintf(stderr, "[%s:%03d] ", file, line);
     va_start( ap, format_str );
     va_end( ap );
     vfprintf(stderr, format_str , ap);
