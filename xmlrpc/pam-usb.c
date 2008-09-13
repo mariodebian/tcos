@@ -39,7 +39,7 @@ static xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *fret;
 
   unsigned char *buf, *e;
-  size_t len, elen;
+  size_t len, elen, fwret;
   static xmlrpc_value *result;
 
   dbgtcos("tcosxmlrpc::tcos_pam_usb() Init \n");
@@ -85,7 +85,7 @@ static xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
         fp = fopen(option, "w");
         if (fp == NULL)
             return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
-        fwrite(e, 1, elen, fp);
+        fwret = fwrite(e, 1, elen, fp);
         fclose(fp);
         free(e);
     dbgtcos("tcos_pam_usb() option savepad, ok, saving base64 code into '%s'...\n", option);
@@ -101,7 +101,7 @@ static xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
         fp = fopen(option, "w+");
         if (fp == NULL)
             return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
-        fwrite(e, 1, elen, fp);
+        fwret = fwrite(e, 1, elen, fp);
         fclose(fp);
         free(e);
     dbgtcos("tcos_pam_usb() option newpad, ok, saving base64 code into '%s'...\n", option);

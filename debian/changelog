@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.89.9) unstable; urgency=low
+
+  * udev/mount_listener.c
+    - Compare device with /dev/disk/ and do nothing if match => pam-usb mount
+  * xmlrpc/sh/tcos-pam-usb.sh
+    - No clean /tmp/tcos-udev.log
+  * xmlrpc/pam-usb.c
+    - Read fwrite returned value too (fix amd64 warning_unused_result)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 12 Sep 2008 17:35:22 +0200
+
 initramfs-tools-tcos (0.89.8) unstable; urgency=low
 
   * New XMLRPC method pamusb:
@@ -13,7 +24,7 @@ initramfs-tools-tcos (0.89.8) unstable; urgency=low
     - Always copy xprop and ltsp-set-xprop
   * Update debian/copyright with base64 origin
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 11 Sep 2008 15:26:01 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 12 Sep 2008 17:34:43 +0200
 
 initramfs-tools-tcos (0.89.7) unstable; urgency=low
 

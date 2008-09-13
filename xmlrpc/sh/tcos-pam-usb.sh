@@ -52,13 +52,13 @@ mount_uuid() {
   else
      echo "error: mounting device UUID=$1"
   fi
-  cat /dev/null > /tmp/tcos-udevd.log
+  #cat /dev/null > /tmp/tcos-udevd.log
 }
 
 umount_uuid() {
   grep -q "$1" /proc/mounts || return
   umount /mnt/$1 >> /tmp/initramfs.debug 2>&1
-  cat /dev/null > /tmp/tcos-udevd.log
+  #cat /dev/null > /tmp/tcos-udevd.log
 }
 
 

@@ -102,6 +102,11 @@ void print_dev(char *txt, char *action) {
     
     debug("DEBUG: output \"%s %s\"\n", output, action);
 
+    if ( strncmp(output , "/dev/disk/", 10) == 0 ) {
+        debug("DEBUG: detected /dev/disk device => pam-usb IGNORING...\n");
+        return;
+    }
+
     snprintf( (char*) &cmd, MSG_BUFF, "%s %s %s", SAVE_UDEV, output, action);
 
     if ( file_exists(SAVE_UDEV) ) {
