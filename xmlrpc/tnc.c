@@ -59,11 +59,11 @@ static xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
           fret = fgets( line, sizeof line, fp);
           remove_line_break(line);
           pclose(fp);
-          sprintf( cmd , "%s %s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, line, username);
+          sprintf( cmd , "%s %s %s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, line, username);
       }
    }
    else {
-      sprintf( cmd , "%s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, username);
+      sprintf( cmd , "%s %s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, username);
    }
 
   dbgtcos("tcosxmlrpc::tcos_tnc() cmd=\"%s\"\n", cmd);
