@@ -1,5 +1,6 @@
 initramfs-tools-tcos (0.89.9) unstable; urgency=low
 
+  [ Mario Izquierdo (mariodebian) ]
   * udev/mount_listener.c
     - Compare device with /dev/disk/ and do nothing if match => pam-usb mount
   * xmlrpc/sh/tcos-pam-usb.sh
@@ -7,7 +8,13 @@ initramfs-tools-tcos (0.89.9) unstable; urgency=low
   * xmlrpc/pam-usb.c
     - Read fwrite returned value too (fix amd64 warning_unused_result)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 12 Sep 2008 17:35:22 +0200
+  [ Ignacio Vidal ]
+  * tnc/tcos-net-controller.c xmlrpc/*:
+    - Allow net-controller only block ports
+  * scripts/tcos-bottom/* 
+    - Add more options from cmdline 
+
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 17 Sep 2008 10:48:09 +0200
 
 initramfs-tools-tcos (0.89.8) unstable; urgency=low
 

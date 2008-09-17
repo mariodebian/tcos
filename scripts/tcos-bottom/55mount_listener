@@ -10,7 +10,11 @@ fi
 quiet=n
 
 
-
+nodevices=$(read_cmdline_var "nodevices" "0") 
+if [ ${nodevices} = 1 ]; then 
+  _log "Devices disabled from cmdline" 
+  exit 0 
+fi
 
 if [ -x /usr/sbin/listener-daemon.sh ]; then
    /usr/sbin/listener-daemon.sh > /var/log/listener-daemon.log 2>&1 &

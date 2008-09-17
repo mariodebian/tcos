@@ -1,0 +1,37 @@
+#!/bin/sh
+# 
+
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+quiet=n
+
+. /conf/tcos.conf
+. /scripts/functions
+. /conf/tcos-run-functions
+
+rxtxoff=$(read_cmdline_var "rxtxoff" "0")
+
+if [ ${rxtxoff} = 1 ]; then
+   # get list of network interfaces
+   TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster|grep -v vmnet)
+
+   # search for network interfaces with link ok status
+   for dev in $TCOS_NET_DEVS; do
+       # have link ???
+       if [ -e /sys/class/net/$dev/carrier ] && \
+          [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
+          [ "$(/usr/sbin/ethtool $dev| grep -c "Wake-on: g")" = "1" ] ; then
+             _log "55checksumoff disabling rx, tx protocol checksum on ifaces..."
+             /usr/sbin/ethtool -K $dev rx off tx off >> /tmp/initramfs.debug 2>&1
+       fi
+   done
+fi
+
+
+
+exit 0
+

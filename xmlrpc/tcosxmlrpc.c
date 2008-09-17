@@ -233,7 +233,7 @@ Info methods:\n\
     "ssss:s", "Tcos, manage rtp params.");
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.tnc", &tcos_tnc, NULL,
-    "sssss:s", "Tcos, net controller params.");
+    "ssssss:s", "Tcos, net controller params.");
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.rebootpoweroff", &tcos_reboot_poweroff, NULL,
     "ssss:s", "Tcos, Reboot or Poweroff using Xorg cookie.");

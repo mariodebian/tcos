@@ -226,7 +226,7 @@ status_iptables_user(char *args) {
    char line[BSIZE];
    char *fret;
 
-    sprintf( cmd, "iptables -L OUTPUT --line-numbers -n %s | awk 'BEGIN{count=0}{if ($NF == %d || $NF == \"%s\") count++}END{print count}'", DEVNULL, (int)get_uid(args), args);
+    sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | awk 'BEGIN{count=0}{if ($NF == %d || $NF == \"%s\") count++}END{print count}'", IPTABLES, DEVNULL, (int)get_uid(args), args);
 #ifdef DEBUG
     debug("status_iptables_user() %s\n",cmd); 
 #endif
@@ -243,10 +243,11 @@ status_iptables_user(char *args) {
 
 
 int
-flush_iptables_user(char *args) {
+flush_iptables_user(char *arg1, char *arg2) {
 
    FILE *fp;
    char cmd[BSIZE];
+   char *substring;
    char line[BSIZE];
    int i;
    char *fret;
@@ -254,10 +255,21 @@ flush_iptables_user(char *args) {
    char *delim = " ";
    char **tokens = NULL;
 
-    if ( (i = status_iptables_user(args)) == 0)
+    if ( (i = status_iptables_user(arg1)) == 0)
        return(1);
-   
-    sprintf( cmd, "iptables -L OUTPUT --line-numbers -n %s | awk '{if ($NF == %d || $NF == \"%s\") print $1}' | tac | tr \"\\n\" \" \"", DEVNULL, (int)get_uid(args), args);
+
+    substring = (char*) malloc(strlen(arg2));
+    strncpy(substring, arg2+13, strlen(arg2));
+
+    if ( strcmp( substring, "no") == 0 ) {
+        sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | awk '{if ($NF == %d || $NF == \"%s\") print $1}' | tac | tr \"\\n\" \" \"", IPTABLES, DEVNULL, (int)get_uid(arg1), arg1);
+    }
+    else {
+        sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | awk '{if (($NF == %d || $NF == \"%s\")  && ($3 == \"tcp\")) print $1}' | tac | tr \"\\n\" \" \"", IPTABLES, DEVNULL, (int)get_uid(arg1), arg1);
+    }
+
+    free(substring);
+
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
        fret = fgets( line, sizeof line, fp);
        pclose(fp);
@@ -297,11 +309,11 @@ add_iptables_user(char **args) {
    char **tokens = NULL;
 
     /* Delete rules that already exists for user*/
-    flush_iptables_user(args[4]);
+    flush_iptables_user(args[5], args[2]);
 
 
     /* Obtain network destination */
-    sprintf( cmd, "ip route %s | awk '{if ($3 == \"%s\") print $1}'", DEVNULL, args[3]);
+    sprintf( cmd, "ip route %s | awk '{if ($3 == \"%s\") print $1}'", DEVNULL, args[4]);
 #ifdef DEBUG
     debug("add_iptables_user() dired cmd=%s\n",cmd);
 #endif
@@ -316,9 +328,9 @@ add_iptables_user(char **args) {
     }
 
     /* block ports if especified*/
-    if(strstr(args[2], "--ports=")) {
-       substring = (char*) malloc(strlen(args[2]));
-       strncpy(substring, args[2]+8, strlen(args[2]));
+    if(strstr(args[3], "--ports=")) {
+       substring = (char*) malloc(strlen(args[3]));
+       strncpy(substring, args[3]+8, strlen(args[3]));
 #ifdef DEBUG
        debug("add_iptables_user() substring='%s'\n",substring);
 #endif
@@ -326,7 +338,7 @@ add_iptables_user(char **args) {
        tokens = split(substring, delim);
        for(j = 0; tokens[j] != NULL; j++){
             if (check_port(tokens[j]) == 0) {
-               sprintf( cmd, "%s -A OUTPUT -p tcp --dport %s -m owner --uid-owner %s -j DROP %s", IPTABLES, tokens[j], args[4], DEVNULL);
+               sprintf( cmd, "%s -A OUTPUT -p tcp --dport %s -m owner --uid-owner %s -j DROP %s", IPTABLES, tokens[j], args[5], DEVNULL);
 #ifdef DEBUG
                debug("add_iptables_user() cmd=%s\n",cmd);
 #endif
@@ -340,36 +352,45 @@ add_iptables_user(char **args) {
        }
        free(tokens);
        free(substring);
+       i=1;
     }
     
-    /* Allow loopback for user*/
-    sprintf( cmd, "%s -A OUTPUT -d 127.0.0.0/255.0.0.0 -m owner --uid-owner %s -j ACCEPT %s", IPTABLES, args[4], DEVNULL);
+    substring = (char*) malloc(strlen(args[2]));
+    strncpy(substring, args[2]+13, strlen(args[2]));
 #ifdef DEBUG
-    debug("add_iptables_user() cmd=%s\n",cmd);
+    debug("add_iptables_user() only-ports='%s'\n",substring);
 #endif
-    if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-      i=1;
-      pclose(fp);
-    }
-    else {
-      return(0);
-    }
-    
-    /* Block output ! network*/
-    sprintf( cmd, "%s -A OUTPUT -d ! %s -m owner --uid-owner %s -j DROP %s", IPTABLES,  dirred, args[4], DEVNULL);
-#ifdef DEBUG
-    debug("add_iptables_user() cmd=%s\n",cmd);
-#endif
-    if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-      i=1;
-      pclose(fp);
-    }
-    else {
-      return(0);
-    }
 
+    if ( strcmp( substring, "no") == 0 ) {
+       /* Allow loopback for user*/
+       sprintf( cmd, "%s -A OUTPUT -d 127.0.0.0/255.0.0.0 -m owner --uid-owner %s -j ACCEPT %s", IPTABLES, args[5], DEVNULL);
+#ifdef DEBUG
+       debug("add_iptables_user() cmd=%s\n",cmd);
+#endif
+       if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
+         i=1;
+         pclose(fp);
+       }
+       else {
+         return(0);
+       }
+    
+       /* Block output ! network*/
+       sprintf( cmd, "%s -A OUTPUT -d ! %s -m owner --uid-owner %s -j DROP %s", IPTABLES,  dirred, args[5], DEVNULL);
+#ifdef DEBUG
+       debug("add_iptables_user() cmd=%s\n",cmd);
+#endif
+       if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
+         i=1;
+         pclose(fp);
+       }
+       else {
+         return(0);
+       }
+    }       
+    
+    free(substring);
     return i;
-
 }
 
 char 
@@ -455,18 +476,18 @@ int main(int argc, char **argv) {
    }
 
 
-  if ( strcmp( argv[1], "disable-internet") == 0 && argc == 5) {
+  if ( strcmp( argv[1], "disable-internet") == 0 && argc == 6) {
      i = add_iptables_user(argv);
      if (i == 0) {
-        flush_iptables_user(argv[4]);
+        flush_iptables_user(argv[5], argv[2]);
         printf("disable-error");
      }
      else {
         printf("disabled");
      }
   }
-  else if ( strcmp( argv[1], "enable-internet") == 0 && argc == 3) {
-     i = flush_iptables_user(argv[2]);
+  else if ( strcmp( argv[1], "enable-internet") == 0 && argc == 4) {
+     i = flush_iptables_user(argv[3], argv[2]);
      if (i == 0) {
         printf("enable-error");
      }
@@ -505,8 +526,8 @@ int main(int argc, char **argv) {
   else {
     fprintf(stderr, "ERROR => Bad command line arguments\n");
     fprintf(stderr, "tnc :: tcos-net-controller usage\n");
-    fprintf(stderr, "\t tnc disable-internet --ports=[AA,BB,CC] ethX username\n");
-    fprintf(stderr, "\t tnc enable-internet username\n");
+    fprintf(stderr, "\t tnc disable-internet --only-ports=[yes,no] --ports=[AA,BB,CC] ethX username\n");
+    fprintf(stderr, "\t tnc enable-internet --only-ports=[yes,no] username\n");
     fprintf(stderr, "\t tnc route-add ip-multicast netmask ethX\n");
     fprintf(stderr, "\t tnc route-del ip-multicast netmask ethX\n");
     fprintf(stderr, "\t tnc status username\n");

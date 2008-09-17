@@ -19,10 +19,14 @@ maybe_break download_settings
 
 MYIP=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $2}' | sed s/";"//g)
 
-log_begin_msg "Download personalized settings ${MYIP}.conf"
-  download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf
-log_end_msg $?
-
+download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf 
+if [ $? -eq 0 ]; then 
+  log_begin_msg "Download personalized settings ${MYIP}.conf" 
+  log_end_msg 0 
+else 
+  log_begin_msg "No personalized settings to download" 
+  log_end_msg 0 
+fi 
 
 update_progress 2
 

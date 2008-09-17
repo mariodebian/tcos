@@ -23,6 +23,12 @@ if [ "$(cat /tmp/less_ram)" != "0" ]; then
   unset NO_UDEV
 fi
 
+nodevices=$(read_cmdline_var "nodevices" "0") 
+if [ ${nodevices} = 1 ]; then 
+  _log "Devices disabled from cmdline" 
+  exit 0 
+fi
+
 
 if [ ${TCOS_USB} ]; then
  MODULES="scsi_mod sd_mod sr_mod isofs vfat floppy usbcore ehci-hcd ohci-hcd uhci-hcd usb-storage"
