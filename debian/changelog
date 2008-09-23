@@ -11,10 +11,15 @@ initramfs-tools-tcos (0.89.9) unstable; urgency=low
   [ Ignacio Vidal ]
   * tnc/tcos-net-controller.c xmlrpc/*:
     - Allow net-controller only block ports
-  * scripts/tcos-bottom/* 
-    - Add more options from cmdline 
+  * scripts/tcos-bottom/*
+    - Add more options from cmdline
+  * debian/control:
+    - Update depends
+  * scripts/tcos-bottom/40initsound xmlrpc/sh/rtp-controller.sh
+    hooks-addons/21pulseaudio:
+    -  Update scripts to allow new chat mode
 
- -- Ignacio Vidal <vidal_joshur@gva.es>  Wed, 17 Sep 2008 10:48:09 +0200
+ -- Ignacio Vidal <vidal_joshur@gva.es>  Tue, 23 Sep 2008 19:05:58 +0200
 
 initramfs-tools-tcos (0.89.8) unstable; urgency=low
 

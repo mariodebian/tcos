@@ -43,24 +43,6 @@ cat <<EOF > /etc/esound/esd.conf
 [esd]
 EOF
 
-# setting volumes
-log_begin_msg "Setting audio channel level to ${TCOS_VOLUME}"
-  _log "INITSOUND Setting volume to ${TCOS_VOLUME}"
-  tmixer -c 0 sset 'PCM' ${TCOS_VOLUME}                  >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'PCM' on                              >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master' ${TCOS_VOLUME}               >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master' on                           >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master Mono' ${TCOS_VOLUME}          >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master Mono' on                      >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master Front' ${TCOS_VOLUME}         >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master Front' on                     >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master Digital' ${TCOS_VOLUME}       >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Master Digital' on                   >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Headphone' on                        >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Speaker' on                        >> /tmp/initramfs.debug 2>&1
-log_end_msg $?
-
-
 if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
    export TCOS_SOUND_OSS=1
    echo "TCOS_SOUND_OSS=1" >> /conf/tcos.conf
@@ -82,6 +64,29 @@ elif [ ! $TCOS_PULSEAUDIO ] && [ ! $TCOS_SOUND_OSS ]; then
     /sbin/startesd
   log_end_msg $?
 fi
+
+# setting volumes, set after sound server initialization
+log_begin_msg "Setting audio channel level to ${TCOS_VOLUME}"
+  _log "INITSOUND Setting volume to ${TCOS_VOLUME}"
+  tmixer -c 0 sset 'Front' ${TCOS_VOLUME}                >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Front' on                            >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'PCM' ${TCOS_VOLUME}                  >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'PCM' on                              >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master' ${TCOS_VOLUME}               >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master' on                           >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Mono' ${TCOS_VOLUME}          >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Mono' on                      >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Front' ${TCOS_VOLUME}         >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Front' on                     >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Digital' ${TCOS_VOLUME}       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Master Digital' on                   >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic' ${TCOS_VOLUME}                  >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic' on                              >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic Boost (+20dB)' on                >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic Boost' on                        >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Headphone' on                        >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Speaker' on                          >> /tmp/initramfs.debug 2>&1
+log_end_msg $?
 
 update_progress
 
