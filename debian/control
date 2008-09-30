@@ -53,7 +53,7 @@ Description: usplash artwork for TCOS
 
 Package: tcos-standalone
 Architecture: any
-Depends: tcos-core (>= 0.88.0), tcosmonitor, gksu, python-gnome2-extras, python-gtk2, 
+Depends: tcos-core (>= 0.88.0), tcosmonitor-common, gksu, python-gnome2-extras, python-gtk2, 
          python-glade2, ethtool, ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-core (<< 0.87.15)
 XB-Python-Version: ${python:Versions}
