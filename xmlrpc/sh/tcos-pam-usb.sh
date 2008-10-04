@@ -106,6 +106,24 @@ for arg in $1; do
 
          echo "ok"
      ;;
+     readdevices)
+         data=""
+         for dev in $(find /sys/block/ -name "[sh]d?" -exec basename {} \;);do
+             if ( udevinfo --query=env --name=$dev 2>/dev/null | grep -q "ID_TYPE=disk" ) && \
+                ( udevinfo --query=env --name=$dev 2>/dev/null | grep -q "ID_BUS=usb" ) ; then
+                    # we have a USB disk search por partitions
+                    for part in $(find /dev/${dev}* -not -name "${dev}" -exec basename {} \;); do
+                        # read udev data and put in data var
+                        vendor=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_VENDOR=/ {print $2}')
+                        model=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_MODEL=/ {print $2}')
+                        serial=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_SERIAL=/ {print $2}')
+                        uuid=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_FS_UUID=/ {print $2}')
+                        data="$data|UUID=$uuid#MODEL=$model#VENDOR=$vendor#SERIAL=$serial#DEVICE=/dev/${part}"
+                    done
+             fi
+         done
+         echo -n "$data"
+     ;;
      umountusb)
          umount_uuid $2
          echo "ok"
