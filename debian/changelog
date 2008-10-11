@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.89.12) unstable; urgency=low
+
+  * Patches by Vidal:
+    - Enable RTP multichat mode and configure MIC levels
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 11 Oct 2008 15:15:22 +0200
+
 initramfs-tools-tcos (0.89.11) unstable; urgency=low
 
   * xmlrpc/sh/tcos-pam-usb.sh:

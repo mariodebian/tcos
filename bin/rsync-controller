@@ -65,11 +65,25 @@ RECEIVE_DIR=$1
 shift
 SERVER_IP=$1
 shift
+OPEN=$1
+shift
 
 [ -d ${home}/${DESKTOP_DIR}/${RECEIVE_DIR} ] || mkdir -p ${home}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
 
-rsync -avx --timeout=30 --ignore-existing ${SERVER_IP}::"$*" ${home}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
+[ -e ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE ] && rm -f ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE >/dev/null 2>&1
+
+rsync -avx --timeout=30 ${SERVER_IP}::"tcos_share/.FILE" ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE >/dev/null 2>&1
+
+rsync -avx --timeout=30 --ignore-existing --files-from=${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE ${SERVER_IP}::"tcos_share" ${home}/${DESKTOP_DIR}/${RECEIVE_DIR} >/dev/null 2>&1
 
 chmod -R 644 ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/*
+
+if [ "$OPEN" = "True" ]; then
+  for f in $(cat ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE); do
+     xdg-open ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/$f 2>/dev/null
+  done
+fi
+
+[ -e ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE ] && rm -f ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE >/dev/null 2>&1
 
 exit 0

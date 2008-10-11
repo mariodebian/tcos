@@ -143,9 +143,10 @@ if [ \${TCOS_PULSEAUDIO_RESAMPLE_METHOD} ]; then
  OPTS="\${OPTS} --resample-method=\${TCOS_PULSEAUDIO_RESAMPLE_METHOD}"
 fi
 
+OPTS="--no-cpu-limit \${OPTS}"
 
 if [ \$cpu = "low" ]; then
- OPTS="--no-cpu-limit \${OPTS}"
+ #OPTS="--no-cpu-limit \${OPTS}"
  # old versions of pulseaudio don't have realtime switch (Etch)
  if [ \$realtime != "0" ]; then
    OPTS="\${OPTS} --realtime "

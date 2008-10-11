@@ -24,6 +24,7 @@
 #
 
 export DISPLAY=:0
+VOLUME=85
 
 if [ -e /conf/tcos-run-functions ]; then
   # running in thin client
@@ -45,6 +46,11 @@ ctl.!default {
 }
 EOF
   DAEMONIZE="/sbin/daemonize.sh"
+  MASTER=$(/sbin/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
+  PCM=$(/sbin/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
+  FRONT=$(/sbin/soundctl.sh --getlevel Front 2>/dev/null | sed 's/%//g')
+  MIC=$(/sbin/soundctl.sh --getlevel Mic 2>/dev/null | sed 's/%//g')
+  MIXER="tmixer -c 0 "
 else
   STANDALONE=1
   STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
@@ -52,13 +58,41 @@ else
   if [ "${STANDALONE_USER}" = "" ]; then echo "error: no standalone user connected"; exit 1; fi
   DBUS_HANDLER="/usr/lib/tcos/tcos-dbus-helper --username=${STANDALONE_USER} "
   DAEMONIZE="/usr/lib/tcos/daemonize.sh"
+  MASTER=$(/usr/lib/tcos/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
+  PCM=$(/usr/lib/tcos/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
+  FRONT=$(/usr/lib/tcos/soundctl.sh --getlevel Front 2>/dev/null | sed 's/%//g')
+  MIC=$(/usr/lib/tcos/soundctl.sh --getlevel Mic 2>/dev/null | sed 's/%//g')
+  MIXER="/usr/lib/tcos/tmixer -c 0 "
 fi
 
-version=$(pactl --version | awk '{print $2}' | awk -F"." '{if (($2 >= 9) && ($3 >= 10)) printf "yes"}')
+set_volume() {
+  [ "$MASTER" = "unknow" ] && MASTER=100
+  [ "$PCM" = "unknow" ] && PCM=100
+  [ "$FRONT" = "unknow" ] && FRONT=100
+
+  $MIXER sset 'PCM' 'on' 2>/dev/null
+  $MIXER sset 'Master' 'on' 2>/dev/null
+  $MIXER sset 'Front' 'on' 2>/dev/null
+  [ $PCM -lt $VOLUME ] && $MIXER sset 'PCM' $VOLUME 2>/dev/null
+  [ $MASTER -lt $VOLUME ] && $MIXER sset 'Master' $VOLUME 2>/dev/null
+  [ $FRONT -lt $VOLUME ] && $MIXER sset 'Front' $VOLUME 2>/dev/null
+}
+
+set_mic() {
+  [ "$MIC" = "unknow" ] && MIC=100
+
+  $MIXER sset 'Mic' 'on' 2>/dev/null
+  $MIXER sset 'Mic Boost (+20dB)' 'on' 2>/dev/null
+  $MIXER sset 'Mic Boost' 'on' 2>/dev/null
+  [ $MIC -lt $VOLUME ] && $MIXER sset 'Mic' $VOLUME 2>/dev/null
+}
+
+version=$(pactl --version 2>/dev/null | awk '{print $2}' | awk -F"." '{if ((int($2) >= 9) && (int($3) >= 10)) printf "yes"}')
 
 for arg in $1; do
   case $arg in
      startrtp-recv)
+        set_volume
         if [ ! -z $version ]; then
             $DAEMONIZE "pactl" "load-module module-rtp-recv sap_address=$2"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting pulse recv module"; fi
@@ -94,6 +128,8 @@ for arg in $1; do
         fi
      ;;
      startrtp-send)
+        set_volume
+        set_mic
         if [ ! -z $version ]; then
             $DAEMONIZE "pactl" "load-module module-rtp-send destination=$2 rate=11025 channels=2 port=1234"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting pulse send module"; fi
@@ -111,6 +147,8 @@ for arg in $1; do
         fi
      ;;
      startrtp-chat)
+        set_volume
+        set_mic
         if [ ! -z $version ]; then
             $DAEMONIZE "pactl" "load-module module-rtp-send destination=$2 rate=11025 channels=2 port=1234"
             $DAEMONIZE "pactl" "load-module module-rtp-recv sap_address=$2"
