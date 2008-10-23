@@ -69,7 +69,7 @@ Architecture: all
 Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), tcos-usplash (>= 0.84.5), 
          dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd, pulseaudio, 
-         pulseaudio-utils, x11vnc, libasound2-plugins, xfs, mtools, 
+         pulseaudio-utils, x11vnc, libasound2-plugins, mtools, 
          ltspfs-server | ltspfs, esound | pulseaudio-esound-compat, cdebootstrap, 
          python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
 Provides: tcos-server-utils

@@ -8,7 +8,7 @@ if [ "$1" = "prereqs" ]; then
 fi
 
 quiet=n
-
+. /conf/tcos-run-functions
 
 nodevices=$(read_cmdline_var "nodevices" "0") 
 if [ ${nodevices} = 1 ]; then 

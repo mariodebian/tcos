@@ -7,12 +7,24 @@ else
   stat_before
 
   ##########   debootstarp stuff....   ########
-  mkdir -p $DESTDIR/usr/lib/ $DESTDIR/usr/bin/
-  copydir    /usr/lib/debootstrap     /usr/lib/
+
+  if [ -d /usr/lib/debootstrap ]; then
+    mkdir -p $DESTDIR/usr/lib/ $DESTDIR/usr/bin/
+    copydir    /usr/lib/debootstrap     /usr/lib/
+  elif [ -d /usr/share/debootstrap ]; then
+    mkdir -p $DESTDIR/usr/share $DESTDIR/usr/lib/debootstrap $DESTDIR/usr/bin/
+    copydir    /usr/share/debootstrap     /usr/share/
+  else
+    _echo ""
+    _echo "WARNING: Can't find deboostrap files in /usr/share or /usr/lib"
+    _echo ""
+  fi
+
   cpifexists /usr/sbin/debootstrap    /usr/bin/
   #############################################
 
   # pkgdetails.c from source of debootstrap (no using perl)
+  cpifexists ${TCOS_BINS}/pkgdetails  /usr/lib/debootstrap/
   cpifexists ${TCOS_BINS}/pkgdetails  /usr/lib/debootstrap/
 
   # dpkg
@@ -29,7 +41,7 @@ else
     # for debian
     copydir    /usr/lib/grub                 /usr/lib/
     cpifexists /usr/sbin/grub                /sbin/
-    cpifexists /usr/sbin/grub-install.real   /sbin/
+    #cpifexists /usr/sbin/grub-install.real   /sbin/
     #cpifexists /usr/sbin/grub-install        /sbin/
     cpifexists /usr/sbin/grub-set-default    /sbin/
 

@@ -22,6 +22,18 @@ done
 
 
 start_usplash() {
+  # kill usplash if cmdline have "nousplash" or "nosplash"
+  for x in $(cat /proc/cmdline); do
+        case $x in
+        nosplash)
+                return
+                ;;
+        nousplash)
+                return
+                ;;
+        esac
+  done
+
   if [ -x /sbin/usplash ]; then
         /sbin/usplash -c &
         /sbin/usplash_write "TEXT Starting usplash..."

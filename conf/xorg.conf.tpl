@@ -20,16 +20,8 @@
 #   dpkg-reconfigure xserver-xorg
 
 Section "Files"
-	FontPath	"unix/:7100"			# local font server
-	# if the local font server has problems, we can fall back on these
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/misc"
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/cyrillic"
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/100dpi/:unscaled"
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/75dpi/:unscaled"
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/Type1"
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/CID"
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/100dpi"
-__xlocalfonts__	FontPath	"/usr/lib/X11/fonts/75dpi"
+	FontPath	"/usr/share/X11/fonts/misc"
+	FontPath	"/usr/share/X11/fonts/100dpi"
 EndSection
 
 Section "Module"
@@ -149,8 +141,6 @@ __dontzap__
 #xmousenowheel=__xmousenowheel__
 #xmousewheel=__xmousewheel__
 #xdpms=__xdpms__
-#xlocalfonts=__xlocalfonts__
-#xfontserver=__xfontserver__
 #xdontzap=__xdontzap__
 #xdriver_via=__xdriver_via__
 #xkbmap=__xkbmap__

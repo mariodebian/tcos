@@ -1,0 +1,54 @@
+
+# must export this variable from shell no config yet
+
+if [ "$TCOS_ENABLE_BOOTCHARTD" = "1" ] && [ -x /sbin/bootchartd ]; then
+
+  cpifexists /sbin/bootchartd     /sbin/
+  cpifexists /etc/bootchartd.conf /etc
+  cpifexists /bin/sleep           /bin
+
+  sed -i -e 's|/mnt|/tmp/bootchart|g' $DESTDIR/sbin/bootchartd
+  sed -i-e 's|sleep|/bin/sleep|g'     $DESTDIR/sbin/bootchartd
+  sed -i -e 's/-eq 1/-eq 65000/g'     $DESTDIR/sbin/bootchartd
+  sed -i -e 's/exec/#exec/g'          $DESTDIR/sbin/bootchartd
+
+  cat << EOF > $DESTDIR/scripts/tcos-top/00bootchartd
+#!/bin/sh
+#
+
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+
+#echo "cargando bootchartd"
+#/sbin/bootchartd start
+#echo "cargado"
+EOF
+
+  chmod +x $DESTDIR/scripts/tcos-top/00bootchartd
+
+
+cat << EOF > $DESTDIR/scripts/tcos-bottom/79bootchartd
+#!/bin/sh
+#
+
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+
+killall -USR1 bootchartd
+
+killall bootchartd
+EOF
+
+  chmod +x $DESTDIR/scripts/tcos-bottom/79bootchartd
+
+  _echo "WARNING: Bootchart enabled !!!!"
+
+fi

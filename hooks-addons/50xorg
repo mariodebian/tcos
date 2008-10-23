@@ -11,8 +11,8 @@ if [ "$(pathof Xorg)" = /usr/bin/Xorg ]; then
    XORG_PATH=/usr/bin
 else
    XORG=6
-   _echo "   USING Xorg 6.9 dirs"
-   XORG_PATH=/usr/X11R6/bin
+   _echo "   Xorg 6.9 no supported"
+   exit
 fi
 
 
@@ -24,7 +24,6 @@ cpifexists $XORG_PATH/mcookie /usr/bin
 cpifexists $XORG_PATH/xhost   /usr/bin
 cpifexists $XORG_PATH/xterm   /usr/bin
 cpifexists $XORG_PATH/twm     /usr/bin
-#cpifexists $XORG_PATH/xfs    /usr/bin
 
 # some xutils
 cpifexists $XORG_PATH/xset     /usr/bin
@@ -34,14 +33,9 @@ cpifexists $XORG_PATH/xkbcomp  /usr/bin/
 
 
 mkdir -p $DESTDIR/var/log
-
-
 mkdir -p $DESTDIR/etc/X11/xserver
-
 mkdir -p $DESTDIR/etc/X11/PreRun
 
-# no anymore in Xorg 7.0 ??
-#copydir /etc/X11/xserver/      /etc/X11/
 
 ################ ugly hack###########################
 mkdir -p $DESTDIR/etc/X11/xserver/
@@ -57,239 +51,185 @@ install -m 755 ${TCOS_BINS}/tryXorg.sh    ${DESTDIR}/sbin/tryXorg
 
 
 # FONTS modules
-if [ $XORG = 6 ]; then
- mkdir -p  $DESTDIR/usr/X11R6/lib/modules/
- copydir /usr/X11R6/lib/modules/fonts /usr/X11R6/lib/modules/
+mkdir -p  $DESTDIR/usr/lib/xorg/modules/
+copydir /usr/lib/xorg/modules/fonts /usr/lib/xorg/modules/
+
+if [ -d /usr/lib/X11/fonts ]; then
+   TCOS_FONTS_PATH="/usr/lib/X11/fonts"
+   TCOS_FONT_EXTENSION=""
+
+
+elif [ -d /usr/share/fonts/X11 ]; then
+   TCOS_FONTS_PATH="/usr/share/fonts/X11"
+   TCOS_FONT_EXTENSION=".gz"
+
 else
- mkdir -p  $DESTDIR/usr/lib/xorg/modules/
- copydir /usr/lib/xorg/modules/fonts /usr/lib/xorg/modules/
+   _echo ""
+   _echo "ERROR: Cant' locate fonts dir, XFS is deprecated, BUG!!!"
+   _echo ""
+   TCOS_FONTS_PATH=""
+   exit
 fi
 
 
+if [ "$TCOS_FONTS_PATH" != "" ]; then
+    mkdir -p $DESTDIR/$TCOS_FONTS_PATH/misc
+    mkdir -p $DESTDIR/$TCOS_FONTS_PATH/100dpi
+
+    cat << EOF > $DESTDIR/$TCOS_FONTS_PATH/misc/fonts.alias
+fixed        -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1
+7x14         -misc-fixed-medium-r-semicondensed--14-120-75-75-c-60-iso8859-1
+EOF
+    cpifexists $TCOS_FONTS_PATH/misc/6x13-ISO8859-1.pcf${TCOS_FONT_EXTENSION} $TCOS_FONTS_PATH/misc
+    cpifexists $TCOS_FONTS_PATH/misc/cursor.pcf${TCOS_FONT_EXTENSION}         $TCOS_FONTS_PATH/misc
+    mkfontdir $DESTDIR/$TCOS_FONTS_PATH/misc
+
+    cpifexists $TCOS_FONTS_PATH/100dpi/helvB24-ISO8859-1.pcf${TCOS_FONT_EXTENSION} $TCOS_FONTS_PATH/100dpi
+    cpifexists $TCOS_FONTS_PATH/100dpi/helvB08-ISO8859-1.pcf${TCOS_FONT_EXTENSION} $TCOS_FONTS_PATH/100dpi
+    mkfontdir $DESTDIR/$TCOS_FONTS_PATH/100dpi
+fi
+
+
+
 # PCIIDS
-if [ $XORG = 7 ] && [ -d /usr/share/xserver-xorg/pci ] ; then
+if [ -d /usr/share/xserver-xorg/pci ] ; then
  mkdir -p $DESTDIR/usr/share/xserver-xorg/
  copydir /usr/share/xserver-xorg/pci /usr/share/xserver-xorg/
 fi
 
 
-# FIXME need light initramfs not fonts....
-#if [ $XORG = 6 ]; then
-# mkdir -p $DESTDIR/usr/X11R6/lib/X11/fonts
-# cp -ra /usr/X11R6/lib/X11/fonts/encodings $DESTDIR/usr/X11R6/lib/X11/fonts/
-# cp -ra /usr/X11R6/lib/X11/fonts/misc $DESTDIR/usr/X11R6/lib/X11/fonts/
-#else
-# mkdir -p $DESTDIR/usr/share/fonts/X11
-# cp -ra /usr/share/fonts/X11/encodings $DESTDIR/usr/share/fonts/X11
-# cp -ra /usr/share/fonts/X11/misc $DESTDIR/usr/share/fonts/X11/misc
-#fi
-
-
-# FIXME clean ja or ko fonts
-#rm -rf $DESTDIR/usr/X11R6/lib/X11/fonts/misc/*ja*
-
 
 
 # MODULES
-if [ $XORG = 6 ]; then
- mkdir -p $DESTDIR/usr/X11R6/lib/modules/input/
- cp -ra /usr/X11R6/lib/modules/lib*so $DESTDIR/usr/X11R6/lib/modules/
- cp -ra /usr/X11R6/lib/modules/input/* $DESTDIR/usr/X11R6/lib/modules/input/
- mkdir -p  $DESTDIR/usr/X11R6/lib/modules/linux
- cp -ra /usr/X11R6/lib/modules/linux/lib*so $DESTDIR/usr/X11R6/lib/modules/linux/
-else
- mkdir -p $DESTDIR/usr/lib/xorg/modules/input/
- cp -ra /usr/lib/xorg/modules/lib*so $DESTDIR/usr/lib/xorg/modules/
- cp -ra /usr/lib/xorg/modules/input/* $DESTDIR/usr/lib/xorg/modules/input/
- mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
- cp -ra /usr/lib/xorg/modules/linux/lib*so $DESTDIR/usr/lib/xorg/modules/linux/
-fi
+
+mkdir -p $DESTDIR/usr/lib/xorg/modules/input/
+cp -ra /usr/lib/xorg/modules/lib*so $DESTDIR/usr/lib/xorg/modules/
+cp -ra /usr/lib/xorg/modules/input/* $DESTDIR/usr/lib/xorg/modules/input/
+mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
+cp -ra /usr/lib/xorg/modules/linux/lib*so $DESTDIR/usr/lib/xorg/modules/linux/
 
 
 # DRIVERS and EXTENSIONS
-if [ $XORG = 6 ]; then
- mkdir -p  $DESTDIR/usr/X11R6/lib/modules/drivers
- cp -ra /usr/X11R6/lib/modules/drivers/vesa* $DESTDIR//usr/X11R6/lib/modules/drivers/
- cp -ra /usr/X11R6/lib/modules/drivers/vga* $DESTDIR//usr/X11R6/lib/modules/drivers/
- cp -ra /usr/X11R6/lib/modules/drivers/v4l* $DESTDIR//usr/X11R6/lib/modules/drivers/
-
- if [ $TCOS_XORG_ALLDRIVERS ]; then
-   driver_dir=/usr/X11R6/lib/modules/drivers
-   _echo "    xorg: installing all drivers...."
-   cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
-   rm -f $DESTDIR/${driver_dir}/nvidia_drv.so
- fi
-
- mkdir -p  $DESTDIR/usr/X11R6/lib/modules/extensions
- cp -ra /usr/X11R6/lib/modules/extensions/lib*.so $DESTDIR/usr/X11R6/lib/modules/extensions/
- # delete nvidia/ati glx module
- rm -f $DESTDIR/usr/X11R6/lib/modules/libglx.so
- rm -f $DESTDIR/usr/X11R6/lib/modules/libwfb.so
- rm -rf $DESTDIR/usr/X11R6/lib/modules/extensions/libGLcore.so
- # delete vnc extension
- rm -f $DESTDIR/usr/X11R6/lib/modules/libvnc.so
-
- if [ $TCOS_XORG_OPENGL ]; then
-    _echo "    * OpenGL support IS ENABLED"
-    if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
-       [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
-
-       if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/X11R6/lib/modules/extensions
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/X11R6/lib/modules/extensions
-          [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
-              cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so /usr/X11R6/lib/modules/
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.*   /usr/lib/
-          #cp -ra     ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLU.so.1.* $DESTDIR/usr/lib/
-          _echo "       * OpenGL use cached fix-nvidia-ati libs"
-       else
-          _echo " ********************************************** "
-          _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
-          _echo "                                                "
-          _echo "      Please fix with: gentcos -fix-nvidia-ati  "
-          _echo "         or uninstall nvidia/ati drivers        "
-          _echo "                                                "
-          _echo "  OpenGL support will not work on thin clients  "
-          _echo " ********************************************** "
-       fi
-
-    else
-       cpifexists /usr/X11R6/lib/modules/extensions/libGLcore.so /usr/X11R6/lib/modules/extensions
-       cpifexists /usr/lib/libGL.so.1  /usr/lib/
-       cp -ra     /usr/lib/libGLU.so.1.* $DESTDIR/usr/lib/
-    fi
- else
-    _echo "    * OpenGL support is not enabled!!"
- fi
-
-else # Xorg 7.x
- mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
- # essential xorg drivers
- cp -ra /usr/lib/xorg/modules/drivers/vesa* $DESTDIR/usr/lib/xorg/modules/drivers/
- cp -ra /usr/lib/xorg/modules/drivers/vga* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
- cp -ra /usr/lib/xorg/modules/drivers/v4l* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
+mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
+# essential xorg drivers
+cp -ra /usr/lib/xorg/modules/drivers/vesa* $DESTDIR/usr/lib/xorg/modules/drivers/
+cp -ra /usr/lib/xorg/modules/drivers/vga* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
+cp -ra /usr/lib/xorg/modules/drivers/v4l* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
 
 
- if [ $TCOS_XORG_ALLDRIVERS ]; then
-   driver_dir=/usr/lib/xorg/modules/drivers
-   _echo "    xorg: installing all drivers...."
-   cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
-   rm -f $DESTDIR/${driver_dir}/nvidia_drv.so
- fi
-
- mkdir -p  $DESTDIR/usr/lib/xorg/modules/extensions
- cp -ra /usr/lib/xorg/modules/extensions/lib*.so $DESTDIR/usr/lib/xorg/modules/extensions/
- # delete nvidia/ati glx module
- rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so
- rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so >/dev/null 2>&1
- rm -f $DESTDIR/usr/lib/xorg/modules/libnvidia-wfb.so.* >/dev/null 2>&1
- rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
- # delete linked nvidia driver (10Mb)
- rm -f $DESTDIR/usr/lib/libGL*
-
- # delete vnc extension
- rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so
-
- if [ $TCOS_XORG_OPENGL ]; then
-    _echo "    * OpenGL support is ENABLED"
-    if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
-       [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
-
-       if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
-          #rm -rf $DESTDIR/usr/lib/libGL.so*
-          #rm -rf $DESTDIR/usr/lib/libGLcore.so*
- 	  rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
-          #cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/
-          #cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
-          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2   /usr/lib/
-      	  [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
-          [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
-              cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
-          _echo "       * OpenGL use cached fix-nvidia-ati libs"
-       else
-          _echo " ********************************************** "
-          _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
-          _echo "                                                "
-          _echo "      Please fix with: gentcos -fix-nvidia-ati  "
-          _echo "         or uninstall nvidia/ati drivers        "
-          _echo "                                                "
-          _echo "  OpenGL support will not work on thin clients  "
-          _echo " ********************************************** "
-       fi
-
-    else
-      cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
-      cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
-      cpifexists /usr/lib/libGL.so.1  /usr/lib/
-      [ -e /usr/lib/libGLcore.so.1 ] && cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
-      [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
-    fi
-
-    if [ -e $DESTDIR/usr/lib/libGL.so.1 ];then
-      if [ "$(strings $DESTDIR/usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
-        [ "$(strings $DESTDIR/usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
-        rm -rf $DESTDIR/usr/lib/libGL.so.1
-      fi
-    fi
-
-    if [ -e $DESTDIR/usr/lib/libGLcore.so.1 ];then
-      if [ "$(strings $DESTDIR/usr/lib/libGLcore.so.1|grep -c NVIDIA)" != 0 ] || \
-        [ "$(strings $DESTDIR/usr/lib/libGLcore.so.1|grep -c -i fgl)" != 0 ]; then
-        rm -rf $DESTDIR/usr/lib/libGLcore.so.1
-      fi
-    fi
-
- else
-    _echo "    * OpenGL support is not enabled!!"
- fi
- 
+if [ $TCOS_XORG_ALLDRIVERS ]; then
+    driver_dir=/usr/lib/xorg/modules/drivers
+    _echo "    xorg: installing all drivers...."
+    # no need to copy linked libs (drivers only linked to libc)
+    cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
+    rm -f $DESTDIR/${driver_dir}/nvidia_drv.so
 fi
+
+mkdir -p  $DESTDIR/usr/lib/xorg/modules/extensions
+# copy linked libs
+for _file in $(ls /usr/lib/xorg/modules/extensions/lib*.so| grep -v glx); do
+    cpifexists $_file /usr/lib/xorg/modules/extensions/
+done
+
+# delete nvidia/ati glx module
+rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so* 
+rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so
+rm -f $DESTDIR/usr/lib/xorg/modules/libnvidia-wfb.so.*
+rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
+# delete linked nvidia driver (10Mb)
+rm -f $DESTDIR/usr/lib/libGL*
+
+# delete vnc extension
+rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so
+
+if [ $TCOS_XORG_OPENGL ]; then
+ _echo "    * OpenGL support is ENABLED"
+ if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
+       [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
+
+   if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
+      rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
+      cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
+      cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
+      cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2   /usr/lib/
+  	  [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
+      [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
+          cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
+      _echo "       * OpenGL use cached fix-nvidia-ati libs"
+   else
+      _echo " ********************************************** "
+      _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
+      _echo "                                                "
+      _echo "      Please fix with: gentcos -fix-nvidia-ati  "
+      _echo "         or uninstall nvidia/ati drivers        "
+      _echo "                                                "
+      _echo "  OpenGL support will not work on thin clients  "
+      _echo " ********************************************** "
+   fi
+
+ else
+  cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
+  cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
+  cpifexists /usr/lib/libGL.so.1  /usr/lib/
+  [ -e /usr/lib/libGLcore.so.1 ] && cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
+  [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
+ fi # end of NVIDIA/ATI strings
+
+if [ -e $DESTDIR/usr/lib/libGL.so.1 ];then
+  if [ "$(strings $DESTDIR/usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
+    [ "$(strings $DESTDIR/usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
+    rm -rf $DESTDIR/usr/lib/libGL.so.1
+  fi
+fi
+
+if [ -e $DESTDIR/usr/lib/libGLcore.so.1 ];then
+  if [ "$(strings $DESTDIR/usr/lib/libGLcore.so.1|grep -c NVIDIA)" != 0 ] || \
+    [ "$(strings $DESTDIR/usr/lib/libGLcore.so.1|grep -c -i fgl)" != 0 ]; then
+    rm -rf $DESTDIR/usr/lib/libGLcore.so.1
+  fi
+fi
+
+else
+_echo "    * OpenGL support is not enabled!!"
+fi # end of $TCOS_XORG_OPENGL
 
 
 # keyboard and keymap FIXME in Xorg 6.x
-if [ $XORG = 6 ]; then
- cp /usr/X11R6/lib/libxk*.so.1 $DESTDIR/usr/X11R6/lib/
- #cp -ra /etc/X11/xkb $DESTDIR/etc/X11/xkb
- #mkdir -p $DESTDIR/var/lib/xkb
-else
- XORG_XKB_DIR=/usr/share/X11/xkb/
 
- [ ! -d "${XORG_XKB_DIR}" ] && XORG_XKB_DIR=/etc/X11/xkb/
+XORG_XKB_DIR=/usr/share/X11/xkb/
+[ ! -d "${XORG_XKB_DIR}" ] && XORG_XKB_DIR=/etc/X11/xkb/
+mkdir -p ${DESTDIR}/usr/share/X11
 
- mkdir -p ${DESTDIR}/usr/share/X11
+# copy all dir (some files not needed)
+cp -ra ${XORG_XKB_DIR} ${DESTDIR}/usr/share/X11
 
- # copy all dir (some files not needed)
- cp -ra ${XORG_XKB_DIR} ${DESTDIR}/usr/share/X11
+# delete symlinks
+find ${DESTDIR}/usr/share/X11/ -type l | xargs rm -f --
 
- # delete symlinks
- find ${DESTDIR}/usr/share/X11/ -type l | xargs rm -f --
+# keymap DB
+cpifexists /usr/share/X11/XKeysymDB /usr/share/X11/
 
- # keymap DB
- cpifexists /usr/share/X11/XKeysymDB /usr/share/X11/
 
-fi
+
 
 # xorg locale
-if [ $XORG = 6 ]; then
- mkdir -p $DESTDIR/usr/share/locale
- mkdir -p $DESTDIR/usr/lib/X11
- [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
- #copydir /usr/lib/X11/config/          /usr/lib/X11/
- cpifexists /etc/X11/rgb.txt           /etc/X11/
- #copydir /etc/X11/rstart               /etc/X11/
- cpifexists /usr/lib/X11/XKeysymDB     /usr/lib/X11/
- cpifexists /usr/lib/X11/XErrorDB     /usr/lib/X11/
-else
- mkdir -p $DESTDIR/usr/share/locale
- mkdir -p $DESTDIR/usr/lib/X11
- [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
- #copydir /usr/lib/X11/config/          /usr/lib/X11/
- cpifexists /etc/X11/rgb.txt            /etc/X11/
-fi
+mkdir -p $DESTDIR/usr/share/locale
+mkdir -p $DESTDIR/usr/lib/X11
+[ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
+#copydir /usr/lib/X11/config/          /usr/lib/X11/
+cpifexists /etc/X11/rgb.txt            /etc/X11/
+
+
 
 stat_after "Xorg"
+
+
+############### XORG SCRIPTS ####################
+
+
+
+
+
 
 cat <<EOF > $DESTDIR/sbin/killX
 #!/bin/sh
@@ -332,7 +272,6 @@ cat <<EOF > $DESTDIR/sbin/startnx
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 SERVER=\$(read_server "xdmcp-server")
-FONT_SERVER=\$(read_server "font-server")
 export DISPLAY=:0
 export HOME=/root
 export USER_NX_DIR=/root/.nx
@@ -345,7 +284,7 @@ if [ -f $\XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-/sbin/tryXorg --fontserver=\${FONT_SERVER} --xorgopts="\${TCOS_XORG_OPTS}" &
+/sbin/tryXorg  --xorgopts="\${TCOS_XORG_OPTS}" &
 
 # no window manager for freenx
 #twm  >> /tmp/initramfs.debug 2>&1 &
@@ -365,14 +304,13 @@ cat <<EOF > $DESTDIR/sbin/startremotex
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 SERVER=\$(read_server "xdmcp-server")
-FONT_SERVER=\$(read_server "font-server")
 export DISPLAY=:0
 
 if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-/sbin/tryXorg --fontserver=\${FONT_SERVER} --server=\${SERVER} --xorgopts="\${TCOS_XORG_OPTS} -query \${SERVER}" &
+/sbin/tryXorg --server=\${SERVER} --xorgopts="\${TCOS_XORG_OPTS} -query \${SERVER}" &
 
 EOF
 chmod +x $DESTDIR/sbin/startremotex
@@ -385,7 +323,6 @@ cat <<EOF > $DESTDIR/sbin/startsshx
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 SERVER=\$(read_server "xdmcp-server")
-SERVER=\$(read_server "font-server")
 export DISPLAY=:0
 export HOME=/root
 
@@ -393,7 +330,7 @@ if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
-/sbin/tryXorg --fontserver=\${FONT_SERVER} --xorgopts="\${TCOS_XORG_OPTS}" &
+/sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
 
 remoteuser=\$(read_cmdline_var "sshuser" "root")
 remotesshhost=\$(read_cmdline_var "sshhost" "\${SERVER}")

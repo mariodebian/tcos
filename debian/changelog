@@ -1,3 +1,21 @@
+initramfs-tools-tcos (0.89.13) unstable; urgency=low
+
+  * hooks-addons/50xorg:
+    - Remove Xorg 6.9 support
+    - Add local fonts, remove xfs depend
+  * conf/tcos-run-functions.sh:
+    - Only start usplash when reboot/shutdown if enabled in cmdline
+  * conf/xorg.conf.tpl
+    - Remove fonts and XFS line, now we have local misc/100dpi fonts
+  * scripts/tcos-bottom/55mount_listener:
+    - Include conf/tcos-run-functions.sh
+  * bin/configurexorg bin/tryXorg.sh
+    - Remove fontserver support
+  * hooks-addons/23bootchart:
+    - Add experimental support for bootchart (not enabled)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 23 Oct 2008 12:40:00 +0200
+
 initramfs-tools-tcos (0.89.12) unstable; urgency=low
 
   * Patches by Vidal:
