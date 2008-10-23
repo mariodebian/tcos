@@ -57,9 +57,11 @@ chmod +x $DESTDIR/sbin/disable_dpms
 cat << EOF > $DESTDIR/etc/X11/PreRun/30intel_dpms
 #!/bin/sh
 
-if [ "$(lspci |grep VGA|grep -i intel)" ]; then
+if [ "\$(lspci |grep VGA|grep -c -i intel)" != "0" ]; then
   /sbin/disable_dpms &
 fi
+
+chmod +x $DESTDIR/etc/X11/PreRun/30intel_dpms
 
 EOF
 
