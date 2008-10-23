@@ -16,8 +16,10 @@ initramfs-tools-tcos (0.89.13) unstable; urgency=low
   * hooks-addons/52intel
     - Fix Intel X11 PreRun if (need a space)
     - Escape dollar in lspci and compare with 0
+  * bin/gentcos
+    - Disable XFS check
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 23 Oct 2008 15:11:23 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 23 Oct 2008 15:15:35 +0200
 
 initramfs-tools-tcos (0.89.12) unstable; urgency=low
 

@@ -471,6 +471,8 @@ check_modules() {
 
 
 check_xfs() {
+    # since 0.89.13 TCOS not need XFS server
+    return
     if [ ! -e /etc/tcos/chroot ] && [ ! -f /etc/X11/fs/config ]; then
         echo ""
         echo "WARNING:"
@@ -749,7 +751,7 @@ link_vmlinuz
 check_modules
 
 # check for XFS setup
-check_xfs
+# check_xfs
 
 # make a pxelinux.cfg/default with this kernel
 parse_pxelinuxcfg
