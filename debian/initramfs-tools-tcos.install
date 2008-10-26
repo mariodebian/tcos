@@ -9,11 +9,11 @@ usr/share/initramfs-tools-tcos/scripts/*
 usr/share/initramfs-tools-tcos/xmlrpc/*
 usr/share/initramfs-tools-tcos/tcos-generation-functions.sh
 usr/share/initramfs-tools-tcos/tcos-run-functions.sh
+usr/share/initramfs-tools-tcos/tcos-modules.conf
 usr/share/initramfs-tools/*
 /etc/tcos/hacking/template
 /etc/tcos/menu.lst-tcos
 /etc/tcos/pxelinux.cfg.tpl
-/etc/tcos/tcos-modules.conf
 /etc/tcos/logo.xpm.gz
 /etc/tcos/conf.d/branding.info
 /etc/tcos/version.conf

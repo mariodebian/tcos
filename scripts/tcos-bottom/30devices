@@ -31,8 +31,11 @@ fi
 
 
 if [ ${TCOS_USB} ]; then
- MODULES="scsi_mod sd_mod sr_mod isofs vfat floppy usbcore ehci-hcd ohci-hcd uhci-hcd usb-storage"
- log_begin_msg "Loading usb and floppy modules"
+ # load floppy from /lib/extramodules
+ [ -e /lib/extramodules/floppy.ko ] && insmod /lib/extramodules/floppy.ko >> /tmp/initramfs.debug 2>&1
+
+ MODULES="scsi_mod sd_mod sr_mod isofs vfat usbcore ehci-hcd ohci-hcd uhci-hcd usb-storage"
+ log_begin_msg "Loading usb modules"
    for mod in ${MODULES}; do
      _log "INITTCOS Loading module ${mod}"
      modprobe -q $mod >> /tmp/initramfs.debug 2>&1 &

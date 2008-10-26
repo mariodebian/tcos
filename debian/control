@@ -2,8 +2,7 @@ Source: initramfs-tools-tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), libusplash-dev, imagemagick, librsvg2-bin, 
-               libxmlrpc-c3-dev, bc, libxau-dev, libxaw7-dev, 
+Build-Depends: debhelper (>= 4.0.0), libxmlrpc-c3-dev, bc, libxau-dev, libxaw7-dev, 
                imlib11-dev, python, python-support (>= 0.3), pkg-config, libasound2-dev
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.4
@@ -43,14 +42,6 @@ Description: common script and bins for generating a thin client bootable image:
  .
   Homepage: http://www.tcosproject.org
 
-Package: tcos-usplash
-Architecture: any
-Depends: initramfs-tools-tcos (>= 0.84.5), usplash, ${misc:Depends}, ${shlibs:Depends}
-Description: usplash artwork for TCOS
- This package contains usplash boot image for TCOS.
- .
-  Homepage: http://www.tcosproject.org
-
 Package: tcos-standalone
 Architecture: any
 Depends: tcos-core (>= 0.88.0), tcosmonitor-common, gksu, python-gnome2-extras, python-gtk2, 
@@ -66,7 +57,8 @@ Description: TCOS standalone GUI configurator
 
 Package: tcos
 Architecture: all
-Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), tcos-usplash (>= 0.84.5), 
+Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), 
+         tcos-usplash (>= 0.89.14) | tcos-splashy (>= 0.89.14), 
          dhcp3-server | dhcp-server, tcosmonitor, 
          openbsd-inetd | netkit-inetd | inetutils-inetd, pulseaudio, 
          pulseaudio-utils, x11vnc, libasound2-plugins, mtools, 

@@ -206,7 +206,7 @@ Things to do, to decrease RAM requirements
 
  with this setting initramfs have exactly all modules you want
 
-* Edit /etc/tcos/tcos-modules.conf
+* Edit /etc/tcos/modules
 
   you can edit some var to exactly put needed modules
 
@@ -226,9 +226,8 @@ Things to do, to decrease RAM requirements
        Skipping XXXXX; assuming it is compiled into kernel
 
    take note of all XXXXX modules and put them in 
-   /etc/tcos/tcos-modules.conf in MYTCOS_MODULES var
+   /etc/tcos/modules
 
-   MYTCOS_MODULES="XXXXX XXXXX"
 
   2.- Second method is to start terminal 
      with cmdline:

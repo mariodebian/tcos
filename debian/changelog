@@ -1,3 +1,12 @@
+initramfs-tools-tcos (0.89.14) unstable; urgency=low
+
+  * Move /etc/tcos/tcos-modules.conf to /usr/share/initramfs-tools-tcos
+  * Don't copy floppy/ide-floppy module in /lib/modules, use /lib/extramodules
+  * Move usplash stuff to tcos-usplash package
+  * Add hooks-addons/91splashy hook (don't work yet)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 26 Oct 2008 12:22:58 +0100
+
 initramfs-tools-tcos (0.89.13) unstable; urgency=low
 
   * hooks-addons/50xorg:

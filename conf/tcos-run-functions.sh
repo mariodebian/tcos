@@ -40,6 +40,10 @@ start_usplash() {
         /sbin/usplash_write "TIMEOUT 180"
         /sbin/usplash_write "SUCCESS ok"
   fi
+    if [ -x /sbin/splashy_update ]; then
+        /sbin/splashy boot
+        /sbin/splashy_update timeout180
+  fi
 }
 
 kill_usplash() {
@@ -47,7 +51,12 @@ kill_usplash() {
     usplash_write QUIT  2> /dev/null
     killall usplash     2> /dev/null
     #chvt 1              2> /dev/null # this cause some problems :(
-  fi 
+  fi
+  if [ -x /sbin/splashy_update ]; then
+    /sbin/splashy_update QUIT  2> /dev/null
+    /sbin/splashy_update exit  2> /dev/null
+    killall splashy     2> /dev/null
+  fi
 }
 
 kill_xorg() {
@@ -205,6 +214,11 @@ update_progress() {
   new=$((${old}+${sum}))
   if [ -x /sbin/usplash_write ]; then
     /sbin/usplash_write "PROGRESS ${new}"
+    #_log "updating progress to ${new} %"
+    echo ${new} > /tmp/progress
+  fi
+  if [ -x /sbin/splashy_update ]; then
+    /sbin/splashy_update "progress${new}"
     #_log "updating progress to ${new} %"
     echo ${new} > /tmp/progress
   fi

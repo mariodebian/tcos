@@ -111,7 +111,7 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
 
   # usplash support outside squashfs
   . ${TCOS_DIR}/hooks-addons/90usplash
-  
+
 
   # overwrite TCOS_SQUASHFS from shell env var
   # this allow to create cdrom with usr.squashfs embedded

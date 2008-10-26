@@ -22,7 +22,7 @@ fi
 if [ "${BOOT}" = "tcos" ]; then
 
 . $CONFDIR/tcos.conf
-. $TCOS_CONF/tcos-modules.conf
+. $TCOS_DIR/tcos-modules.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
 for tpl in $(tcos_get_templates); do
@@ -82,6 +82,20 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
       #force_add_module ${x}
     done
 
+    # put floppy outside /lib/modules
+    mkdir -p $DESTDIR/lib/extramodules
+    FLOPPY_MOD=$(modprobe --set-version="${TCOS_KERNEL}" --list "floppy" 2>/dev/null)
+    FLOPPY_IDE_MOD=$(modprobe --set-version="${TCOS_KERNEL}" --list "ide-floppy")
+
+    if [ "${FLOPPY_MOD}" != "" ]; then
+      # don't use cpifexists
+      cp -a "${FLOPPY_MOD}" $DESTDIR/lib/extramodules
+      cp -a "${FLOPPY_IDE_MOD}" $DESTDIR/lib/extramodules
+
+      # delete floppy kernel
+      rm -f ${DESTDIR}/${FLOPPY_MOD}
+      rm -f ${DESTDIR}/${FLOPPY_IDE_MOD}
+    fi
 
     if [ "$TCOS_EXTRA_MODULES" != "" ]; then
        TCOS_EXTRA_MODULES=$(echo ${TCOS_EXTRA_MODULES} | sed s/","/" "/g)

@@ -4,7 +4,6 @@
 ##    mariodebian \/at\/ gmail \/dot\/ com
 
 all:
-	if [ $(DISABLE_USPLASH) = 0 ]; then cd usplash && make; fi
 	cd debootstrap && make
 	#cd daemonize   && make
 	cd printer     && make
@@ -25,7 +24,6 @@ include common.mk
 clean:
 	find * |grep "~" | xargs rm -rf --
 	rm -f build-stamp configure-stamp
-	cd usplash && make clean
 	cd debootstrap && make clean
 	#cd daemonize   && make clean
 	cd printer     && make clean
@@ -81,9 +79,6 @@ install:
 	install -d $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg
 	install -d $(DESTDIR)$(TFTP_DIR)/conf/
 
-	# usplash
-	if [ $(DISABLE_USPLASH) = 0 ]; then cd usplash && make install DESTDIR=$(DESTDIR); fi
-
 	install -d $(DESTDIR)$(TCOS_CONF)/hooks
 	for i in `find scripts/ -type d`; do install -d $(DESTDIR)$(TCOS_CONF)/$$i; done
 	
@@ -136,7 +131,8 @@ install:
 	install -m 644 conf/tcos.conf.nfs $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.nfs
 
 
-	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
+#	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
+	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_DIR)/tcos-modules.conf
 
 	install -m 644 conf/tcos-generation-functions.sh $(DESTDIR)$(TCOS_DIR)/tcos-generation-functions.sh
 	install -m 644 conf/tcos-run-functions.sh        $(DESTDIR)$(TCOS_DIR)/tcos-run-functions.sh
@@ -217,9 +213,9 @@ targz: clean
 	rm -rf ../initramfs-tools-tcos-$(VERSION)
 
 tcos: clean
-	rm -f ../tcos_*deb ../gentcos*deb ../initramfs-tools-tcos*deb ../tcos_*deb ../tcos-server-utils*deb ../tcos-usplash*deb
+	rm -f ../tcos_*deb ../gentcos*deb ../initramfs-tools-tcos*deb ../tcos_*deb ../tcos-server-utils*deb
 	debuild -us -uc; true
-	sudo dpkg -i ../initramfs-tools-tcos*deb ../gentcos*deb ../tcos-server-utils*deb ../tcos-usplash*deb ../tcos_*deb
+	sudo dpkg -i ../initramfs-tools-tcos*deb ../gentcos*deb ../tcos-server-utils*deb ../tcos_*deb
 
 patch_version:
 	# PATCHING VERSION

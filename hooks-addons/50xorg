@@ -16,7 +16,7 @@ else
 fi
 
 
-cpifexists $CONFDIR/tcos-modules.conf         /conf/
+cpifexists $TCOS_DIR/tcos-modules.conf         /conf/
 
 cpifexists $XORG_PATH/Xorg    /usr/bin
 cpifexists $XORG_PATH/xauth   /usr/bin

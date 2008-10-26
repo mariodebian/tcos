@@ -49,7 +49,7 @@ EOF
 
 else 
 
-  _echo "   * Usplash not found, timeout path not applied."
+  _verbose "(95usplash_timeout) Usplash not found, timeout path not applied."
 
 fi
 

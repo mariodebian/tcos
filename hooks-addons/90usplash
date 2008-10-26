@@ -1,5 +1,9 @@
 # hook-addon for usplash support
 
+if [ ! -e /usr/lib/usplash/usplash-tcos.so ] && [ ! -e /sbin/usplash ]; then
+  _verbose "(90usplash) USPLASH not installed"
+else
+
 if [ $TCOS_DISABLE_UPLASH ]; then
   rm -f ${DESTDIR}/lib/usplash
   rm -f ${DESTDIR}/sbin/usplash
@@ -37,4 +41,6 @@ xres=1024
 yres=768
 EOF
 
-fi
+fi # end if TCOS_DISABLE_USPLASH
+
+fi # end if no usplash installed
