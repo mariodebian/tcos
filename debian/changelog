@@ -21,8 +21,10 @@ initramfs-tools-tcos (0.89.15) unstable; urgency=low
     - Delete libltdl3 depend with Ubuntu intrepid
   * hooks-addons/03udev2:
     - delete some not needed rules
+  * bin/tcosgenbootchart:
+    - Fix typo, rename
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 28 Oct 2008 18:01:52 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 28 Oct 2008 18:29:40 +0100
 
 initramfs-tools-tcos (0.89.14) unstable; urgency=low
 

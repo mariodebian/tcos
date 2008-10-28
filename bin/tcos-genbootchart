@@ -17,29 +17,29 @@ if [ ! -x /usr/bin/bootchart ]; then
 fi
 
 OUT=$(pwd)
-TGZ=/tmp/tcos-gentbootchart/bootchart.tgz
+TGZ=/tmp/tcos-genbootchart/bootchart.tgz
 
-mkdir -p /tmp/tcos-gentbootchart/mnt
+mkdir -p /tmp/tcos-genbootchart/mnt
 
 _exit() {
-  umount /tmp/tcos-gentbootchart/mnt
-  rm -rf /tmp/tcos-gentbootchart/mnt
+  umount /tmp/tcos-genbootchart/mnt
+  rm -rf /tmp/tcos-genbootchart/mnt
   exit $1
 }
 
 
-ltspfs ${1}:/tmp /tmp/tcos-gentbootchart/mnt
+ltspfs ${1}:/tmp /tmp/tcos-genbootchart/mnt
 if [ $? -gt 0 ]; then
   echo "Error mounting remote LTSPFS"
   _exit 1
 fi
 
-if [ ! -d /tmp/tcos-gentbootchart/mnt/bootchart ]; then
+if [ ! -d /tmp/tcos-genbootchart/mnt/bootchart ]; then
   echo "/tmp/bootchart not found on remote host"
   _exit 1
 fi
 
-( cd /tmp/tcos-gentbootchart/mnt/bootchart && tar -czf ${TGZ} *)
+( cd /tmp/tcos-genbootchart/mnt/bootchart && tar -czf ${TGZ} *)
 
 bootchart ${TGZ} -o ${OUT} | tail -1
 
