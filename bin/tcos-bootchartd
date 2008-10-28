@@ -1,0 +1,130 @@
+#!/bin/sh
+#
+# Bootchart logger script
+# Ziga Mahkovec  <ziga.mahkovec@klika.si>
+#
+# Modified for TCOS project by Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+#
+# This script is used for data collection for the bootchart
+# boot performance visualization tool (http://www.bootchart.org).
+#
+# To profile the boot process, bootchartd should be called instead of
+# /sbin/init.  Modify the kernel command line to include:
+# init=/sbin/bootchartd
+#
+# bootchartd will then start itself in background and exec /sbin/init
+# (or an alternative init process if specified using bootchart_init=)
+#
+# To profile a running system, run:
+# $ /sbin/bootchartd start; /bin/sleep 30; /sbin/bootchartd stop
+#
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin:$PATH"
+VERSION="0.8"
+
+# Lock file
+BOOTLOG_LOCK="/tmp/bootchart.lock"
+
+# bootchartd.conf
+SAMPLE_PERIOD=0.2
+PROCESS_ACCOUNTING="no"
+BOOTLOG_DEST=/var/log/bootchart.tgz
+AUTO_STOP_LOGGER="no"
+AUTO_RENDER="no"
+AUTO_RENDER_FORMAT="png"
+AUTO_RENDER_DIR="/var/log"
+LOG_DIR="/tmp/bootchart"
+
+
+
+
+# Start the boot logger.
+start()
+{
+    mkdir -p $LOG_DIR
+    cd "$LOG_DIR"
+    touch "$BOOTLOG_LOCK"
+
+    /sbin/bootlogger "cat /proc/stat" /tmp/bootchart/proc_stat.log &
+    /sbin/bootlogger "cat /proc/diskstats" /tmp/bootchart/proc_diskstats.log &
+    /sbin/bootlogger "cat /proc/*/stat" /tmp/bootchart/proc_ps.log &
+    /sbin/bootlogger "cat /proc/net/dev" /tmp/bootchart/proc_netdev.log &
+}
+
+
+
+# Stop the boot logger.  The lock file is removed to force the loggers in
+# background to exit.  Some final log files are created and then all log files
+# from the tmpfs are packaged and stored in $BOOTLOG_DEST.
+stop()
+{
+	if [ ! -f "$BOOTLOG_LOCK" ]; then
+		echo "${0##*/} not running"
+		return
+	fi
+	# Prevent concurrent stop() calls
+	rm -f "$BOOTLOG_LOCK"
+	/bin/sleep $SAMPLE_PERIOD
+	/bin/sleep $SAMPLE_PERIOD
+	
+	cd "$LOG_DIR"
+
+	# Write system information
+	log_header
+}
+
+
+# Log some basic information about the system.
+log_header()
+{
+	(
+		echo "version = $VERSION"
+		echo "title = TCOS Boot chart for $( hostname | sed q ) ($( date ))"
+		echo "system.uname = $( uname -srvm | sed q ) TCOS version:"$(grep ^TCOS_VERSION /conf/tcos.conf| awk -F "=" '{print $2}' |sed s/'"'//g)
+		if [ -f /etc/gentoo-release ]; then
+			echo "system.release = $( sed q /etc/gentoo-release )"
+		elif [ -f /etc/SuSE-release ]; then
+			echo "system.release = $( sed q /etc/SuSE-release )"
+		elif [ -f /etc/debian_version ]; then
+			echo "system.release = Debian GNU/$( uname -s ) $( cat /etc/debian_version )"
+		elif [ -f /etc/frugalware-release ]; then
+			echo "system.release = $( sed q /etc/frugalware-release )"
+		elif [ -f /etc/pardus-release ]; then
+			echo "system.release = $( sed q /etc/pardus-release )"
+		else
+			echo "system.release = $( sed 's/\\.//g;q' /etc/issue )"
+		fi
+
+		# Get CPU count
+		local cpucount=$(grep -c '^processor' /proc/cpuinfo)
+		if [ $cpucount -gt 1 -a -n "$(grep 'sibling.*2' /proc/cpuinfo)" ]; then
+			# Hyper-Threading enabled
+			cpucount=$(( $cpucount / 2 ))
+		fi
+		if grep -q '^model name' /proc/cpuinfo; then
+			echo "system.cpu = $( grep '^model name' /proc/cpuinfo | sed q )"\
+			     "($cpucount)"
+		else
+			echo "system.cpu = $( grep '^cpu' /proc/cpuinfo | sed q )"\
+			     "($cpucount)"
+		fi
+
+		echo "system.kernel.options = $( sed q /proc/cmdline )"
+	) >> /tmp/bootchart/header
+}
+
+
+case "$1" in
+	"start")
+		start
+		;;
+	"stop")
+		sleep 2
+		stop
+		killall bootlogger      2>/dev/null
+		;;
+	*)
+		echo "Usage: $0 {start|stop}"
+		;;
+esac
+

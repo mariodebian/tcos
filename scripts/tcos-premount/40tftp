@@ -41,8 +41,8 @@ if [ ! -e /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/usr.squashfs ];
     _log "SQMOUNT downloading squashfs"
     value=0
     download_file /tcos/usr-$(uname -r).squashfs /mnt/tmp/usr-$(uname -r).squashfs || value=1
-    sync
-    sleep 1
+    #sync
+    #sleep 1
   log_end_msg $value
 
 

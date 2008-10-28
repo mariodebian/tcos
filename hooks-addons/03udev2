@@ -37,3 +37,58 @@ cpudev /lib/udev/scsi_id        /lib/udev
 cpudev /etc/udev/rules.d/60-symlinks.rules    /etc/udev/rules.d/
 
 
+# delete not usessfull rules
+rm -f $DESTDIR/etc/udev/rules.d/024_hpmud.rules
+rm -f $DESTDIR/etc/udev/rules.d/025_libgphoto2.rules
+rm -f $DESTDIR/etc/udev/rules.d/025_logitechmouse.rules
+rm -f $DESTDIR/etc/udev/rules.d/45-hpdjconsole.rules
+rm -f $DESTDIR/etc/udev/rules.d/45-hplip.rules
+rm -f $DESTDIR/etc/udev/rules.d/55-hpmud.rules
+rm -f $DESTDIR/etc/udev/rules.d/60-persistent-v4l.rules
+rm -f $DESTDIR/etc/udev/rules.d/70-persistent-cd.rules
+rm -f $DESTDIR/etc/udev/rules.d/70-persistent-net.rules
+rm -f $DESTDIR/etc/udev/rules.d/85-pcmcia.rules
+rm -f $DESTDIR/etc/udev/rules.d/90-hal.rules
+rm -f $DESTDIR/etc/udev/rules.d/91-permissions.rules # ??????
+rm -f $DESTDIR/etc/udev/rules.d/libmtp7.rules
+rm -f $DESTDIR/etc/udev/rules.d/z60_hdparm.rules
+rm -f $DESTDIR/etc/udev/rules.d/z60_libccid.rules
+rm -f $DESTDIR/etc/udev/rules.d/z60_libfprint0.rules
+rm -f $DESTDIR/etc/udev/rules.d/z60_libpisock9.rules
+rm -f $DESTDIR/etc/udev/rules.d/z60_libsane-extras.rules
+rm -f $DESTDIR/etc/udev/rules.d/z60_libsane.rules
+rm -f $DESTDIR/etc/udev/rules.d/z60_virtualbox-ose.rules
+
+# from idefix (sid)
+rm -f $DESTDIR/etc/udev/rules.d/65_dmsetup.rules
+
+# from dartacan (etch)
+rm -f $DESTDIR/etc/udev/rules.d/020_permissions.rules
+rm -f $DESTDIR/etc/udev/rules.d/z25_persistent-cd.rules
+rm -f $DESTDIR/etc/udev/rules.d/z25_persistent-net.rules
+
+# from max40 (Ubuntu hardy)
+rm -f $DESTDIR/etc/udev/rules.d/40-basic-permissions.rules
+rm -f $DESTDIR/etc/udev/rules.d/40-permissions.rules ### ????
+rm -f $DESTDIR/etc/udev/rules.d/45-fuse.rules
+rm -f $DESTDIR/etc/udev/rules.d/45-legousbtower.rules
+rm -f $DESTDIR/etc/udev/rules.d/45-libmtp7.rules
+rm -f $DESTDIR/etc/udev/rules.d/45-libnjb.rules
+rm -f $DESTDIR/etc/udev/rules.d/45-libgphoto2.rules
+rm -f $DESTDIR/etc/udev/rules.d/50-huawei.rules
+rm -f $DESTDIR/etc/udev/rules.d/50-iscan.rules
+rm -f $DESTDIR/etc/udev/rules.d/50-libpisock9.rules
+rm -f $DESTDIR/etc/udev/rules.d/55-hpmud.rules
+rm -f $DESTDIR/etc/udev/rules.d/60-symlinks.rules
+rm -f $DESTDIR/etc/udev/rules.d/62-bluez-hid2hci.rules
+rm -f $DESTDIR/etc/udev/rules.d/65-dmsetup.rules
+rm -f $DESTDIR/etc/udev/rules.d/70-persistent-cd.rules
+rm -f $DESTDIR/etc/udev/rules.d/70-persistent-net.rules
+##rm -f $DESTDIR/etc/udev/rules.d/85-alsa.rules #????
+rm -f $DESTDIR/etc/udev/rules.d/85-brltty.rules
+rm -f $DESTDIR/etc/udev/rules.d/85-hdparm.rules
+rm -f $DESTDIR/etc/udev/rules.d/85-hplj10xx.rules
+rm -f $DESTDIR/etc/udev/rules.d/85-pcmcia.rules
+rm -f $DESTDIR/etc/udev/rules.d/95-hal.rules
+rm -f $DESTDIR/etc/udev/rules.d/kino.rules
+

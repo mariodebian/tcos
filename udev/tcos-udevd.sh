@@ -5,6 +5,13 @@
 
 output_file=/tmp/tcos-udevd.log
 
+# don't listen on udev events during boot
+# this file is created in scripts/tcos-bottom/55mount_listener
+if [ ! -f /var/run/tcos-udev.run ]; then
+  exit 0
+fi
+
+
 get_env_var() {
   env_var=$(env |grep ^$1=)
   echo $env_var

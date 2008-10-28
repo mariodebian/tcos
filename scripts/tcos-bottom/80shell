@@ -13,6 +13,12 @@ quiet=n
 . /scripts/functions
 . /conf/tcos-run-functions
 
+
+# kill bootchart
+if grep -q bootchartd /proc/cmdline ; then
+  /sbin/tcos-bootchartd stop
+fi
+
 TCOS_TTY=$(read_cmdline_var "ttys" "${TCOS_TTY}")
 
 export PS1="($(hostname)@$(whoami)) # "

@@ -1,0 +1,46 @@
+#!/bin/sh
+
+if [ "$1" = "" ]; then
+  echo "ERROR: need a IP/hostname as first argument"
+  echo "Examples:"
+  echo "       tcos-genbootchart 192.168.0.10"
+  echo "       tcos-genbootchart host10"
+  exit 1
+fi
+
+
+if [ ! -x /usr/bin/bootchart ]; then
+  echo "ERROR:"
+  echo ""
+  echo "  Please install bootchart-view package"
+  exit 1
+fi
+
+OUT=$(pwd)
+TGZ=/tmp/tcos-gentbootchart/bootchart.tgz
+
+mkdir -p /tmp/tcos-gentbootchart/mnt
+
+_exit() {
+  umount /tmp/tcos-gentbootchart/mnt
+  rm -rf /tmp/tcos-gentbootchart/mnt
+  exit $1
+}
+
+
+ltspfs ${1}:/tmp /tmp/tcos-gentbootchart/mnt
+if [ $? -gt 0 ]; then
+  echo "Error mounting remote LTSPFS"
+  _exit 1
+fi
+
+if [ ! -d /tmp/tcos-gentbootchart/mnt/bootchart ]; then
+  echo "/tmp/bootchart not found on remote host"
+  _exit 1
+fi
+
+( cd /tmp/tcos-gentbootchart/mnt/bootchart && tar -czf ${TGZ} *)
+
+bootchart ${TGZ} -o ${OUT} | tail -1
+
+_exit 0

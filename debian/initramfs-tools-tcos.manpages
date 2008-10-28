@@ -1,3 +1,4 @@
 bin/gentcos.1
 bin/tcos-buildchroot.1
 xmlrpc/man/tcosxmlrpc.1
+bin/tcos-genbootchart.1

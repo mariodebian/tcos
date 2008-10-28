@@ -32,7 +32,8 @@ fi
 
 if [ ${TCOS_USB} ]; then
  # load floppy from /lib/extramodules
- [ -e /lib/extramodules/floppy.ko ] && insmod /lib/extramodules/floppy.ko >> /tmp/initramfs.debug 2>&1
+ [ -e /lib/extramodules/ide-floppy.ko ] && insmod /lib/extramodules/ide-floppy.ko &
+ [ -e /lib/extramodules/floppy.ko ] && insmod /lib/extramodules/floppy.ko &
 
  MODULES="scsi_mod sd_mod sr_mod isofs vfat usbcore ehci-hcd ohci-hcd uhci-hcd usb-storage"
  log_begin_msg "Loading usb modules"
@@ -66,8 +67,13 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
   # start ltspfsd daemon
   log_begin_msg "Start ltspfs daemon"
   _log "LTSPFS Starting ltspfs daemon"
-      # AUTH works ok
-      ltspfsd 
+      # configure ltspfsd with noauth when starting bootchartd
+      if grep -q bootchartd /proc/cmdline ; then
+          ltspfsd -a
+      else
+          # AUTH works ok
+          ltspfsd 
+      fi
   log_end_msg $?
  fi
 fi # end of TCOS_REMOTEFS=ltspfs

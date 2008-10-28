@@ -164,6 +164,10 @@ install:
 	install -m 755 bin/get_server        $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/clean_string.sh   $(DESTDIR)/$(TCOS_BINS)/
 
+
+	install -m 755 bin/tcos-bootchartd   $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/tcos-genbootchart $(DESTDIR)/usr/sbin/tcos-genbootchart
+
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 
 	install -d $(DESTDIR)/usr/bin
@@ -250,7 +254,7 @@ patch_hardy: patch_amd64
 	# nothing to patch
 
 patch_intrepid: patch_amd64
-	# nothing to patch
+	sed -i 's/libltdl3//g' debian/control
 
 patch_etch: patch_amd64
 	# PATCHING INITRAMFS_TOOLS_TCOS in Debian etch

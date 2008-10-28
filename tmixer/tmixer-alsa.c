@@ -1349,7 +1349,8 @@ static int sset_channels(snd_mixer_elem_t *elem, unsigned int argc, char **argv)
 					okflag &= ~1;
 				}
 			}
-#if 0
+/* don't comment this part, need to set capture channel */
+#if 1
 			if ((dir & 2) && snd_mixer_selem_has_capture_channel(elem, chn)) {
 				if (sptr != NULL)
 					ptr = sptr;

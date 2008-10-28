@@ -1,6 +1,7 @@
 var/lib/tcos/tftp/*
 usr/sbin/gentcos
 usr/sbin/tcos-buildchroot
+usr/sbin/tcos-genbootchart
 usr/share/initramfs-tools-tcos/templates/*
 usr/share/initramfs-tools-tcos/xmlrpc/*
 usr/share/initramfs-tools-tcos/hooks/*

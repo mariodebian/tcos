@@ -1,3 +1,29 @@
+initramfs-tools-tcos (0.89.15) unstable; urgency=low
+
+  * bin/tcos-bootchartd:
+    - Create new bootchartd script (without init stuff)
+  * bin/tcos-genbootchart:
+    - Conect to thin client, get bootchartd logs and create bootchart.png in current dir
+  * scripts/tcos-premount/40tftp:
+    - Disable sync and sleep before downloading (not needed)
+  * scripts/tcos-top/01busybox:
+    - set kernel less verbose if quiet arg detected
+  * scripts/tcos-bottom/80shell:
+    - Stop tcos-bootchartd if detected
+  * scripts/tcos-bottom/55mount_listener:
+    - Enable late tcos-udev.sh
+  * scripts/tcos-bottom/30devices:
+    - Configure LTSPFS wit noauth when using bootchart
+    - Load floppy module with insmod in background
+  * tmixer/tmixer-alsa.c:
+    - Enable sset to set Capture level
+  * bin/tcos-buildchroot Makefile
+    - Delete libltdl3 depend with Ubuntu intrepid
+  * hooks-addons/03udev2:
+    - delete some not needed rules
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 28 Oct 2008 18:01:52 +0100
+
 initramfs-tools-tcos (0.89.14) unstable; urgency=low
 
   * Move /etc/tcos/tcos-modules.conf to /usr/share/initramfs-tools-tcos
