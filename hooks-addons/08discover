@@ -3,7 +3,7 @@
 # works good with discover
 
 
-if [ ! $TCOS_DISCOVER ] ;then
+if [ ! $TCOS_____DISABLED___DISCOVER ] ;then
     _verbose "(08discover) TCOS_DISCOVER disabled"
 else    
     # check if discover is discover or discover1

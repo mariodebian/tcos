@@ -1,0 +1,4 @@
+# hook addon to load pcimodules
+
+
+cpifexists /usr/bin/pcimodules /usr/bin

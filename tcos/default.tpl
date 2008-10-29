@@ -26,8 +26,5 @@ label nfs
 # other examples
 #label tcos-low
 #  kernel vmlinuz-__TCOS_KERNEL__
-#  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet discover=0 noautofs noltspfs nosound
+#  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet noautofs noltspfs nosound
 #
-#label tcos-new-pc
-#  kernel vmlinuz-__TCOS_KERNEL__
-#  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet showmodules discover=1

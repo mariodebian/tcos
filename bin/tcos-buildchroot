@@ -48,7 +48,7 @@ TCOS_MIRROR="http://www.tcosproject.org"
 
 
 TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound"
-TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear console-data discover"
+TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear console-data "
 TCOS_PACKAGES="${TCOS_PACKAGES} busybox rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils libasound2-plugins"
 
 # apt options (force-yes)
@@ -347,10 +347,10 @@ fi
 	chroot ${TCOS_CHROOT} gentcos -instpkg esound
 
 # need for Tcos but conflicts with discover1 required by Lliurex
-if [ "${DISTRIBUTION}" = "ubuntu" ]; then
-    [ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/discover ] && \
-	chroot ${TCOS_CHROOT} gentcos -instpkg discover discover-data libdiscover2
-fi
+#if [ "${DISTRIBUTION}" = "ubuntu" ]; then
+#    [ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/discover ] && \
+#	chroot ${TCOS_CHROOT} gentcos -instpkg discover discover-data libdiscover2
+#fi
 
 mount --bind /proc ${TCOS_CHROOT}/proc
 

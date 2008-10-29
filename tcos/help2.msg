@@ -4,7 +4,6 @@ More available command line options
 
 02 allmodules       07 Download all kernel modules (exec gentcos -allmodules)
 02 showmodules      07 Pause boot and show loaded and needed modules
-02 discover=[0|1]   07 Enable/disable discover
 02 wifi             07 Enable wireless connection (need essid)
 02 essid=foo        07 Set wireless ESSID to connect to
 02 nbd              07 Enable NBD squashfs

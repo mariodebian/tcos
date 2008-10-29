@@ -178,6 +178,9 @@ if [ $force_xdriver = 1 ]; then
   return
 fi
 
+
+# detect Xorg kernel module and driver
+# pcimodules --class 0x30000 --classmask 0xffff00 | grep -v fb$
 if [ -x $(which discover) ]; then
   counts=0
   all_file_drivers=$(ls $xdriver_dir/|grep "_drv.so"|grep -v vga)

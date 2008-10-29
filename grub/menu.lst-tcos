@@ -48,8 +48,3 @@ kernel  /boot/vmlinuz ramdisk_size=65536 initrd=/boot/initramfs root=/dev/ram0 B
 initrd  /boot/initramfs
 boot
 
-title   TCOS Thin Client Operating System (unknow hardware)
-root    
-kernel  /boot/vmlinuz ramdisk_size=65536 initrd=/boot/initramfs root=/dev/ram0 BOOT=tcos showmodules discover=1 startx=N
-initrd  /boot/initramfs
-boot

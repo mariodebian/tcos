@@ -18,8 +18,8 @@ quiet=n
 # if break=inittcos STOP here
 maybe_break inittcos
 
-# link discover moved to /usr/lib to reduce initramfs space
-[ -d /usr/lib/discover ] &&  ln -s /usr/lib/discover /lib/
+## link discover moved to /usr/lib to reduce initramfs space
+#[ -d /usr/lib/discover ] &&  ln -s /usr/lib/discover /lib/
 
 
 # Loop over every line in /etc/modules.
@@ -44,75 +44,85 @@ else
  _log "INITTCOS not updating root passwd, using generation root passwd"
 fi
 
+
+# load modules
+if [ -x /usr/bin/pcimodules ]; then
+    for mod in $(pcimodules) ; do
+    modprobe -s -k "$mod" > /tmp/initramfs.debug 2>&1 &
+    done
+fi
+# detect Xorg kernel module and driver
+# pcimodules --class 0x30000 --classmask 0xffff00 | grep -v fb$
+
 ###############################################################
-TCOS_ENABLE_DISCOVER=$(read_cmdline_var "discover" "0")
+#TCOS_ENABLE_DISCOVER=$(read_cmdline_var "discover" "0")
 
-start_discover=1
+#start_discover=1
 
-# discover
-if [ "$TCOS_ENABLE_DISCOVER" = "0" ]; then
-  start_discover=0
-elif [ -x "$(which discover-modprobe)" ] ; then
-  start_discover=1
-fi
+## discover
+#if [ "$TCOS_ENABLE_DISCOVER" = "0" ]; then
+#  start_discover=0
+#elif [ -x "$(which discover-modprobe)" ] ; then
+#  start_discover=1
+#fi
 
-if [ "${start_discover}" = "1" ] ; then
- log_begin_msg "Discovering hardware"
-   _log "INITTCOS launching discover"
-  discover-modprobe -v >> /tmp/initramfs.debug 2>&1
- fg $?
-else
- _log "INITTCOS not starting discover"
-fi
+#if [ "${start_discover}" = "1" ] ; then
+# log_begin_msg "Discovering hardware"
+#   _log "INITTCOS launching discover"
+#  discover-modprobe -v >> /tmp/initramfs.debug 2>&1
+# fg $?
+#else
+# _log "INITTCOS not starting discover"
+#fi
 
-update_progress
+#update_progress
 ##########################################################
 
 
 # DOCUMENTME showmodules | show loaded and discover modules and stop loading
-showmodules=$(read_cmdline_var "showmodules" "${TCOS_SHOW_NEEDED_MODULES}")
+#showmodules=$(read_cmdline_var "showmodules" "${TCOS_SHOW_NEEDED_MODULES}")
 
-if [ ${showmodules} ]; then
-  kill_usplash
-  
-  discover_modules=$(grep Discovering /tmp/initramfs.debug | awk -F ":" '{print $2}')
-  loaded_modules=$(lsmod| grep -v ^Module| awk '{print $1}'| sed s/'\n'/''/g)
-  # FIXME very ugly hack
-  loaded=""
-  not_found=""
-  for mod in ${loaded_modules}; do
-    loaded="${loaded} ${mod}"
-  done
-  for mod in ${discover_modules}; do
-    mod2=$(echo ${mod} | sed s/"-"/"_"/g)
-    if [ $(grep -c ${mod2} /proc/modules) = 0 ]; then
-      not_found="${not_found} ${mod2}"
-    fi
-  done
-  
-  log_begin_msg "Loaded modules are
-${loaded}"
-  log_end_msg 0
+#if [ ${showmodules} ]; then
+#  kill_usplash
+#  
+#  discover_modules=$(grep Discovering /tmp/initramfs.debug | awk -F ":" '{print $2}')
+#  loaded_modules=$(lsmod| grep -v ^Module| awk '{print $1}'| sed s/'\n'/''/g)
+#  # FIXME very ugly hack
+#  loaded=""
+#  not_found=""
+#  for mod in ${loaded_modules}; do
+#    loaded="${loaded} ${mod}"
+#  done
+#  for mod in ${discover_modules}; do
+#    mod2=$(echo ${mod} | sed s/"-"/"_"/g)
+#    if [ $(grep -c ${mod2} /proc/modules) = 0 ]; then
+#      not_found="${not_found} ${mod2}"
+#    fi
+#  done
+#  
+#  log_begin_msg "Loaded modules are
+#${loaded}"
+#  log_end_msg 0
 
-  log_begin_msg "Discover needed modules are
-${discover_modules}"
-  log_end_msg 0
-  
-  if [ "${not_found}" != "" ]; then
-  log_begin_msg "NOT FOUND modules
-${not_found}"
-  log_end_msg 1
-  else
-  log_begin_msg "OK all needed modules loaded"
-  log_end_msg 0
-  fi
+#  log_begin_msg "Discover needed modules are
+#${discover_modules}"
+#  log_end_msg 0
+#  
+#  if [ "${not_found}" != "" ]; then
+#  log_begin_msg "NOT FOUND modules
+#${not_found}"
+#  log_end_msg 1
+#  else
+#  log_begin_msg "OK all needed modules loaded"
+#  log_end_msg 0
+#  fi
 
-  echo -n "Press ENTER to continue loading..."
-  read x
-  start_usplash
-fi
+#  echo -n "Press ENTER to continue loading..."
+#  read x
+#  start_usplash
+#fi
 
-update_progress
+#update_progress
 
 
 if [ "$(which loadkeys)" ]; then

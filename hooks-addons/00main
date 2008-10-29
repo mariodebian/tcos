@@ -123,3 +123,19 @@ mkdir -p $DESTDIR/var/log
 touch $DESTDIR/var/log/lastlog
 mkdir -p ${DESTDIR}/var/run
 
+
+# hack run_scripts... TCOS use numbered
+cat << EOF >> $DESTDIR/scripts/functions
+
+# TCOS hacked ;)
+run_scripts()
+{
+        initdir=\${1}
+        [ ! -d \${1} ] && return
+        for sc in \$(ls -t1 \${1}); do
+          \${1}/\${sc}
+        done
+}
+
+EOF
+

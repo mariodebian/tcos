@@ -54,6 +54,7 @@ mount -r -o loop -t squashfs ${allmodules} /lib/modules/$(uname -r)/
 # remount
 mount_unionfs /mnt/.ram-modules /mnt/.modules /lib/modules/$(uname -r)
 
+# FIXME discover is not avalaible anymore
 # reload modules....
 if [ -x /usr/bin/discover-modprobe ]; then
   discover-modprobe -nv >/dev/null 2>&1
