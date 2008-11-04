@@ -54,14 +54,15 @@ install -m 755 ${TCOS_BINS}/tryXorg.sh    ${DESTDIR}/sbin/tryXorg
 mkdir -p  $DESTDIR/usr/lib/xorg/modules/
 copydir /usr/lib/xorg/modules/fonts /usr/lib/xorg/modules/
 
-if [ -d /usr/lib/X11/fonts ]; then
+
+if [ -d /usr/share/fonts/X11 ]; then
+   TCOS_FONTS_PATH="/usr/share/fonts/X11"
+   TCOS_FONT_EXTENSION=".gz"
+
+elif [ ! -L /usr/lib/X11/fonts ]; then
    TCOS_FONTS_PATH="/usr/lib/X11/fonts"
    TCOS_FONT_EXTENSION=""
 
-
-elif [ -d /usr/share/fonts/X11 ]; then
-   TCOS_FONTS_PATH="/usr/share/fonts/X11"
-   TCOS_FONT_EXTENSION=".gz"
 
 else
    _echo ""
