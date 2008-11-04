@@ -2,8 +2,10 @@ initramfs-tools-tcos (0.89.17) unstable; urgency=low
 
   * hooks-addons/50xorg:
     - Priorice /usr/share/fonts instead or old /usr/lib/X11 (fix for etch)
+  * debian/control bin/tcos-buildchroot
+    - Add xfonts-base xfonts-100dpi as Depends on initramfs-tools-tcos and tcos-buildchroot
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 04 Nov 2008 15:59:30 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 04 Nov 2008 16:06:09 +0100
 
 initramfs-tools-tcos (0.89.16) unstable; urgency=low
 

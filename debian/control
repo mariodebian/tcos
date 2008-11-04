@@ -14,7 +14,8 @@ Architecture: any
 Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, atftpd, 
          console-setup | console-data, libnss-db, iftop, strace, twm, debootstrap, mbr, 
          libltdl3, tinylogin, debconf, grub, syslinux, squashfs-tools, pciutils, 
-         mknbi, dropbear, ltspfs-client | ltspfsd, genisoimage | mkisofs , 
+         mknbi, dropbear, ltspfs-client | ltspfsd, genisoimage | mkisofs, 
+         xfonts-base, xfonts-100dpi,
          ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2)
 Recommends: pulseaudio, pulseaudio-utils
