@@ -139,3 +139,25 @@ run_scripts()
 
 EOF
 
+
+cat << EOF > $DESTDIR/sbin/down-listener
+#!/bin/sh
+
+. /conf/tcos-run-functions
+
+MAX=15
+COUNT=0
+
+sleep 1
+[ ! -e /tmp/downloading ] && exit 0
+
+while [ -e /tmp/downloading ] && [ \$COUNT -lt \$MAX ]; do
+  update_progress 1
+  COUNT=\$((\$COUNT+1))
+  sleep 1
+done
+
+
+EOF
+chmod +x $DESTDIR/sbin/down-listener
+

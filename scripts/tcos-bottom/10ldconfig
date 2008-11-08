@@ -109,6 +109,7 @@ else
 
 fi
 
+echo 67 > /tmp/progress
 update_progress
 
 exit 0

@@ -23,7 +23,11 @@ TCOS_TTY=$(read_cmdline_var "ttys" "${TCOS_TTY}")
 
 export PS1="($(hostname)@$(whoami)) # "
 
-clear
+kill_usplash
+grep -q " startx=N " /proc/cmdline && chvt 1
+
+# no clear
+#clear
 
 
 while [ ${TCOS_TTY} -ge 1 ]; do

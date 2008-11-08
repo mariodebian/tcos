@@ -15,6 +15,9 @@ quiet=n
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
+# stop PULSATE
+grep -q " splash " /proc/cmdline && usplash_write "PROGRESS 0" >/dev/null 2>&1
+
 
 #printk:
 

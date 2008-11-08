@@ -46,7 +46,8 @@ if [ "$TCOS_ALL_MODULES_CMD" = "1" ] || [ ! -z $TCOS_ALL_MODULES_DOWNLOAD ]; the
 fi
 
 
-update_progress 5
+echo 48 > /tmp/progress
+update_progress
 
 exit 0
 

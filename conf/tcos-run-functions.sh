@@ -48,8 +48,8 @@ start_usplash() {
 
 kill_usplash() {
   if [ -x /sbin/usplash ]; then
-    usplash_write QUIT  2> /dev/null
-    killall usplash     2> /dev/null
+    usplash_write "QUIT"  2> /dev/null
+    killall usplash       2> /dev/null
     #chvt 1              2> /dev/null # this cause some problems :(
   fi
   if [ -x /sbin/splashy_update ]; then
@@ -164,7 +164,11 @@ download_file () {
 # $2 local file
 mkdir $(dirname $2) >/dev/null 2>&1
 _log "tftp -g -r ${1} -l ${2} "$(read_server "tftp-server")
+rm -f /tmp/downloading
+touch /tmp/downloading
+/sbin/down-listener &
 tftp -g -r ${1} -l ${2} $(read_server "tftp-server") > /dev/null 2> /tmp/download_file.log
+rm -f /tmp/downloading
 if [ $? = 0 ] ;then
  _log "download_file() OK"
  return 0
@@ -211,7 +215,8 @@ update_progress() {
   fi
   # /tmp/progress is created in scripts/tcos-top/10foo with value=5
   old=$(cat /tmp/progress)
-  new=$((${old}+${sum}))
+  new=$(echo $old $sum | awk '{print $1+$2}')
+  #new=$((${old}+${sum}))
   if [ -x /sbin/usplash_write ]; then
     /sbin/usplash_write "PROGRESS ${new}"
     #_log "updating progress to ${new} %"

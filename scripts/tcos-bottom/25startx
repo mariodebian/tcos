@@ -109,7 +109,9 @@ fi
 # always overwrite with cmdline
 startx=$(read_cmdline_var "startx" "${startx}")
 
-kill_usplash
+if [ "${startx}" != "N" ]; then
+  kill_usplash
+fi
 
 
 if [ "$startx" = "L" ] ; then
@@ -130,5 +132,7 @@ elif [ "$startx" = "W"  ] ; then
 fi
 
 
+echo 82 > /tmp/progress
+update_progress
 
 exit 0

@@ -54,7 +54,7 @@ fi
 ##############################################
 
 
-update_progress 5
+update_progress
 
 exit 0
 

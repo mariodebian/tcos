@@ -20,6 +20,7 @@ maybe_break network
 
 # file to save progress %
 echo 5 > /tmp/progress
+update_progress
 
 # localhost
 log_begin_msg "Bring up Local loopback device"
@@ -266,6 +267,7 @@ export hostname
 log_end_msg $?
 
 
+echo 18 > /tmp/progress
 update_progress
 
 exit 0
