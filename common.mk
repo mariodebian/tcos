@@ -29,10 +29,10 @@ USPLASH_experimental=0.4.1
 KERNEL_gutsy="2.6.22-15-generic"
 USPLASH_gutsy=0.4.1
 
-KERNEL_max="2.6.24-19-generic"
+KERNEL_max="2.6.24-22-generic"
 USPLASH_max=0.4.1
 
-KERNEL_hardy="2.6.24-19-generic"
+KERNEL_hardy="2.6.24-22-generic"
 USPLASH_hardy=0.4.1
 
 KERNEL_intrepid="2.6.27-2-generic"

@@ -7,8 +7,10 @@ initramfs-tools-tcos (0.89.18) unstable; urgency=low
     - Increase progress bar when downloading big files
   * hooks-addons/clean_initramfs:
     - No delete libdrm and other libs
+  * common.mk:
+    - Update Ubuntu Hardy and MaX kernel to 2.6.24-22
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 08 Nov 2008 17:42:36 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 31 Dec 2008 17:22:51 +0100
 
 initramfs-tools-tcos (0.89.17) unstable; urgency=low
 
