@@ -25,7 +25,6 @@ else
 
   # pkgdetails.c from source of debootstrap (no using perl)
   cpifexists ${TCOS_BINS}/pkgdetails  /usr/lib/debootstrap/
-  cpifexists ${TCOS_BINS}/pkgdetails  /usr/lib/debootstrap/
 
   # dpkg
   cpifexists /usr/bin/dpkg   /usr/bin/

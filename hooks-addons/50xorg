@@ -48,6 +48,9 @@ cp ${TCOS_CONF}/xorg.conf.tpl ${DESTDIR}/conf/xorg.conf.tpl
 install -m 755 ${TCOS_BINS}/configurexorg ${DESTDIR}/sbin/configurexorg
 install -m 755 ${TCOS_BINS}/tryXorg.sh    ${DESTDIR}/sbin/tryXorg
 
+# include xorg PCI IDS file
+mkdir -p ${DESTDIR}/usr/share/xserver-xorg/pci/
+cpifexists ${TCOS_DIR}/inc/xorg.pciids /usr/share/xserver-xorg/pci/
 
 
 # FONTS modules
@@ -90,14 +93,11 @@ EOF
     mkfontdir $DESTDIR/$TCOS_FONTS_PATH/100dpi
 fi
 
-
-
 # PCIIDS
 if [ -d /usr/share/xserver-xorg/pci ] ; then
  mkdir -p $DESTDIR/usr/share/xserver-xorg/
  copydir /usr/share/xserver-xorg/pci /usr/share/xserver-xorg/
 fi
-
 
 
 

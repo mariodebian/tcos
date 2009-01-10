@@ -1,0 +1,84 @@
+#!/bin/sh
+# 
+
+# new header not using prereqs
+if [ "$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+quiet=n
+
+# if break=nfs-squashfs STOP here
+maybe_break nfs-squashfs
+
+
+
+# if use NFS try to mount:
+#
+#   SERVER_IP:/var/lib/tcos/fs-$(uname -r)
+#
+
+
+
+
+
+# SQUASHFS NFS ?
+SQUASHFS_MODE=$(read_cmdline_var "squashfs" "")
+
+
+if [ "${SQUASHFS_MODE}" = "nfs" ]; then
+
+  MNTOPT="ro,nolock,rsize=2048,wsize=2048,retrans=10"
+  NFS_RO=/mnt/nfs-squashfs
+  mkdir -p $NFS_RO
+
+  log_begin_msg "Trying to mount NFS-SQUAHSFS"
+    nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/tftp ${NFS_RO} 2>/dev/null
+
+
+  # try again
+  if [ $? -ne 0 ]; then
+    log_begin_msg "Second retry to mount NFS-SQUAHFS"
+       nfsmount -o $MNTOPT $(read_server "nfs-server"):${TCOS_VAR}/tftp ${NFS_RO} 2> /dev/null
+  fi
+
+  if [ $? -ne 0 ]; then
+    panic "Unable to mount NFS, check NFS service in server and ${TCOS_VAR}/tftp dir"
+  fi
+
+  log_end_msg 0
+
+  # copy squashfs file in /mnt/tmp to not download
+  log_begin_msg "Copy SQUASHFS to /mnt/tmp"
+    touch /tmp/downloading
+    /sbin/down-listener &
+    cp ${NFS_RO}/usr-$(uname -r).squashfs /mnt/tmp/usr-$(uname -r).squashfs
+    rm -f /tmp/downloading
+  log_end_msg 0
+
+  umount ${NFS_RO}
+
+elif [ "${SQUASHFS_MODE}" = "http" ]; then
+
+
+  log_begin_msg "Downloading SQUASHFS using HTTP"
+    touch /tmp/downloading
+    /sbin/down-listener &
+    wget http://$(read_server "nfs-server"):8080/usr-$(uname -r).squashfs -O- > /mnt/tmp/usr-$(uname -r).squashfs
+    rm -f /tmp/downloading
+  log_end_msg 0
+
+
+fi # end of SQUASHFS_MODE
+
+
+
+
+
+exit 0

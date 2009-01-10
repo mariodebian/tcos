@@ -87,6 +87,8 @@ install:
 
 	install -d $(DESTDIR)/var/lib/tcos/isos
 
+	install -m 644 xorgids/xorg.pciids $(DESTDIR)/$(TCOS_DIR)/inc/
+
 	# FIXME this file isn't in Xorg 7.0 anymore???
 	install -m 644 SecurityPolicy $(DESTDIR)/$(TCOS_CONF)
 

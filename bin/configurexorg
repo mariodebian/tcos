@@ -173,11 +173,26 @@ get_mybool() {
 
 detect_driver() {
 debug "detect_driver()"
-if [ $force_xdriver = 1 ]; then
-  debug "detect_driver() force OFF"
-  return
-fi
+#if [ $force_xdriver = 1 ]; then
+#  debug "detect_driver() force OFF"
+#  return
+#fi
 
+if [ -d /usr/share/xserver-xorg/pci/ ]; then
+  xpci=$(lspci -n -s $(lspci | awk '/VGA/ {print $1}') | tail -1 | awk '{print $3}' | tr [a-z] [A-Z])
+  if [ "${xpci}" != "" ]; then
+    # get last line
+    _xdev=$(grep "${xpci}" /usr/share/xserver-xorg/pci/xorg.pciids| awk '{print $1}' | tail -1)
+    xdev=$(basename ${_xdev})
+    if [ -f ${xdriver_dir}/${xdev}_drv.so ]; then
+      xdriver=$xdev
+      debug "detect_driver() FILE ${xdriver_dir}/${xdev}_drv.so FOUND"
+    else
+      debug "detect_driver() FILE ${xdriver_dir}/${xdev}_drv.so NOT FOUND"
+    fi
+    return
+  fi
+fi
 
 # detect Xorg kernel module and driver
 # pcimodules --class 0x30000 --classmask 0xffff00 | grep -v fb$

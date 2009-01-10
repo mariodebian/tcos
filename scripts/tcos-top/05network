@@ -266,8 +266,12 @@ export HOSTNAME=$hostname
 export hostname
 log_end_msg $?
 
+# start portmap
+/sbin/portmap >/tmp/portmap.log 2>&1 &
+
 
 echo 18 > /tmp/progress
 update_progress
+
 
 exit 0

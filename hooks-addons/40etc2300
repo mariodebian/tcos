@@ -26,7 +26,7 @@ EOF
       manual_add_modules snd-sis7019
     fi
 
-  stat_after "eTC2300 modules support"
+  stat_after "eTC2300 modules support (usplash disabled)"
 else
   _verbose "(40etc2300) TCOS_ETC2300 disabled"
 fi

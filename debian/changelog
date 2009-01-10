@@ -1,3 +1,19 @@
+initramfs-tools-tcos (0.89.19) unstable; urgency=low
+
+  * Include xorg.pciids and use in configurexorg
+  * hooks-addons/00main:
+    - Include portmap (needed for NFS)
+  * hooks-addons/01dhclient
+    - Fix nameserver detection
+  * hooks-addons/16debootstrap
+    - Fix duplicated cpifexists
+  * xmlrpc/sh/devicesctl.sh
+    - New function --getid (call udevinfo to get vendor and model)
+  * scripts/tcos-premount/36squashfs-methods
+    - Get squashfs using NFS or http
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 10 Jan 2009 16:25:21 +0100
+
 initramfs-tools-tcos (0.89.18) unstable; urgency=low
 
   * Use update_progress without argument (switch to new theme)

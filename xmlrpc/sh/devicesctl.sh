@@ -222,6 +222,10 @@ if [ "$1" = "--gethdd" ]; then
   need_parse=0
 fi
 
+if [ "$1" = "--getid" ]; then
+  output=$(udevinfo --query=env --name=$2| grep -e "^ID_VENDOR=" -e "^ID_MODEL="| awk -F"=" '{print $2}' 2>/dev/null)
+  need_parse=1
+fi
 
 usage() {
   echo "Usage:"
@@ -241,6 +245,7 @@ usage() {
   echo "       $0  --getxdrivers           ( return all xorg drivers found )"
   echo "       $0  --exists  ARG           ( return 1 if exists 0 if not )"
   echo "       $0  --gethdd                ( return all hard disk partitions )"
+  echo "       $0  --getid DEVICE          ( return device info )"
 }
 
 

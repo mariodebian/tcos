@@ -49,10 +49,10 @@ if [ ! -e /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/usr.squashfs ];
   if [ "$(if_is_zero /mnt/tmp/usr-$(uname -r).squashfs)" = "0" ]; then
     panic "Error downloading extra data from server $(read_server "tftp-server")"
   fi
-else
-  log_begin_msg "usr-$(uname -r).squashfs not downloaded"
-    sync
-  log_end_msg $?
+#else
+#  log_begin_msg "usr-$(uname -r).squashfs not downloaded"
+#    sync
+#  log_end_msg $?
 fi
 
 ##############################################
