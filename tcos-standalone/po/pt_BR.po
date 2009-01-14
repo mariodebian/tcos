@@ -1,30 +1,30 @@
-# Portuguese translations for initramfs-tools-tcos package
-# Traduções em português para o pacote initramfs-tools-tcos.
-# Copyright (C) 2008 THE initramfs-tools-tcos'S COPYRIGHT HOLDER
+# translation of initramfs-tools-tcos.
+# Copyright (C) 2009 THE initramfs-tools-tcos'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the initramfs-tools-tcos package.
-# Aécio dos Santos Pires <aecio@comunicacaodigital.org>, 2008.
+# <>, 2009.
+# , fuzzy
+# <>, 2009.
 # 
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: initramfs-tools-tcos 0\n"
+"Project-Id-Version: initramfs-tools-tcos 0.89.19\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-30 10:10+0200\n"
-"PO-Revision-Date: 2008-07-16 18:08-0300\n"
-"Last-Translator: Aécio dos Santos Pires <aecio@comunicacaodigital.org>\n"
-"Language-Team: Brazilian Portuguese\n"
+"PO-Revision-Date: 2009-01-14 08:52-0300\n"
+"Last-Translator: Aécio dos Santos Pires <aeciopires@gmail.com>\n"
+"Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);"
+"Content-Transfer-Encoding: 8bit"
 
 #: tcos-standalone.glade:9
 msgid "TCOS Standalone"
-msgstr "Tcos Standalone"
+msgstr "TCOS Standalone"
 
 #: tcos-standalone.glade:32
 msgid "<span size=\"x-large\">Configure TCOS standalone mode</span>"
-msgstr "<span size=\"x-large\">Modo de Configuração do TCOS Standalone</span>"
+msgstr "<span size=\"x-large\">Configure o Modo Autonômo\n do TCOS</span>"
 
 #: tcos-standalone.glade:126
 msgid "Stop"
@@ -32,7 +32,7 @@ msgstr "Parar"
 
 #: tcos-standalone.glade:204
 msgid "Start"
-msgstr "Começar"
+msgstr "Iniciar"
 
 #: tcos-standalone.glade:282
 msgid "Apply"
@@ -40,19 +40,19 @@ msgstr "Aplicar"
 
 #: tcos-standalone.glade:344
 msgid "Enable tcos-standalone daemon"
-msgstr "Ativar o daemon tcos-standalone"
+msgstr "Habilitar o daemon tcos-standalone"
 
 #: tcos-standalone.glade:365
 msgid "Username (root):"
-msgstr "Usuário (administrador):"
+msgstr "Usuário (root)"
 
 #: tcos-standalone.glade:414
 msgid "Password (not visible):"
-msgstr "Senha (não exibir):"
+msgstr "Senha (não exibida):"
 
 #: tcos-standalone.glade:521
 msgid "Enable SSL over XMLRPC"
-msgstr "Ativar o SSL sobre o XMLRPC"
+msgstr "Habilitar o uso de SSL sobre o XMLRPC"
 
 #: tcos-standalone.glade:562
 msgid "Options"
@@ -62,18 +62,18 @@ msgstr "Opções"
 msgid ""
 "Not user and password configured.\n"
 "Using root system user."
-msgstr "Não usar o usuário e a senha configurados.\n"
-"Use o usuário 'root' do sistema."
+msgstr "Usuário e senha não configurados.\n"
+"Usando os dados do usuário root do sistema."
 
 #: tcos-standalone.py:246
 msgid "New username and password used.\n"
-msgstr "Novos usuários e senhas adicionados.\n"
+msgstr "Usando o novo usuário.\n"
 
 #: tcos-standalone.py:269
 msgid "tcosxmlrpc running"
-msgstr "Executando o TcosXmlRpc"
+msgstr "O tcosxmlrpc está funcionando."
 
 #: tcos-standalone.py:274
 msgid "tcosxmlrpc stopped"
-msgstr "TcosXmlRpc parado"
+msgstr "O tcosxmlrpc está parado."
 

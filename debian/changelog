@@ -2,8 +2,9 @@ initramfs-tools-tcos (0.89.20) unstable; urgency=low
 
   * Makefile common.mk
     - Fix amd64 patches
+  * Update tcos-standalone pt_BR translation
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 14 Jan 2009 20:08:13 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 14 Jan 2009 20:15:04 +0100
 
 initramfs-tools-tcos (0.89.19) unstable; urgency=low
 
