@@ -75,7 +75,7 @@ ifeq ($(strip $(have_changelog)),)
 DISTRO_VERSION=$(shell dpkg-parsechangelog -l../debian/changelog | awk '/^Distribution/ {print $$2}')
 endif
 
-TCOS_ARCH=$(shell dpkg-architecture  | awk -F"=" '/^DEB_BUILD_ARCH=/ {print $$2}')
+TCOS_ARCH:=$(shell dpkg-architecture  | awk -F"=" '/^DEB_BUILD_ARCH=/ {print $$2}')
 
 
 TCOS_DEFAULT_KERNEL=$(KERNEL_$(DISTRO_VERSION))

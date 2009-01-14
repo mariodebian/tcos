@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.89.20) unstable; urgency=low
+
+  * Makefile common.mk
+    - Fix amd64 patches
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 14 Jan 2009 20:08:13 +0100
+
 initramfs-tools-tcos (0.89.19) unstable; urgency=low
 
   * Include xorg.pciids and use in configurexorg

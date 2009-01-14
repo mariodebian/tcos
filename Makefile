@@ -2,6 +2,8 @@
 ##     TCOS makefile
 ##
 ##    mariodebian \/at\/ gmail \/dot\/ com
+ARCH:=$(shell dpkg-architecture -qDEB_BUILD_ARCH)
+
 
 all:
 	cd debootstrap && make
@@ -229,7 +231,7 @@ patch_version:
 	sed -i 's/__VERSION__/$(VERSION)/g' xmlrpc/sh/tcos-last
 
 patch_amd64: patch_version
-	if [ "$(shell dpkg-architecture -qDEB_BUILD_ARCH)" != "i386" ]; then sed -i 's/mknbi,//g' debian/control ; fi
+	if [ "$(ARCH)" != "i386" ]; then sed -i 's/mknbi,//g' debian/control ; fi
 
 patch_dapper: patch_amd64
 	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu DAPPER
