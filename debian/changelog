@@ -2,8 +2,10 @@ initramfs-tools-tcos (0.89.21) unstable; urgency=low
 
   * Enable XFS again, some apps needs another fonts
   * Use TCOS_ENABLE_FONT_SERVER (disabled by default)
+  * common.mk
+    - Update Ubuntu Hardy and MaX kernel to 2.6.24-23
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 Jan 2009 12:31:16 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 25 Jan 2009 13:08:22 +0100
 
 initramfs-tools-tcos (0.89.20) unstable; urgency=low
 
