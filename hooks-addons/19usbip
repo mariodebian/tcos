@@ -3,13 +3,16 @@
 
 # I have put no-exists to disable usbip (not work yet)
 # but I want to provide code
-if [ -x /usr/bin/usbipd-noexists ]; then
+#if [ -x /usr/bin/usbipd-noexists ]; then
+if [ -x /usr/bin/usbip ]; then
 
    stat_before
 
-    cpifexists /usr/bin/usbip        /usr/bin
+    cpifexists /usr/bin/usbip         /usr/bin
     cpifexists /usr/bin/usbipd        /usr/bin
     cpifexists /usr/bin/bind_driver   /usr/bin
+
+    cpifexists /usr/bin/lsusb         /usr/bin
 
     mkdir -p $DESTDIR/usr/share/
     cp -ra /usr/share/usbip $DESTDIR/usr/share/
@@ -37,7 +40,9 @@ quiet=n
 
 log_begin_msg "Starting USB/IP"
   mkdir -p /usr/share/hwdata
+  mkdir -p /var/lib/usbutils
   ln -s /usr/share/usbip/usb.ids /usr/share/hwdata 2>/dev/null
+  ln -s /usr/share/usbip/usb.ids /var/lib/usbutils
 
   modprobe usbip_common_mod
   modprobe usbip

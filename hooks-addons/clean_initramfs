@@ -66,24 +66,24 @@ fi
 
 # experimental delete, not needed LIBS
 rm -f ${DESTDIR}/sbin/resume
-rm -f ${DESTDIR}/usr/lib/libgcrypt.so.11
-rm -f ${DESTDIR}/usr/lib/libpcre.so.3
-rm -f ${DESTDIR}/usr/lib/libgpg-error.so.0
+#rm -f ${DESTDIR}/usr/lib/libgcrypt.so.11
+#rm -f ${DESTDIR}/usr/lib/libpcre.so.3
+#rm -f ${DESTDIR}/usr/lib/libgpg-error.so.0
 rm -f ${DESTDIR}/usr/lib/libGL.so.1.2
 rm -f ${DESTDIR}/usr/lib/libGLU.so.1
-rm -f ${DESTDIR}/usr/lib/libkrb5support.so.0
-rm -f ${DESTDIR}/usr/lib/libfusion-1.0.so.0
+#rm -f ${DESTDIR}/usr/lib/libkrb5support.so.0
+#rm -f ${DESTDIR}/usr/lib/libfusion-1.0.so.0
 #rm -f ${DESTDIR}/usr/lib/libdrm.so.2
-rm -f ${DESTDIR}/usr/lib/libdirectfb-1.0.so.0
+#rm -f ${DESTDIR}/usr/lib/libdirectfb-1.0.so.0
 rm -f ${DESTDIR}/usr/lib/libnvidia-tls.so.1
-rm -f ${DESTDIR}/usr/lib/libdirect-1.0.so.0
-rm -f ${DESTDIR}/usr/lib/libk5crypto.so.3
-rm -f ${DESTDIR}/usr/lib/libkrb5.so.3
-rm -f ${DESTDIR}/usr/lib/libXxf86vm.so.1
-rm -f ${DESTDIR}/usr/lib/libglib-2.0.so.0
+#rm -f ${DESTDIR}/usr/lib/libdirect-1.0.so.0
+#rm -f ${DESTDIR}/usr/lib/libk5crypto.so.3
+#rm -f ${DESTDIR}/usr/lib/libkrb5.so.3
+#rm -f ${DESTDIR}/usr/lib/libXxf86vm.so.1
+#rm -f ${DESTDIR}/usr/lib/libglib-2.0.so.0
 rm -f ${DESTDIR}/usr/lib/imlib2/loaders/png.so
-rm -f ${DESTDIR}/usr/lib/libgssapi_krb5.so.2
+#rm -f ${DESTDIR}/usr/lib/libgssapi_krb5.so.2
 #rm -f ${DESTDIR}/lib/libsplashycnf.so.1
-rm -f ${DESTDIR}/lib/libkeyutils.so.1
+#rm -f ${DESTDIR}/lib/libkeyutils.so.1
 #rm -f ${DESTDIR}/lib/libsplashy.so.1
 

@@ -25,6 +25,9 @@ for x in "$@"; do
         --server=*)
                 SERVER=${x#--server=}
                 ;;
+        --fontserver=*)
+                FONT_SERVER=${x#--fontserver=}
+                ;;
         --xorgopts=*)
                 TCOS_XORG_OPTS=${x#--xorgopts=}
                 ;;
@@ -42,6 +45,16 @@ done
 
 # try to autoconfigure Xorg
 new_xorg=$(Xorg -configure 2>&1|awk '/Your xorg.conf/ {print $5}')
+
+if [ "${FONT_SERVER}" = "" ]; then
+  FONT_SERVER=${SERVER}
+fi
+
+# add font server
+sed "/modules/i\
+\	FontPath     \"tcp/${FONT_SERVER}:7100\"\
+" $new_xorg > /etc/X11/xorg.conf.auto
+
 
 
 # change keyboard map

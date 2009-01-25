@@ -227,6 +227,12 @@ if [ "$1" = "--getid" ]; then
   need_parse=1
 fi
 
+
+if [ "$1" = "--getusbip" ]; then
+  output=$(/usr/bin/usbip_list 2>/dev/null)
+  need_parse=1
+fi
+
 usage() {
   echo "Usage:"
   echo "       $0  --help                  ( this help text )"
@@ -246,6 +252,7 @@ usage() {
   echo "       $0  --exists  ARG           ( return 1 if exists 0 if not )"
   echo "       $0  --gethdd                ( return all hard disk partitions )"
   echo "       $0  --getid DEVICE          ( return device info )"
+  echo "       $0  --getusbip              ( return USBIP exportable devices)"
 }
 
 

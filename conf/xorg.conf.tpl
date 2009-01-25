@@ -20,6 +20,7 @@
 #   dpkg-reconfigure xserver-xorg
 
 Section "Files"
+__enable_font_server__	FontPath        "unix/:7100"                    # local font server
 	FontPath	"/usr/share/X11/fonts/misc"
 	FontPath	"/usr/share/X11/fonts/100dpi"
 EndSection
@@ -141,6 +142,8 @@ __dontzap__
 #xmousenowheel=__xmousenowheel__
 #xmousewheel=__xmousewheel__
 #xdpms=__xdpms__
+#xfontserver=__xfontserver__
+#enablefontserver=__enable_font_server__
 #xdontzap=__xdontzap__
 #xdriver_via=__xdriver_via__
 #xkbmap=__xkbmap__

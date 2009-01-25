@@ -261,6 +261,9 @@ load_cmdline () {
         #--xvertsync=*)
         #        xvertsync=${x#--xvertsync=}
         #        ;;
+        --xfontserver=*)
+                xfontserver=${x#--xfontserver=}
+                ;;
         --xmouseprotocol=**)
                 xmouseprotocol=${x#--xmouseprotocol=}
                 ;;
@@ -504,7 +507,7 @@ fi
 debug "set_settings() xdriver=$xdriver xres=$xres xdepth=$xdepth xdpms=$xdpms"
 debug "xhorizsync=$xhorizsync xvertsync=$xvertsync xrefresh=$xrefresh xmousewheel=$xmousewheel"
 debug "xmousedev=$xmousedev2 xmouseprotocol=$xmouseprotocol2 xlocalfonts=$xlocalfonts"
-debug "date=$stamp xdontzap=$xdontzap dontzap=$xzap"
+debug "date=$stamp server=$SERVER xdontzap=$xdontzap dontzap=$xzap"
 
 # sed template to output file
 sed -e s/"__xdriver__"/"${xdriver}"/g \
@@ -524,6 +527,9 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xmouseprotocol__"/"${xmouseprotocol2}"/g \
     -e s/"__xlocalfonts__"/"${xlocalfonts}"/g \
     -e s/"__date__"/"${stamp}"/g \
+    -e s/"unix\/:7100"/"tcp\/${SERVER}:7100"/g \
+    -e s/"__xfontserver__"/"${SERVER}"/g \
+    -e s/"__enable_font_server__"/"${TCOS_ENABLE_FONT_SERVER}"/g \
     -e s/"__dontzap__"/"${xzap}"/g \
     -e s/"__xdontzap__"/"${xdontzap}"/g \
   ${template} > ${tmp_xorg_file}
@@ -565,6 +571,7 @@ get_settings() {
  getsimple "xrefresh"
  getsimple "xhorizsync"
  getsimple "xvertsync"
+ getsimple "xfontserver"
  getsimple "xmousedev"
  getsimple "xmousewheel"
  getsimple "xmouseprotocol"
@@ -581,6 +588,7 @@ load_settings() {
      xrefresh=$(getvalue "xrefresh")
    xhorixsync=$(getvalue "xhorizsync")
     xvertsync=$(getvalue "xvertsync")
+  xfontserver=$(getvalue "xfontserver")
   xmousewheel=$(getvalue "xmousewheel")
 xmousenowheel=$(getvalue "xmousenowheel")
      xdontzap=$(getvalue "xdontzap")
@@ -606,6 +614,12 @@ if [ $(cat ${mysettings} | wc -l) -gt 1 ]; then
 fi
 
 
+SERVER=$(read_server "font-server")
+# get first one
+for iserver in ${SERVER}; do
+ SERVER=${iserver}
+ break
+done
 
 if [ "${xmousewheel}" = "#" ]; then
  xmousenowheel=""
