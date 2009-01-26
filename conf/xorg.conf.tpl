@@ -20,9 +20,10 @@
 #   dpkg-reconfigure xserver-xorg
 
 Section "Files"
-__enable_font_server__	FontPath        "unix/:7100"                    # local font server
 	FontPath	"/usr/share/X11/fonts/misc"
 	FontPath	"/usr/share/X11/fonts/100dpi"
+__enable_font_server__	FontPath        "unix/:7100"                    # local font server
+__enable_font_server__	FontPath        "tcp/__xfontserver__:7101" # Truetype xfstt fonts
 EndSection
 
 Section "Module"

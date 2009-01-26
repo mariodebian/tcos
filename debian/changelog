@@ -1,3 +1,11 @@
+initramfs-tools-tcos (0.89.22) unstable; urgency=low
+
+  * conf/xorg.conf.tpl:
+    - Include TTF fontserver too, doc at:
+      http://wiki.tcosproject.org/Tips/XFontServer/es
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 26 Jan 2009 17:12:43 +0100
+
 initramfs-tools-tcos (0.89.21) unstable; urgency=low
 
   * Enable XFS again, some apps needs another fonts
