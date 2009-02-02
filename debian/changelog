@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.23) unstable; urgency=low
+
+  * Update Vcs- debian/control headers to new GIT repos
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 02 Feb 2009 01:20:38 +0100
+
 initramfs-tools-tcos (0.89.22) unstable; urgency=low
 
   * conf/xorg.conf.tpl:

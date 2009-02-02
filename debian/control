@@ -6,8 +6,8 @@ Build-Depends: debhelper (>= 4.0.0), libxmlrpc-c3-dev, bc, libxau-dev, libxaw7-d
                imlib11-dev, python, python-support (>= 0.3), pkg-config, libasound2-dev
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.4
-XS-Vcs-Browser: http://trac.tcosproject.org/browser/trunk/initramfs-tools-tcos
-XS-Vcs-Svn: https://www.tcosproject.org/svn/tcos/trunk/initramfs-tools-tcos
+Vcs-Git: http://tcosproject.org/git/initramfs-tools-tcos.git
+Vcs-Browser: http://tcosproject.org/cgit/cgit.cgi/initramfs-tools-tcos.git/
 
 Package: initramfs-tools-tcos
 Architecture: any
