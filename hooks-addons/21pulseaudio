@@ -109,7 +109,11 @@ if [ "\$(pidof esd)" != "" ]; then
 cat << FIN > /etc/pulse/default.pa
 #!/usr/bin/pulseaudio -nF
 
+if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
+load-module module-esound-sink server=127.0.0.1;\$(read_server "xdmcp-server")
+else
 load-module module-esound-sink server=127.0.0.1
+fi
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
 FIN
@@ -145,10 +149,10 @@ fi
 
 OPTS="--no-cpu-limit \${OPTS}"
 
-if [ \$cpu = "low" ]; then
+if [ "\$cpu" = "low" ]; then
  #OPTS="--no-cpu-limit \${OPTS}"
  # old versions of pulseaudio don't have realtime switch (Etch)
- if [ \$realtime != "0" ]; then
+ if [ "\$realtime" != "0" ]; then
    OPTS="\${OPTS} --realtime "
  fi
 fi

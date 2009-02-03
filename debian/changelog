@@ -3,8 +3,11 @@ initramfs-tools-tcos (0.89.23) unstable; urgency=low
   * Update Vcs- debian/control headers to new GIT repos
   * Remove debootstarp stuff
   * Update debian/copyright (remove pkgdetails and usplash)
+  * hooks-addons/21pulseaudio conf/base.conf conf/80export_pulseaudio:
+    - New var TCOS_SOUND_REMOTE_ESD, enable pulseaudio to listen again at esound port
+    - Fix some if then test
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 02 Feb 2009 11:54:22 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 03 Feb 2009 23:23:02 +0100
 
 initramfs-tools-tcos (0.89.22) unstable; urgency=low
 
