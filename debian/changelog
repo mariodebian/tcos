@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.24) unstable; urgency=low
+
+  * Upss wrong patched lines in hooks-addons/21pulseaudio, fixed
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 04 Feb 2009 01:30:24 +0100
+
 initramfs-tools-tcos (0.89.23) unstable; urgency=low
 
   * Update Vcs- debian/control headers to new GIT repos

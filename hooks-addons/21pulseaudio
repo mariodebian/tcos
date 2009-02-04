@@ -109,11 +109,7 @@ if [ "\$(pidof esd)" != "" ]; then
 cat << FIN > /etc/pulse/default.pa
 #!/usr/bin/pulseaudio -nF
 
-if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
-load-module module-esound-sink server=127.0.0.1;\$(read_server "xdmcp-server")
-else
 load-module module-esound-sink server=127.0.0.1
-fi
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
 FIN
@@ -124,8 +120,12 @@ cat << FIN > /etc/pulse/default.pa
 
 load-module module-detect
 
+if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
+load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
+else
 # don't listen on esound port, eats a lot of bandwich
 load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1
+fi
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
 load-module module-esound-protocol-unix
