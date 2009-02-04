@@ -135,6 +135,7 @@ usage() {
   echo "       $0  --setmute CHANNEL       ( mute CHANNEL and return off if succesfull )"
   echo "       $0  --setunmute CHANNEL     ( unmute CHANNEL and return on if succesfull )"
   echo "       $0  --getserverinfo         ( show stats of PulseAudio server with pactl)"
+  echo "       $0  --restartpulse          ( restart PulseAudio daemon)"
 }
 
 
@@ -164,6 +165,9 @@ for x in $1; do
 		;;
     --getserverinfo)
 		get_serverinfo
+		;;
+    --restartpulse)
+		killall -9 pulseaudio; /bin/daemonize.sh /sbin/startpulseaudio
 		;;
     --help)
 		usage
