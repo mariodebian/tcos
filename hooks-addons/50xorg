@@ -52,6 +52,8 @@ install -m 755 ${TCOS_BINS}/tryXorg.sh    ${DESTDIR}/sbin/tryXorg
 mkdir -p ${DESTDIR}/usr/share/xserver-xorg/pci/
 cpifexists ${TCOS_DIR}/inc/xorg.pciids /usr/share/xserver-xorg/pci/
 
+# new in xorg 1.5
+[ -e /usr/lib/xorg/protocol.txt ] && cpifexists /usr/lib/xorg/protocol.txt /usr/lib/xorg/
 
 # FONTS modules
 mkdir -p  $DESTDIR/usr/lib/xorg/modules/
@@ -170,7 +172,8 @@ if [ $TCOS_XORG_OPENGL ]; then
 
  else
   cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
-  cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
+  [ -e /usr/lib/xorg/modules/extensions/libGLcore.so ] && \
+       cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
   cpifexists /usr/lib/libGL.so.1  /usr/lib/
   [ -e /usr/lib/libGLcore.so.1 ] && cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
   [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
@@ -218,7 +221,7 @@ mkdir -p $DESTDIR/usr/share/locale
 mkdir -p $DESTDIR/usr/lib/X11
 [ -d /usr/lib/X11/locale ] && copydir /usr/lib/X11/locale/          /usr/lib/X11/
 #copydir /usr/lib/X11/config/          /usr/lib/X11/
-cpifexists /etc/X11/rgb.txt            /etc/X11/
+[ -e /etc/X11/rgb.txt ] && cpifexists /etc/X11/rgb.txt              /etc/X11/
 
 
 

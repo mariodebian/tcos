@@ -13,6 +13,10 @@ else
  
     mkdir -p $DESTDIR/usr/share/
     copydir /usr/share/alsa/ /usr/share/
+
+    # Ubuntu make pulse default in this dir (thin clients must use ALSA directly)
+    rm -f $DESTDIR/usr/share/alsa/*pulse*
+
     mkdir -p $DESTDIR/var/run/alsa
 
     mkdir -p $DESTDIR/lib
@@ -62,6 +66,9 @@ else
          cpifexists /usr/lib/alsa-lib/libasound_module_pcm_pulse.so    /usr/lib/alsa-lib/
     [ -e /usr/lib/alsa-lib/libasound_module_ctl_pulse.so ]  && \
          cpifexists /usr/lib/alsa-lib/libasound_module_ctl_pulse.so    /usr/lib/alsa-lib/
+    # new in Ubuntu??
+    [ -e /usr/lib/alsa-lib/libasound_module_conf_pulse.so ] && \
+         cpifexists /usr/lib/alsa-lib/libasound_module_conf_pulse.so /usr/lib/alsa-lib/
     [ -e /usr/lib/alsa-lib/libasound_module_pcm_alsa_dsp.so ] && \
          cpifexists /usr/lib/alsa-lib/libasound_module_pcm_alsa_dsp.so /usr/lib/alsa-lib/
 

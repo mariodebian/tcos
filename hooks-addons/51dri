@@ -13,6 +13,9 @@ if [ $TCOS_XORG_DRI ]; then
     cpifexists /usr/lib/dri/sis_dri.so /usr/lib/dri
     cpifexists /usr/lib/dri/s3v_dri.so /usr/lib/dri
 
+    # new DRI extension (include set by default?? )
+    cpifexists /usr/lib/dri/swrast_dri.so /usr/lib/dri
+
 
     [ $TCOS_XORG_DRI_RADEON ] && cp -ra /usr/lib/dri/r* ${DESTDIR}/usr/lib/dri
 

@@ -11,6 +11,7 @@ usr/share/initramfs-tools-tcos/xmlrpc/*
 usr/share/initramfs-tools-tcos/tcos-generation-functions.sh
 usr/share/initramfs-tools-tcos/tcos-run-functions.sh
 usr/share/initramfs-tools-tcos/tcos-modules.conf
+usr/share/initramfs-tools-tcos/inc
 usr/share/initramfs-tools/*
 /etc/tcos/hacking/template
 /etc/tcos/menu.lst-tcos

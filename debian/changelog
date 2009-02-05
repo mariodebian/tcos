@@ -1,3 +1,22 @@
+initramfs-tools-tcos (0.89.26) unstable; urgency=low
+
+  * Add portmap and acpid as depends of initramfs-tools-tcos
+  * hooks-addons/20alsa
+    - Delete pulse-as-default Ubuntu files from usr/share/alsa
+    - Copy libasound_module_conf_pulse.so if found
+  * Move usr/share/initramfs-tools-tcos/inc from tcos to initramfs-tools-tcos package
+    - initramfs-tools-tcos now conflicts with tcos << 0.89.26
+  * hooks-addons/50xorg
+    - Copy /usr/lib/xorg/protocol.txt (new file in Xorg 1.5)
+    - Check if exists /usr/lib/xorg/modules/extensions/libGLcore.so before copying
+    - Check if exists /etc/X11/rgb.txt before copying
+  * hooks-addons/51dri
+    - Copy new dri /usr/lib/dri/swrast_dri.so
+  * hooks-addons/51via_openchrome
+    - Check if exists /etc/X11/XvMCConfig before copying
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 05 Feb 2009 19:05:31 +0100
+
 initramfs-tools-tcos (0.89.25) unstable; urgency=low
 
   * xmlrpc/sh/soundctl.sh:
