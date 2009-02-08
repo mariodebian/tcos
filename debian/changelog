@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.27) unstable; urgency=low
+
+  * Add support of p910nd print daemon
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 08 Feb 2009 19:18:06 +0100
+
 initramfs-tools-tcos (0.89.26) unstable; urgency=low
 
   * Add portmap and acpid as depends of initramfs-tools-tcos

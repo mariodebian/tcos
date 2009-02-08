@@ -24,7 +24,11 @@ if [ $TCOS_PRINTER ]; then
 
   if [ "${LP}" = "" ]; then exit 0; fi
 
-  if [ -e /usr/bin/lp_server ]; then
+  if [ -e /usr/bin/p910nd ]; then
+
+     /usr/bin/p910nd -f $LP > /var/log/p910nd.log 2>&1 &
+
+  elif [ -e /usr/bin/lp_server ]; then
 
      /usr/bin/lp_server -d $LP -r tcos-server > /var/log/lp_server.log 2>&1 &
 

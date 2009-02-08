@@ -47,7 +47,7 @@ TCOS_FLAVOUR=standard
 TCOS_MIRROR="http://www.tcosproject.org"
 
 
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client lp-server xvnc4viewer esound"
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client p910nd xvnc4viewer esound"
 TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear console-data "
 TCOS_PACKAGES="${TCOS_PACKAGES} busybox rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils libasound2-plugins"
 

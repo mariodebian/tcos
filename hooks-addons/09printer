@@ -14,7 +14,14 @@ if [ ! $TCOS_PRINTER ] ;then
 else
     stat_before
 
-    if [ -e /usr/bin/lp_server ]; then
+    if [ -e /usr/sbin/p910nd ]; then
+       #/var/run/p9100d.pid, /var/lock/subsys/p9100d, /etc/hosts.allow, /etc/hosts.deny
+       mkdir -p $DESTDIR/var/run
+       mkdir -p $DESTDIR/var/lock/subsys
+       cpifexists /usr/sbin/p910nd         /usr/bin/
+       stat_after "Print server [p910nd]"
+
+    elif [ -e /usr/bin/lp_server ]; then
        cpifexists /usr/bin/lp_server         /usr/bin/
        stat_after "Print server [lp_server]"
     else

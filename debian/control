@@ -18,7 +18,7 @@ Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, atftp
          xfonts-base, xfonts-100dpi, portmap, acpid,
          ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), tcos (<< 0.89.26)
-Recommends: pulseaudio, pulseaudio-utils
+Recommends: pulseaudio, pulseaudio-utils, p910nd
 Description: tools for generating a thin client bootable image: TCOS
  This package contains tools to create and boot an initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
