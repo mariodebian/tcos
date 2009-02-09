@@ -1,0 +1,75 @@
+# hook addon for blacklist or add kernel modules options on startup
+
+stat_before
+
+cat << EOF > ${DESTDIR}/scripts/init-top/tcos_modules
+#!/bin/sh
+#
+
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+
+quiet=n
+
+FORCE_MODULES=""
+BLACKLIST_MODULES=""
+
+for x in \$(cat /proc/cmdline); do
+   case \$x in
+      force_modules=*)
+         FORCE_MODULES="\$(echo \${x#force_modules=}|tr "," " ")"
+         ;;
+      blacklist_modules=*)
+         BLACKLIST_MODULES="\$(echo \${x#blacklist_modules=}|tr "," " ")"
+         ;;
+   esac
+done
+
+if [ "\$FORCE_MODULES" != "" ] ; then
+   for x in \$FORCE_MODULES ; do
+      modprobe -Q \$x 2>/dev/null || true
+   done
+fi
+
+if [ "\$BLACKLIST_MODULES" != "" ] ; then
+   for x in \$BLACKLIST_MODULES ; do
+      echo "blacklist \$x" >> /etc/modprobe.d/blacklist-tcos 2>/dev/null || true
+   done
+fi
+
+
+# Fix corruption MAC address in Realtek PCI Express RTL810xE with kernel module r8169.ko
+if [ "\$(pcimodules | grep -c r8101)" != "0" ]; then
+  if [ "\$(modprobe -l | grep -c r8101)" != "0" ]; then
+     modprobe -Q r8101 2>/dev/null || true
+     if [ "\$(dmesg | grep -c -i rtl*810.e)" != "0" ]; then
+         echo "blacklist r8169" >> /etc/modprobe.d/blacklist-tcos 2>/dev/null || true
+     else
+         modprobe -Q -r -f r8101 2>/dev/null || true
+     fi
+  else
+     echo -n -e "WARNING!!! Your computer has an Ethernet Realtek 810xE PCI Express does not work correctly with kernel module r8169. Please regenerate TCOS images, adding the extra kernel module r8101 and blacklisting r8169 kernel modules."
+  fi
+fi
+
+if [ "\$(pcimodules | grep -c sisfb)" != "0" ]; then
+  echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/framebuffer
+  echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/usplash
+fi
+
+
+EOF
+chmod +x ${DESTDIR}/scripts/init-top/tcos_modules
+
+
+# add options to snd-hda-intel
+if [ "$(cat ${DESTDIR}/etc/modprobe.d/alsa-base | grep -c snd-hda-intel)" = "0" ]; then
+   echo "options snd-hda-intel model=auto" >> ${DESTDIR}/etc/modprobe.d/alsa-base
+fi
+
+
+stat_after "Tcos Kernel modules support"

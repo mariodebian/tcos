@@ -121,6 +121,8 @@ install:
 
 	# tcos.conf templates
 	install -d $(DESTDIR)$(TCOS_DIR)/templates/
+	install -d $(DESTDIR)$(TCOS_CONF)/templates/
+	install -m 644 conf/branding-pxelinux.info             $(DESTDIR)$(TCOS_CONF)/templates/
 
 	# copy tcos.conf to have a default config
 	install -m 644 conf/base.conf     $(DESTDIR)$(TCOS_DIR)/templates/base.conf
@@ -156,6 +158,7 @@ install:
 	install -m 755 bin/tryXorg.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 644 bin/set-limits      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/daemonize.sh    $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/get_xauth       $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/clear-logs      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/rsync-controller  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/down-controller   $(DESTDIR)/$(TCOS_BINS)/

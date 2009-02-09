@@ -109,7 +109,7 @@ set_unmute() {
 
 
 get_serverinfo() {
-  if [ "$(pidof pulseaudio)" = "" ]; then
+  if [ "$(pidof pulseaudio | sed '/^$/d')" = "" ]; then
     echo "error: pulseaudio not running"
     exit 1
   fi

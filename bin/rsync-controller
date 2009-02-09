@@ -20,7 +20,7 @@
 # --------
 set -e 
 
-home=$(getent passwd | grep "^${USER}:" | awk -F":" '{print $6}')
+home=$(getent passwd ${USER} | head -1 | awk -F":" '{print $6}')
 DESKTOP_DIR="Desktop"
 
 if [ -r /etc/xdg/user-dirs.conf ];then
@@ -80,7 +80,7 @@ chmod -R 644 ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/*
 
 if [ "$OPEN" = "True" ]; then
   for f in $(cat ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/.FILE); do
-     xdg-open ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/$f 2>/dev/null
+     xdg-open ${home}/${DESKTOP_DIR}/${RECEIVE_DIR}/$f 2>/dev/null &
   done
 fi
 

@@ -18,6 +18,7 @@ usr/share/initramfs-tools/*
 /etc/tcos/pxelinux.cfg.tpl
 /etc/tcos/logo.xpm.gz
 /etc/tcos/conf.d/branding.info
+/etc/tcos/templates/branding-pxelinux.info
 /etc/tcos/version.conf
 /etc/tcos/xorg.conf.tpl
 /etc/tcos/SecurityPolicy

@@ -94,7 +94,10 @@ Section "Monitor"
 __xdpms__	Option		"DPMS"
 __disablesync__	HorizSync	__xhorizsync__
 __disablesync__	VertRefresh	__xvertsync__
+__xdriver_amd__	UseModes	"Cimarron"
 EndSection
+
+__usemodes__
 
 Section "Screen"
 	Identifier	"Default Screen"

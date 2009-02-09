@@ -1,0 +1,81 @@
+# Valencian translation of qcv.
+# Copyright (C) 2008 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Pilar Embid Giner <embid_mar@gva.es>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: qcv\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-05-10 18:16+0200\n"
+"PO-Revision-Date: 2008-07-01 14:36+0200\n"
+"Last-Translator: Pilar Embid Giner <embid_mar@gva.es>\n"
+"Language-Team: Valencian <lliurex@gva.es>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
+
+#: tcos-standalone.glade:9
+msgid "TCOS Standalone"
+msgstr "Sistema autònom del TCOS"
+
+#: tcos-standalone.glade:32
+msgid "<span size=\"x-large\">Configure TCOS standalone mode</span>"
+msgstr "<span size=\"x-large\">Configura el mode de sistema autònom del TCOS</span>"
+
+#: tcos-standalone.glade:126
+msgid "Stop"
+msgstr "Para"
+
+#: tcos-standalone.glade:204
+msgid "Start"
+msgstr "Inici"
+
+#: tcos-standalone.glade:282
+msgid "Apply"
+msgstr "Aplica"
+
+#: tcos-standalone.glade:344
+msgid "Enable tcos-standalone daemon"
+msgstr "Habilita el dimoni del sistema autònom del Tcos"
+
+#: tcos-standalone.glade:365
+msgid "Username (root):"
+msgstr "Nom d'usuari (superusuari):"
+
+#: tcos-standalone.glade:414
+msgid "Password (not visible):"
+msgstr "Contrasenya (no visible):"
+
+#: tcos-standalone.glade:521
+msgid "Enable SSL over XMLRPC"
+msgstr "Habilita el SSL damunt d'XMLRPC"
+
+#: tcos-standalone.glade:562
+msgid "Options"
+msgstr "Opcions"
+
+#: tcos-standalone.py:170
+msgid ""
+"Not user and password configured.\n"
+"Using root system user."
+msgstr ""
+"No s'ha configurat l'usuari i la contrasenya.\n"
+"S'utilitzarà l'usuari root del sistema. "
+
+#: tcos-standalone.py:246
+msgid "New username and password used.\n"
+msgstr "S'ha utilitzat un nom d'usuari i contrasenya nous.\n"
+
+#: tcos-standalone.py:269
+msgid "tcosxmlrpc running"
+msgstr "executant-se el tcosxmlrpc"
+
+#: tcos-standalone.py:274
+msgid "tcosxmlrpc stopped"
+msgstr "el tcosxmlrpc està parat"
+
+#~ msgid "busybox running"
+#~ msgstr "execució del busybox"
+#~ msgid "busybox stopped"
+#~ msgstr "el busybox està parat"

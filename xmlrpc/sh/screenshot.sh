@@ -33,9 +33,13 @@ else
   _www=/var/lib/tcos/standalone/www
   #user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
   user=$(/usr/lib/tcos/tcos-last --user 2>/dev/null)
-  home=$(getent passwd | grep "^${user}:" | awk -F":" '{print $6}')
+  home=$(getent passwd ${user} | head -1 | awk -F":" '{print $6}')
   if [ "$user" = "root" ]; then echo -n "error: root not allowed"; exit 1; fi
-  export XAUTHORITY=$home/.Xauthority
+  if [ -e "${home}/.Xauthority" ]; then
+     export XAUTHORITY=$home/.Xauthority
+  else
+     export XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
+  fi
   export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
   beepoff="xset b off"
   beepon="xset b on"

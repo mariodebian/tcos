@@ -173,8 +173,8 @@ case "$1" in
 	esac
 	;;
    status)
-       if [ "$(pidof tcosxmlrpc-standalone)" = "$(cat /var/lib/tcos/standalone/log/abyss.pid 2>/dev/null)" ] && \
-	  [ "$(pidof tcosxmlrpc-standalone)" != "" ] ; then
+       if [ "$(pidof tcosxmlrpc-standalone | sed '/^$/d')" = "$(cat /var/lib/tcos/standalone/log/abyss.pid 2>/dev/null)" ] && \
+	  [ "$(pidof tcosxmlrpc-standalone | sed '/^$/d')" != "" ] ; then
            echo "tcosxmlrpc running"
        else
            echo "tcosxmlrpc stopped"

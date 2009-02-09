@@ -1,4 +1,4 @@
-LANGUAGES=es ca@valencia pt_BR
+LANGUAGES=es ca@valencia pt_BR qcv
 
 all:
 	#none

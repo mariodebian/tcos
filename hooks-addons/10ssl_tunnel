@@ -13,6 +13,11 @@ else
    mkdir -p $DESTDIR/etc/stunnel
    mkdir -p $DESTDIR/usr/lib/ssl
    cpifexists /usr/lib/ssl/openssl.cnf /usr/lib/ssl
+   #cpifexists /usr/lib/libcrypto.so.0.9.8 /usr/lib/
+   #cpifexists /usr/lib/libssl.so.0.9.8 /usr/lib/
+
+   [ -e ${DESTDIR}/usr/lib/i686/cmov/libcrypto.so.0.9.8 ] && mv -f ${DESTDIR}/usr/lib/i686/cmov/libcrypto.so.0.9.8 ${DESTDIR}/usr/lib/libcrypto.so.0.9.8 2>/dev/null
+   [ -e ${DESTDIR}/usr/lib/i686/cmov/libssl.so.0.9.8 ] && mv -f ${DESTDIR}/usr/lib/i686/cmov/libssl.so.0.9.8 ${DESTDIR}/usr/lib/libssl.so.0.9.8 2>/dev/null
 
 cat << EOF > ${DESTDIR}/etc/stunnel/stunnel.conf
 cert = /etc/stunnel/tcos.pem
@@ -67,13 +72,21 @@ fi
 quiet=n
 
 . /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
 
-  [ -e /etc/stunnel/tcos.pem ] && rm -f /etc/stunnel/tcos.pem
+nosslxmlrpc=\$(read_cmdline_var "nosslxmlrpc" "0") 
+if [ "\${nosslxmlrpc}" = "1" ]; then 
+  _log "SSL XMLRPC disabled from cmdline" 
+  exit 0 
+fi
+
+  [ -e /etc/stunnel/tcos.pem ] && rm -f /etc/stunnel/tcos.pem 2>/dev/null
   openssl req -new -x509 -nodes -days 365 -out /etc/stunnel/tcos.pem -keyout /etc/stunnel/tcos.pem -subj "/C=/ST=/L=/CN=localhost/emailAddress=root@localhost" 2>/dev/null
-  chmod 600 /etc/stunnel/tcos.pem
-  dd if=/dev/urandom of=/tmp/temp_file_ssl count=2
+  dd if=/dev/urandom of=/tmp/temp_file_ssl count=2 2>/dev/null
   openssl dhparam -rand /tmp/temp_file_ssl 256 >> /etc/stunnel/tcos.pem 2>/dev/null
-  rm -f /tmp/temp_file_ssl
+  chmod 600 /etc/stunnel/tcos.pem 2>/dev/null
+  rm -f /tmp/temp_file_ssl 2>/dev/null
 
   stunnel4 >/dev/null 2>&1 &
 exit 0

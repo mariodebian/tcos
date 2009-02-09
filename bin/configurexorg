@@ -30,6 +30,7 @@ restartxorg=0
 autodetect_xdriver=1
 force_xdriver=0
 xdriver_via="#"
+xdriver_amd="#"
 
 . /conf/tcos.conf
 . /conf/tcos-run-functions
@@ -128,6 +129,50 @@ xzap_txt="Section \"Serverflags\"\\
 EndSection"
 
 xzap=$xzap_txt
+
+usemodes_txt="Section \"Modes\"\\
+        Identifier \"Cimarron\"\\
+        # 640x480 @ 60.00 Hz (GTF) hsync: 29.82 kHz; pclk: 23.86 MHz\\
+        Modeline \"640x480-60\" 25.1749  640  656  744  800   480  490  492  525 -HSync -VSync\\
+        # 640x480 @ 75.00 Hz (GTF) hsync: 37.65 kHz; pclk: 30.72 MHz\\
+        Modeline \"640x480-75\" 31.5000  640  656  720  840   480  481  484  500 -HSync -VSync\\
+        # 640x480 @ 85.00 Hz (GTF) hsync: 42.92 kHz; pclk: 35.71 MHz\\
+        Modeline \"640x480-85\" 36.0000  640  696  752  832   480  481  484  509 -HSync -VSync\\
+        # 640x480 @ 90.00 Hz (GTF) hsync: 45.54 kHz; pclk: 37.89 MHz\\
+        Modeline \"640x480-90\" 37.8889  640  672  736  832   480  481  484  506 -HSync -VSync\\
+        # 640x480 @ 100.00 Hz (GTF) hsync: 50.90 kHz; pclk: 43.16 MHz\\
+        Modeline \"640x480-100\" 43.1629  640  680  744  848   480  481  484  509 -HSync -VSync\\
+        # 800x600 @ 60.00 Hz (GTF) hsync: 37.32 kHz; pclk: 38.22 MHz\\
+        Modeline \"800x600-60\" 40.0000  800  840  976 1056   600  601  605  628 -HSync -VSync\\
+        # 800x600 @ 75.00 Hz (GTF) hsync: 47.02 kHz; pclk: 48.91 MHz\\
+        Modeline \"800x600-75\" 49.5000  800  816  896 1056   600  601  604  625 -HSync -VSync\\
+        # 800x600 @ 85.00 Hz (GTF) hsync: 53.55 kHz; pclk: 56.55 MHz\\
+        Modeline \"800x600-85\" 56.2500  800  832  896 1048   600  601  604  631 -HSync -VSync\\
+        # 800x600 @ 90.00 Hz (GTF) hsync: 56.88 kHz; pclk: 60.07 MHz\\
+        Modeline \"800x600-90\" 60.0649  800  840  928 1056   600  601  604  632 -HSync -VSync\\
+        # 800x600 @ 100.00 Hz (GTF) hsync: 63.60 kHz; pclk: 68.18 MHz\\
+        Modeline \"800x600-100\" 68.1789  800  848  936 1072   600  601  604  636 -HSync -VSync\\
+        # 1024x768 @ 60.00 Hz (GTF) hsync: 47.70 kHz; pclk: 64.11 MHz\\
+        Modeline \"1024x768-60\" 65.0000 1024 1048 1184 1344   768  771  777  806 -HSync -VSync\\
+        # 1024x768 @ 75.00 Hz (GTF) hsync: 60.15 kHz; pclk: 81.80 MHz\\
+        Modeline \"1024x768-75\" 78.7500 1024 1040 1136 1312   768  769  772  800 -HSync -VSync\\
+        # 1024x768 @ 85.00 Hz (GTF) hsync: 68.60 kHz; pclk: 94.39 MHz\\
+        Modeline \"1024x768-85\" 94.5000 1024 1072 1168 1376   768  769  772  808 -HSync -VSync\\
+        # 1024x768 @ 90.00 Hz (GTF) hsync: 72.81 kHz; pclk: 100.19 MHz\\
+        Modeline \"1024x768-90\" 100.1869 1024 1088 1200 1376   768  769  772  809 -HSync -VSync\\
+        # 1024x768 @ 100.00 Hz (GTF) hsync: 81.40 kHz; pclk: 113.31 MHz\\
+        Modeline \"1024x768-100\" 113.3099 1024 1096 1208 1392   768  769  772  814 -HSync -VSync\\
+        # 1280x800 @ 60.00 Hz (GTF) hsync: 49.68 kHz; pclk: 83.46 MHz\\
+        Modeline \"1280x800-60\"  83.46  1280 1344 1480 1680  800 801 804 828  -HSync +Vsync\\
+        # 1280x1024 @ 60.00 Hz (GTF) hsync: 63.60 kHz; pclk: 108.88 MHz\\
+        Modeline \"1280x1024-60\" 108.0000 1280 1328 1440 1688  1024 1025 1028 1066 -HSync -VSync\\
+        # 1280x1024 @ 75.00 Hz (GTF) hsync: 80.17 kHz; pclk: 138.54 MHz\\
+        Modeline \"1280x1024-75\" 135.0000 1280 1296 1440 1688  1024 1025 1028 1066 -HSync -VSync\\
+        # 1280x1024 @ 85.00 Hz (GTF) hsync: 91.38 kHz; pclk: 159.36 MHz\\
+EndSection"
+
+usemodes=$usemodes_txt
+
 
 # other
 withnofail=0
@@ -487,6 +532,12 @@ if [ "$xdriver" = "via" ] || [ "$xdriver" = "openchrome" ]; then
   xdriver_via=""
 fi
 
+if [ "$xdriver" = "amd" ]; then
+  xdriver_amd=""
+else
+  usemodes=""
+fi
+
 disablesync=""
 if [ "$xdisablesync" = "disable" ]; then
   disablesync="#"
@@ -513,6 +564,7 @@ debug "date=$stamp server=$SERVER xdontzap=$xdontzap dontzap=$xzap"
 sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xres__"/"${xres}"/g \
     -e s/"__xdriver_via__"/"${xdriver_via}"/g \
+    -e s/"__xdriver_amd__"/"${xdriver_amd}"/g \
     -e s/"__xdepth__"/"${xdepth}"/g \
     -e s/"__xdpms__"/"${xdpms}"/g \
     -e s/"__xhorizsync__"/"${xhorizsync}"/g \
@@ -532,6 +584,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__enable_font_server__"/"${TCOS_ENABLE_FONT_SERVER}"/g \
     -e s/"__dontzap__"/"${xzap}"/g \
     -e s/"__xdontzap__"/"${xdontzap}"/g \
+    -e s/"__usemodes__"/"${usemodes}"/g \
   ${template} > ${tmp_xorg_file}
 }
 

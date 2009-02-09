@@ -1,0 +1,43 @@
+# hook addon for thin clients with chip AMD - GEODE
+
+stat_before
+
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/15amd_geode
+#!/bin/sh
+#
+
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+
+quiet=n
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+test1=0
+test1=\$(lspci | grep VGA | grep -c Geode)
+
+test2=0
+test2=\$(Xorg -version 2>&1 | sed '/^\$/d' | head -1 | awk '{print \$NF}' | awk -F"." '{if (\$1 <= 1 && \$2 > 3) printf "1"}')
+
+if [ "\$test1" = "0" ] || [ "\$test2" = "1" ] ; then
+   # no client with chip amd geode or Xorg with amd fixes
+   exit 0
+fi
+
+log_begin_msg "Loading xserver AMD Geode Support"
+
+    configurexorg --newsettings --xdriver=amd --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
+
+log_end_msg \$?
+
+EOF
+chmod +x ${DESTDIR}/scripts/tcos-bottom/15amd_geode
+
+
+stat_after "AMD Geode Xorg support"

@@ -16,7 +16,7 @@ else
   time2=0
 fi
 
-while [ "\$(pidof Xorg)" = "" ] ; do
+while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
  sleep \$time1
  echo "ltspfs-set-xprop::waiting for Xorg"
 done

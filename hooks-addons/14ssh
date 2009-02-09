@@ -37,7 +37,7 @@ else
         pkey=/root/.ssh/id_rsa.pub
 	key=/root/.ssh/id_rsa
       else
-	home=$(getent passwd | grep "^${TCOS_ADMIN_USER}:" | awk -F":" '{print $6}')
+	home=$(getent passwd ${TCOS_ADMIN_USER} | head -1 | awk -F":" '{print $6}')
         pkey=${home}/.ssh/id_rsa.pub
 	key=${home}/.ssh/id_rsa
       fi

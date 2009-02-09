@@ -36,24 +36,29 @@ if [ -e /conf/tcos-run-functions ]; then
   STANDALONE=0
   export XAUTHORITY=/root/.Xauthority
   MASTER=$(/sbin/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
+  MASTER_FRONT=$(/sbin/soundctl.sh --getlevel "Master Front" 2>/dev/null | sed 's/%//g')
   PCM=$(/sbin/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
   FRONT=$(/sbin/soundctl.sh --getlevel Front 2>/dev/null | sed 's/%//g')
   MIXER="tmixer -c 0 "
 else
   MASTER=$(/usr/lib/tcos/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
+  MASTER_FRONT=$(/usr/lib/tcos/soundctl.sh --getlevel "Master Front" 2>/dev/null | sed 's/%//g')
   PCM=$(/usr/lib/tcos/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
   FRONT=$(/usr/lib/tcos/soundctl.sh --getlevel Front 2>/dev/null | sed 's/%//g')
   MIXER="/usr/lib/tcos/tmixer -c 0 "
 fi
 
 [ "$MASTER" = "unknow" ] && MASTER=100
+[ "$MASTER_FRONT" = "unknow" ] && MASTER_FRONT=100
 [ "$PCM" = "unknow" ] && PCM=100
 [ "$FRONT" = "unknow" ] && FRONT=100
 
-$MIXER sset 'PCM' 'on' 2>/dev/null
-$MIXER sset 'Master' 'on' 2>/dev/null
-$MIXER sset 'Front' 'on' 2>/dev/null
-[ $PCM -lt ${1} ] && $MIXER sset 'PCM' ${1} 2>/dev/null
-[ $MASTER -lt ${1} ] && $MIXER sset 'Master' ${1} 2>/dev/null
-[ $FRONT -lt ${1} ] && $MIXER sset 'Front' ${1} 2>/dev/null
+$MIXER sset 'PCM' 'on' >/dev/null 2>&1
+$MIXER sset 'Master' 'on' >/dev/null 2>&1
+$MIXER sset 'Master Front' 'on' >/dev/null 2>&1
+$MIXER sset 'Front' 'on' >/dev/null 2>&1
+[ $PCM -lt ${1} ] && $MIXER sset 'PCM' ${1} >/dev/null 2>&1
+[ $MASTER -lt ${1} ] && $MIXER sset 'Master' ${1} >/dev/null 2>&1
+[ $MASTER_FRONT -lt ${1} ] && $MIXER sset 'Master Front' ${1} >/dev/null 2>&1
+[ $FRONT -lt ${1} ] && $MIXER sset 'Front' ${1} >/dev/null 2>&1
 

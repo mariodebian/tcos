@@ -140,9 +140,10 @@ def GetLast(ip):
                 if not b:
                     break
                 if b[0] == USER_PROCESS:
-                    #print_debug("  => Searching for host \"%s:0\" found host=%s ut_line=%s"%(ip, b.ut_host,b.ut_line))
+                    print_debug("  => Searching for host \"%s:0\", hostname=%s found host=%s ut_line=%s"%(ip, hostname, b.ut_host,b.ut_line))
                     if b.ut_host == "%s:0"%(ip) or b.ut_line == "%s:0"%(ip) or b.ut_host == "%s"%hostname :
-                        #print_debug(" Ip \"%s:0\" => found host=%s ut_line=%s user=%s pid=%s"%(ip, b.ut_host,b.ut_line, b.ut_user, b.ut_pid))
+                        if b.ut_line.startswith("pts/") and not os.path.isdir("/proc/%s"%b.ut_pid): continue
+                        print_debug(" Ip \"%s:0\" => found host=%s hostname=%s ut_line=%s user=%s pid=%s"%(ip, hostname, b.ut_host,b.ut_line, b.ut_user, b.ut_pid))
                         last=b
             a.endutent()
             if last and os.path.isdir("/proc/%s"%last.ut_pid): break

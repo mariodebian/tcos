@@ -137,7 +137,7 @@ if [ -d $DESTDIR/lib/tls ]; then
    _echo "  * WARNING: /lib/tls exists in image"
    for lib in ${DESTDIR}/lib/tls/*; do
      tlslib=$lib
-     notlslib=$(echo $lib | sed 's/tls//g')
+     notlslib=$(echo $lib | sed 's/tls\///g')
      notlslib1=$(basename $lib)
      notlslib2=$(basename $lib | awk -F "." '{print $1}')
      if [ -f $notlslib ]; then
@@ -158,7 +158,7 @@ if [ -d $DESTDIR/lib/i686 ]; then
 
    for lib in $(find ${DESTDIR}/lib/i686 -type f); do
      i686lib=$lib
-     noi686lib=$(echo $lib | sed 's/i686\/cmov//g')
+     noi686lib=$(echo $lib | sed 's/i686\/cmov\///g')
      noi686lib1=$(basename $lib)
      if [ -f $noi686lib ]; then
       rm -f $lib
@@ -172,6 +172,28 @@ if [ -d $DESTDIR/lib/i686 ]; then
   
   (rmdir ${DESTDIR}/lib/i686/cmov && rmdir ${DESTDIR}/lib/i686) || _echo "  * WARNING can't delete /lib/i686 from image (not empty)"
 fi # end of /lib/i686 dir exists
+
+# clean /usr/lib/i686 if needed
+if [ -d $DESTDIR/usr/lib/i686 ]; then
+   # convert symlinks to files into usr/lib/i686 dir
+   convert_links2files "usr/lib/i686"
+
+   for lib in $(find ${DESTDIR}/usr/lib/i686 -type f); do
+     i686lib=$lib
+     noi686lib=$(echo $lib | sed 's/i686\/cmov\///g')
+     noi686lib1=$(basename $lib)
+     if [ -f $noi686lib ]; then
+      rm -f $lib
+     elif [ -f /usr/lib/${noi686lib1} ]; then
+      cp -f /usr/lib/${noi686lib1} $DESTDIR/usr/lib/
+      rm -f $lib
+     else    
+      _echo "WARNING equivalent to $i686lib not found"
+     fi
+  done
+  
+  (rmdir ${DESTDIR}/usr/lib/i686/cmov && rmdir ${DESTDIR}/usr/lib/i686) || _echo "  * WARNING can't delete /usr/lib/i686 from image (not empty)"
+fi # end of /usr/lib/i686 dir exists
 
 
 if [ $TCOS_DISABLE_ACPI ]; then

@@ -80,7 +80,11 @@ install:
 	install -m 755 sh/vnc-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/vlc-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/rtp-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
+	#install -m 755 sh/clone-controller.sh  $(DESTDIR)/$(TCOS_BINS)/
+	#install -m 755 sh/clonerecv          $(DESTDIR)/$(TCOS_BINS)/
+	#install -m 755 sh/clonesend          $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/tcos-last          $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 sh/pactl-controller.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/tcos-pam-usb.sh    $(DESTDIR)/$(TCOS_BINS)/
 
 	install -m 644 var/etc/mime.types  $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/

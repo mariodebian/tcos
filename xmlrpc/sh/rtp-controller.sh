@@ -46,10 +46,14 @@ ctl.!default {
 }
 EOF
   DAEMONIZE="/sbin/daemonize.sh"
+  PACTL="/sbin/pactl-controller.sh"
   MASTER=$(/sbin/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
+  MASTER_FRONT=$(/sbin/soundctl.sh --getlevel "Master Front" 2>/dev/null | sed 's/%//g')
   PCM=$(/sbin/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
   FRONT=$(/sbin/soundctl.sh --getlevel Front 2>/dev/null | sed 's/%//g')
   MIC=$(/sbin/soundctl.sh --getlevel Mic 2>/dev/null | sed 's/%//g')
+  FRONT_MIC=$(/sbin/soundctl.sh --getlevel "Front Mic" 2>/dev/null | sed 's/%//g')
+  REAR_MIC=$(/sbin/soundctl.sh --getlevel "Rear Mic" 2>/dev/null | sed 's/%//g')
   MIXER="tmixer -c 0 "
 else
   STANDALONE=1
@@ -58,34 +62,57 @@ else
   if [ "${STANDALONE_USER}" = "" ]; then echo "error: no standalone user connected"; exit 1; fi
   DBUS_HANDLER="/usr/lib/tcos/tcos-dbus-helper --username=${STANDALONE_USER} "
   DAEMONIZE="/usr/lib/tcos/daemonize.sh"
+  PACTL="/usr/lib/tcos/pactl-controller.sh"
   MASTER=$(/usr/lib/tcos/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
+  MASTER_FRONT=$(/usr/lib/tcos/soundctl.sh --getlevel "Master Front" 2>/dev/null | sed 's/%//g')
   PCM=$(/usr/lib/tcos/soundctl.sh --getlevel PCM 2>/dev/null | sed 's/%//g')
   FRONT=$(/usr/lib/tcos/soundctl.sh --getlevel Front 2>/dev/null | sed 's/%//g')
   MIC=$(/usr/lib/tcos/soundctl.sh --getlevel Mic 2>/dev/null | sed 's/%//g')
+  FRONT_MIC=$(/usr/lib/tcos/soundctl.sh --getlevel "Front Mic" 2>/dev/null | sed 's/%//g')
+  REAR_MIC=$(/usr/lib/tcos/soundctl.sh --getlevel "Rear Mic" 2>/dev/null | sed 's/%//g')
   MIXER="/usr/lib/tcos/tmixer -c 0 "
 fi
 
 set_volume() {
-  [ "$MASTER" = "unknow" ] && MASTER=100
-  [ "$PCM" = "unknow" ] && PCM=100
-  [ "$FRONT" = "unknow" ] && FRONT=100
+  [ "$MASTER" = "unknow" ] && MASTER=85
+  [ "$MASTER_FRONT" = "unknow" ] && MASTER_FRONT=85
+  [ "$PCM" = "unknow" ] && PCM=85
+  [ "$FRONT" = "unknow" ] && FRONT=85
 
-  $MIXER sset 'PCM' 'on' 2>/dev/null
-  $MIXER sset 'Master' 'on' 2>/dev/null
-  $MIXER sset 'Front' 'on' 2>/dev/null
-  [ $PCM -lt $VOLUME ] && $MIXER sset 'PCM' $VOLUME 2>/dev/null
-  [ $MASTER -lt $VOLUME ] && $MIXER sset 'Master' $VOLUME 2>/dev/null
-  [ $FRONT -lt $VOLUME ] && $MIXER sset 'Front' $VOLUME 2>/dev/null
+  $MIXER sset 'PCM' 'on' >/dev/null 2>&1
+  $MIXER sset 'Master' 'on' >/dev/null 2>&1
+  $MIXER sset 'Master Front' 'on' >/dev/null 2>&1
+  $MIXER sset 'Front' 'on' >/dev/null 2>&1
+  [ $PCM -lt $VOLUME ] && $MIXER sset 'PCM' $VOLUME >/dev/null 2>&1
+  [ $MASTER -lt $VOLUME ] && $MIXER sset 'Master' $VOLUME >/dev/null 2>&1
+  [ $MASTER_FRONT -lt ${1} ] && $MIXER sset 'Master Front' $VOLUME >/dev/null 2>&1
+  [ $FRONT -lt $VOLUME ] && $MIXER sset 'Front' $VOLUME >/dev/null 2>&1
 }
 
 set_mic() {
-  [ "$MIC" = "unknow" ] && MIC=100
+  [ "$MIC" = "unknow" ] && MIC=85
+  [ "$FRONT_MIC" = "unknow" ] && FRONT_MIC=85
+  [ "$REAR_MIC" = "unknow" ] && REAR_MIC=85
 
-  $MIXER sset 'Mic' 'on' 2>/dev/null
-  $MIXER sset 'Mic Boost (+20dB)' 'on' 2>/dev/null
-  $MIXER sset 'Mic Boost' 'on' 2>/dev/null
-  [ $MIC -lt $VOLUME ] && $MIXER sset 'Mic' $VOLUME 2>/dev/null
+  $MIXER sset 'Mic' 'on' >/dev/null 2>&1
+  $MIXER sset 'Front Mic' 'on' >/dev/null 2>&1
+  $MIXER sset 'Rear Mic' 'on' >/dev/null 2>&1
+  $MIXER sset 'Mic Boost (+20dB)' 'off' >/dev/null 2>&1
+  $MIXER sset 'Mic Boost' 'off' >/dev/null 2>&1
+  [ $MIC -lt $VOLUME ] && $MIXER sset 'Mic' $VOLUME >/dev/null 2>&1
+  [ $FRONT_MIC -lt $VOLUME ] && $MIXER sset 'Front Mic' $VOLUME >/dev/null 2>&1
+  [ $REAR_MIC -lt $VOLUME ] && $MIXER sset 'Rear Mic' $VOLUME >/dev/null 2>&1
+  $MIXER sset 'Capture' 100% >/dev/null 2>&1
+  $MIXER sset 'Capture,0' 100% >/dev/null 2>&1
+  $MIXER sset 'Capture,1' 100% >/dev/null 2>&1
 }
+
+set_mute_mic() {
+  $MIXER sset 'Mic' 'off' >/dev/null 2>&1
+  $MIXER sset 'Front Mic' 'off' >/dev/null 2>&1
+  $MIXER sset 'Rear Mic' 'off' >/dev/null 2>&1
+}
+
 
 version=$(pactl --version 2>/dev/null | awk '{print $2}' | awk -F"." '{if ((int($2) >= 9) && (int($3) >= 10)) printf "yes"}')
 
@@ -93,8 +120,9 @@ for arg in $1; do
   case $arg in
      startrtp-recv)
         set_volume
+        set_mute_mic
         if [ ! -z $version ]; then
-            $DAEMONIZE "pactl" "load-module module-rtp-recv sap_address=$2"
+            $DAEMONIZE "$PACTL" "start-recv $2"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting pulse recv module"; fi
         else
             mkfifo /tmp/audiofifo 2>/dev/null
@@ -111,7 +139,7 @@ for arg in $1; do
      stoprtp-recv)
         if [ ! -z $version ]; then
            index=$(pactl list | grep -B1 "module-rtp-recv" | head -1 | awk '{printf $3}' | sed 's/#//g')
-           $DAEMONIZE "pactl" "unload-module $index"
+           $DAEMONIZE "$PACTL" "stop-recv $index"
             if [ $? = 0 ]; then echo "ok"; else echo "error: stopping pulse recv module"; fi
         else
            if [ $STANDALONE = 0 ]; then
@@ -131,16 +159,17 @@ for arg in $1; do
         set_volume
         set_mic
         if [ ! -z $version ]; then
-            $DAEMONIZE "pactl" "load-module module-rtp-send destination=$2 rate=11025 channels=2 port=1234"
+            $DAEMONIZE "$PACTL" "start-send $2"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting pulse send module"; fi
         else
             echo "error: starting pulse send module, incorrect pulseaudio version"
         fi
      ;;
      stoprtp-send)
+        set_mute_mic
         if [ ! -z $version ]; then
            index=$(pactl list | grep -B1 "module-rtp-send" | head -1 | awk '{printf $3}' | sed 's/#//g')
-           $DAEMONIZE "pactl" "unload-module $index"
+           $DAEMONIZE "$PACTL" "stop-send $index"
             if [ $? = 0 ]; then echo "ok"; else echo "error: stopping pulse send module"; fi
         else
             echo "error: stopping pulse send module, incorrect pulseaudio version"
@@ -150,19 +179,18 @@ for arg in $1; do
         set_volume
         set_mic
         if [ ! -z $version ]; then
-            $DAEMONIZE "pactl" "load-module module-rtp-send destination=$2 rate=11025 channels=2 port=1234"
-            $DAEMONIZE "pactl" "load-module module-rtp-recv sap_address=$2"
+            $DAEMONIZE "$PACTL" "start-chat $2"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting pulse chat mode"; fi
         else
             echo "error: starting pulse chat mode, incorrect pulseaudio version"
         fi
      ;;
      stoprtp-chat)
+        set_mute_mic
         if [ ! -z $version ]; then
            index_send=$(pactl list | grep -B1 "module-rtp-send" | head -1 | awk '{printf $3}' | sed 's/#//g')
            index_recv=$(pactl list | grep -B1 "module-rtp-recv" | head -1 | awk '{printf $3}' | sed 's/#//g')
-           $DAEMONIZE "pactl" "unload-module $index_send"
-           $DAEMONIZE "pactl" "unload-module $index_recv"
+           $DAEMONIZE "$PACTL" "stop-chat $index_send $index_recv"
             if [ $? = 0 ]; then echo "ok"; else echo "error: stopping pulse chat mode"; fi
         else
             echo "error: stopping pulse chat mode, incorrect pulseaudio version"

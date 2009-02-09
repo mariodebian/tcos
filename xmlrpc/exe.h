@@ -20,10 +20,12 @@
 
 
 #ifdef IS_STANDALONE
- #define DISPLAY "DISPLAY=:0 XAUTHORITY=$("STANDALONE_HOME")/.Xauthority"
+ #define XAUTHORITY "/usr/lib/tcos/get_xauth"
+ #define DISPLAY "DISPLAY=:0 XAUTHORITY=$("XAUTHORITY")"
  #define CMD_WRAPPER DISPLAY" /usr/lib/tcos/daemonize.sh "
 #else
- #define DISPLAY "DISPLAY=:0 XAUTHORITY=/root/.Xauthority"
+ #define XAUTHORITY "/root/.Xauthority"
+ #define DISPLAY "DISPLAY=:0 XAUTHORITY="XAUTHORITY
  #define CMD_WRAPPER DISPLAY" /sbin/daemonize.sh "
 #endif
 

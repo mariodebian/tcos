@@ -17,7 +17,7 @@ touch /var/run/tcos-udev.run
 
 
 nodevices=$(read_cmdline_var "nodevices" "0") 
-if [ ${nodevices} = 1 ]; then 
+if [ "${nodevices}" = "1" ]; then 
   _log "Devices disabled from cmdline" 
   exit 0 
 fi

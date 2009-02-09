@@ -1,0 +1,37 @@
+#!/bin/sh
+
+#/*
+#* get_xauth shell script to make and screenshot with scrot
+#*               and save it in /var/www
+#* Copyright (C) 2006,2007,2008  mariodebian at gmail
+#*
+#* This program is free software; you can redistribute it and/or
+#* modify it under the terms of the GNU General Public License
+#* as published by the Free Software Foundation; either version 2
+#* of the License, or (at your option) any later version.
+#*
+#* This program is distributed in the hope that it will be useful,
+#* but WITHOUT ANY WARRANTY; without even the implied warranty of
+#* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#* GNU General Public License for more details.
+#*
+#* You should have received a copy of the GNU General Public License
+#* along with this program; if not, write to the Free Software
+#* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#*/
+
+
+export DISPLAY=:0
+
+user=$(/usr/lib/tcos/tcos-last --user 2>/dev/null)
+home=$(getent passwd ${user} | head -1 | awk -F":" '{print $6}')
+if [ "$user" = "root" ]; then echo -n "error: root not allowed"; exit 1; fi
+if [ -e "${home}/.Xauthority" ]; then
+   XAUTHORITY=$home/.Xauthority
+else
+   XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
+fi
+
+echo -n "${XAUTHORITY}"
+
+exit 0

@@ -1,4 +1,6 @@
 # hook addon to load pcimodules
 
 
-cpifexists /usr/bin/pcimodules /usr/bin
+# need pcimodules
+cpifexists /usr/bin/pcimodules        /bin/
+mv -f $DESTDIR/usr/lib/libz.so.1 $DESTDIR/lib/libz.so.1 2>/dev/null

@@ -92,9 +92,22 @@ fi
 
 
 if [ "$1" = "--getudev" ]; then
-  output=$(cat /tmp/tcos-udevd.log 2>/dev/null)
-  cat /dev/null > /tmp/tcos-udevd.log
-  need_parse=1
+#  if [ -e /tmp/gnetic.log ]; then
+#     if [ "$(pidof gnetic | sed '/^$/d')" = "" ]; then
+#       if [ "$(cat /tmp/gnetic.log | grep -c Error)" != "0" -o "$(cat /tmp/gnetic.log | grep -c Killed)" != "0" -o "$(cat /tmp/gnetic.log | grep -c #Terminated)" != "0" ]; then
+#          output="clone-failed"
+#       elif [ "$(cat /tmp/gnetic.log | grep -c FINISH)" != "0" ]; then
+#          output="cloned"
+#       fi
+#     else
+#       output="cloning"
+#     fi
+#     need_parse="0"
+#  else
+   output=$(cat /tmp/tcos-udevd.log 2>/dev/null)
+   cat /dev/null > /tmp/tcos-udevd.log
+   need_parse=1
+#  fi
 fi
 
 

@@ -13,9 +13,10 @@ else
   . /etc/default/tcos-standalone
 fi
 
+pidssl="$(pidof stunnel4 | sed '/^$/d')"
 
 # SSL enabled
-if [ -f $STANDALONE/log/stunnel.log ]; then
+if [ -f $STANDALONE/log/stunnel.log -a "$pidssl" != "" -a "$1" = "1" ]; then
   if [ "$TCOS_XMLRPC_SSL" = "1" ] || [ "$TCOS_ENABLE_SSL" = "1" ]; then
     grep "tcosxmlrpc accepted connection" $STANDALONE/log/stunnel.log |tail -1 | awk '{print $NF}'| awk -F ":" '{print $1}'
     exit 0

@@ -69,7 +69,8 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
        SOUNDISA_MODULES=""
     else
        ISADIR=$(find /lib/modules/${TCOS_KERNEL}/ -type d -name isa)
-       SOUNDISA_MODULES=$(find ${ISADIR} -type f -exec basename '{}' \; | sed s/".ko"//g)
+       #SOUNDISA_MODULES=$(find ${ISADIR} -type f -exec basename '{}' \; | sed s/".ko"//g)
+       SOUNDISA_MODULES="snd-gusmax snd-gusclassic snd-gusextreme snd-gus-synth snd-gus-lib snd-interwave-stb snd-interwave snd-opl3sa2 snd-als100 snd-miro snd-opti93x snd-opti92x-ad1848 snd-opti92x-cs4231 snd-adlib snd-es18xx snd-dt019x snd-sb8 snd-sb16 snd-es968 snd-sb16-csp snd-sb8-dsp snd-sbawe snd-sb16-dsp snd-sb-common snd-emu8000-synth snd-sgalaxy snd-cs4236-lib snd-cs4231 snd-cs4231-lib snd-cs4236 snd-cs4232 snd-es1688 snd-es1688-lib snd-sscape snd-ad1848-lib snd-ad1848 snd-cmi8330 snd-azt2320 snd-ad1816a snd-wavefront"
     fi
 
     MODULES="${CORE_MODULES} ${USB_MODULES} ${LIVE_MODULES} ${NETWORK_MODULES}"
@@ -80,6 +81,13 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
       #manual_add_modules ${x}
       tcos_manual_add_modules ${x} 
       #force_add_module ${x}
+    done
+
+    BLACKLIST_MODULES="${BLACKLIST_MODULES}"
+
+    for x in ${BLACKLIST_MODULES} ; do
+      _verbose "(tcosmods) blacklist module ${x}"
+      echo "blacklist ${x}" >> ${DESTDIR}/etc/modprobe.d/blacklist-tcos
     done
 
     # put floppy outside /lib/modules
@@ -102,6 +110,14 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
        for module in ${TCOS_EXTRA_MODULES}; do
          _echo "   TCOS extra module: adding ${module}"
          tcos_manual_add_modules ${module}
+       done
+    fi
+
+    if [ "$TCOS_BLACKLIST_MODULES" != "" ]; then
+       TCOS_BLACKLIST_MODULES=$(echo ${TCOS_BLACKLIST_MODULES} | sed s/","/" "/g)
+       for module in ${TCOS_BLACKLIST_MODULES}; do
+         _echo "   TCOS blacklist module: adding ${module}"
+         echo "blacklist ${module}" >> ${DESTDIR}/etc/modprobe.d/blacklist-tcos
        done
     fi
 

@@ -1,0 +1,47 @@
+# hook addon for thin clients with chip Matrox MGA*
+
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/15mga
+#!/bin/sh
+#
+
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+
+quiet=n
+
+. /scripts/functions
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+ids="2064w 1064sg 2164w g100 g200 g400 g550"
+test1=\$(lspci | grep -i VGA | grep -i Matrox | grep -i mga)
+
+
+if [ -z "\$test1" ]; then
+   # not in client with chip Matrox mga
+   exit 0
+else
+   for id in \$ids; do
+      test2=\$(echo "\$test1" | grep -c -i "\$id")
+      if [ "\$test2" != "0" ]; then
+
+         log_begin_msg "Loading support Matrox MGA driver"
+
+           if [ -f /usr/lib/xorg/modules/drivers/mga_drv.so ]; then
+             configurexorg --newsettings --xdriver=mga --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
+           fi
+
+         log_end_msg \$?
+         exit 0
+
+      fi
+   done
+fi
+
+
+EOF
+chmod +x ${DESTDIR}/scripts/tcos-bottom/15mga

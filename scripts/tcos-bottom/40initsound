@@ -66,7 +66,7 @@ elif [ ! $TCOS_PULSEAUDIO ] && [ ! $TCOS_SOUND_OSS ]; then
 fi
 
 # setting volumes, set after sound server initialization
-log_begin_msg "Setting audio (Master,PCM) level to ${TCOS_VOLUME}"
+log_begin_msg "Setting audio levels to ${TCOS_VOLUME}"
   _log "INITSOUND Setting volume to ${TCOS_VOLUME}"
   tmixer -c 0 sset 'Front' ${TCOS_VOLUME}                >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Front' on                            >> /tmp/initramfs.debug 2>&1
@@ -81,11 +81,18 @@ log_begin_msg "Setting audio (Master,PCM) level to ${TCOS_VOLUME}"
   tmixer -c 0 sset 'Master Digital' ${TCOS_VOLUME}       >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Master Digital' on                   >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Mic' ${TCOS_VOLUME}                  >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Front Mic' ${TCOS_VOLUME}            >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Rear Mic' ${TCOS_VOLUME}             >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Mic' on                              >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Mic Boost (+20dB)' on                >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Mic Boost' on                        >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Front Mic' on                        >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Rear Mic' on                         >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic Boost (+20dB)' off               >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic Boost' off                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Headphone' ${TCOS_VOLUME}            >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Headphone' on                        >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Speaker' on                          >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,0' 100%                      >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,1' 100%                      >> /tmp/initramfs.debug 2>&1
 log_end_msg 0
 
 update_progress

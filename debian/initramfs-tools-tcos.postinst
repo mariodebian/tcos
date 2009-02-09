@@ -20,8 +20,8 @@ chmod -f -R 640 /etc/tcos/secrets/* 2>/dev/null || true
 
 if [ -d /etc/tcos/templates ];then
    chown -f -R root:tcos /etc/tcos/templates
-   chmod -f 755 /etc/tcos/templates
-   chmod -f -R 640 /etc/tcos/templates/* 2>/dev/null || true
+   chmod -f 775 /etc/tcos/templates
+   chmod -f -R 640 /etc/tcos/templates/tcos* 2>/dev/null || true
 fi
 
 if [ -e /usr/lib/tcos/tnc ];then

@@ -105,7 +105,7 @@ else
 # generate conf
 rm -f /etc/pulse/default.pa
 
-if [ "\$(pidof esd)" != "" ]; then
+if [ "\$(pidof esd | sed '/^\$/d')" != "" ]; then
 cat << FIN > /etc/pulse/default.pa
 #!/usr/bin/pulseaudio -nF
 
@@ -164,7 +164,7 @@ sleep 1
 
 # wait for Xorg is started
 
-while [ "\$(pidof Xorg)" = "" ] ; do
+while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
  sleep 2
 done
        

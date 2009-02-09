@@ -1,0 +1,36 @@
+# 
+#
+#   BRANDING info for TCOS
+#
+#
+#  You can change some default settings in TCOS creating a file
+#  in /etc/tcos/templates/ dir
+#
+#
+#  Files allowed:
+#
+#  pxelinux.menu*.tpl | pxelinux.nomenu*.tpl
+#   Add custom menu labels to pxelinux.cfg template
+#   Examples:
+#
+#    Vars:
+#     __TCOS_KERNEL__
+#
+#     pxelinux.menu*.tpl:
+#
+#        label tcos-custom
+#          MENU LABEL TCOS Thin Client Custom Label
+#          KERNEL vmlinuz-__TCOS_KERNEL__
+#          APPEND ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash
+#
+#
+#     pxelinux.nomenu*.tpl:
+#
+#        label tcos-custom
+#          kernel vmlinuz-__TCOS_KERNEL__
+#          append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash
+#
+#
+#
+#  If you want to brand another file, please tell me
+#

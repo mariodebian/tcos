@@ -41,7 +41,7 @@ if [ $TCOS_SOUND ]; then
      _echo "  Warning: eSound not installed."
      exit 0
 
-   elif [ "$(_ldd /usr/bin/esd ; echo $? )" = "1"  ]; then
+   elif [ "$(_ldd /usr/bin/esd 2>/dev/null | grep -c dynamic)" = "1"  ]; then
      stat_before
      mkdir -p $DESTDIR/etc/esound
 

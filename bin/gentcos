@@ -20,8 +20,9 @@
 #* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #*/
 
+ID=$(id -u)
 
-if [ $UID != 0 ]; then
+if [ $ID -ne 0 ]; then
  echo "You must run this script as root"
  exit 1
 fi
@@ -101,6 +102,13 @@ cp ${TCOS_CONF}/tcos.conf ${TCOS_CONF}/tcos.conf.orig > /dev/null 2>&1
 
 
 _exit () {
+ if [ "$1" = "1" ];then
+   rm -f ${TFTP_DIR}/usr${TCOS_SUFFIX}-${TCOS_KERNEL}.squashfs 2>/dev/null
+   rm -f ${TFTP_DIR}/${OUTINITRAMFS}${TCOS_SUFFIX} 2>/dev/null
+   rm -f ${TFTP_DIR}/${OUTNBI}${TCOS_SUFFIX} 2>/dev/null
+   rm -f ${TFTP_DIR}/root-${TCOS_KERNEL}.squashfs 2>/dev/null
+   rm -f ${TFTP_DIR}/${OUTINITRAMFS}-nfs 2>/dev/null
+ fi
  unset TCOS_SQUASHFS
  unset TCOS_ALL_MODULES
  unset TCOS_SUFFIX
@@ -589,11 +597,13 @@ tcos_inst_pkg() {
       echo "Unknow PKG_URI=${PKG_URI} protocol: ${PKG_PROTOCOL} "
       error=1
       PKG_FILE=""
+      echo -e "There are some errors during caching \"${PKG}\". PLEASE CHECK REPOSITORIES!!"
     fi
     dpkg -I ${PKG_FILE} >/dev/null 2>&1
     if [ $? -ne 0 ] || [ "${PKG_FILE}" = "" ] ; then
       echo "Error: Unknow package: ${PKG}"
       error=1
+      echo -e "There are some errors during caching \"${PKG}\". PLEASE CHECK REPOSITORIES!!"
     else
       echo "Extracting $(basename ${PKG_FILE})..."
       VER=$(LC_ALL=C apt-cache policy ${PKG} | awk -F"Candidate: " '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
@@ -611,7 +621,7 @@ tcos_inst_pkg() {
     fi
   done
   [ $error = 0 ] && echo -e "All package installed.\n"
-  [ $error != 0 ] && echo -e "There are some errors during caching or Network is down...\n"
+  [ $error != 0 ] && _exit 1
 }
 
 tcos_rm_pkg() {
@@ -723,6 +733,10 @@ for opt in $@ ; do
         -listpkg) list_pkg
             ;;
         -fix-nvidia-ati) fix_nvidia_ati
+            ;;
+        -parse-pxelinuxcfg)
+            parse_pxelinuxcfg
+            _exit 0
             ;;
         --*)
             echo "Double -- is not accepted as command line parameter."
