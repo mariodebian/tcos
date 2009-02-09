@@ -91,12 +91,6 @@ do_stop()
           :> /var/lib/tcos/standalone/log/stunnel.log
         fi
 
-        # kill busybox httpd
-        kill $(ps aux|grep "busybox httpd" |grep -v grep | awk '{print $2}') 2>/dev/null
-        
-        # ubuntu dapper busybox rename busybox process to httpd
-        kill $(ps aux|egrep "httpd.*standalone" |grep -v grep | awk '{print $2}') 2>/dev/null
-
         kill $(cat /var/lib/tcos/standalone/log/abyss.pid 2>/dev/null ) 2> /dev/null
         killall tcosxmlrpc-standalone 2>/dev/null
         rm -f /var/lib/tcos/standalone/log/abyss.pid

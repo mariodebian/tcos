@@ -29,9 +29,6 @@ cpifexists /usr/bin/vncviewer              /usr/bin/
 
 cpifexists ${TCOS_BINS}/soundctl.sh /sbin/
 
-#cpifexists ${TCOS_BINS}/starthttpd.sh        /sbin/
-#cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/httpd2.conf       /etc/
-
 # udev process
 cpifexists ${TCOS_BINS}/tcos-udevd.sh           /sbin/
 mkdir -p ${DESTDIR}/etc/udev/rules.d/
