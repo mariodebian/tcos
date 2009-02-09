@@ -25,8 +25,12 @@ else
        cpifexists /usr/bin/lp_server         /usr/bin/
        stat_after "Print server [lp_server]"
     else
-       cpifexists ${TCOS_BINS}/print_server  /usr/bin/
-       stat_after "Print server [print_server]"
+       _echo "WARNING:"
+       _echo ""
+       _echo "     TCOS_PRINTER enabled but not found p910nd or lp-server packages"
+       _echo "     Please install p910nd or lp-server, or disable TCOS_PRINTER support"
+       _echo ""
+       _echo ""
     fi
 
     add_lp_modules

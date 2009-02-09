@@ -7,7 +7,6 @@ ARCH:=$(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
 all:
 	#cd daemonize   && make
-	cd printer     && make
 	cd hex2ascii   && make
 	cd xmlrpc      && make
 	cd udev        && make
@@ -25,7 +24,6 @@ clean:
 	find * |grep "~" | xargs rm -rf --
 	rm -f build-stamp configure-stamp
 	#cd daemonize   && make clean
-	cd printer     && make clean
 	cd hex2ascii   && make clean
 	cd xmlrpc      && make clean
 	cd udev        && make clean
@@ -176,7 +174,6 @@ install:
 	install -m 644 bin/shfscommon.sh $(DESTDIR)$(TCOS_DIR)/inc/shfscommon.sh
 
 	#cd daemonize   && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
-	cd printer     && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
 
 	# xmlrpc
