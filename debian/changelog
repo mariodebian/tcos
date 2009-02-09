@@ -4,8 +4,9 @@ initramfs-tools-tcos (0.89.28) unstable; urgency=low
   * Clean all busybox httpd old stuff
   * Provide alternate in tcos-core Depends:
     busybox | busybox-static
+  * Remove print_server support (use p910nd or lp-server)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 09 Feb 2009 15:38:47 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 09 Feb 2009 16:06:10 +0100
 
 initramfs-tools-tcos (0.89.27) unstable; urgency=low
 
