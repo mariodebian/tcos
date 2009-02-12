@@ -1,3 +1,10 @@
+initramfs-tools-tcos (0.89.30+1) unstable; urgency=low
+
+  * hooks-addons/19usbip:
+    - Change path of usb.ids
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 12 Feb 2009 19:28:14 +0100
+
 initramfs-tools-tcos (0.89.30) unstable; urgency=low
 
   * Fix some errors with (set -e) in debian/*.p* scripts

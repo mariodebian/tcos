@@ -14,8 +14,9 @@ if [ -x /usr/bin/usbip ]; then
 
     cpifexists /usr/bin/lsusb         /usr/bin
 
-    mkdir -p $DESTDIR/usr/share/
-    cp -ra /usr/share/usbip $DESTDIR/usr/share/
+    mkdir -p $DESTDIR/usr/share/misc
+    [ -e /usr/share/misc/usb.ids ] && \
+         cpifexists /usr/share/misc/usb.ids $DESTDIR/usr/share/misc
 
     manual_add_modules usbip_common_mod
     manual_add_modules usbip
@@ -39,10 +40,12 @@ quiet=n
 . /conf/tcos-run-functions
 
 log_begin_msg "Starting USB/IP"
+  mkdir -p /usr/share/usbip
   mkdir -p /usr/share/hwdata
   mkdir -p /var/lib/usbutils
+  ln -s /usr/share/misc/usb.ids  /usr/share/usbip  2>/dev/null
   ln -s /usr/share/usbip/usb.ids /usr/share/hwdata 2>/dev/null
-  ln -s /usr/share/usbip/usb.ids /var/lib/usbutils
+  ln -s /usr/share/usbip/usb.ids /var/lib/usbutils 2>/dev/null
 
   modprobe usbip_common_mod
   modprobe usbip
