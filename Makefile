@@ -172,11 +172,7 @@ install:
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 
 	install -d $(DESTDIR)/usr/bin
-	install -m 755 bin/tcos-shfsmount $(DESTDIR)$(TCOS_DIR)/inc/tcos-shfsmount
-	install -m 755 bin/tcos-shfsumount $(DESTDIR)$(TCOS_DIR)/inc/tcos-shfsumount
-	install -m 644 bin/shfscommon.sh $(DESTDIR)$(TCOS_DIR)/inc/shfscommon.sh
 
-	#cd daemonize   && make install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
 
 	# xmlrpc

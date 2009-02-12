@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.29) unstable; urgency=low
+
+  * Remove SHFS support
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 12 Feb 2009 16:21:34 +0100
+
 initramfs-tools-tcos (0.89.28.1) unstable; urgency=low
 
   * Merge From Ignacio Vidal an Lliurex changes

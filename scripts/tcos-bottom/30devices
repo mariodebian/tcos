@@ -80,18 +80,6 @@ fi # end of TCOS_REMOTEFS=ltspfs
 
 
 
-if [ "$TCOS_REMOTEFS" = "shfs" ]; then
-  log_begin_msg "Adding SHFS filesystem user"
-   # create shfs user, change pass and allow connect throught ssh
-   #root:x:0:0:root:/root:/bin/bash
-   echo "shfs:x:1000:1000::/media/autofs:/bin/sh" >> /etc/passwd
-   echo "shfs:!:13287:0:99999:7:::" >> /etc/shadow
-   echo "shfs:x:1000:" >> /etc/group
-   echo "shfs:shfs" | chpasswd >/dev/null 2>&1
-   chown shfs:root /media/autofs >/dev/null 2>&1
-  log_end_msg $?
-fi
-
 update_progress
 
 exit 0

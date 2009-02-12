@@ -67,14 +67,6 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
    echo ""
   fi
 
-elif [ "$TCOS_REMOTEFS" = "shfs" ]; then
-  _echo "WARNING:"
-  _echo "  SHFS support enabled, server requires shfs kernel module"
-  cpifexists /etc/login.defs /etc/
-else
- _verbose "(05devices) TCOS_REMOTEFS disabled '$TCOS_REMOTEFS'"
-fi
-
 
 if [ ! $TCOS_AUTOFS ]; then
   _verbose "(05devices) TCOS_AUTOFS disabled"
