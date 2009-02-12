@@ -1,6 +1,6 @@
 #!/bin/bash
-
 set -e
+
 
 # on purge delete tcos-standalone daemon
 case "$1" in

@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -e
+set -e
 
 # create group tcos
 if ! getent group tcos >/dev/null; then
@@ -31,17 +31,6 @@ fi
 
 # create file
 touch /etc/tcos/modules
-
-if [ -e /etc/tcos/tcos-modules.conf ]; then
-  cat << EOF
- * INFO:  
-     /etc/tcos/tcos-modules.conf was moved to /usr/share/initramfs-tools-tcos
-
-     If you want to add modules use TcosConfig or add to /etc/tcos/modules
-
-     (this message will disappear if you delete old /etc/tcos/tcos-modules.conf)
-EOF
-fi
 
 
 TFTPBOOT_DEFAULT=/var/lib/tftpboot

@@ -47,7 +47,7 @@ TCOS_STANDALONE_START=1
 #
 do_start()
 {
-        # don't start if start-stop-daemon is a ELF file (installing in chroot)
+        # don't start if start-stop-daemon is not a ELF file (installing in chroot)
         if [ $(file /sbin/start-stop-daemon |grep -c ELF) != "1" ] ; then
           log_begin_msg "Fake start-stop-daemon detected, not starting "
           return 0 

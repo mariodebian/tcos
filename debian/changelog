@@ -2,8 +2,9 @@ initramfs-tools-tcos (0.89.29) unstable; urgency=low
 
   * Remove SHFS support
   * Update reportbug mail
+  * Cleanup debian/* files and scripts
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 12 Feb 2009 16:22:56 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 12 Feb 2009 16:23:41 +0100
 
 initramfs-tools-tcos (0.89.28.1) unstable; urgency=low
 
