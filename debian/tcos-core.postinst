@@ -4,7 +4,7 @@ set -e
 [ -e /etc/tcos/ssl/tcos.pem ] && chmod 600 /etc/tcos/ssl/tcos.pem
 
 if ! getent group tcos >/dev/null; then
-  addgroup --quiet --system tcos
+  addgroup --quiet --system tcos || true
 fi
 
 # set tnc rights for standalone hosts
@@ -14,7 +14,7 @@ if [ ! -d /var/lib/tcos/tftp ] && [ -e /usr/lib/tcos/tnc ];then
 fi
 
 if ! getent group tcosmonitor-exclude >/dev/null; then
-  addgroup --quiet --system tcosmonitor-exclude
+  addgroup --quiet --system tcosmonitor-exclude || true
 fi
 
 # Rename 82export_pulseaudio => 80export_pulseaudio

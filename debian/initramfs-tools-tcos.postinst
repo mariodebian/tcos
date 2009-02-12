@@ -3,7 +3,7 @@ set -e
 
 # create group tcos
 if ! getent group tcos >/dev/null; then
-  addgroup --quiet --system tcos
+  addgroup --quiet --system tcos || true
 fi
 
 # make sure that tcos.conf is not all readable
@@ -30,7 +30,7 @@ if [ -e /usr/lib/tcos/tnc ];then
 fi
 
 # create file
-touch /etc/tcos/modules
+[ ! -e /etc/tcos/modules ] && touch /etc/tcos/modules
 
 
 TFTPBOOT_DEFAULT=/var/lib/tftpboot
@@ -41,14 +41,6 @@ function read_inetd() {
     # read tftpboot dir from inetd.conf
     if [ -f /etc/inetd.conf ]; then
       # get last word of tftp file
-
-      value=$(grep ^tftp /etc/inetd.conf |grep -c " -s" 2>/dev/null)
-
-      if [ "$value" = "1" ]; then
-         echo "initramfs-tools-tcos:"
-         echo "  WARNING: You must delete \"-s\"  param in tftp line of /etc/inetd.conf"
-         echo ""
-      fi
 
       tmp=$(grep ^tftp /etc/inetd.conf | awk '{print $NF}')
         if [ -d "${tmp}" ]; then 
@@ -77,10 +69,6 @@ if [ -z "$TFTPBOOT" ]; then
     read_from_conf "/etc/default/atftpd"
 fi
 
-if [ -z "$TFTPBOOT" ]; then
-    # try with other conf file
-    read_from_conf "/etc/default/tftpd-hpa"
-fi
 
 
 
@@ -88,7 +76,7 @@ if [ -z "${TFTPBOOT}" ]; then
 
   echo "***********************************************************"
   echo "initramfs-tools-tcos: ERROR: can't read TFTPBOOT dir, please, install"
-  echo "         atftp or tftpd-hpa package first."
+  echo "         atftp package first."
   echo ""
   echo "***********************************************************"
 

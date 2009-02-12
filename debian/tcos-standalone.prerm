@@ -7,7 +7,7 @@ case "$1" in
   	if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
      		invoke-rc.d tcos-standalone stop || true
   	else
-   		 /etc/init.d/tcos-standalone stop || true
+   		/etc/init.d/tcos-standalone stop || true
   	fi
     ;;
 esac

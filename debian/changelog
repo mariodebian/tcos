@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.30) unstable; urgency=low
+
+  * Fix some errors with (set -e) in debian/*.p* scripts
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 12 Feb 2009 18:49:14 +0100
+
 initramfs-tools-tcos (0.89.29) unstable; urgency=low
 
   * Remove SHFS support
