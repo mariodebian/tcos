@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.32) unstable; urgency=low
+
+  * Remove bc package as Build-Depends and fix/clean xmlrpc/Makefile
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 15 Feb 2009 23:18:26 +0100
+
 initramfs-tools-tcos (0.89.31) unstable; urgency=low
 
   * Switch tcos-standalone to arch all

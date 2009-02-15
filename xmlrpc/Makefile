@@ -1,12 +1,12 @@
 all: server standalone tcospasswd
-#all: server
 
 
 include ../common.mk
 
 
+XMLRPC_INC=$(shell xmlrpc-c-config --version)
 XMLRPC_VERSION_MAYOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$1}')
-XMLRPC_VERSION_MINOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$2$$3}'| cut -c-4| bc)
+XMLRPC_VERSION_MINOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$2$$3}'| cut -c-4| awk '{print int($$1)}')
 #CFLAGS=-Wall -std=c99 -O2 -ansi -pedantic `xmlrpc-c-config abyss-server --cflags`
 CFLAGS=-Wall -O2  `xmlrpc-c-config abyss-server --cflags`
 LIBS=`xmlrpc-c-config abyss-server --libs` -lcrypt -lX11
@@ -35,29 +35,12 @@ debug:
 	$(GCC) $(TEST_DEFINES) -o $(SERVER) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"/sbin\"
 
 
-validate-tcos:
-	$(GCC) $(DEFINES) -o validate-tcos $(CFLAGS) $(LIBS) validate-tcos.c -DVISIBLE_PASSWD
-
 tcospasswd:
 	$(GCC) $(DEFINES) -o tcospasswd tcospasswd.c -lcrypt -O2
-
-base64:
-	$(GCC) -DTEST_MAIN common.c -o base64 -DTCOS_PATH="/sbin"
 
 clean:
 	rm -f $(SERVER) $(STANDALONE) tcosmd5 prueba prueba2 prueba3 validate-tcos validate-passwd tcospasswd var/log.txt var/log/* *~ image*.jpg image*png base64
 	rm -f sh/*~
-
-run:
-	./$(SERVER) var/etc/abyss.conf
-
-
-client:
-	python2.4 test/client.py
-
-kill:
-	killall $(SERVER) ; true
-
 
 install:
 	install -d $(DESTDIR)/$(TCOS_BINS)
