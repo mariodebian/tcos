@@ -81,7 +81,8 @@ rm -f ${DESTDIR}/usr/lib/libnvidia-tls.so.1
 #rm -f ${DESTDIR}/usr/lib/libkrb5.so.3
 #rm -f ${DESTDIR}/usr/lib/libXxf86vm.so.1
 #rm -f ${DESTDIR}/usr/lib/libglib-2.0.so.0
-rm -f ${DESTDIR}/usr/lib/imlib2/loaders/png.so
+# no remove, needed for new lockscreen (imlib2)
+#rm -f ${DESTDIR}/usr/lib/imlib2/loaders/png.so
 #rm -f ${DESTDIR}/usr/lib/libgssapi_krb5.so.2
 #rm -f ${DESTDIR}/lib/libsplashycnf.so.1
 #rm -f ${DESTDIR}/lib/libkeyutils.so.1

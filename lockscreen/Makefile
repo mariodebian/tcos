@@ -7,8 +7,8 @@ XRES_SOURCES = screensize.c
 LOCKVNC_SOURCES = lockvnc.c
 LOCKVLC_SOURCES = lockvlc.c
 LIBS= -I/usr/lib
-LOCKLIBS=$(shell imlib-config --libs)
-CFLAGS=$(shell imlib-config --cflags)
+LOCKLIBS=$(shell pkg-config --libs imlib2)
+CFLAGS=$(shell pkg-config --cflags imlib2)
 LDADD=-O2 -ansi -pedantic -Wall -lXaw $(LIBS) $(CFLAGS)
 CC=gcc
 

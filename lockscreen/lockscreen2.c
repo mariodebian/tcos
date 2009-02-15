@@ -29,13 +29,15 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <X11/Xlib.h>
 #include <X11/StringDefs.h>
 #include <X11/IntrinsicP.h>
 #include <X11/Shell.h>
 #include <X11/Xaw/Viewport.h>
 #include <X11/Xmu/Converters.h>
+#include "X11/extensions/shape.h"
 
-#include <Imlib.h>
+#include <Imlib2.h>
 
 #ifndef LOCKSCREEN_IMAGE
 #define LOCKSCREEN_IMAGE "/usr/share/tcos-core/lockscreen-custom.png"
@@ -72,8 +74,6 @@ int file_exists (char * fileName)
 	Button5MotionMask | ButtonMotionMask | \
 	KeymapStateMask)
 
-	
-/* TODO: don't use X-Athena-Widgets (xaw)*/
 
 int main (int argc, char **argv) {
 	XtResource desktopBackingStoreResources[] = { { XtNbackingStore, XtCBackingStore, XtRBackingStore, sizeof(int), 0, XtRImmediate, (XtPointer) Always, }, };
@@ -100,10 +100,10 @@ int main (int argc, char **argv) {
 	char srcBits[] = { 0,0,0,0,0 };
 	char mskBits[] = { 0,0,0,0,0 };
 
-    ImlibData *id;
-    ImlibImage *image;
+    Imlib_Image *image;
     Pixmap pixmap, mask;
     int image_x, image_y, rc;
+    int screen, depth;
     
     setenv("XLIB_SKIP_ARGB_VISUALS", "1", 1);
 
@@ -117,7 +117,8 @@ int main (int argc, char **argv) {
 
 	displayWidth = WidthOfScreen(DefaultScreenOfDisplay(display));
 	displayHeight = HeightOfScreen(DefaultScreenOfDisplay(display));
-	
+	screen = DefaultScreen(display);
+	depth =  DefaultDepth(display, screen);
 
 	/* full screen - set position to 0,0, but defer size calculation until widgets are realized */
 	XtVaSetValues(toplevel, XtNoverrideRedirect, True, XtNgeometry, "+0+0", NULL);
@@ -160,30 +161,34 @@ int main (int argc, char **argv) {
 
     if ( file_exists (LOCKSCREEN_IMAGE) || file_exists(LOCKSCREEN_IMAGE_TCOS) )
     {
-        id = Imlib_init(display);
+        imlib_context_set_display(display);
+        imlib_context_set_visual(DefaultVisual(display, DefaultScreen(display)));
+        imlib_context_set_colormap(DefaultColormap(display, DefaultScreen(display)));
+        imlib_set_color_usage(128);
+        imlib_context_set_dither(1);
         
         if ( file_exists(LOCKSCREEN_IMAGE) ) {
             printf("loading custom image %s...\n", LOCKSCREEN_IMAGE);
-            image=Imlib_load_image(id, LOCKSCREEN_IMAGE);
+            image=imlib_load_image(LOCKSCREEN_IMAGE);
         }
         else {
             printf("loading TCOS image %s...\n", LOCKSCREEN_IMAGE_TCOS);
-            image=Imlib_load_image(id, LOCKSCREEN_IMAGE_TCOS);
+            image=imlib_load_image(LOCKSCREEN_IMAGE_TCOS);
         }
         
-        image_x = image->rgb_width;
-        image_y = image->rgb_height;
+        imlib_context_set_image(image);
+        image_x = imlib_image_get_width();
+        image_y = imlib_image_get_height();
+        printf("image x=%d y=%d displayWidth=%d displayHeight=%d\n", image_x, image_y, displayWidth, displayHeight);
 
-        Imlib_apply_image(id, image, desktop_win);
 
-
-        pixmap = Imlib_move_image( id,image );
-        mask = Imlib_move_mask( id, image );
-
+        pixmap = XCreatePixmap(display, desktop_win, displayWidth, displayHeight, depth);
         
-
+        imlib_context_set_drawable(desktop_win);
+        imlib_render_image_on_drawable_at_size(0, 0, displayWidth, displayHeight);
+        imlib_render_pixmaps_for_whole_image_at_size(&pixmap, &mask, displayWidth, displayHeight);
+        
         rc = XSetWindowBackgroundPixmap(display, desktop_win, pixmap );
-        
         switch (rc) {
             case BadMatch:
                 fprintf(stderr, "XSetWindowBackgroundPixmap - BadMatch.\n");
@@ -200,14 +205,30 @@ int main (int argc, char **argv) {
                 break;
         }
 
+        
         if (mask) {
             XShapeCombineMask(display, desktop_win,
                             ShapeBounding, 0, 0, mask, ShapeSet);
         }
-
+        
+        
         XMapWindow(display, desktop_win);
-        XFillRectangle( display, pixmap, gc, 0, 0, image_x, image_y );
-        XFreePixmap(display, pixmap);
+        XSetForeground(display, gc, blackColor);
+        XFillRectangle( display, pixmap, gc, 0, 0, displayWidth, displayHeight );
+        
+        if (image)
+            imlib_free_image();
+
+        if(pixmap)
+            XFreePixmap(display, pixmap);
+
+        if(pixmap)
+            imlib_free_pixmap_and_mask(pixmap);
+
+        pixmap = None;
+
+        if(gc)
+            XFreeGC(display, gc);
     }
 
     else {
@@ -281,6 +302,7 @@ int main (int argc, char **argv) {
     sleep(3);
     printf("DEBUG: quiting...\n");
 #endif
-	return (0);
+	XCloseDisplay(display);
+	return(0);
 
 }
