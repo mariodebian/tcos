@@ -1,11 +1,13 @@
-initramfs-tools-tcos (0.89.30+1) unstable; urgency=low
+initramfs-tools-tcos (0.89.30) unstable; urgency=low
 
   * hooks-addons/19usbip:
     - Change path of usb.ids
   * lockscreen/lockscreen2.c lockscreen/Makefile debian/control:
     - Switch from Imlib1 to Imlib2
+  * Delete USPLASH stuff (is in another package)
+  * Add Debian lenny as distro target
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 15 Feb 2009 17:28:21 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 15 Feb 2009 18:34:39 +0100
 
 initramfs-tools-tcos (0.89.30) unstable; urgency=low
 

@@ -257,6 +257,9 @@ patch_etch: patch_amd64
 	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control
 	sed -i 's/libsox-fmt-all/sox/g' debian/control
 
+patch_lenny: patch_amd64
+	# nothing to patch
+
 patch_testing: patch_amd64
 	# nothing to patch
 
