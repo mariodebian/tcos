@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.31) unstable; urgency=low
+
+  * Switch tcos-standalone to arch all
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 15 Feb 2009 20:18:54 +0100
+
 initramfs-tools-tcos (0.89.30) unstable; urgency=low
 
   * hooks-addons/19usbip:
