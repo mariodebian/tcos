@@ -28,14 +28,6 @@ if [ $TCOS_PRINTER ]; then
 
      /usr/bin/p910nd -f $LP > /var/log/p910nd.log 2>&1 &
 
-  elif [ -e /usr/bin/lp_server ]; then
-
-     /usr/bin/lp_server -d $LP -r tcos-server > /var/log/lp_server.log 2>&1 &
-
-  elif [ -e /usr/bin/print_server ]; then
-
-     /usr/bin/print_server $LP > /var/log/print_server.log 2>&1 &
-
   fi
 
 

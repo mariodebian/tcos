@@ -1,8 +1,9 @@
 initramfs-tools-tcos (0.89.31) unstable; urgency=low
 
   * Switch tcos-standalone to arch all
+  * Remove lp-server support (packages are removed from repos)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 15 Feb 2009 20:18:54 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 15 Feb 2009 20:31:46 +0100
 
 initramfs-tools-tcos (0.89.30) unstable; urgency=low
 

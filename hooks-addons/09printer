@@ -21,14 +21,11 @@ else
        cpifexists /usr/sbin/p910nd         /usr/bin/
        stat_after "Print server [p910nd]"
 
-    elif [ -e /usr/bin/lp_server ]; then
-       cpifexists /usr/bin/lp_server         /usr/bin/
-       stat_after "Print server [lp_server]"
     else
        _echo "WARNING:"
        _echo ""
-       _echo "     TCOS_PRINTER enabled but not found p910nd or lp-server packages"
-       _echo "     Please install p910nd or lp-server, or disable TCOS_PRINTER support"
+       _echo "     TCOS_PRINTER enabled but not found p910nd package"
+       _echo "     Please install p910nd, or disable TCOS_PRINTER support"
        _echo ""
        _echo ""
     fi
