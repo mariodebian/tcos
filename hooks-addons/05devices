@@ -66,6 +66,7 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
    echo ""
    echo ""
   fi
+fi
 
 
 if [ ! $TCOS_AUTOFS ]; then
