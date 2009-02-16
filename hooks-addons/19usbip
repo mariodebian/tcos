@@ -1,9 +1,6 @@
 # hooks addon to export USB devices with USB/IP
 # need usbip-tools and modules
 
-# I have put no-exists to disable usbip (not work yet)
-# but I want to provide code
-#if [ -x /usr/bin/usbipd-noexists ]; then
 if [ -x /usr/bin/usbip ]; then
 
    stat_before
@@ -16,7 +13,7 @@ if [ -x /usr/bin/usbip ]; then
 
     mkdir -p $DESTDIR/usr/share/misc
     [ -e /usr/share/misc/usb.ids ] && \
-         cpifexists /usr/share/misc/usb.ids $DESTDIR/usr/share/misc
+         cpifexists /usr/share/misc/usb.ids /usr/share/misc
 
     manual_add_modules usbip_common_mod
     manual_add_modules usbip
