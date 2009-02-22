@@ -89,6 +89,12 @@ else
  cpifexists /etc/pulse/client.conf     /etc/pulse/
  cpifexists /etc/pulse/daemon.conf     /etc/pulse/
 
+ if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
+   _SERVER=";\$(read_server "xdmcp-server")"
+ else
+   _SERVER=""
+ fi
+
 
  cat << EOF >> ${DESTDIR}/sbin/startpulseaudio
 #!/bin/sh
@@ -120,12 +126,7 @@ cat << FIN > /etc/pulse/default.pa
 
 load-module module-detect
 
-if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
-load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
-else
-# don't listen on esound port, eats a lot of bandwich
-load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1
-fi
+load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1$_SERVER
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
 load-module module-esound-protocol-unix
