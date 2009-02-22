@@ -4,10 +4,6 @@
 cat << EOF > $DESTDIR/sbin/rungetty
 #!/bin/sh
 
-if [ ! -e /sbin/getty ]; then
-  echo "Error: getty comnand not found, please install tinylogin"
-  exit 1
-fi
 
 
 VEL=38400
@@ -20,10 +16,18 @@ fi
 
 
 while [ 1 ]; do
-  getty \$VEL \$CONSOLE_NUMBER
+  busybox getty \$VEL \$CONSOLE_NUMBER
 done
 
 
 EOF
 
 chmod +x $DESTDIR/sbin/rungetty
+
+
+cat << EOF > $DESTDIR/bin/login
+#!/bin/sh
+busybox login \$@
+EOF
+
+chmod +x $DESTDIR/bin/login
