@@ -29,19 +29,6 @@ if [ -x /sbin/startica ]; then
   ln -s /sbin/startica /sbin/startivs
 fi
 
-# tinylogin
-if [ -x /bin/tinylogin ]; then
-  # create links
-  for name in addgroup adduser delgroup deluser login passwd vlock su; do
-    _log "LDCONFIG Creting link ${name} => /bin/tinylogin"
-    ln -s /bin/tinylogin /bin/${name} 
-  done
-    ln -s /bin/tinylogin /sbin/getty 
-    ln -s /bin/tinylogin /sbin/sulogin 
-else
-  _log "LDCONFIG ERROR No tinylogin support found"
-fi
-
 
 if [ ! "$(which Xorg)" ]; then
   _log "LDCONFIG Xorg not found"
