@@ -24,7 +24,7 @@ Licenses:
          GNU General Public License for more details.
 
          You should have received a copy of the GNU General Public License with
-         the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
+         the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL-2;
          if not, write to the Free Software Foundation, Inc., 59 Temple Place,
        
     xmlrpc/common.c: (base64 stuff)
@@ -39,7 +39,7 @@ Licenses:
 
 
 On Debian systems, the complete text of the GNU General Public
-License, version 2, can be found in /usr/share/common-licenses/GPL.
+License, version 2, can be found in /usr/share/common-licenses/GPL-2.
 
 The Debian packaging is (C) 2005, Mario Izquierdo (mariodebian) 
 <mariodebian@gmail.com> and is licensed under the GPL, see above.
