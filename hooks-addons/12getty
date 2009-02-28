@@ -1,5 +1,6 @@
 # getty console
 
+have_getty=$($DESTDIR/bin/busybox getty --help  2>&1 | grep -c -i usage)
 
 cat << EOF > $DESTDIR/sbin/rungetty
 #!/bin/sh
@@ -16,7 +17,14 @@ fi
 
 
 while [ 1 ]; do
-  busybox getty \$VEL \$CONSOLE_NUMBER
+  if [ "\$have_getty" = "0" ]; then
+    echo "" > /dev/console
+    echo "" > /dev/console
+    echo "WARNING: getty not found, login disabled" > /dev/console
+    sh
+  else
+    busybox getty \$VEL \$CONSOLE_NUMBER
+  fi
 done
 
 
