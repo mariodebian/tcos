@@ -139,6 +139,10 @@ call_mkinitramfs() {
  # clean dir
  bash ${TCOS_DIR}/hooks-addons/clean_initramfs 
 
+ echo -n "   * Updating module dependencies..."
+ chroot ${DESTDIR}/ depmod -ae ${TCOS_KERNEL}
+ echo " done."
+
  # compress again
  rm -f ${NEWINITRAMFS}
  (cd "${DESTDIR2}" && find . | cpio --quiet -o -H newc | gzip >"${NEWINITRAMFS}") || exit 1
@@ -162,7 +166,7 @@ create_initramfs() {
 # some functions 
 create_initramfs_nfs() {
  # call mkinitramfs
- _echo "Creating initramfs NFS with ${TCOS_KERNEL} kernel..."
+ _echo "Creating NFS initramfs with ${TCOS_KERNEL} kernel..."
 
  export TCOS_BOOT=tcos-nfs
  call_mkinitramfs "${INITRAMFS}-nfs"
