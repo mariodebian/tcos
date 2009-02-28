@@ -7,7 +7,6 @@
 _verbose "(clean_initramfs) Cleaning initramfs..."
 
 
-
 if [ "${DESTDIR}" = "" ] || [ "$DESTDIR" = "/" ]; then
   _echo "  * ERROR: DESTDIR var not set. not cleaning initramfs..."
   exit 1
@@ -19,6 +18,80 @@ find $DESTDIR/etc/ -name "*dpkg-old" | xargs rm -f
 rm -f $DESTDIR/bin/sh
 (cd $DESTDIR/bin && ln -s busybox sh)
 
+create_links() {
+ ( cd $DESTDIR/bin && rm -f $1 ; ln -s busybox $1)
+}
+
+
+create_links "date"
+create_links "bash"
+create_links "tftp"
+create_links "awk"
+create_links "dirname"
+create_links "chown"
+create_links "wc"
+create_links "head"
+create_links "whoami"
+create_links "swapon"
+create_links "swapoff"
+create_links "dmesg"
+create_links "route"
+create_links "run-parts"
+create_links "killall"
+create_links "which"
+create_links "pidof"
+create_links "syslogd"
+create_links "logger"
+create_links "ulimit"
+create_links "ifconfig"
+
+# use busybox mount/umount instead of klibc utils
+create_links "mount"
+create_links "umount"
+
+
+
+# link creator
+mkdir -p $DESTDIR/scripts/tcos-bottom
+cat << EOF > $DESTDIR/scripts/tcos-bottom/02linkcreator
+#!/bin/sh
+
+[ ! -e /conf/links ] && exit
+cat /conf/links | while read line ; do
+  ln -s "\$line" 2>> /tmp/initramfs.debug
+  echo "[linkcreator] ln -s \$line" >> /tmp/initramfs.debug
+done
+
+EOF
+chmod +x $DESTDIR/scripts/tcos-bottom/02linkcreator
+
+
+# mcopy && mattrib (same file)
+if [ -e $DESTDIR/usr/bin/mcopy ]; then
+  rm -f $DESTDIR/usr/bin/mcopy
+  echo "/usr/bin/mattrib /usr/bin/mcopy" >> $DESTDIR/conf/links
+fi
+
+
+if [ -e $DESTDIR/usr/lib/libpci.so.3 ]; then
+  rm -f $DESTDIR/usr/lib/libpci.so.3
+  echo "/lib/libpci.so.3 /usr/lib/libpci.so.3" >> $DESTDIR/conf/links
+fi
+
+if [ -e $DESTDIR/usr/lib/libz.so.1 ]; then
+  rm -f $DESTDIR/usr/lib/libz.so.1
+  echo "/lib/libz.so.1 /usr/lib/libz.so.1" >> $DESTDIR/conf/links
+fi
+
+( cd $DESTDIR/sbin && rm -f udevsettle ; ln -s udevadm udevsettle)
+
+
+if [ -e $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so ] && [ -e $DESTDIR/usr/lib/xorg/modules/drivers/intel_drv.so ]; then
+  if cmp $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so $DESTDIR/usr/lib/xorg/modules/drivers/intel_drv.so ; then
+    rm -f $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so
+    echo "/usr/lib/xorg/modules/drivers/intel_drv.so /usr/lib/xorg/modules/drivers/i810_drv.so" >> $DESTDIR/conf/links
+  fi
+fi
 
 # zattoo provides libasound.so.2 link in /usr/lib/zattoo that breaks sound support
 # move to their site
@@ -87,4 +160,6 @@ rm -f ${DESTDIR}/usr/lib/libnvidia-tls.so.1
 #rm -f ${DESTDIR}/lib/libsplashycnf.so.1
 #rm -f ${DESTDIR}/lib/libkeyutils.so.1
 #rm -f ${DESTDIR}/lib/libsplashy.so.1
+rm -rf ${DESTDIR}/etc/dhcp3/gadmin-dhcpd
+
 
