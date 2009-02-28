@@ -2,30 +2,36 @@
 # need strace, lsmod and ldd wrapper
 
 
+
 # for debug purposes
 if [ ! $TCOS_DEBUG_TOOLS ]; then
  _verbose "(04debug) TCOS_DEBUG_TOOLS disabled"
 else
  stat_before
 
- cpifexists /usr/sbin/iftop /usr/bin/
  mkdir -p $DESTDIR/lib/terminfo/l/
- cp -a /lib/terminfo/l/linux $DESTDIR/lib/terminfo/l/
-
  mkdir -p $DESTDIR/lib/terminfo/x/
+ cp -a /lib/terminfo/l/linux $DESTDIR/lib/terminfo/l/
  cp -a /lib/terminfo/x/xterm* $DESTDIR/lib/terminfo/x/
+
  
+ cpifexists /usr/sbin/iftop  /usr/bin/
  cpifexists /bin/lsmod       /usr/bin/
- cpifexists /usr/bin/strace  /bin/
+ cpifexists /usr/bin/strace  /usr/bin/
  cpifexists /sbin/mkfs       /sbin/
  cpifexists /sbin/mkfs.vfat  /sbin/
  cpifexists /sbin/mkfs.ext3  /sbin/
 
- cat <<EOF > $DESTDIR/bin/ldd
+ 
+ stat_after "Debug tools"
+fi # end of TCOS_DEBUG_TOOLS
+
+
+cat <<EOF > $DESTDIR/bin/ldd
 #!/bin/sh
 file=\$1
-if [ ! -f /\$1 ]; then
- file=\$(which \$1)
+if [ ! -f /\$file ]; then
+ file=\$(which \$file)
 fi
 if [ ! -e \${file} ]; then
   echo "\${file} not found"
@@ -33,7 +39,4 @@ if [ ! -e \${file} ]; then
 fi
 /lib/ld-linux.so.2 --list \$file
 EOF
- chmod +x $DESTDIR/bin/ldd
- 
- stat_after "Debug tools"
-fi # end of TCOS_DEBUG_TOOLS
+chmod +x $DESTDIR/bin/ldd
