@@ -24,6 +24,12 @@ if [ "$(cat /tmp/less_ram)" = "0" ]; then
 fi
 
 
+if grep -q bootchartd /proc/cmdline ; then
+  # stop bootchart
+  /sbin/tcos-bootchartd stop
+  mkdir -p /root/tmp/bootchart
+  mv /tmp/bootchart/* /root/tmp/bootchart
+fi
 
 rm -f /root/sbin/init
 cat << EOF > /root/sbin/init
@@ -35,6 +41,10 @@ cat << EOF > /root/sbin/init
 . /conf/tcos.conf
 
 quiet=n
+
+if grep -q bootchartd /proc/cmdline ; then
+ /sbin/daemonize.sh /sbin/tcos-bootchartd start
+fi
 
 
 /scripts/tcos-top/01busybox >/dev/null 2>&1
