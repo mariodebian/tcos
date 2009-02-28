@@ -19,71 +19,12 @@ quiet=n
 grep -q " splash " /proc/cmdline && usplash_write "PROGRESS 0" >/dev/null 2>&1
 
 
-#printk:
-
-#The four values in printk denote: console_loglevel,
-#default_message_loglevel, minimum_console_loglevel and
-#default_console_loglevel respectively.
-
-#These values influence printk() behavior when printing or
-#logging error messages. See 'man 2 syslog' for more info on
-#the different loglevels.
-
-#- console_loglevel: messages with a higher priority than
-#  this will be printed to the console
-#- default_message_level: messages without an explicit priority
-#  will be printed with this priority
-#- minimum_console_loglevel: minimum (highest) value to which
-#  console_loglevel can be set
-#- default_console_loglevel: default value for console_loglevel 
-
-#       #define KERN_EMERG    "<0>"  /* system is unusable               */
-#       #define KERN_ALERT    "<1>"  /* action must be taken immediately */
-#       #define KERN_CRIT     "<2>"  /* critical conditions              */
-#       #define KERN_ERR      "<3>"  /* error conditions                 */
-#       #define KERN_WARNING  "<4>"  /* warning conditions               */
-#       #define KERN_NOTICE   "<5>"  /* normal but significant condition */
-#       #define KERN_INFO     "<6>"  /* informational                    */
-#       #define KERN_DEBUG    "<7>"  /* debug-level messages             */ 
-
 # set kernel very silent
 if grep -q quiet /proc/cmdline ; then
-  echo "4 1 1 7" > /proc/sys/kernel/printk 
+  echo "1 1 1 7" > /proc/sys/kernel/printk 
+  dmesg -n 1
 fi
 
-
-create_links() {
- [ ! -x /bin/$1 ] && ln -s /bin/busybox /bin/$1
-}
-
-
-create_links "date"
-create_links "bash"
-create_links "tftp"
-create_links "awk"
-create_links "dirname"
-create_links "chown"
-create_links "wc"
-create_links "head"
-create_links "whoami"
-create_links "swapon"
-create_links "swapoff"
-create_links "dmesg"
-create_links "route"
-create_links "run-parts"
-create_links "killall"
-create_links "which"
-create_links "pidof"
-create_links "syslogd"
-create_links "logger"
-create_links "ulimit"
-create_links "ifconfig"
-
-rm -f /bin/mount
-create_links "mount"
-
-rm -f /bin/umount
-create_links "umount"
 
 # start syslogd (busybox embeded)
 killall syslogd 2>/dev/null
@@ -101,7 +42,7 @@ EOF
 fi
 
 
-# hack for ubuntu udev
+# hack for ubuntu old udev
 while [ 1 ]; do
      [ -d /sys/class/net/eth0 ] &&  break
      [ -d /sys/class/net/eth1 ] &&  break
@@ -124,18 +65,21 @@ modprobe af_packet 2>/dev/null
 
 if [ ! $TCOS_DISABLE_IDE ]; then
   # load cdrom and HDD modules
-  modprobe -q ide_disk >> /tmp/initramfs.debug 2>&1
-  modprobe -q ide_cd   >> /tmp/initramfs.debug 2>&1
+  modprobe -q ide_disk >> /tmp/initramfs.debug 2>&1 &
+  modprobe -q ide_cd   >> /tmp/initramfs.debug 2>&1 &
 fi
 
 if [ "$(read_cmdline_var "aufs" "0")" = "1" ] && [ $(modprobe aufs -q ; echo $?) != 1  ]; then
   _log "BUSYBOX loaded aufs module"
-  modprobe -q aufs     >> /tmp/initramfs.debug 2>&1
+  modprobe -q aufs     >> /tmp/initramfs.debug 2>&1 &
 else
   _log "BUSYBOX loaded unionfs module"
-  modprobe -q unionfs  >> /tmp/initramfs.debug 2>&1
+  modprobe -q unionfs  >> /tmp/initramfs.debug 2>&1 &
 fi
 
+
+## wait for udev finish
+##[ -x /sbin/udevadm ] && /sbin/udevadm settle --timeout=2
 
 
 exit 0
