@@ -32,12 +32,6 @@ EOF
 #!/bin/sh
 #
 
-# new header not using prereqs
-if [ "$1" = "prereqs" ]; then
-  echo ""
-  exit 0
-fi
-
 if grep -q bootchartd /proc/cmdline ; then
  /sbin/daemonize.sh /sbin/tcos-bootchartd start 
 fi
@@ -46,7 +40,4 @@ EOF
 
   chmod +x $DESTDIR/scripts/init-top/000bootchartd
   
-  # 40tftp kills bootchart ????
-  #cp $DESTDIR/scripts/init-top/000bootchartd $DESTDIR/scripts/tcos-premount/41bootchartd
-
 fi
