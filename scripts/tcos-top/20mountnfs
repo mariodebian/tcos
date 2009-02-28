@@ -1,12 +1,6 @@
 #!/bin/sh
 # 
 
-# new header not using prereqs
-if [ "$1" = "prereqs" ]; then
-  echo ""
-  exit 0
-fi
-
 
 . /scripts/functions
 . /conf/tcos.conf
@@ -85,6 +79,7 @@ else
   if [ $? -ne 0 ]; then
     panic "Unable to mount NFS, check NFS service in server and ${TCOS_VAR}/fs-$(uname -r) dir"
   fi
+  log_end_msg $?
 
 fi # end of NFS_MODE
 
