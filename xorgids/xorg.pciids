@@ -26,6 +26,8 @@ cirrus 1013:0038
 cyrix 1078:0000
 cyrix 1078:0002
 cyrix 1078:0104
+geode 100B:0030
+geode 1022:2081
 glint 104C:3D04
 glint 104C:3D07
 glint 3D3D:0001
