@@ -1,3 +1,29 @@
+initramfs-tools-tcos (0.89.33) unstable; urgency=low
+
+  * Remove tinylogin (use busybox-static when avalaible
+  * Update GPL to GPL2 in debian/copyright
+  * Disable RDESKTOP in tcos.conf.all
+  * Add geode choipset pci IDS
+  * stunnel don't allow comments on vars lines, fix 0 TIMEOUTclose
+  * Stop and start tcos-bootchartd when booting in NFS mode
+  * use PCI IDS instead of calling lspci in hooks-addons/51amd_geode
+  * use PCI IDS instead of calling lspci in hooks-addons/53mga
+  * Update module deps in initramfs image
+  * don't copy udevinfo, link from udevadm if original is a symbolic link
+  * scripts/tcos-top/01busybox:
+  * remove prereqs test, TCOS don't need
+  * hooks-addons/01busybox: check for static version of busybox, remove
+    tinylogin
+  * hooks-addons/12getty: disable getty if busybox don't have it
+  * hooks-addons/23bootchart: remove prereqs and commented code
+  * hooks-addons/04debug:
+  * hooks-addons/03udev2:
+  * hooks-addons/clean_initramfs
+  * Update destripar_initramfs.sh script with new kernel version and
+    call fdupes
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 28 Feb 2009 20:13:10 +0100
+
 initramfs-tools-tcos (0.89.32) unstable; urgency=low
 
   * Remove bc package as Build-Depends and fix/clean xmlrpc/Makefile
