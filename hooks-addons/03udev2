@@ -92,3 +92,17 @@ rm -f $DESTDIR/etc/udev/rules.d/85-pcmcia.rules
 rm -f $DESTDIR/etc/udev/rules.d/95-hal.rules
 rm -f $DESTDIR/etc/udev/rules.d/kino.rules
 
+# modify udev script to not wait in init-premount (wait in tcos-top/01busybox)
+#sed -i -e '/udevadm trigger/s/trigger/trigger --subsystem-match=net/g' $DESTDIR/scripts/init-premount/udev
+#sed -i -e '/udevadm settle/s/udevadm/#udevadm/g' $DESTDIR/scripts/init-premount/udev
+#cat $DESTDIR/scripts/init-premount/udev
+
+
+# modify /init script to not call depmod
+sed -i -e '/depmod/s/depmod/#depmod/g' $DESTDIR/init
+
+
+# remove some init scripts
+rm -f ${DESTDIR}/scripts/init-premount/devpts
+rm -f ${DESTDIR}/scripts/init-bottom/dropbear
+rm -f ${DESTDIR}/scripts/init-premount/dropbear
