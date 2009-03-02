@@ -17,13 +17,15 @@ fi
 
 
 while [ 1 ]; do
-  if [ "\$have_getty" = "0" ]; then
-    echo "" > /dev/console
-    echo "" > /dev/console
-    echo "WARNING: getty not found, login disabled" > /dev/console
+  if [ "$have_getty" = "0" ]; then
+    echo ""
+    echo ""
+    echo "Press enter to activate this console..."
+    read enter
     sh
   else
     busybox getty \$VEL \$CONSOLE_NUMBER
+    sleep 2
   fi
 done
 
