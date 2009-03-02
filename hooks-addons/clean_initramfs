@@ -53,45 +53,44 @@ create_links "umount"
 
 # link creator
 mkdir -p $DESTDIR/scripts/tcos-bottom
-cat << EOF > $DESTDIR/scripts/tcos-bottom/02linkcreator
+cat << EOF > $DESTDIR/scripts/tcos-bottom/00linkcreator
 #!/bin/sh
 
 [ ! -e /conf/links ] && exit
 cat /conf/links | while read line ; do
-  ln -s "\$line" 2>> /tmp/initramfs.debug
+  ln -s \$line >> /tmp/initramfs.debug 2>&1
   echo "[linkcreator] ln -s \$line" >> /tmp/initramfs.debug
 done
 
 EOF
-chmod +x $DESTDIR/scripts/tcos-bottom/02linkcreator
+chmod +x $DESTDIR/scripts/tcos-bottom/00linkcreator
 
-
-# mcopy && mattrib (same file)
-if [ -e $DESTDIR/usr/bin/mcopy ]; then
-  rm -f $DESTDIR/usr/bin/mcopy
-  echo "/usr/bin/mattrib /usr/bin/mcopy" >> $DESTDIR/conf/links
-fi
-
-
-if [ -e $DESTDIR/usr/lib/libpci.so.3 ]; then
-  rm -f $DESTDIR/usr/lib/libpci.so.3
-  echo "/lib/libpci.so.3 /usr/lib/libpci.so.3" >> $DESTDIR/conf/links
-fi
-
-if [ -e $DESTDIR/usr/lib/libz.so.1 ]; then
-  rm -f $DESTDIR/usr/lib/libz.so.1
-  echo "/lib/libz.so.1 /usr/lib/libz.so.1" >> $DESTDIR/conf/links
-fi
-
-( cd $DESTDIR/sbin && rm -f udevsettle ; ln -s udevadm udevsettle)
-
-
-if [ -e $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so ] && [ -e $DESTDIR/usr/lib/xorg/modules/drivers/intel_drv.so ]; then
-  if cmp $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so $DESTDIR/usr/lib/xorg/modules/drivers/intel_drv.so ; then
-    rm -f $DESTDIR/usr/lib/xorg/modules/drivers/i810_drv.so
-    echo "/usr/lib/xorg/modules/drivers/intel_drv.so /usr/lib/xorg/modules/drivers/i810_drv.so" >> $DESTDIR/conf/links
+create_link() {
+  if [ -e $DESTDIR/$1 ] && [ -e $DESTDIR/$2 ]; then
+    if cmp $DESTDIR/$1 $DESTDIR/$2; then
+      rm -f $DESTDIR/$1
+      echo "$2 $1" >> $DESTDIR/conf/links
+    fi
   fi
-fi
+}
+
+create_link /usr/bin/mcopy /usr/bin/mattrib
+create_link /usr/lib/libpci.so.3 /lib/libpci.so.3
+create_link /usr/lib/libz.so.1 /lib/libz.so.1
+
+create_link /etc/console/boottime.kmap.gz /etc/boottime.kmap.gz
+create_link /usr/share/X11/xkb/symbols/sun_vndr/cz /usr/share/X11/xkb/symbols/sun_vndr/cs
+
+create_link /usr/lib/xorg/modules/drivers/i810_drv.so /usr/lib/xorg/modules/drivers/intel_drv.so
+create_link /usr/share/X11/xkb/rules/evdev.lst /usr/share/X11/xkb/rules/base.lst
+
+
+( cd $DESTDIR/bin && rm -f zcat ; ln -s gunzip zcat )
+[ -d $DESTDIR/lib/cmds ] && ( cd $DESTDIR/lib/cmds && rm -f poweroff ; ln -s reboot poweroff )
+( cd $DESTDIR/sbin && rm -f udevsettle ; ln -s udevadm udevsettle )
+
+
+
 
 # zattoo provides libasound.so.2 link in /usr/lib/zattoo that breaks sound support
 # move to their site
