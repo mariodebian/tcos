@@ -23,6 +23,7 @@
 
 #ifndef __VALIDATE_H__
 
+/* crypt salt */
 #define PASS_ID "$1$id2trA1q"
 
 #define LOGIN_OK      "ok"

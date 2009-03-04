@@ -29,7 +29,6 @@
 char *get_passwd( char *username )
 {
  struct passwd *pwd;
- /*char *criptpass;*/
 
  dbgtcos("get_passwd() getting passwd from user=%s\n", username);
 
@@ -51,7 +50,6 @@ char *get_passwd( char *username )
 
 char *validate_passwd(char *user, char *pass)
 {
-  /*struct passwd *pwd;*/
   char *cryptpass;
 
   cryptpass=get_passwd(user);

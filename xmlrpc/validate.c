@@ -49,6 +49,8 @@ char
      dbgtcos("info validate_login(): /etc/tcospasswd exists.\n");
      return validate_tcos(user, pw);
    }
+#ifndef IS_STANDALONE
+   /* only use /etc/shadow or /etc/passwd in thin clients environments */
    else if ( check_for_file("/etc/shadow") == 1 ) {
      dbgtcos("info validate_login(): /etc/shadow exists.\n");
      return validate_shadow(user, pw);
@@ -57,6 +59,7 @@ char
      dbgtcos("info validate_login(): /etc/passwd exists.\n");
      return validate_passwd(user, pw);
    }
+#endif
    else {
      dbgtcos("error validate_login(): no files found.\n");
      return (char*) LOGIN_ERROR;
