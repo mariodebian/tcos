@@ -15,9 +15,9 @@ else
  cp -a /lib/terminfo/x/xterm* $DESTDIR/lib/terminfo/x/
 
  
- cpifexists /usr/sbin/iftop  /usr/bin/
+ [ -e /usr/sbin/iftop ] && cpifexists /usr/sbin/iftop  /usr/bin/
  cpifexists /bin/lsmod       /usr/bin/
- cpifexists /usr/bin/strace  /usr/bin/
+ [ -e /usr/bin/strace ] && cpifexists /usr/bin/strace  /usr/bin/
  cpifexists /sbin/mkfs       /sbin/
  cpifexists /sbin/mkfs.vfat  /sbin/
  cpifexists /sbin/mkfs.ext3  /sbin/
