@@ -1,3 +1,13 @@
+initramfs-tools-tcos (0.89.34) unstable; urgency=low
+
+  * Fix have_getty var and sleep 2 second between getty calls
+  * call linkcreator in tcos-bottom/00 and fix ln -s command
+  * bin/configurexorg: set TCOS_ENABLE_FONT_SERVER emtpy if value is 1
+  * fix initsound script when sound is disabled
+  * Change modprobe.d files with new .conf format
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 21 Mar 2009 12:16:14 +0100
+
 initramfs-tools-tcos (0.89.33) unstable; urgency=low
 
   * Remove tinylogin (use busybox-static when avalaible
