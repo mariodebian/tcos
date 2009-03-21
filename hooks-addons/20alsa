@@ -32,15 +32,21 @@ else
     fi
 
     if [ -f /etc/modutils/alsa-base ]; then
-      # debian alsa-base
+      # OLD alsa-base
       mkdir -p $DESTDIR/etc/modutils/
       cpifexists /etc/modutils/alsa-base /etc/modutils
     fi
 
     if [ -f /etc/modprobe.d/alsa-base ]; then
-      # ubuntu alsa-base
+      # NEW alsa-base
       mkdir -p $DESTDIR/etc/modprobe.d/
       cpifexists /etc/modprobe.d/alsa-base /etc/modprobe.d/
+    fi
+
+    if [ -f /etc/modprobe.d/alsa-base.conf ]; then
+      # NEW alsa-base
+      mkdir -p $DESTDIR/etc/modprobe.d/
+      cpifexists /etc/modprobe.d/alsa-base.conf /etc/modprobe.d/
     fi
 
 

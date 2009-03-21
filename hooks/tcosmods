@@ -87,7 +87,7 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
 
     for x in ${BLACKLIST_MODULES} ; do
       _verbose "(tcosmods) blacklist module ${x}"
-      echo "blacklist ${x}" >> ${DESTDIR}/etc/modprobe.d/blacklist-tcos
+      echo "blacklist ${x}" >> ${DESTDIR}/etc/modprobe.d/blacklist-tcos.conf
     done
 
     # put floppy outside /lib/modules
@@ -117,7 +117,7 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
        TCOS_BLACKLIST_MODULES=$(echo ${TCOS_BLACKLIST_MODULES} | sed s/","/" "/g)
        for module in ${TCOS_BLACKLIST_MODULES}; do
          _echo "   TCOS blacklist module: adding ${module}"
-         echo "blacklist ${module}" >> ${DESTDIR}/etc/modprobe.d/blacklist-tcos
+         echo "blacklist ${module}" >> ${DESTDIR}/etc/modprobe.d/blacklist-tcos.conf
        done
     fi
 

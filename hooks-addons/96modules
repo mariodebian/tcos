@@ -37,7 +37,7 @@ fi
 
 if [ "\$BLACKLIST_MODULES" != "" ] ; then
    for x in \$BLACKLIST_MODULES ; do
-      echo "blacklist \$x" >> /etc/modprobe.d/blacklist-tcos 2>/dev/null || true
+      echo "blacklist \$x" >> /etc/modprobe.d/blacklist-tcos.conf 2>/dev/null || true
    done
 fi
 
@@ -47,7 +47,7 @@ if [ "\$(pcimodules | grep -c r8101)" != "0" ]; then
   if [ "\$(modprobe -l | grep -c r8101)" != "0" ]; then
      modprobe -Q r8101 2>/dev/null || true
      if [ "\$(dmesg | grep -c -i rtl*810.e)" != "0" ]; then
-         echo "blacklist r8169" >> /etc/modprobe.d/blacklist-tcos 2>/dev/null || true
+         echo "blacklist r8169" >> /etc/modprobe.d/blacklist-tcos.conf 2>/dev/null || true
      else
          modprobe -Q -r -f r8101 2>/dev/null || true
      fi
@@ -67,8 +67,10 @@ chmod +x ${DESTDIR}/scripts/init-top/tcos_modules
 
 
 # add options to snd-hda-intel
-if [ "$(cat ${DESTDIR}/etc/modprobe.d/alsa-base | grep -c snd-hda-intel)" = "0" ]; then
-   echo "options snd-hda-intel model=auto" >> ${DESTDIR}/etc/modprobe.d/alsa-base
+if [ "$(cat ${DESTDIR}/etc/modprobe.d/alsa-base* | grep -c snd-hda-intel)" = "0" ]; then
+   [ -e ${DESTDIR}/etc/modprobe.d/alsa-base ] && \
+	mv ${DESTDIR}/etc/modprobe.d/alsa-base ${DESTDIR}/etc/modprobe.d/alsa-base.conf
+   echo "options snd-hda-intel model=auto" >> ${DESTDIR}/etc/modprobe.d/alsa-base.conf
 fi
 
 
