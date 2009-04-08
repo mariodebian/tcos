@@ -46,6 +46,11 @@ while [ 1 ]; do
      [ -d /sys/class/net/ra1 ] && break
      [ -x /sbin/udevtrigger ] && /sbin/udevtrigger
      [ -x /sbin/udevplug ]    && /sbin/udevplug
+     if [ ! -e /tmp/waiting_for_net ]; then
+         echo " * Waiting for net device "
+     fi
+     touch /tmp/waiting_for_net
+     echo -n "."
      sleep 1
 done
 
@@ -71,8 +76,6 @@ else
 fi
 
 
-## wait for udev finish
-##[ -x /sbin/udevadm ] && /sbin/udevadm settle --timeout=2
 
 
 exit 0
