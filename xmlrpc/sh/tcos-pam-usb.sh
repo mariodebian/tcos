@@ -24,6 +24,9 @@
 
 ALLOW_NOT_REMOVABLE=1
 
+UDEVINFO="/usr/bin/udevinfo"
+[ -x /sbin/udevadm ] && UDEVINFO="/sbin/udevadm info"
+
 export DISPLAY=:0
 
 if [ -e /conf/tcos-run-functions ]; then
@@ -88,17 +91,17 @@ for arg in $1; do
 
          DEVICE=$(basename $(readlink /dev/disk/by-uuid/$UUID))
 
-         if [ "$MODEL" != "$(udevinfo --query=env --name=$DEVICE| awk -F"=" '/^ID_MODEL=/ {print $2}')" ]; then
+         if [ "$MODEL" != "$($UDEVINFO --query=env --name=$DEVICE| awk -F"=" '/^ID_MODEL=/ {print $2}')" ]; then
              echo "error: MODEL not match"
              exit 0
          fi
 
-         if [ "$VENDOR" != "$(udevinfo --query=env --name=$DEVICE| awk -F"=" '/^ID_VENDOR=/ {print $2}')" ]; then
+         if [ "$VENDOR" != "$($UDEVINFO --query=env --name=$DEVICE| awk -F"=" '/^ID_VENDOR=/ {print $2}')" ]; then
              echo "error: VENDOR not match"
              exit 0
          fi
 
-         if [ "$SERIAL" != "$(udevinfo --query=env --name=$DEVICE| awk -F"=" '/^ID_SERIAL=/ {print $2}')" ]; then
+         if [ "$SERIAL" != "$($UDEVINFO --query=env --name=$DEVICE| awk -F"=" '/^ID_SERIAL=/ {print $2}')" ]; then
              echo "error: SERIAL not match"
              exit 0
          fi
@@ -109,15 +112,15 @@ for arg in $1; do
      readdevices)
          data=""
          for dev in $(find /sys/block/ -name "[sh]d?" -exec basename {} \;);do
-             if ( udevinfo --query=env --name=$dev 2>/dev/null | grep -q "ID_TYPE=disk" ) && \
-                ( udevinfo --query=env --name=$dev 2>/dev/null | grep -q "ID_BUS=usb" ) ; then
+             if ( $UDEVINFO --query=env --name=$dev 2>/dev/null | grep -q "ID_TYPE=disk" ) && \
+                ( $UDEVINFO --query=env --name=$dev 2>/dev/null | grep -q "ID_BUS=usb" ) ; then
                     # we have a USB disk search por partitions
                     for part in $(find /dev/${dev}* -not -name "${dev}" -exec basename {} \;); do
                         # read udev data and put in data var
-                        vendor=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_VENDOR=/ {print $2}')
-                        model=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_MODEL=/ {print $2}')
-                        serial=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_SERIAL=/ {print $2}')
-                        uuid=$(udevinfo --query=env --name=$part | awk -F"=" '/ID_FS_UUID=/ {print $2}')
+                        vendor=$($UDEVINFO --query=env --name=$part | awk -F"=" '/ID_VENDOR=/ {print $2}')
+                        model=$($UDEVINFO --query=env --name=$part | awk -F"=" '/ID_MODEL=/ {print $2}')
+                        serial=$($UDEVINFO --query=env --name=$part | awk -F"=" '/ID_SERIAL=/ {print $2}')
+                        uuid=$($UDEVINFO --query=env --name=$part | awk -F"=" '/ID_FS_UUID=/ {print $2}')
                         data="$data|UUID=$uuid#MODEL=$model#VENDOR=$vendor#SERIAL=$serial#DEVICE=/dev/${part}"
                     done
              fi

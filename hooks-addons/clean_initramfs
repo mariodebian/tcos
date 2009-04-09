@@ -86,7 +86,9 @@ create_link /usr/share/X11/xkb/rules/evdev.lst /usr/share/X11/xkb/rules/base.lst
 
 
 ( cd $DESTDIR/bin && rm -f zcat ; ln -s gunzip zcat )
-[ -d $DESTDIR/lib/cmds ] && ( cd $DESTDIR/lib/cmds && rm -f poweroff ; ln -s reboot poweroff )
+if [ -d $DESTDIR/lib/cmds ]; then
+   ( cd $DESTDIR/lib/cmds && rm -f poweroff && ln -s reboot poweroff )
+fi
 ( cd $DESTDIR/sbin && rm -f udevsettle ; ln -s udevadm udevsettle )
 
 

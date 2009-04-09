@@ -2,6 +2,8 @@
 
 enable_debug=1
 output_file=/tmp/tcos-udevd.log
+UDEVINFO="/usr/bin/udevinfo"
+[ -x /sbin/udevadm ] && UDEVINFO="/sbin/udevadm info"
 
 debug() {
   [ $enable_debug = 1 ] && echo "  ** DEBUG (listener-daemon): $@" >&2
@@ -23,7 +25,7 @@ DISK=$(echo "$PART" | cut -c-3)
 DEVPATH="/block/$DISK"
 [ "$PART" != "$DISK" ] && DEVPATH="/block/$DISK/$PART"
 
-[ $DEVNAME ] && [ -e $DEVNAME ] && export $(udevinfo --path=/sys$DEVPATH --query=env )
+[ $DEVNAME ] && [ -e $DEVNAME ] && export $($UDEVINFO --path=/sys$DEVPATH --query=env )
 
 if [ "$ID_FS_LABEL_SAFE" ]; then
   ID_FS_LABEL=$ID_FS_LABEL_SAFE
