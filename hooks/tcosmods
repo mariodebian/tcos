@@ -95,13 +95,29 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
     FLOPPY_MOD=$(modprobe --set-version="${TCOS_KERNEL}" --list "floppy" 2>/dev/null)
     FLOPPY_IDE_MOD=$(modprobe --set-version="${TCOS_KERNEL}" --list "ide-floppy")
 
+    # new modprobe versions return relative PATH
+    if [ ! -e "${FLOPPY_MOD}" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_MOD}" ]; then
+      FLOPPY_MOD="/lib/modules/${TCOS_KERNEL}/${FLOPPY_MOD}"
+    fi
+
+    if [ ! -e "${FLOPPY_IDE_MOD}" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_IDE_MOD}" ]; then
+      FLOPPY_IDE_MOD="/lib/modules/${TCOS_KERNEL}/${FLOPPY_IDE_MOD}"
+    fi
+    
+
     if [ "${FLOPPY_MOD}" != "" ]; then
       # don't use cpifexists
       cp -a "${FLOPPY_MOD}" $DESTDIR/lib/extramodules
-      cp -a "${FLOPPY_IDE_MOD}" $DESTDIR/lib/extramodules
 
       # delete floppy kernel
       rm -f ${DESTDIR}/${FLOPPY_MOD}
+    fi
+
+    if [ "${FLOPPY_IDE_MOD}" != "" ]; then
+      # don't use cpifexists
+      cp -a "${FLOPPY_IDE_MOD}" $DESTDIR/lib/extramodules
+
+      # delete floppy kernel
       rm -f ${DESTDIR}/${FLOPPY_IDE_MOD}
     fi
 
