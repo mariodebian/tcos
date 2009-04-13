@@ -45,7 +45,7 @@ if [ "$NO_UDEV" = "" ]; then
   # don't call udev again with NFS
   # wait for devices
   [ -x /sbin/udevtrigger ] && /sbin/udevtrigger --subsystem-match=ide --subsystem-match=block
-  [ -x /sbin/udevsettle ] && /sbin/udevsettle
+  [ -x /sbin/udevsettle ] && /sbin/udevadm settle
 fi
 
 
