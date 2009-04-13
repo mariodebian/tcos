@@ -67,14 +67,22 @@ if [ ! $TCOS_DISABLE_IDE ]; then
   modprobe -q ide_cd   >> /tmp/initramfs.debug 2>&1 &
 fi
 
-if [ "$(read_cmdline_var "aufs" "0")" = "1" ] && [ $(modprobe aufs -q ; echo $?) != 1  ]; then
-  _log "BUSYBOX loaded aufs module"
+# from > 2.6.26 we need to load aufs module (unionfs is deprecated)
+# TCOS_UNIONFS is generated in hooks-addons/99tcos and saved in /conf/tcos.conf
+if [ "$TCOS_UNIONFS" = "aufs" ]; then
+  _log "BUSYBOX load aufs module"
   modprobe -q aufs     >> /tmp/initramfs.debug 2>&1 &
 else
-  _log "BUSYBOX loaded unionfs module"
-  modprobe -q unionfs  >> /tmp/initramfs.debug 2>&1 &
-fi
 
+  if [ "$(read_cmdline_var "aufs" "0")" = "1" ] && [ $(modprobe aufs -q ; echo $?) != 1  ]; then
+    _log "BUSYBOX loaded aufs module"
+    modprobe -q aufs     >> /tmp/initramfs.debug 2>&1 &
+  else
+    _log "BUSYBOX loaded unionfs module"
+    modprobe -q unionfs  >> /tmp/initramfs.debug 2>&1 &
+  fi
+
+fi
 
 
 
