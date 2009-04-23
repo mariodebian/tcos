@@ -78,8 +78,8 @@ else
     _log "BUSYBOX loaded aufs module"
     modprobe -q aufs     >> /tmp/initramfs.debug 2>&1 &
   else
-    _log "BUSYBOX loaded unionfs module"
-    modprobe -q unionfs  >> /tmp/initramfs.debug 2>&1 &
+    _log "BUSYBOX load unionfs module and if fail try aufs"
+    modprobe unionfs  || modprobe aufs >> /tmp/initramfs.debug 2>&1 &
   fi
 
 fi
