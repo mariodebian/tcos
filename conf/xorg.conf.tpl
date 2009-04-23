@@ -111,6 +111,7 @@ Section "Screen"
 EndSection
 
 Section "ServerLayout"
+	Option		"AutoAddDevices" "off" # HAL disabled
 	Identifier	"Default Layout"
 	Screen		"Default Screen"
 	InputDevice	"Generic Keyboard"
