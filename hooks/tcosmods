@@ -96,11 +96,11 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
     FLOPPY_IDE_MOD=$(modprobe --set-version="${TCOS_KERNEL}" --list "ide-floppy")
 
     # new modprobe versions return relative PATH
-    if [ ! -e "${FLOPPY_MOD}" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_MOD}" ]; then
+    if [ ! -e "${FLOPPY_MOD}" ] && [ "${FLOPPY_MOD}" != "" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_MOD}" ]; then
       FLOPPY_MOD="/lib/modules/${TCOS_KERNEL}/${FLOPPY_MOD}"
     fi
 
-    if [ ! -e "${FLOPPY_IDE_MOD}" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_IDE_MOD}" ]; then
+    if [ ! -e "${FLOPPY_IDE_MOD}" ] && [ "${FLOPPY_IDE_MOD}" != "" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_IDE_MOD}" ]; then
       FLOPPY_IDE_MOD="/lib/modules/${TCOS_KERNEL}/${FLOPPY_IDE_MOD}"
     fi
     
