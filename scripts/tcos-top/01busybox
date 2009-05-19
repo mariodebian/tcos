@@ -61,7 +61,7 @@ modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
 modprobe nfs 2>/dev/null
 modprobe af_packet 2>/dev/null
 
-if [ ! $TCOS_DISABLE_IDE ]; then
+if [ ! -z "$TCOS_DISABLE_IDE" ]; then
   # load cdrom and HDD modules
   modprobe -q ide_disk >> /tmp/initramfs.debug 2>&1 &
   modprobe -q ide_cd   >> /tmp/initramfs.debug 2>&1 &
