@@ -1,3 +1,22 @@
+initramfs-tools-tcos (0.89.35) unstable; urgency=low
+
+  * hooks/tcosmods: fix detection of floppy module
+  * hooks-addons/21pulseaudio: use pulse-*/ for modules dir adn delete
+    console-kit and ldspa modules
+  * scripts/tcos-bottom/40initsound: fix empty var test and add % to
+    volume string, printf need it
+  * scripts/tcos-bottom/10ldconfig scripts/tcos-bottom/20autofs: fix
+    empty var tests
+  * hooks-addons/50xorg: create /usr/lib/xorg before copying files to
+    it, and don't copy fonts if not exists
+  * scripts/tcos-top/01busybox: fix test var to disable ide modules
+  * scripts/tcos-bottom/80shell: empty cached memory when TCOS ends
+    booting
+  * scripts/tcos-bottom/70wakeonlan: fix var test and only exec ethtool
+    if exists
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 19 May 2009 15:34:44 +0200
+
 initramfs-tools-tcos (0.89.34) unstable; urgency=low
 
   * Fix have_getty var and sleep 2 second between getty calls
