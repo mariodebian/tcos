@@ -20,6 +20,11 @@ export PS1="($(hostname)@$(whoami)) # "
 kill_usplash
 grep -q " startx=N " /proc/cmdline && chvt 1
 
+# empty memory cache
+# from http://linux-mm.org/Drop_Caches
+sync
+echo 3 > /proc/sys/vm/drop_caches
+
 # no clear
 #clear
 
