@@ -231,7 +231,11 @@ fi
 # create allmodules.squashfs
 if [ $TCOS_ALL_MODULES ]; then
   _echo "Running depmod of kernel ${version}"
-  depmod -ae ${version}
+  DEPMOD_ARGS="-ae"
+  if depmod -h 2>&1|grep -q map; then
+    DEPMOD_ARGS="-aem"
+  fi
+  depmod $DEPMOD_ARGS ${version}
   _echo "     Creating allmodules-${version}.squashfs file"
   mkdir -p $DESTDIR/mnt/tmp > /dev/null 2>&1
   $MKSQUASHFS /lib/modules/${version}/ $DESTDIR/mnt/tmp/allmodules-${version}.squashfs -e volatile -noappend > /dev/null 2>&1

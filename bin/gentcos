@@ -140,7 +140,11 @@ call_mkinitramfs() {
  bash ${TCOS_DIR}/hooks-addons/clean_initramfs 
 
  echo -n "   * Updating module dependencies..."
- chroot ${DESTDIR}/ depmod -ae ${TCOS_KERNEL}
+ DEPMOD_ARGS="-ae"
+ if depmod -h 2>&1|grep -q map; then
+   DEPMOD_ARGS="-aem"
+ fi
+ chroot ${DESTDIR}/ depmod $DEPMOD_ARGS ${TCOS_KERNEL}
  echo " done."
 
  # compress again
@@ -222,7 +226,11 @@ create_rootfs() {
  mkdir ${TCOS_VAR}/fs-${TCOS_KERNEL}
  mv ${OUTROOTFS_TMP}/* ${TCOS_VAR}/fs-${TCOS_KERNEL}/
  echo -n "   * Updating modules dependencies..."
- chroot ${TCOS_VAR}/fs-${TCOS_KERNEL}/ depmod -ae ${TCOS_KERNEL}
+ DEPMOD_ARGS="-ae"
+ if depmod -h 2>&1|grep -q map; then
+   DEPMOD_ARGS="-aem"
+ fi
+ chroot ${TCOS_VAR}/fs-${TCOS_KERNEL}/ depmod $DEPMOD_ARGS ${TCOS_KERNEL}
  echo " done."
  
  if [ -e /sbin/nbd-client ]; then
