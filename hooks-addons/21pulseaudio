@@ -41,34 +41,37 @@ else
  cpifexists /usr/bin/pax11publish   /usr/bin/
  cpifexists /usr/bin/pactl          /usr/bin/
 
- mkdir -p ${DESTDIR}/usr/lib/pulse-0.9
- copydir /usr/lib/pulse-0.9/modules   /usr/lib/pulse-0.9/
+ mkdir -p ${DESTDIR}/usr/lib
+ copydir /usr/lib/pulse-*   /usr/lib/
 
  # clean unneeded modules
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*.la
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*jack*
- # rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*rtp*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*lirc*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*evdev*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*sine*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*x11-bell*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*zeroconf*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*avahi*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*gconf*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*hal*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*pipe*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*tunel*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*volume-restore*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*cli*
- rm -f ${DESTDIR}/usr/lib/pulse-0.9/modules/*http*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*.la
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*jack*
+ # rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*rtp*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*lirc*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*evdev*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*sine*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*x11-bell*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*zeroconf*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*avahi*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*gconf*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*hal*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*pipe*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*tunel*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*volume-restore*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*cli*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*http*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*console-kit*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*ladspa*
 
  # needed for pulse -> esound -> OSS
- cpifexists /usr/lib/pulse-0.9/modules/libsocket-client.so /usr/lib/pulse-0.9/modules/
+ [ -e /usr/lib/pulse-*/modules/libsocket-client.so ] && \
+      cpifexists /usr/lib/pulse-*/modules/libsocket-client.so /usr/lib/pulse-*/modules/
 
- if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules ]; then
+ if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules ]; then
   _echo "    * PulseAudio copying esound compat [cached] modules..."
   # warn about OLD cached version
-  PULSE_LIB_FILE=${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/libprotocol-esound.so
+  PULSE_LIB_FILE=${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules/libprotocol-esound.so
   if [ $(_ldd ${PULSE_LIB_FILE} | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
     _echo ""
     _echo "    *** WARNING ***"
@@ -80,7 +83,7 @@ else
     _echo "       gentcos -instpkg pulseaudio-esound-compat"
     _echo ""
   fi
-  cp -ra ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-0.9/modules/*.so ${DESTDIR}/usr/lib/pulse-0.9/modules/
+  cp -ra ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules/*.so ${DESTDIR}/usr/lib/pulse-*/modules/
  fi
 
 
