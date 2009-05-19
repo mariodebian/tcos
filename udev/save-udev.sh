@@ -25,7 +25,7 @@ DISK=$(echo "$PART" | cut -c-3)
 DEVPATH="/block/$DISK"
 [ "$PART" != "$DISK" ] && DEVPATH="/block/$DISK/$PART"
 
-[ $DEVNAME ] && [ -e $DEVNAME ] && export $($UDEVINFO --path=/sys$DEVPATH --query=env )
+[ -n "$DEVNAME" ] && [ -e $DEVNAME ] && export $($UDEVINFO --path=/sys$DEVPATH --query=env | grep -v "^DEVLINKS")
 
 if [ "$ID_FS_LABEL_SAFE" ]; then
   ID_FS_LABEL=$ID_FS_LABEL_SAFE
