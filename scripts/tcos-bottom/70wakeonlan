@@ -7,7 +7,7 @@ quiet=n
 . /scripts/functions
 . /conf/tcos-run-functions
 
-if [ ! $TCOS_WAKEONLAN ]; then
+if [ -z "$TCOS_WAKEONLAN" ]; then
    exit 0
 fi
 
@@ -22,7 +22,8 @@ for dev in $TCOS_NET_DEVS; do
        [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
        [ "$(/usr/sbin/ethtool $dev| grep -c "Wake-on: g")" = "1" ] ; then
           _log "70WAKEONLAN Enabling WOL in $dev iface..."
-          /usr/sbin/ethtool -s $dev wol g >> /tmp/initramfs.debug 2>&1
+          [ -x /usr/sbin/ethtool ] && \
+               /usr/sbin/ethtool -s $dev wol g >> /tmp/initramfs.debug 2>&1
     fi
 done
 
