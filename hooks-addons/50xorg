@@ -52,12 +52,13 @@ install -m 755 ${TCOS_BINS}/tryXorg.sh    ${DESTDIR}/sbin/tryXorg
 mkdir -p ${DESTDIR}/usr/share/xserver-xorg/pci/
 cpifexists ${TCOS_DIR}/inc/xorg.pciids /usr/share/xserver-xorg/pci/
 
+mkdir -p  $DESTDIR/usr/lib/xorg/modules/
+
 # new in xorg 1.5
 [ -e /usr/lib/xorg/protocol.txt ] && cpifexists /usr/lib/xorg/protocol.txt /usr/lib/xorg/
 
 # FONTS modules
-mkdir -p  $DESTDIR/usr/lib/xorg/modules/
-copydir /usr/lib/xorg/modules/fonts /usr/lib/xorg/modules/
+[ -d /usr/lib/xorg/modules/fonts ] && copydir /usr/lib/xorg/modules/fonts /usr/lib/xorg/modules/
 
 
 if [ -d /usr/share/fonts/X11 ]; then
