@@ -30,7 +30,7 @@ if [ -x /sbin/startica ]; then
 fi
 
 
-if [ ! "$(which Xorg)" ]; then
+if [ -z "$(which Xorg)" ]; then
   _log "LDCONFIG Xorg not found"
   log_failure_msg "Xorg not found"
   log_end_msg 1
@@ -46,7 +46,7 @@ if [ -d /usr/lib/xorg/modules/ ]; then
   XORG_MAYOR=7
 fi
 
-if [ ${XORG_MAYOR} -lt 7 ]; then
+if [ "${XORG_MAYOR}" -lt 7 ]; then
  _log "LDCONFIG Updating links in Xorg 6.9 mode"
  # updating links for Xorg <= 6.9
  ln -s /etc/X11/xserver /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1

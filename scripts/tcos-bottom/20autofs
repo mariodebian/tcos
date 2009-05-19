@@ -18,7 +18,7 @@ if [ ${noautofs} = 1 ]; then
   exit 0
 fi
 
-if [ ! $TCOS_AUTOFS ]; then
+if [ -z "$TCOS_AUTOFS" ]; then
   _log "AUTOFS autofs disabled in tcos.conf"
   exit 0
 fi
