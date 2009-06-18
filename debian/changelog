@@ -1,3 +1,22 @@
+initramfs-tools-tcos (0.89.36) unstable; urgency=low
+
+  * Add Xfbdev support
+  * hooks-addons/99tcos:
+    - Fix typo TCOS_UNONFS => TCOS_UNIONFS
+  * Disable HAL in Xorg autoconfigure
+  * hooks-addons/50xorg:
+    - Copy linked libs in drivers
+  * hooks-addons/21pulseaudio hooks-addons/22esd 
+    scripts/tcos-bottom/40initsound
+    - Disable ESOUND (pulseaudio only support)
+  * Fix typo in hooks-addons/52intel
+  * scripts/tcos-bottom/22intel:
+    - Force intel driver (VESA don't works)
+  * Disable INETD by default
+  * Delete old code (discover, opentelnet, etc...)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 18 Jun 2009 12:32:47 +0200
+
 initramfs-tools-tcos (0.89.35) unstable; urgency=low
 
   * hooks/tcosmods: fix detection of floppy module

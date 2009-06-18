@@ -26,7 +26,7 @@ echo "export DISPLAY=:0" >> ${DESTDIR}/conf/tcos.conf
 echo "export PATH=/bin:/sbin:/usr/bin:/usr/sbin" >> ${DESTDIR}/conf/tcos.conf
 
 # set aufs if kernel is greater than 2.6.26
-echo "$TCOS_KERNEL" | awk -F"-" '{print $1}' | awk -F"." '{if($3>26) print "TCOS_UNONFS=aufs"; else print "TCOS_UNIONFS=unionfs"}' >> ${DESTDIR}/conf/tcos.conf
+echo "$TCOS_KERNEL" | awk -F"-" '{print $1}' | awk -F"." '{if($3>26) print "TCOS_UNIONFS=aufs"; else print "TCOS_UNIONFS=unionfs"}' >> ${DESTDIR}/conf/tcos.conf
 
 
 cat << EOF > $DESTDIR/etc/issue

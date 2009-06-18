@@ -3,7 +3,6 @@
 
 
 quiet=n
-. /conf/tcos.conf
 
 [ -x /sbin/startacpid ] && /sbin/startacpid > /var/log/acpid.log 2>&1
 

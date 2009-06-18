@@ -55,6 +55,11 @@ sed "/modules/i\
 \	FontPath     \"tcp/${FONT_SERVER}:7100\"\
 " $new_xorg > /etc/X11/xorg.conf.auto
 
+# disable HAL
+sed "/ServerLayout/i\
+Option \"AutoAddDevices\" \
+" /etc/X11/xorg.conf.auto > /etc/X11/xorg.conf.auto.new
+mv /etc/X11/xorg.conf.auto.new /etc/X11/xorg.conf.auto
 
 
 # change keyboard map

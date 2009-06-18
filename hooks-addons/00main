@@ -36,6 +36,8 @@ mkdir -p $DESTDIR/lib/lsb/
 cp /lib/lsb/init-functions      ${DESTDIR}/lib/lsb/
 cpifexists /etc/debian_version  /etc/
 
+cpifexists $TCOS_DIR/tcos-modules.conf         /conf/
+
 # seq script
 cpifexists ${TCOS_BINS}/seq /bin
 
@@ -102,7 +104,7 @@ fi
 [ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
 
 cpifexists /etc/localtime  /etc/
-cpifexists /etc/adjtime    /etc/
+[ -f /etc/adjtime ] && cpifexists /etc/adjtime    /etc/
 cpifexists /etc/securetty  /etc
 
 # create (if not exists) empty modules file

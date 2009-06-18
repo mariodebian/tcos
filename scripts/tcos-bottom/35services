@@ -11,17 +11,6 @@ quiet=n
 # if break=inittcos STOP here
 maybe_break services
 
-# DOCUMENTME opentelnet | write some debug entry's to /etc/inetd.conf to allow kill or start X with telnet terminal-ip port
-opentelnet=$(read_cmdline_var "opentelnet")
-
-if [ ${opentelnet} ] ;then
-  echo "INITTCOS opentelnet=1, put some things in /etc/inetd.conf" >> /tmp/initramfs.debug
-  echo "55            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/killX " >> $DESTDIR/etc/inetd.conf
-  echo "56            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/startlocalx " >> $DESTDIR/etc/inetd.conf
-  echo "57            stream  tcp     nowait  root  /usr/bin/tcpd /sbin/startremotex " >> $DESTDIR/etc/inetd.conf
-else
- _log "INITTCOS not starting opentelnet mode"
-fi
 
 
 if [ "$(which dropbear)" ] ; then

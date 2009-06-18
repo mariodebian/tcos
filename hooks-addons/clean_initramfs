@@ -74,7 +74,18 @@ create_link() {
   fi
 }
 
+# mtools
 create_link /usr/bin/mcopy /usr/bin/mattrib
+create_link /usr/bin/mcopy /usr/bin/mcat
+create_link /usr/bin/mcopy /usr/bin/mcopy
+create_link /usr/bin/mcopy /usr/bin/mdel
+create_link /usr/bin/mcopy /usr/bin/mformat
+create_link /usr/bin/mcopy /usr/bin/minfo
+create_link /usr/bin/mcopy /usr/bin/mlabel
+create_link /usr/bin/mcopy /usr/bin/mmove
+create_link /usr/bin/mcopy /usr/bin/mmount
+create_link /usr/bin/mcopy /usr/bin/mtype
+
 create_link /usr/lib/libpci.so.3 /lib/libpci.so.3
 create_link /usr/lib/libz.so.1 /lib/libz.so.1
 

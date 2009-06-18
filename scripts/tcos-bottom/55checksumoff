@@ -11,7 +11,7 @@ rxtxoff=$(read_cmdline_var "rxtxoff" "0")
 
 if [ ${rxtxoff} = 1 ]; then
    # get list of network interfaces
-   TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster|grep -v vmnet)
+   TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v -e lo -e sit0 -e wmaster -e vmnet -e pan)
 
    # search for network interfaces with link ok status
    for dev in $TCOS_NET_DEVS; do

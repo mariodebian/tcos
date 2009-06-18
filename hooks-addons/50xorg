@@ -2,7 +2,7 @@
 # compatible with Xorg 6.9 and 7.0
 
 
-if [ $TCOS_XORG ] ; then
+if [ -z "$TCOS_XFBDEV" ] && [ $TCOS_XORG ]; then
 # Xorg stuff
  stat_before
 if [ "$(pathof Xorg)" = /usr/bin/Xorg ]; then
@@ -15,8 +15,6 @@ else
    exit
 fi
 
-
-cpifexists $TCOS_DIR/tcos-modules.conf         /conf/
 
 cpifexists $XORG_PATH/Xorg    /usr/bin
 cpifexists $XORG_PATH/xauth   /usr/bin
@@ -115,17 +113,16 @@ cp -ra /usr/lib/xorg/modules/linux/lib*so $DESTDIR/usr/lib/xorg/modules/linux/
 
 # DRIVERS and EXTENSIONS
 mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
-# essential xorg drivers
-cp -ra /usr/lib/xorg/modules/drivers/vesa* $DESTDIR/usr/lib/xorg/modules/drivers/
-cp -ra /usr/lib/xorg/modules/drivers/vga* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
-cp -ra /usr/lib/xorg/modules/drivers/v4l* $DESTDIR/usr/lib/xorg/modules/drivers/ >/dev/null 2>&1
+# essential xorg driver
+cpifexists /usr/lib/xorg/modules/drivers/vesa_drv.so /usr/lib/xorg/modules/drivers/
 
 
 if [ $TCOS_XORG_ALLDRIVERS ]; then
     driver_dir=/usr/lib/xorg/modules/drivers
     _echo "    xorg: installing all drivers...."
-    # no need to copy linked libs (drivers only linked to libc)
-    cp -ra ${driver_dir}/*so $DESTDIR/${driver_dir}/
+    for _drv in $(ls ${driver_dir}/*so|grep -v -e nvidia -e vmware -e vbox); do
+        cpifexists $_drv ${driver_dir}/
+    done
     rm -f $DESTDIR/${driver_dir}/nvidia_drv.so
 fi
 
@@ -199,7 +196,7 @@ _echo "    * OpenGL support is not enabled!!"
 fi # end of $TCOS_XORG_OPENGL
 
 
-# keyboard and keymap FIXME in Xorg 6.x
+# keyboard and keymap
 
 XORG_XKB_DIR=/usr/share/X11/xkb/
 [ ! -d "${XORG_XKB_DIR}" ] && XORG_XKB_DIR=/etc/X11/xkb/
@@ -228,7 +225,7 @@ mkdir -p $DESTDIR/usr/lib/X11
 
 stat_after "Xorg"
 
-
+fi # end of TCOS_XORG
 ############### XORG SCRIPTS ####################
 
 
@@ -351,5 +348,5 @@ EOF
 chmod +x $DESTDIR/sbin/startsshx
 
 
-fi # end of TCOS_XORG
+
 

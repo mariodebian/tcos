@@ -33,29 +33,19 @@ fi
 # DOCUMENTME volume=XX% | set master and pcm volume levels to value passed (0%-100% or integer from 1 to 31)
 TCOS_VOLUME=$(read_cmdline_var "volume" "${TCOS_VOLUME}")
 
-cat <<EOF > /etc/esound/esd.conf
-[esd]
-EOF
-
 if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
    export TCOS_SOUND_OSS=1
    echo "TCOS_SOUND_OSS=1" >> /conf/tcos.conf
 
-  log_begin_msg "Init sound server OSS (eSound)"
-    /sbin/startesd
-  log_end_msg $?
+  log_begin_msg "OSS detected, try to search another sound device with ALSA support"
+  log_end_msg 1
+  exit 0
 fi
 
 if [ -n "$TCOS_PULSEAUDIO" ]; then
   log_begin_msg "Init sound server (PulseAudio)"
     _log "INITSOUND starting pulseaudio"
     startpulseaudio 2> /var/log/pulseaudio.log &
-  log_end_msg $?
-
-elif [ ! -n "$TCOS_PULSEAUDIO" ] && [ ! -n "$TCOS_SOUND_OSS" ]; then
-  log_begin_msg "Init sound server (esound)"
-    _log "INITSOUND starting esd daemon"
-    /sbin/startesd
   log_end_msg $?
 fi
 

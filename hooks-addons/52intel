@@ -1,41 +1,6 @@
 # hook for intel graphics card
 # Copyright Rubén Gómez Antolí <listas at mucharuina [.] com>
 
-# test if we have intel-drv or i810
-if [ -e /usr/lib/xorg/modules/drivers/i810_drv.so ] && \
-   [ ! -L /usr/lib/xorg/modules/drivers/i810_drv.so ]; then
-
-    # we have OLD driver, need 915resolution
-    if [ ! -x /usr/sbin/915resolution ]; then
-        if [ ! -e /etc/tcos/disable915 ]; then
-            _echo "    WARNING:"
-            _echo "      Detected old INTEL graphic driver (i810)"
-            _echo ""
-            _echo "      Install 915resolution to support full resolutions for intel cards"
-            _echo ""
-            _echo "      If you don't want to see this warning again,"
-            _echo "      create and empty file  =>  /etc/tcos/disable915"
-            _echo ""
-        fi
-    else
-        stat_before
-        cpifexists /usr/sbin/915resolution    /usr/bin/
-        cpifexists /usr/sbin/vbetool          /usr/bin/
-        cpifexists /usr/bin/tac               /usr/bin/
-        
-        if [ -f /etc/tcos/915resolution ]; then
-            cpifexists /etc/tcos/915resolution    /etc/default/
-            _echo "    * INTEL, using /etc/tcos/915resolution as conf file"
-        else
-            cpifexists /etc/default/915resolution /etc/default/
-            _echo "    * INTEL, using /etc/default/915resolution as conf file"
-        fi
-        
-        stat_after "Intel 915 resolution hack"
-    fi
-else
-  _verbose "(52intel) Not doing INTEL hack "
-fi
 
 #rgrep -h 8086 /usr/share/xserver-xorg/pci/ | sed -e 's/8086/8086:/g'
 #8086:7800
@@ -123,7 +88,7 @@ cat << EOF > $DESTDIR/etc/X11/PreRun/30intel_dpms
 #!/bin/sh
 
 test1=0
-test1=$(lspci -n | grep -c -e "8086:7800" -e "8086:7121" -e "8086:7123" -e "8086:7125" -e "8086:1132" \
+test1=\$(lspci -n | grep -c -e "8086:7800" -e "8086:7121" -e "8086:7123" -e "8086:7125" -e "8086:1132" \
  -e "8086:7120" -e "8086:7122" -e "8086:7124" -e "8086:1130" -e "8086:3577" \
  -e "8086:3575" -e "8086:2562" -e "8086:2560" -e "8086:3582" -e "8086:3580" \
  -e "8086:2572" -e "8086:2570" -e "8086:2582" -e "8086:2580" -e "8086:2592" \
@@ -143,3 +108,5 @@ fi
 EOF
 
 chmod +x $DESTDIR/etc/X11/PreRun/30intel_dpms
+
+

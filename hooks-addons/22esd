@@ -3,9 +3,13 @@
 
 cat << EOF > $DESTDIR/sbin/startesd
 #!/bin/sh
-echo "STARTESD starting esound daemon" >> /tmp/initramfs.debug
-esd -public -tcp -nobeeps -as 1 -trust -promiscuous &  >> /tmp/initramfs.debug 2>&1
+exit 0
 EOF
+#cat << EOF > $DESTDIR/sbin/startesd
+##!/bin/sh
+#echo "STARTESD starting esound daemon" >> /tmp/initramfs.debug
+#esd -public -tcp -nobeeps -as 1 -trust -promiscuous &  >> /tmp/initramfs.debug 2>&1
+#EOF
 chmod +x $DESTDIR/sbin/startesd
 
 function copy_esd_libs() {
@@ -35,7 +39,7 @@ function copy_libesd0() {
 }
 
 
-if [ $TCOS_SOUND ]; then
+if [ $TCOS__NOT_NEEDED_ANYMORE_ESD__SOUND ]; then
 
    if [ ! -e /usr/bin/esd ]; then
      _echo "  Warning: eSound not installed."

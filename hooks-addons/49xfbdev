@@ -1,0 +1,87 @@
+
+
+if [ -n "$TCOS_XFBDEV" ] && [ -x /usr/bin/Xfbdev ]; then
+    stat_before
+    _echo "  * Using Xfbdev as Xserver"
+
+    cpifexists /usr/bin/Xfbdev /usr/bin/
+    cat << EOF > $DESTDIR/usr/bin/Xorg
+#!/bin/sh
+echo "ARGS=\$@" > /tmp/xorg.args
+
+if [ "\$1" = "-version" ]; then
+  echo "7.1"
+  exit
+fi
+
+/usr/bin/Xfbdev \$@ -screen 1024x768x16 -mouse mouse,2 -3button -keybd keyboard
+# example
+# Xfbdev vt7 -query 192.168.0.3 -auth /root/.Xauthority -screen 1024x768x16 -mouse mouse,2 -3button
+EOF
+    chmod +x $DESTDIR/usr/bin/Xorg
+
+    install -m 755 ${TCOS_BINS}/tryXorg.sh    ${DESTDIR}/sbin/tryXorg
+    cpifexists /usr/bin/xauth   /usr/bin
+    cpifexists /usr/bin/mcookie /usr/bin
+
+    # some xutils
+    cpifexists /usr/bin/xset     /usr/bin
+    cpifexists /usr/bin/xsetroot /usr/bin
+    cpifexists /usr/bin/xkbcomp  /usr/bin
+
+    XORG_XKB_DIR=/usr/share/X11/xkb/
+    [ ! -d "${XORG_XKB_DIR}" ] && XORG_XKB_DIR=/etc/X11/xkb/
+    mkdir -p ${DESTDIR}/usr/share/X11
+
+    # copy all dir (some files not needed)
+    cp -ra ${XORG_XKB_DIR} ${DESTDIR}/usr/share/X11
+
+    # delete symlinks
+    find ${DESTDIR}/usr/share/X11/ -type l | xargs rm -f --
+
+    # keymap DB
+    cpifexists /usr/share/X11/XKeysymDB /usr/share/X11/
+    
+    mkdir -p $DESTDIR/var/log
+    mkdir -p $DESTDIR/etc/X11/xserver
+    mkdir -p $DESTDIR/etc/X11/PreRun
+    
+    if [ -d /usr/share/fonts/X11 ]; then
+       TCOS_FONTS_PATH="/usr/share/fonts/X11"
+       TCOS_FONT_EXTENSION=".gz"
+    
+    elif [ ! -L /usr/lib/X11/fonts ]; then
+       TCOS_FONTS_PATH="/usr/lib/X11/fonts"
+       TCOS_FONT_EXTENSION=""
+    
+    else
+       _echo ""
+       _echo "ERROR: Cant' locate fonts dir, XFS is deprecated, BUG!!!"
+       _echo ""
+       TCOS_FONTS_PATH=""
+       exit
+    fi # end of -d /usr/share/fonts/X11
+    
+    cat << EOF > ${DESTDIR}/sbin/configurexorg
+#!/bin/sh
+exit 0
+EOF
+
+    if [ "$TCOS_FONTS_PATH" != "" ]; then
+        mkdir -p $DESTDIR/$TCOS_FONTS_PATH/misc
+        mkdir -p $DESTDIR/$TCOS_FONTS_PATH/100dpi
+
+        cat << EOF > $DESTDIR/$TCOS_FONTS_PATH/misc/fonts.alias
+fixed        -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1
+7x14         -misc-fixed-medium-r-semicondensed--14-120-75-75-c-60-iso8859-1
+EOF
+        cpifexists $TCOS_FONTS_PATH/misc/6x13-ISO8859-1.pcf${TCOS_FONT_EXTENSION} $TCOS_FONTS_PATH/misc
+        cpifexists $TCOS_FONTS_PATH/misc/cursor.pcf${TCOS_FONT_EXTENSION}         $TCOS_FONTS_PATH/misc
+        mkfontdir $DESTDIR/$TCOS_FONTS_PATH/misc
+
+        cpifexists $TCOS_FONTS_PATH/100dpi/helvB24-ISO8859-1.pcf${TCOS_FONT_EXTENSION} $TCOS_FONTS_PATH/100dpi
+        cpifexists $TCOS_FONTS_PATH/100dpi/helvB08-ISO8859-1.pcf${TCOS_FONT_EXTENSION} $TCOS_FONTS_PATH/100dpi
+        mkfontdir $DESTDIR/$TCOS_FONTS_PATH/100dpi
+    fi # end of $TCOS_FONTS_PATH
+    stat_after "Xfbdev"
+fi

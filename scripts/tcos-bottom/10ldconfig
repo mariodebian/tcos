@@ -21,8 +21,8 @@ log_end_msg $?
 # mount /dev/shm
 # if not mounted
 # this causes to break browsers and italc
-mkdir /dev/shm > /dev/null 2>&1
-mount -t tmpfs shmfs /dev/shm >/dev/null 2>&1
+mkdir -p /dev/shm
+mount -t tmpfs shmfs /dev/shm >>/tmp/initramfs.debug 2>&1
 
 # italc 1.0.0 new version
 if [ -x /sbin/startica ]; then
@@ -38,26 +38,7 @@ if [ -z "$(which Xorg)" ]; then
 fi
 
 
-#XORG_VERSION=$(Xorg -version 2>&1 | grep "System Version"| awk '{print $5}')
-#XORG_MAYOR=$(echo $XORG_VERSION | awk -F "." '{print $1}')
 
-
-if [ -d /usr/lib/xorg/modules/ ]; then
-  XORG_MAYOR=7
-fi
-
-if [ "${XORG_MAYOR}" -lt 7 ]; then
- _log "LDCONFIG Updating links in Xorg 6.9 mode"
- # updating links for Xorg <= 6.9
- ln -s /etc/X11/xserver /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
- ln -s /etc/X11/xkb /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
- rm -rf /usr/X11R6/lib/X11/compiled  >> /tmp/initramfs.debug 2>&1
- mkdir -p /var/lib/xkb
- ln -s /var/lib/xkb /usr/X11R6/lib/X11/compiled  >> /tmp/initramfs.debug 2>&1
- ln -s /etc/X11/rgb.txt /usr/X11R6/lib/X11/  >> /tmp/initramfs.debug 2>&1
- mkdir -p /usr/X11R6 >> /tmp/initramfs.debug 2>&1
- ln -s /usr/bin /usr/X11R6/bin >> /tmp/initramfs.debug 2>&1
-else
  _log "LDCONFIG Updating links in Xorg 7.x mode"
  [ ! -e /usr/lib/libGLcore.so.1 -a -e /usr/lib/libGLcore.so ] && ln -sf /usr/lib/libGLcore.so /usr/lib/libGLcore.so.1
  [ ! -e /usr/lib/libGL.so.1 -a -e /usr/lib/libGL.so.1.2 ] && ln -sf /usr/lib/libGL.so.1.2 /usr/lib/libGL.so.1
@@ -88,7 +69,6 @@ else
     [ ! -e /usr/share/X11/xkb/rules/xorg.xml ] &&\
 	 ln -s /usr/share/X11/xkb/rules/base.xml /usr/share/X11/xkb/rules/xorg.xml
 
-fi
 
 echo 67 > /tmp/progress
 update_progress
