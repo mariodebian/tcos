@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.89.36+1) unstable; urgency=low
+
+  * scripts/tcos-top/05network:
+    - Wait 10 seconds for netlink (some gigabit cards needs it)
+  * scripts/tcos-top/01busybox:
+    - Call udevadm too
+  * hooks-addons/25tcosmonitor:
+    - Create udevinfo script if no exists (for backwards compability)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 19 Jun 2009 16:28:24 +0200
+
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 
   * Add Xfbdev support

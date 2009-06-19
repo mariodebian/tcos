@@ -41,7 +41,13 @@ cpifexists ${TCOS_BINS}/save-udev.sh             /usr/sbin/
 cpifexists ${TCOS_BINS}/listener-daemon.sh       /usr/sbin/
 
 # need udevinfo in listener-daemon.sh
-if readlink /usr/bin/udevinfo | grep -q udevadm; then
+if [ ! -e /usr/bin/udevinfo ]; then
+  cat << EOF > $DESTDIR/usr/bin/udevinfo
+#!/bin/sh
+udevadm info \$@
+EOF
+  chmod +x $DESTDIR/usr/bin/udevinfo
+elif readlink /usr/bin/udevinfo | grep -q udevadm; then
   echo "/sbin/udevadm /usr/bin/udevinfo" >> $DESTDIR/conf/links
 else
   cpifexists /usr/bin/udevinfo                     /usr/bin/
@@ -66,10 +72,6 @@ fi
 
 cpifexists ${TCOS_BINS}/getinfo.sh       /sbin/
 chmod +x $DESTDIR/sbin/getinfo.sh
-
-# fixed in initramfs-tools-tcos 0.60
-#copy_exec /usr/bin/seq             /bin/
-
 
 
 cat << EOF >  $DESTDIR/sbin/restartx

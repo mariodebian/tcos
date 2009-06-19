@@ -86,7 +86,7 @@ TCOS_NET_ACTIVE="eth0"
 TCOS_NET_WIFI=0
 TCOS_NET_WIFI_ESSID=""
 TCOS_NET_WIFI_KEYMODE=""
-TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v lo|grep -v sit0|grep -v wmaster)
+TCOS_NET_DEVS=$(ls /sys/class/net/ |grep -v -e lo -e sit0 -e wmaster -e pan)
 TCOS_NET_LINK=""
 TCOS_NET_LINK_NUMBER=0
 
@@ -97,8 +97,13 @@ for dev in $TCOS_NET_DEVS; do
     ifconfig $dev up >> /tmp/initramfs.debug 2>&1
     # have link ???
     if [ -e /sys/class/net/$dev/carrier ]; then
-       [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" != 1 ] && sleep 3
-       if [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ]; then
+       if [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" != "1" ]; then
+           # some gigabit cards take some time to negotiate network link
+           log_begin_msg "Waiting for netlink in $dev"
+           sleep 10
+           log_end_msg
+       fi
+       if [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = "1" ]; then
           _log "05NETWORK found carrier link in $dev iface"
           TCOS_NET_LINK="$TCOS_NET_LINK $dev"
           TCOS_NET_LINK_NUMBER=$(($TCOS_NET_LINK_NUMBER+1))
