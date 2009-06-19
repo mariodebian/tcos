@@ -6,8 +6,10 @@ initramfs-tools-tcos (0.89.36+1) unstable; urgency=low
     - Call udevadm too
   * hooks-addons/25tcosmonitor:
     - Create udevinfo script if no exists (for backwards compability)
+  * hooks-addons/00main
+    - Copy /lib/libnss_mdns4_minimal.so.2 when avalaible (fix DNS calls)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 19 Jun 2009 16:28:24 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 19 Jun 2009 16:41:05 +0200
 
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 
