@@ -8,8 +8,12 @@ initramfs-tools-tcos (0.89.36+1) unstable; urgency=low
     - Create udevinfo script if no exists (for backwards compability)
   * hooks-addons/00main
     - Copy /lib/libnss_mdns4_minimal.so.2 when avalaible (fix DNS calls)
+  * hooks-addons/50xorg:
+    - Only support Xorg versions >= 7.0
+  * conf/tcos-modules.conf
+    - Add new modules ide-gd_mod ide-cd_mod
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 19 Jun 2009 16:41:05 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 30 Jun 2009 14:03:05 +0200
 
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 

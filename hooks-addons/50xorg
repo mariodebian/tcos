@@ -1,5 +1,5 @@
 # hooks addon of Xorg
-# compatible with Xorg 6.9 and 7.0
+# compatible with Xorg 7.x
 
 
 if [ -z "$TCOS_XFBDEV" ] && [ $TCOS_XORG ]; then
@@ -10,8 +10,7 @@ if [ "$(pathof Xorg)" = /usr/bin/Xorg ]; then
    _echo "   USING Xorg 7.X dirs"
    XORG_PATH=/usr/bin
 else
-   XORG=6
-   _echo "   Xorg 6.9 no supported"
+   _echo "   **ERROR** Xorg not found"
    exit
 fi
 
@@ -27,7 +26,7 @@ cpifexists $XORG_PATH/twm     /usr/bin
 cpifexists $XORG_PATH/xset     /usr/bin
 cpifexists $XORG_PATH/xsetroot /usr/bin
 cpifexists $XORG_PATH/sessreg  /usr/bin
-cpifexists $XORG_PATH/xkbcomp  /usr/bin/
+cpifexists $XORG_PATH/xkbcomp  /usr/bin
 
 
 mkdir -p $DESTDIR/var/log
@@ -35,7 +34,7 @@ mkdir -p $DESTDIR/etc/X11/xserver
 mkdir -p $DESTDIR/etc/X11/PreRun
 
 
-################ ugly hack###########################
+################ ugly hack ###########################
 mkdir -p $DESTDIR/etc/X11/xserver/
 cp ${TCOS_CONF}/SecurityPolicy $DESTDIR/etc/X11/xserver/
 #####################################################
