@@ -1,24 +1,70 @@
 # hook addon for enable direct rendering
 
+#TCOS_XORG_DRI=
+#TCOS_XORG_DRI_INTEL=
+#TCOS_XORG_DRI_ATI=
+#TCOS_XORG_DRI_SAVAGE=
+#TCOS_XORG_DRI_SIS=
+#TCOS_XORG_DRI_TRIDENT=
+#TCOS_XORG_DRI_UNICHROME=
+
+
+
 mkdir -p ${DESTDIR}/usr/lib/dri
 
-if [ $TCOS_XORG_DRI ]; then
+copy_dri() {
+  [ -e "/usr/lib/dri/$1" ] && cpifexists /usr/lib/dri/$1 /usr/lib/dri
+}
+
+
+if [ $TCOS_XORG_DRI_INTEL ]; then
   stat_before
- 
-
-    cpifexists /usr/lib/dri/i810_dri.so /usr/lib/dri
-    cpifexists /usr/lib/dri/i915_dri.so /usr/lib/dri
-    cpifexists /usr/lib/dri/i965_dri.so /usr/lib/dri
-    cpifexists /usr/lib/dri/sis_dri.so /usr/lib/dri
-    cpifexists /usr/lib/dri/s3v_dri.so /usr/lib/dri
-
-
-    [ $TCOS_XORG_DRI_RADEON ] && cp -ra /usr/lib/dri/r* ${DESTDIR}/usr/lib/dri
-
-  stat_after "Direct Rendering support"
-
+    copy_dri i810_dri.so
+    copy_dri i915_dri.so
+    copy_dri i965_dri.so
+  stat_after "Intel DRI"
 fi
 
-# new DRI extension
-[ -e /usr/lib/dri/swrast_dri.so ] && cpifexists /usr/lib/dri/swrast_dri.so /usr/lib/dri
+if [ $TCOS_XORG_DRI_ATI ]; then
+  stat_before
+    copy_dri r128_dri.so
+    copy_dri r200_dri.so
+    copy_dri r300_dri.so
+    copy_dri radeon_dri.so
+  stat_after "ATI DRI"
+fi
+
+if [ $TCOS_XORG_DRI_SAVAGE ]; then
+  stat_before
+    copy_dri s3v_dri.so
+    copy_dri savage_dri.so
+  stat_after "Savage DRI"
+fi
+
+if [ $TCOS_XORG_DRI_SIS ]; then
+  stat_before
+    copy_dri sis_dri.so
+  stat_after "SiS DRI"
+fi
+
+if [ $TCOS_XORG_DRI_TRIDENT ]; then
+  stat_before
+    copy_dri trident_dri.so
+  stat_after "Trident DRI"
+fi
+
+if [ $TCOS_XORG_DRI_UNICHROME ]; then
+  stat_before
+    copy_dri unichrome_dri.so
+  stat_after "Unichrome DRI"
+fi
+
+
+
+if [ $TCOS_XORG_DRI ]; then
+  _echo "  ** WARNING: TCOS_XORG_DRI is deprecated, generate new config."
+fi
+
+# Software Rendering DRI extension (always copy)
+copy_dri swrast_dri.so
 

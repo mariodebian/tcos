@@ -1,4 +1,4 @@
-initramfs-tools-tcos (0.89.36+1) unstable; urgency=low
+initramfs-tools-tcos (0.89.37) unstable; urgency=low
 
   * scripts/tcos-top/05network:
     - Wait 10 seconds for netlink (some gigabit cards needs it)
@@ -15,8 +15,10 @@ initramfs-tools-tcos (0.89.36+1) unstable; urgency=low
   * Refactorize Makefiles and some XMLRPC code
   * Set C code spaces to 2 and clean some old code
   * Disable old screenshot.c method
+  * Add TCOS_XORG_DRI_* new vars to enable individual DRI libs
+  * Don't copy libGLcore.so if not found (newest xserver-xorg-core don't have it)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 13 Jul 2009 10:59:38 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 13 Jul 2009 19:50:22 +0200
 
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 

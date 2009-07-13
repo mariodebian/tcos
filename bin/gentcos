@@ -657,7 +657,9 @@ fix_nvidia_ati() {
     mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libglx.so \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so
        
-    mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libGLcore.so \
+    # libGLcore.so is not provided by xserver-xorg-core in >= 1.6
+    [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libGLcore.so ] && \
+       mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libGLcore.so \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so
 
     [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/libwfb.so ] && \

@@ -149,7 +149,9 @@ if [ $TCOS_XORG_OPENGL ]; then
 
    if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
       rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
-      cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
+      [ -e ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so ] && \
+           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
+
       cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so    /usr/lib/xorg/modules/extensions/
       cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2   /usr/lib/
   	  [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
