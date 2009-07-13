@@ -30,3 +30,14 @@
 #define LOGIN_ERROR       "error: unknow error"
 
 
+#if NEWAPI
+xmlrpc_value *tcos_login(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif
+
+#if NEWAPI
+xmlrpc_value *tcos_logout(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_logout(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif

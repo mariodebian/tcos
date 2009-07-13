@@ -73,3 +73,8 @@
 #define INFO_UNKNOW "error: Unknow info request"
 #define INFO_ERROR  "error: info command failure"
 
+#if NEWAPI
+xmlrpc_value *tcos_info(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_info(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif

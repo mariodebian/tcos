@@ -19,6 +19,9 @@
 */
 
 
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
 #include "exe.h"
 
 
@@ -55,9 +58,9 @@ kill_exe( char *cmd )
 
 
 #if NEWAPI
-static xmlrpc_value *tcos_exe(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_exe(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
 {
      char *s;
@@ -85,9 +88,9 @@ static xmlrpc_value *tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 }
 
 #if NEWAPI
-static xmlrpc_value *tcos_kill(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_kill(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_kill(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_kill(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
 {
      char *s;

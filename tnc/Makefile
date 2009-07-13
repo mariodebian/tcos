@@ -4,20 +4,20 @@ LIBS= -I/usr/lib
 LDADD = -O2 -ansi -pedantic -Wall $(LIBS)
 GCC=gcc
 
-all: compile
+all: $(TNC)
 
 include ../common.mk
 
 
-compile:
-	$(CC) $(SOURCE) $(LDADD) -o $(TNC)
+$(TNC):
+	$(QUIET_CC)$(CC) $(SOURCE) $(LDADD) -o $(TNC)
 
 debug:
 	$(CC) $(SOURCE) $(LDADD) -o $(TNC) -DDEVNULL="\"\"" -DDEBUG
 
 
 clean:
-	rm -f $(TNC) *~
+	$(QUIET_CL)rm -f $(TNC) *~
 
 install:
 	mkdir -p $(DESTDIR)/$(TCOS_BINS)

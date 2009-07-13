@@ -1,13 +1,12 @@
-GCC=gcc
-all: compile
+all: hex2ascii
 
 include ../common.mk
 
-compile:
-	$(GCC) hex2ascii.c -o hex2ascii -Wall -ansi -pedantic
+hex2ascii:
+	$(QUIET_CC)$(GCC) hex2ascii.c -o hex2ascii -Wall -ansi -pedantic
 
 clean:
-	rm -f hex2ascii
+	$(QUIET_CL)rm -f hex2ascii
 
 install:
 	install -d $(DESTDIR)$(TCOS_BINS)

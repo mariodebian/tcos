@@ -62,5 +62,7 @@ typedef struct info {
 /* Whether or not to record failed attempts in the system log defined=yes, not defined=no */
 #define LOG_FAILED_ATTEMPTS 
 
+
+char *validate_login(char *user, char*pw);
 #endif
 

@@ -19,11 +19,13 @@
 */
 
 
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
+
 #include <pwd.h>
 #include <sys/types.h>
 
-#include "validate.h"
-#include "debug.c"
 
 
 char *get_passwd( char *username )
@@ -65,19 +67,4 @@ char *validate_passwd(char *user, char *pass)
 }
 
 
-
-#ifndef HAVE_MAIN
-int main() {
-  char *username;
-  username = "root";
-  printf("user=%s pass=%s\n", username, get_passwd(username) );
-
-  username = "mario";
-  printf("user=%s pass=%s\n", username, get_passwd(username) );
-
-  username = "pepe";
-  printf("user=%s pass=%s\n", username, get_passwd(username) );
-  return 0;
-}
-#endif
 

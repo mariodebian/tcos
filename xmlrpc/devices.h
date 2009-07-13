@@ -31,3 +31,8 @@
 #define DEVICES_UNKNOW_ERROR "error: unknow option passed."
 
 
+#if NEWAPI
+xmlrpc_value *tcos_devices(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif

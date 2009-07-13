@@ -1,6 +1,8 @@
 /*
-* debug.c part of tcosxmlrpc
+* dpms.c part of tcosxmlrpc
+*   => method to set dpms monitor status
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
+* Copyright (C) 2006,2007,2008  vidal_joshur at gva.es
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -17,24 +19,8 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
-/*
-*  you can compile this file as standalone app with:
-*     gcc -Wall debug.c -o debug
-*
-*  Try exec:
-*     ./debug   [nothing to stdout or err]
-*     TCOS_DEBUG=1 ./debug  print some debug strings
-*/
-
-#include <stdio.h>
-
-/* variable argument list */
-#include <stdarg.h>
-
-
-#ifndef HAVE_DEBUG
-#define dbgtcos(s, ...) __dbgtcos(__FILE__, __LINE__, s, ##__VA_ARGS__)
+#include "common.h"
+#include "debug.h"
 
 void __dbgtcos(const char *file, int line, const char *format_str, ... ) {
   if ( getenv("TCOS_DEBUG") == NULL) return;
@@ -46,17 +32,5 @@ void __dbgtcos(const char *file, int line, const char *format_str, ... ) {
     vfprintf(stderr, format_str , ap);
   }
 }
-#define HAVE_DEBUG 1
-#endif
-/*
-#ifndef HAVE_MAIN
-int main( int argc, char **argv ) {
- 
-  dbgtcos ( "testing debug is ON\n" );
-  dbgtcos ( "Mi username is %s and my home path is %s\n", getenv("USERNAME"),  getenv("HOME") );
-  dbgtcos ( "My XAUTHORITY is %s\n", getenv("XAUTHORITY") );
-  dbgtcos ( "Var not found test %s\n", getenv("NOTFOUND") );
-  return(0);
-}
-#endif
-*/
+
+

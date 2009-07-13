@@ -20,11 +20,15 @@
 
 
 #ifndef __COMMON_H__
+#define  __COMMON_H__
 
 #define IP_LENGHT 1024
 #ifndef BSIZE
 #define BSIZE 500
 #endif
+#define BUFF_SIZE 1000
+#define BIG_BUFFER 5000
+
 #define MY_IP_ADDRESS       TCOS_PATH"/getinfo.sh -i NETWORK_IP"
 
 #define FILE_CONTENT_ERROR_MEM  "error: unable to malloc memory"
@@ -40,20 +44,45 @@ typedef struct ip_address {
   char ipstr[IP_LENGHT];
 } ip ;
 
-#define  __COMMON_H__
 
 
 
-FILE *popen(const char *orden, const char *tipo);
-int pclose(FILE *flujo);
+/*FILE *popen(const char *orden, const char *tipo);*/
+/*int pclose(FILE *flujo);*/
 
-int gethostname(char *name, size_t len);
-int setenv(const char *nombre, const char *valor, int sobrescribir);
-int unsetenv(const char *name);
+/*int gethostname(char *name, size_t len);*/
+/*int setenv(const char *nombre, const char *valor, int sobrescribir);*/
+/*int unsetenv(const char *name);*/
 
-int mkstemp(char *template);
-int snprintf(char *str, size_t size, const char *format, ...);
+/*int mkstemp(char *template);*/
+/*int snprintf(char *str, size_t size, const char *format, ...);*/
 
 
-int sscanf(const char *str, const char *format, ...);
+/*int sscanf(const char *str, const char *format, ...);*/
+
+/* common.c */
+void remove_line_break( char *s );
+
+#include <sys/types.h>
+unsigned char *readfile( const char *name, size_t *len );
+unsigned char * base64_encode( const unsigned char *src, size_t len, size_t *out_len );
+unsigned char * base64_decode(const unsigned char *src, size_t len, size_t *out_len);
+struct ip_address check_ip_address(char *data);
+char **split(char *string, char *delim);
+int check_for_file(char *fname);
+
+
+#include <xmlrpc.h>
+#include <xmlrpc_abyss.h>
+
+#define OLD_VERSION_MAYOR 0
+#define OLD_VERSION_MINOR 920
+
+#if XMLRPC_VERSION_MAYOR > OLD_VERSION_MAYOR || ( (XMLRPC_VERSION_MAYOR == OLD_VERSION_MAYOR) && (XMLRPC_VERSION_MINOR > OLD_VERSION_MINOR) )
+    #define NEWAPI 1
+    #include <xmlrpc_server.h>
+#endif
+
+
+
 #endif

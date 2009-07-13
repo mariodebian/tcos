@@ -37,3 +37,8 @@
 #define XORG_UNKNOW_OPTION "error: Unknow option for "XORGCFG
 #define XORG_READING_ERROR "error: Error reading pipe"
 
+#if NEWAPI
+xmlrpc_value *tcos_xorg(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif

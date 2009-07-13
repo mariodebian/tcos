@@ -1,7 +1,7 @@
 DESTDIR:=/
 
 all:
-	
+	@echo
 
 include ../common.mk
 
@@ -10,4 +10,4 @@ install:
 	install -m 644 tcosmonitor.conf    $(DESTDIR)$(DBUS_CONF)/
 
 clean:
-	rm -f  *~
+	$(QUIET_CL)rm -f  *~

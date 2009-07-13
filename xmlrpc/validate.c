@@ -31,9 +31,12 @@
  */
 
 
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
+
 #include <shadow.h>
 
-#include "validate.h"
 
 #include "validate-passwd.c"
 #include "validate-shadow.c"

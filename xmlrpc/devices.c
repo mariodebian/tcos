@@ -19,13 +19,15 @@
 */
 
 
+#include "common.h"
+#include "debug.h"
 #include "devices.h"
 #include "xauth.h"
 
 #if NEWAPI
-static xmlrpc_value *tcos_devices(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_devices(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   FILE *fp;

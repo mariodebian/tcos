@@ -24,3 +24,11 @@
 #define RP_ERROR "error: reboot_poweroff action error."
 
 #define RP_UNKNOW "error: unknow option passed."
+
+
+#if NEWAPI
+xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif
+

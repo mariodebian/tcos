@@ -33,8 +33,15 @@ KERNEL_jaunty="2.6.28-1-generic"
 ##################################
 
 
-MAKE=make -B
-INSTALL=install
+MAKE:=make -B
+GCC:=gcc
+INSTALL:=install
+ifndef V
+        QUIET_CC       = @echo '   $(TXT)'  CC    $@;
+        QUIET_CL       = @echo '   $(TXT)'  CLEAN $@ `basename $(CURDIR)`;
+        QUIET_LN       = @echo '   $(TXT)'  LINK  $@;
+        MAKE           = @make --no-print-directory -B
+endif
 
 VERSION=$(shell head -1 debian/changelog 2>/dev/null | awk  '{gsub(/\(/,"",$$2); gsub(/\)/, "" , $$2); print $$2}' )
 

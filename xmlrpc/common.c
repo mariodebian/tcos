@@ -24,21 +24,7 @@
 #include <string.h>
 
 #include "common.h"
-
-#ifdef TEST_MAIN
-#include <stdarg.h>
-#define dbgtcos(s, ...) __dbgtcos(__FILE__, __LINE__, s, ##__VA_ARGS__)
-
-void __dbgtcos( const char *format_str, ... ) {
-  if ( getenv("TCOS_DEBUG") == NULL) return;
-  if ( strcmp(getenv("TCOS_DEBUG"), "1" ) == 0  ) {
-    va_list ap;
-    va_start( ap, format_str );
-    va_end( ap );
-    vfprintf(stderr, format_str , ap);
-  }
-}
-#endif
+#include "debug.h"
 
 
 struct ip_address check_ip_address(char *data) {

@@ -27,3 +27,10 @@
 #define XAUTH_BAD_FDTEMP 5
 
 
+int handle_xauth( char *cookie , char *servername);
+
+#if NEWAPI
+xmlrpc_value *tcos_xauth(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_xauth(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif

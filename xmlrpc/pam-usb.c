@@ -18,14 +18,17 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
 
 #include "pam-usb.h"
 #include "xauth.h"
 
 #if NEWAPI
-static xmlrpc_value *tcos_pam_usb(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_pam_usb(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   FILE *fp;

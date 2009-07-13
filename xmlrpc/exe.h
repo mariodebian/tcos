@@ -30,3 +30,18 @@
 #endif
 
 
+#if NEWAPI
+xmlrpc_value *tcos_exe(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif
+
+#if NEWAPI
+xmlrpc_value *tcos_kill(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_kill(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif
+
+void job_exe( char *cmd );
+void kill_exe( char *cmd );
+

@@ -18,11 +18,17 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
+#include "exe.h"
+
+
 
 #if NEWAPI
-static xmlrpc_value *tcos_lockscreen(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_lockscreen(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_lockscreen(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_lockscreen(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   char *user;
@@ -49,9 +55,9 @@ static xmlrpc_value *tcos_lockscreen(xmlrpc_env *env, xmlrpc_value *in, void *ud
 }
 
 #if NEWAPI
-static xmlrpc_value *tcos_unlockscreen(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_unlockscreen(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_unlockscreen(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_unlockscreen(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   char *user;

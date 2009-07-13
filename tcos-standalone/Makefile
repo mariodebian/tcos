@@ -1,12 +1,14 @@
 LANGUAGES=es ca@valencia pt_BR qcv
 
 all:
-	#none
+	@echo
+
+include ../common.mk
 
 clean:
-	rm -f *~ *glade.* *gladep*
+	$(QUIET_CL)rm -f *~ *glade.* *gladep*
 	@for lang in $(LANGUAGES); do \
-		echo " **CLEANDIR** po/$$lang"; \
+		echo "      **CLEANDIR** po/$$lang"; \
 		rm -rf po/$$lang;\
 	done
 

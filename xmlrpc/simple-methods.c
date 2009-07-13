@@ -20,12 +20,14 @@
 
 /* tcosxmlrpc simple methods */
 
-
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
 
 #if NEWAPI
-static xmlrpc_value *tcos_version(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_version(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_version(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_version(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
     dbgtcos("tcosxmlrpc::tcos_version() %s\n", VERSION);
@@ -34,9 +36,9 @@ static xmlrpc_value *tcos_version(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
 
 #if NEWAPI
-static xmlrpc_value *tcos_echo(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_echo(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_echo(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_echo(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
    char *s;
@@ -48,9 +50,9 @@ static xmlrpc_value *tcos_echo(xmlrpc_env *env, xmlrpc_value *in, void *ud)
  
 
 #if NEWAPI
-static xmlrpc_value *tcos_status(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_status(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_data)
+xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_data)
 #endif
 {
    FILE *fp=NULL;

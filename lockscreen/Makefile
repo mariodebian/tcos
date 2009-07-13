@@ -13,19 +13,25 @@ LDADD=-O2 -ansi -pedantic -Wall -lXaw $(LIBS) $(CFLAGS)
 CC=gcc
 
 
-all: compile
+all: $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC)
 
 include ../common.mk
 
 
-compile:
-	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK)
-	$(CC) $(XRES_SOURCES) $(LDADD) -o $(XRES)
-	$(CC) $(LOCKVNC_SOURCES) $(LDADD) -o $(LOCKVNC)
-	$(CC) $(LOCKVLC_SOURCES) $(LDADD) -o $(LOCKVLC)
+$(LOCK):
+	$(QUIET_CC)$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK)
+
+$(XRES):
+	$(QUIET_CC)$(CC) $(XRES_SOURCES) $(LDADD) -o $(XRES)
+
+$(LOCKVNC):
+	$(QUIET_CC)$(CC) $(LOCKVNC_SOURCES) $(LDADD) -o $(LOCKVNC)
+
+$(LOCKVLC):
+	$(QUIET_CC)$(CC) $(LOCKVLC_SOURCES) $(LDADD) -o $(LOCKVLC)
 
 clean:
-	rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) *~
+	$(QUIET_CL)rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) *~
 
 debug: clean
 	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK) -DDEBUG=1

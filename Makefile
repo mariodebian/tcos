@@ -1,38 +1,37 @@
 ##
-##     TCOS makefile
+##     TCOS Makefile
 ##
 ##    mariodebian \/at\/ gmail \/dot\/ com
 ARCH:=$(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
 
 all:
-	#cd daemonize   && make
-	cd hex2ascii   && make
-	cd xmlrpc      && make
-	cd udev        && make
-	cd lockscreen  && make
-	cd tnc         && make
-	cd dbus        && make
-	cd session-cmd && make
-	cd tcos-standalone && make
-	cd tmixer       && make
+	$(MAKE) -C hex2ascii
+	$(MAKE) -C xmlrpc
+	$(MAKE) -C udev
+	$(MAKE) -C lockscreen
+	$(MAKE) -C tnc
+	$(MAKE) -C dbus
+	$(MAKE) -C session-cmd
+	$(MAKE) -C tcos-standalone
+	$(MAKE) -C tmixer
 
 include common.mk
 
 
 clean:
-	find * |grep "~" | xargs rm -rf --
-	rm -f build-stamp configure-stamp
-	#cd daemonize   && make clean
-	cd hex2ascii   && make clean
-	cd xmlrpc      && make clean
-	cd udev        && make clean
-	cd lockscreen  && make clean
-	cd tnc         && make clean
-	cd dbus        && make clean
-	cd session-cmd && make clean
-	cd tcos-standalone && make clean
-	cd tmixer       && make clean
+	@find * |grep "~" | xargs rm -rf --
+	@rm -f build-stamp configure-stamp
+#	$(MAKE) -C daemonize clean
+	$(MAKE) -C hex2ascii  clean
+	$(MAKE) -C xmlrpc     clean
+	$(MAKE) -C udev       clean
+	$(MAKE) -C lockscreen clean
+	$(MAKE) -C tnc        clean
+	$(MAKE) -C dbus       clean
+	$(MAKE) -C session-cmd clean
+	$(MAKE) -C tcos-standalone clean
+	$(MAKE) -C tmixer      clean
 
 gedit:
 	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
@@ -173,31 +172,31 @@ install:
 
 	install -d $(DESTDIR)/usr/bin
 
-	cd hex2ascii   && make install DESTDIR=$(DESTDIR)
+	$(MAKE) -C hex2ascii install DESTDIR=$(DESTDIR)
 
 	# xmlrpc
-	cd xmlrpc && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+	$(MAKE) -C xmlrpc install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 	# udev
-	cd udev && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS)
+	$(MAKE) -C udev install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS)
 
 	# lockscreen
-	cd lockscreen && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
+	$(MAKE) -C lockscreen install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
 
 	# tcos net controller
-	cd tnc && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
+	$(MAKE) -C tnc install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS) PACKAGE=$(PACKAGE)
 
 	# dbus conf file
-	cd dbus && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+	$(MAKE) -C dbus install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 	# session-cmd scripts
-	cd session-cmd && $(MAKE) install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
+	$(MAKE) -C session-cmd install TCOS_BINS=$(TCOS_BINS) DESTDIR=$(DESTDIR)
 
 	# tcos-standalone helper
-	cd tcos-standalone && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+	$(MAKE) -C tcos-standalone install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 	# tmixer
-	cd tmixer && $(MAKE) install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+	$(MAKE) -C tmixer install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 
 targz: clean

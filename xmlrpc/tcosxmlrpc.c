@@ -27,54 +27,38 @@
 #include <unistd.h>
 #include <time.h>
 
-#include <xmlrpc.h>
-#include <xmlrpc_abyss.h>
-
-#define OLD_VERSION_MAYOR 0
-#define OLD_VERSION_MINOR 920
-
-#if XMLRPC_VERSION_MAYOR > OLD_VERSION_MAYOR || ( (XMLRPC_VERSION_MAYOR == OLD_VERSION_MAYOR) && (XMLRPC_VERSION_MINOR > OLD_VERSION_MINOR) )
-    #define NEWAPI 1
-    #include <xmlrpc_server.h>
-#endif
-
-
-
-
-
-#define BUFF_SIZE 1000
 #define HAVE_MAIN
 
 /* My TCOS includes */
 
-#include "debug.c"
-#include "common.c"
+#include "common.h"
+#include "debug.h"
 
-#include "login.c"
-#include "xauth.c"
-#include "info.c"
-#include "standalone.c"
-#include "pci.c"
-#include "exe.c"
-#include "screenshot.c"
-#include "xorg.c"
-#include "sound.c"
-#include "devices.c"
-#include "lockscreen.c"
-#include "lockcontroller.c"
-#include "vnc.c"
-#include "vlc.c"
-#include "rtp.c"
-#include "tnc.c"
+#include "login.h"
+#include "xauth.h"
+#include "info.h"
+#include "standalone.h"
+#include "pci.h"
+#include "exe.h"
+#include "screenshot.h"
+#include "xorg.h"
+#include "sound.h"
+#include "devices.h"
+#include "lockscreen.h"
+#include "lockcontroller.h"
+#include "vnc.h"
+#include "vlc.h"
+#include "rtp.h"
+#include "tnc.h"
 
-#include "get_screenshot.c"
-#include "reboot_poweroff.c"
+#include "get_screenshot.h"
+#include "reboot_poweroff.h"
 
-#include "dpms.c"
+#include "dpms.h"
 
-#include "pam-usb.c"
+#include "pam-usb.h"
 
-#include "simple-methods.c"
+#include "simple-methods.h"
 
 
 

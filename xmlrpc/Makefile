@@ -1,46 +1,103 @@
-all: server standalone tcospasswd
+SERVER=tcosxmlrpc
+STANDALONE=tcosxmlrpc-standalone
+TCOSPASSWD=tcospasswd
 
+all: message $(SERVER) $(STANDALONE) $(TCOSPASSWD)
 
 include ../common.mk
+
+
+
+TCOS_PATH:=/sbin
+IS_STANDALONE:=0
+
+ifneq ($(findstring $(IS_STANDALONE),1),1)
+TXT = 
+else
+TXT = STANDALONE
+endif
+
+ifndef V
+	QUIET_CC       = @echo '   $(TXT)'  CC    $@;
+	QUIET_CL       = @echo '   $(TXT)'  CLEAN $@ `basename $(CURDIR)`;
+	QUIET_LN       = @echo '   $(TXT)'  LINK  $@;
+endif
+
 
 
 XMLRPC_INC=$(shell xmlrpc-c-config --version)
 XMLRPC_VERSION_MAYOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$1}')
 XMLRPC_VERSION_MINOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$2$$3}'| cut -c-4| awk '{print int($$1)}')
-#CFLAGS=-Wall -std=c99 -O2 -ansi -pedantic `xmlrpc-c-config abyss-server --cflags`
-CFLAGS=-Wall -O2  `xmlrpc-c-config abyss-server --cflags`
-LIBS=`xmlrpc-c-config abyss-server --libs` -lcrypt -lX11
-DEFINES= -DBSIZE=512 -DVERSION=\"$(VERSION)\" -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
-TEST_DEFINES=-DDEBUG -DVERSION=\"$(VERSION)\" -DBSIZE=512 -DVISIBLE_PASSWD -DXMLRPC_INC=$(XMLRPC_INC) -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
-GCC=gcc
-SERVER=tcosxmlrpc
 
-STANDALONE=tcosxmlrpc-standalone
+CFLAGS+=-Wall -O2  `xmlrpc-c-config abyss-server --cflags`
+LDFLAGS+=-Wl,-z,defs -Wl,-O1 -Wl,--as-needed
+LIBS+=`xmlrpc-c-config abyss-server --libs` -lcrypt -lX11
+
+DEFINES:= -DVERSION=\"$(VERSION)\" -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
+
+#TEST_DEFINES=-DDEBUG -DVERSION=\"$(VERSION)\" -DBSIZE=512 -DVISIBLE_PASSWD -DXMLRPC_INC=$(XMLRPC_INC) -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
+
+
+
+SRCS	     := common.c \
+		debug.c \
+		devices.c \
+		dpms.c \
+		exe.c \
+		get_screenshot.c \
+		info.c \
+		lockcontroller.c \
+		lockscreen.c \
+		login.c \
+		pam-usb.c \
+		pci.c \
+		reboot_poweroff.c \
+		rtp.c \
+		screenshot.c \
+		simple-methods.c \
+		sound.c \
+		standalone.c \
+		tnc.c \
+		validate.c \
+		vlc.c \
+		vnc.c \
+		xauth.c \
+		xorg.c \
+		tcosxmlrpc.c
+
+OBJS		:= $(SRCS:.c=.o)
+
+message:
+	@echo " * Building tcosxmlrpc"
+
+cleanobjs:
+	$(QUIET_CL)rm -f $(OBJS)
+
+%.o: %.c
+	$(QUIET_CC)$(GCC) -c ${CFLAGS} -Wno-unused-function ${DEFINES} -DTCOS_PATH=\"$(TCOS_PATH)\" $< -o $@
+
+$(SERVER): $(OBJS)
+	$(QUIET_LN)$(GCC) $(LDFLAGS) $(DEFINES) -o $(SERVER) $(CFLAGS) $(OBJS) $(LIBS)
+	$(MAKE) cleanobjs
+
+$(STANDALONE):
+	$(MAKE) $(OBJS) TCOS_PATH=$(TCOS_BINS) IS_STANDALONE=1 CFLAGS+='-DIS_STANDALONE=1'
+	$(QUIET_LN)$(GCC) $(LDFLAGS) $(DEFINES) -o $(STANDALONE) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBS)
+	$(MAKE) cleanobjs
+
+$(TCOSPASSWD):
+	$(QUIET_CC)$(GCC) $(DEFINES) $(CFLAGS) -o $(TCOSPASSWD) $(TCOSPASSWD).c -lcrypt
+
+
 
 test2:
 	@echo XMLRPC_INC=$(XMLRPC_INC)
 	@echo XMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR)
 	@echo XMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
 
-server:
-	$(GCC) $(DEFINES) -o $(SERVER) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"/sbin\"
-
-standalone:
-	$(GCC) $(DEFINES) -o $(STANDALONE) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"$(TCOS_BINS)\" -DIS_STANDALONE=1
-
-standalone-debug:
-	$(GCC) $(TEST_DEFINES) -o $(STANDALONE) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"$(TCOS_BINS)\" -DIS_STANDALONE=1 -DVISIBLE_PASSWD
-
-debug:
-	$(GCC) $(TEST_DEFINES) -o $(SERVER) $(CFLAGS) $(LIBS) $(SERVER).c -DTCOS_PATH=\"/sbin\"
-
-
-tcospasswd:
-	$(GCC) $(DEFINES) -o tcospasswd tcospasswd.c -lcrypt -O2
 
 clean:
-	rm -f $(SERVER) $(STANDALONE) tcosmd5 prueba prueba2 prueba3 validate-tcos validate-passwd tcospasswd var/log.txt var/log/* *~ image*.jpg image*png base64
-	rm -f sh/*~
+	$(QUIET_CL)rm -f $(OBJS) $(SERVER) $(STANDALONE) $(TCOSPASSWD) var/log.txt var/log/* *~ image*.jpg image*png base64 sh/*~
 
 install:
 	install -d $(DESTDIR)/$(TCOS_BINS)
@@ -50,7 +107,7 @@ install:
 	install -m 755 $(SERVER)       $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(STANDALONE)   $(DESTDIR)/$(TCOS_BINS)/
 
-	install -m 755 tcospasswd $(DESTDIR)/$(PREFIX)/sbin/tcospasswd
+	install -m 755 $(TCOSPASSWD) $(DESTDIR)/$(PREFIX)/sbin/$(TCOSPASSWD)
 	install -m 755 sh/update-tcospasswd.sh $(DESTDIR)/$(PREFIX)/sbin/update-tcospasswd
 	
 	# Install tcosxmlrpc utils

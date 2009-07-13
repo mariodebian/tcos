@@ -18,9 +18,13 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
+
 #include <shadow.h>
 #include <string.h>
-#include "validate.h"
 
 
 char

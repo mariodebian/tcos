@@ -12,8 +12,9 @@ initramfs-tools-tcos (0.89.36+1) unstable; urgency=low
     - Only support Xorg versions >= 7.0
   * conf/tcos-modules.conf
     - Add new modules ide-gd_mod ide-cd_mod
+  * Refactorize Makefiles and some XMLRPC code
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 30 Jun 2009 14:03:05 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 08 Jul 2009 23:17:23 +0200
 
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 

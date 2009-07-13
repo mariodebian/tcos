@@ -26,3 +26,9 @@
 #define VNC_ERROR "error: vnc command error"
 #define VNC_OK "ok"
 
+#if NEWAPI
+xmlrpc_value *tcos_vnc(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif
+

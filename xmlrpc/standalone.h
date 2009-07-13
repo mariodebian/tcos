@@ -54,3 +54,14 @@ stunnel4 break STANDALONE_SERVER
 
 
 
+#if NEWAPI
+xmlrpc_value *tcos_standalone(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif
+
+#if NEWAPI
+xmlrpc_value *tcos_dbus(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif

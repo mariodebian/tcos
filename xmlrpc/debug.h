@@ -1,6 +1,5 @@
 /*
-* tcospasswd.c part of tcosxmlrpc
-*   => return an crypt passwd
+* debug.c part of tcosxmlrpc
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
 *
 * This program is free software; you can redistribute it and/or
@@ -18,39 +17,30 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+
+/*
+*  you can compile this file as standalone app with:
+*     gcc -Wall debug.c -o debug
+*
+*  Try exec:
+*     ./debug   [nothing to stdout or err]
+*     TCOS_DEBUG=1 ./debug  print some debug strings
+*/
+
 #include <stdio.h>
+
+/* variable argument list */
+#include <stdarg.h>
+
+/* getenv */
+#include <stdlib.h>
+
+/* strcmp */
 #include <string.h>
 
+#ifndef HAVE_DEBUG
+#define dbgtcos(s, ...) __dbgtcos(__FILE__, __LINE__, s, ##__VA_ARGS__)
+#define HAVE_DEBUG 1
+#endif
 
-#include <pwd.h>
-#include "common.h"
-#include "validate.h"
-
-void usage();
-
-int main( int argc, char **argv) {
-
- char *pass;
- if (argc==2) {
-   printf("%s\n", crypt(argv[1], PASS_ID) );
-   return 0;
- }
-
- if (argc != 2) {
-   pass=getpass("TCOS Password: ");
-   printf("%s\n", crypt(pass, PASS_ID) );
-   return 1;
- }
-
- usage();
- return 1;
-}
-
-
-void
-usage()
-{
-  printf("Usage:\n\t\t tcospasswd pass\n");
-}
-
-
+void __dbgtcos(const char *file, int line, const char *format_str, ... );

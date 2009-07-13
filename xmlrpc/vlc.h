@@ -26,3 +26,8 @@
 #define VLC_ERROR "error: vlc command error"
 #define VLC_OK "ok"
 
+#if NEWAPI
+xmlrpc_value *tcos_vlc(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext);
+#else
+xmlrpc_value *tcos_vlc(xmlrpc_env *env, xmlrpc_value *in, void *ud);
+#endif

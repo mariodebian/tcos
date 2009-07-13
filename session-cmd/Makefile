@@ -1,8 +1,10 @@
 all:
-	# nothing
+	@echo
+
+include ../common.mk
 
 clean:
-	rm -f *~
+	$(QUIET_CL)rm -f *~
 
 install:
 	install -m 755 session-cmd-send        $(DESTDIR)/${TCOS_BINS}/

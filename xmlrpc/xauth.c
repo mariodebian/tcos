@@ -19,11 +19,14 @@
 */
 
 
+#include "common.h"
+#include "debug.h"
+#include "validate.h"
+#include "xauth.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xauth.h>
 
-#include "xauth.h"
 
 
 
@@ -110,9 +113,9 @@ handle_xauth( char *cookie , char *servername)
 
 
 #if NEWAPI
-static xmlrpc_value *tcos_xauth(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
+xmlrpc_value *tcos_xauth(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
 #else
-static xmlrpc_value *tcos_xauth(xmlrpc_env *env, xmlrpc_value *in, void *ud)
+xmlrpc_value *tcos_xauth(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
  {
   char *cookie;
