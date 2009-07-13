@@ -30,7 +30,9 @@ XMLRPC_VERSION_MAYOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$1}')
 XMLRPC_VERSION_MINOR=$(shell xmlrpc-c-config --version| awk -F"." '{print $$2$$3}'| cut -c-4| awk '{print int($$1)}')
 
 CFLAGS+=-Wall -O2  `xmlrpc-c-config abyss-server --cflags`
-LDFLAGS+=-Wl,-z,defs -Wl,-O1 -Wl,--as-needed
+#LDFLAGS+=-Wl,-z,defs -Wl,-O1 -Wl,--as-needed
+## OLD gcc (lenny) don't work with -Wl,--as-needed
+LDFLAGS+=-Wl,-z,defs -Wl,-O1 
 LIBS+=`xmlrpc-c-config abyss-server --libs` -lcrypt -lX11
 
 DEFINES:= -DVERSION=\"$(VERSION)\" -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)

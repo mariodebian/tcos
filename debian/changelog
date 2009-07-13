@@ -18,8 +18,9 @@ initramfs-tools-tcos (0.89.37) unstable; urgency=low
   * Add TCOS_XORG_DRI_* new vars to enable individual DRI libs
   * Don't copy libGLcore.so if not found (newest xserver-xorg-core don't have it)
   * Update kernel versions
+  * Disable '-Wl,--as-needed' flags (Squeeze and Lenny don't work)
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 13 Jul 2009 19:58:23 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 13 Jul 2009 20:17:51 +0200
 
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 
