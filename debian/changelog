@@ -17,8 +17,9 @@ initramfs-tools-tcos (0.89.37) unstable; urgency=low
   * Disable old screenshot.c method
   * Add TCOS_XORG_DRI_* new vars to enable individual DRI libs
   * Don't copy libGLcore.so if not found (newest xserver-xorg-core don't have it)
+  * Update kernel versions
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 13 Jul 2009 19:50:22 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 13 Jul 2009 19:58:23 +0200
 
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 
