@@ -1,6 +1,6 @@
 /*
-* dpms.c part of tcosxmlrpc
-*   => method to set dpms monitor status
+* debug.c part of tcosxmlrpc
+*   => dbgtcos function
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
 * Copyright (C) 2006,2007,2008  vidal_joshur at gva.es
 *

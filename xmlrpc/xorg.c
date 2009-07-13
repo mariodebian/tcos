@@ -44,7 +44,7 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* read what option and cmdline params need */
   xmlrpc_parse_value(env, in, "(ssss)", &option, &cmdline, &user, &pass);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
    /* need login first */
   login_ok=validate_login(user,pass);
@@ -61,9 +61,9 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    dbgtcos("tcosxmlrpc::tcos_xorg() new exec=\"%s\"\n", line);
 
    if (system(line) != 0 )
-      return xmlrpc_build_value(env, "s", XORG_ERROR );
+     return xmlrpc_build_value(env, "s", XORG_ERROR );
    else
-      return xmlrpc_build_value(env, "s", XORG_OK );
+     return xmlrpc_build_value(env, "s", XORG_OK );
   }
 
   /* change xorg.conf */
@@ -74,9 +74,9 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    dbgtcos("tcosxmlrpc::tcos_xorg() change exec=\"%s\"\n", line);
 
    if (system(line) != 0 )
-      return xmlrpc_build_value(env, "s", XORG_ERROR );
+     return xmlrpc_build_value(env, "s", XORG_ERROR );
    else
-      return xmlrpc_build_value(env, "s", XORG_OK );
+     return xmlrpc_build_value(env, "s", XORG_OK );
   }
 
   /* rebuild xorg.conf */
@@ -87,11 +87,11 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    dbgtcos("tcosxmlrpc::tcos_xorg() rebuild exec=\"%s\"\n", line);
 
    if (system(line) != 0 )
-      return xmlrpc_build_value(env, "s", XORG_ERROR );
+     return xmlrpc_build_value(env, "s", XORG_ERROR );
    else
-      return xmlrpc_build_value(env, "s", XORG_OK );
+     return xmlrpc_build_value(env, "s", XORG_OK );
   }
- 
+
   else if ( strcmp(option, "get") == 0 )
   {
 
@@ -99,7 +99,7 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
    fp=(FILE*)popen(XORG_GET_CONF, "r");
    if (fp == NULL)
-      return xmlrpc_build_value(env, "s", XORG_READING_ERROR );
+     return xmlrpc_build_value(env, "s", XORG_READING_ERROR );
 
    /* put error msg into line var */
    strncpy(line, XORG_ERROR, BSIZE);
@@ -107,17 +107,17 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    fret = fgets( line, sizeof line, fp);
    remove_line_break(line);
    pclose(fp);
-   
+
    if (env->fault_occurred) {
-        return xmlrpc_build_value(env, "s", XORG_READING_ERROR);
+     return xmlrpc_build_value(env, "s", XORG_READING_ERROR);
    }
-   
-   return xmlrpc_build_value(env, "s", line );
+
+  return xmlrpc_build_value(env, "s", line );
   }
 
 
   else {
-	return xmlrpc_build_value(env, "s", XORG_UNKNOW_OPTION );
+    return xmlrpc_build_value(env, "s", XORG_UNKNOW_OPTION );
   }
 
 }

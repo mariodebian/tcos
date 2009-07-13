@@ -24,7 +24,7 @@
 #include "validate.h"
 #include "exe.h"
 
-void 
+void
 lockcontroller_exe( char *action )
 {
   char cmd[BIG_BUFFER];
@@ -39,7 +39,7 @@ lockcontroller_exe( char *action )
   return;
 }
 
-void 
+void
 lockcontroller_kill( char *action )
 {
   dbgtcos("tcosxmlrpc::lockcontroller_kill() action=> \"%s\"\n", action);
@@ -60,10 +60,10 @@ xmlrpc_value *tcos_lockcontroller(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *action;
   char *login_ok;
   char cmd[BIG_BUFFER];
-   /* Parse app string */
-   xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
-   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+  /* Parse app string */
+  xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "s", "params error");
 
   /* need login first */
   login_ok=validate_login(user,pass);
@@ -91,10 +91,10 @@ xmlrpc_value *tcos_unlockcontroller(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *action;
   char *login_ok;
 
-   /* Parse app string */
-   xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
-   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+  /* Parse app string */
+  xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "s", "params error");
 
    /* need login first */
   login_ok=validate_login(user,pass);

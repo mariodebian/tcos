@@ -46,7 +46,7 @@ xmlrpc_value *tcos_dpms(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* read what info search */
   xmlrpc_parse_value(env, in, "(sss)", &action, &user, &pass);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
    /* need login first */
   login_ok=validate_login(user,pass);
@@ -57,14 +57,14 @@ xmlrpc_value *tcos_dpms(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
   /* read action */
   if( strcmp(action, "off" ) == 0 ) {
-          sprintf( cmd , "%s dpms force off; echo $?", DPMS_CONTROLLER);
+    sprintf( cmd , "%s dpms force off; echo $?", DPMS_CONTROLLER);
   }
   else if( strcmp(action, "on" ) == 0 ) {
-          sprintf( cmd , "%s dpms force on; echo $?", DPMS_CONTROLLER);
+    sprintf( cmd , "%s dpms force on; echo $?", DPMS_CONTROLLER);
   }
   else {
-        /* show status */
-       sprintf( cmd , "%s q| awk '/Monitor/ {print $3}'", DPMS_CONTROLLER);
+    /* show status */
+    sprintf( cmd , "%s q| awk '/Monitor/ {print $3}'", DPMS_CONTROLLER);
   }
 
   dbgtcos("tcosxmlrpc::tcos_dpms() cmd=\"%s\"\n", cmd);
@@ -76,8 +76,8 @@ xmlrpc_value *tcos_dpms(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   fret = fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
-  
-  
+
+
   dbgtcos("tcosxmlrpc::tcos_dpms() line=\"%s\"\n", line);
 
   return xmlrpc_build_value(env, "s", line );

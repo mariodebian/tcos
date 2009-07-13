@@ -35,10 +35,10 @@ xmlrpc_value *tcos_lockscreen(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
 
-   /* Parse app string */
-   xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
-   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+  /* Parse app string */
+  xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "s", "params error");
 
   /* need login first */
   login_ok=validate_login(user,pass);
@@ -64,12 +64,12 @@ xmlrpc_value *tcos_unlockscreen(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
 
-   /* Parse app string */
-   xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
-   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+  /* Parse app string */
+  xmlrpc_parse_value(env, in, "(ss)", &user, &pass);
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "s", "params error");
 
-   /* need login first */
+  /* need login first */
   login_ok=validate_login(user,pass);
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )
     return xmlrpc_build_value(env, "s", login_ok );

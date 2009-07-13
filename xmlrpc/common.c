@@ -56,27 +56,27 @@ check_for_file(char *fname)
 {
 /* return 0 if not found or cant read or 1 if found */
 
- FILE *fptemp;
- if ((fptemp = fopen(fname,"r"))) {
+  FILE *fptemp;
+  if ((fptemp = fopen(fname,"r"))) {
     fclose(fptemp);
     dbgtcos("info check_for_file(): File \"%s\" found.\n", fname);
     return 1;
- }
+  }
 
-   dbgtcos("info check_for_file(): File \"%s\" not found or cant read.\n", fname);
-   return 0;
+  dbgtcos("info check_for_file(): File \"%s\" not found or cant read.\n", fname);
+  return 0;
 }
 
 
 
 
 unsigned int getfilesize(char *fname) {
-    struct stat infobuf;              /* place to store info */
+  struct stat infobuf;              /* place to store info */
 
-    if ( stat( fname, &infobuf) == -1 )  /* get info */
-        return -1;
-    else
-        return infobuf.st_size;
+  if ( stat( fname, &infobuf) == -1 )  /* get info */
+    return -1;
+  else
+    return infobuf.st_size;
 }
 
 

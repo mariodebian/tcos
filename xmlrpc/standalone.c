@@ -43,28 +43,28 @@ xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   dbgtcos("tcosxmlrpc::tcos_standalone() searching for standalone=\"%s\"\n", info);
 
   if ( strcmp(info, "get_user") == 0 )
-      fp=(FILE*)popen(STANDALONE_USER, "r");
+    fp=(FILE*)popen(STANDALONE_USER, "r");
 
   else if ( strcmp(info, "get_exclude") == 0 ) {
-      snprintf( line, BSIZE, "%s=%s 2>/dev/null", STANDALONE_EXCLUDE, group);
-      fp=(FILE*)popen(line, "r");
+    snprintf( line, BSIZE, "%s=%s 2>/dev/null", STANDALONE_EXCLUDE, group);
+    fp=(FILE*)popen(line, "r");
   }
   else if ( strcmp(info, "get_process") == 0 )
-      fp=(FILE*)popen(STANDALONE_PROCESS, "r");
+    fp=(FILE*)popen(STANDALONE_PROCESS, "r");
 
   else if ( strcmp(info, "get_server") == 0 ) {
-      snprintf( line, BSIZE, "%s %s 2>/dev/null", STANDALONE_SERVER, group);
-      fp=(FILE*)popen(line, "r");
+    snprintf( line, BSIZE, "%s %s 2>/dev/null", STANDALONE_SERVER, group);
+    fp=(FILE*)popen(line, "r");
   }
   else if ( strcmp(info, "get_time") == 0 )
-      fp=(FILE*)popen(STANDALONE_TIME, "r");
+    fp=(FILE*)popen(STANDALONE_TIME, "r");
 
   /* default method = error */
   else
-      return xmlrpc_build_value(env, "s", STANDALONE_UNKNOW );
+    return xmlrpc_build_value(env, "s", STANDALONE_UNKNOW );
 
   if (fp == NULL)
-	return xmlrpc_build_value(env, "s", STANDALONE_UNKNOW );
+    return xmlrpc_build_value(env, "s", STANDALONE_UNKNOW );
 
   /* put error into line */
   strncpy(line, STANDALONE_ERROR, BIG_BUFFER);
@@ -112,7 +112,7 @@ xmlrpc_value *tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   fp=(FILE*)popen(cmd, "r");
 
   if (fp == NULL)
-	return xmlrpc_build_value(env, "s", DBUS_ERROR );
+    return xmlrpc_build_value(env, "s", DBUS_ERROR );
 
   /* put error into line var */
   strncpy(line, DBUS_ERROR, BIG_BUFFER);
@@ -120,7 +120,7 @@ xmlrpc_value *tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   fret = fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
-  
+
   return xmlrpc_build_value(env, "s", line );
 }
 

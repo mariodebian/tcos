@@ -38,12 +38,12 @@ xmlrpc_value *tcos_vlc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
   char cmd[BIG_BUFFER];
-  
+
 
   /* read what info search */
   xmlrpc_parse_value(env, in, "(ssss)", &volume, &lock, &user, &pass);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
    /* need login first */
   login_ok=validate_login(user,pass);
@@ -62,7 +62,7 @@ xmlrpc_value *tcos_vlc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   sprintf( cmd , "%s %s", VLC_CONTROLLER, volume);
 
   dbgtcos("tcosxmlrpc::tcos_vlc() cmd=\"%s\"\n", cmd);
-  
+
   fp=(FILE*)popen(cmd, "r");
   pclose(fp);
 

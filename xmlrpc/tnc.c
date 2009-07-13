@@ -35,7 +35,7 @@ xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char line[BIG_BUFFER];
   char *action;
   char *ports;
-  char *onlyports; 
+  char *onlyports;
   char *username;
   char *user;
   char *pass;
@@ -47,7 +47,7 @@ xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* read what info search */
   xmlrpc_parse_value(env, in, "(ssssss)", &action, &onlyports, &ports, &username, &user, &pass);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
    /* need login first */
   login_ok=validate_login(user,pass);
@@ -58,16 +58,16 @@ xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
   /* prepare action */
   if( strcmp(action, "disable-internet" ) == 0 ) {
-      if ((fp=(FILE*)popen(NETWORK_IFACE, "r")) != NULL) {
-          fret = fgets( line, sizeof line, fp);
-          remove_line_break(line);
-          pclose(fp);
-          sprintf( cmd , "%s %s %s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, line, username);
-      }
-   }
-   else {
-      sprintf( cmd , "%s %s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, username);
-   }
+    if ((fp=(FILE*)popen(NETWORK_IFACE, "r")) != NULL) {
+      fret = fgets( line, sizeof line, fp);
+      remove_line_break(line);
+       pclose(fp);
+       sprintf( cmd , "%s %s %s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, line, username);
+    }
+  }
+  else {
+    sprintf( cmd , "%s %s %s %s %s", TNC_CONTROLLER, action, onlyports, ports, username);
+  }
 
   dbgtcos("tcosxmlrpc::tcos_tnc() cmd=\"%s\"\n", cmd);
 
@@ -79,7 +79,7 @@ xmlrpc_value *tcos_tnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   fret = fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
-  
+
   dbgtcos("tcosxmlrpc::tcos_tnc() line=\"%s\"\n", line);
 
   return xmlrpc_build_value(env, "s", line );

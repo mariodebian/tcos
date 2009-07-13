@@ -50,7 +50,7 @@ xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* read what option and cmdline params need */
   xmlrpc_parse_value(env, in, "(ssss)", &option, &timeout, &user, &pass);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
   gethostname(hostname,BSIZE);
   fp=(FILE*)popen(MY_IP_ADDRESS, "r");
@@ -85,10 +85,10 @@ xmlrpc_value *tcos_reboot_poweroff(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
    dbgtcos("tcosxmlrpc::tcos_reboot_poweroff() exec=\"%s\"\n", cmd);
 
-   if ( (strcmp(option, "reboot") == 0) || (strcmp(option, "poweroff") == 0) )
-       job_exe(cmd);
-   else
-       return xmlrpc_build_value(env, "s", RP_UNKNOW );
+  if ( (strcmp(option, "reboot") == 0) || (strcmp(option, "poweroff") == 0) )
+    job_exe(cmd);
+  else
+    return xmlrpc_build_value(env, "s", RP_UNKNOW );
 
   return xmlrpc_build_value(env, "s", RP_OK );
 }

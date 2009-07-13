@@ -30,52 +30,52 @@ xmlrpc_value *tcos_get_screenshot(xmlrpc_env *const env, xmlrpc_value *const in,
 xmlrpc_value *tcos_get_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
     {
-    
-    FILE *fp;
-    
-    char line[BIG_BUFFER];
-    char *size;
-    char *user;
-    char *pass;
-    char *login_ok;
 
-    size_t len, elen;
-	unsigned char *buf, *e;
-    
-    static xmlrpc_value *result;
+  FILE *fp;
 
-    /* read what info search */
-    xmlrpc_parse_value(env, in, "(sss)", &size, &user, &pass);
-    if (env->fault_occurred)
-        return xmlrpc_build_value(env, "(ss)", "error: params error", SCROT_EMPTY);
+  char line[BIG_BUFFER];
+  char *size;
+  char *user;
+  char *pass;
+  char *login_ok;
 
-    /* need login first */
-    login_ok=validate_login(user,pass);
-    if( strcmp(login_ok,  LOGIN_OK ) != 0 )
-        return xmlrpc_build_value(env, "(ss)", login_ok, SCROT_EMPTY );
+  size_t len, elen;
+  unsigned char *buf, *e;
 
-    if ( strlen(size) > 0)
-        snprintf( (char*) line, BSIZE, "%s %s", SCROT_CMD, size);
-    else
-        snprintf( (char*) line, BSIZE, "%s", SCROT_CMD);
+  static xmlrpc_value *result;
 
-    dbgtcos("tcosxmlrpc::getscreenshot() exe=%s\n", line);
+  /* read what info search */
+  xmlrpc_parse_value(env, in, "(sss)", &size, &user, &pass);
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "(ss)", "error: params error", SCROT_EMPTY);
 
-    /* exe screenshot */
-    fp=(FILE*)popen(line, "r");
-    fclose(fp);
+  /* need login first */
+  login_ok=validate_login(user,pass);
+  if( strcmp(login_ok,  LOGIN_OK ) != 0 )
+    return xmlrpc_build_value(env, "(ss)", login_ok, SCROT_EMPTY );
 
-    /* convert base64 string */
-    dbgtcos("tcosxmlrpc::getscreenshot() reading file=%s\n", SCREENSHOT_FILE);
-    buf = readfile(SCREENSHOT_FILE, &len);
-	if (buf == NULL)
-		return xmlrpc_build_value(env, "(ss)", SCROT_ERROR, SCROT_EMPTY );
+  if ( strlen(size) > 0)
+    snprintf( (char*) line, BSIZE, "%s %s", SCROT_CMD, size);
+  else
+    snprintf( (char*) line, BSIZE, "%s", SCROT_CMD);
 
-	e = base64_encode(buf, len, &elen);
+  dbgtcos("tcosxmlrpc::getscreenshot() exe=%s\n", line);
 
-    result = xmlrpc_build_value(env, "(ss)", SCROT_OK, e );
-    
-    free(e);
-    return result;
+  /* exe screenshot */
+  fp=(FILE*)popen(line, "r");
+  fclose(fp);
+
+  /* convert base64 string */
+  dbgtcos("tcosxmlrpc::getscreenshot() reading file=%s\n", SCREENSHOT_FILE);
+  buf = readfile(SCREENSHOT_FILE, &len);
+  if (buf == NULL)
+    return xmlrpc_build_value(env, "(ss)", SCROT_ERROR, SCROT_EMPTY );
+
+  e = base64_encode(buf, len, &elen);
+
+  result = xmlrpc_build_value(env, "(ss)", SCROT_OK, e );
+
+  free(e);
+  return result;
 }
 

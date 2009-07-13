@@ -50,51 +50,51 @@ xmlrpc_value *tcos_pci(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
   if (strcmp(pci, "") == 0 )
   {
-	return xmlrpc_build_value(env, "s", PCI_NEED_ID );
+    return xmlrpc_build_value(env, "s", PCI_NEED_ID );
   }
   /* list all pci ids */
   else if ( strcmp(pci, "pci_all") == 0 )
   {
-      fp=(FILE*)popen(PCI_ALL, "r");
-      dbgtcos("tcosxmlrpc::tcos_pci() reading pipe\n");
+    fp=(FILE*)popen(PCI_ALL, "r");
+    dbgtcos("tcosxmlrpc::tcos_pci() reading pipe\n");
 
-       if (fp == NULL)
-	return xmlrpc_build_value(env, "s", PCI_FP_ERROR );
+    if (fp == NULL)
+      return xmlrpc_build_value(env, "s", PCI_FP_ERROR );
 
-      fret = fgets( line, sizeof line, fp);
-      remove_line_break(line);
-      pclose(fp);
-      dbgtcos("tcosxmlrpc::tcos_pci() line=\"%s\"\n", line);
-      
-      return xmlrpc_build_value(env, "s", line );
+    fret = fgets( line, sizeof line, fp);
+    remove_line_break(line);
+    pclose(fp);
+    dbgtcos("tcosxmlrpc::tcos_pci() line=\"%s\"\n", line);
+
+    return xmlrpc_build_value(env, "s", line );
   }
   /* default method */
   else
   {
-      /* read all PCI ids and store in allpci */
-      fp=(FILE*)popen(PCI_ALL, "r");
-      fret = fgets( allpci, sizeof allpci, fp);
+    /* read all PCI ids and store in allpci */
+    fp=(FILE*)popen(PCI_ALL, "r");
+    fret = fgets( allpci, sizeof allpci, fp);
+    remove_line_break(line);
+    pclose(fp);
+    /* search pci in allpci */
+
+    dbgtcos("tcosxmlrpc::tcos_pci() compare=\"%d\"\n", strstr( allpci, pci));
+
+    if ( strstr( allpci, pci ) == 0 ) {
+      return xmlrpc_build_value(env, "s", PCI_UNKNOW );
+    }
+    else {
+      /* return info about pci bus id */
+      snprintf ( (char*) pci_cmd, BSIZE, "lspci |grep \"%s\" | sed s/\"%s \"//g", pci, pci);
+
+      dbgtcos("tcosxmlrpc::tcos_pci() pci_cmd=\"%s\"\n", pci_cmd);
+
+      fp=(FILE*)popen(pci_cmd, "r");
+      fret = fgets( line, sizeof line, fp);
       remove_line_break(line);
       pclose(fp);
-      /* search pci in allpci */
-
-      dbgtcos("tcosxmlrpc::tcos_pci() compare=\"%d\"\n", strstr( allpci, pci));
-
-      if ( strstr( allpci, pci ) == 0 ) {
-	return xmlrpc_build_value(env, "s", PCI_UNKNOW );
-      }
-      else {
-        /* return info about pci bus id */
-	snprintf ( (char*) pci_cmd, BSIZE, "lspci |grep \"%s\" | sed s/\"%s \"//g", pci, pci);
-
-        dbgtcos("tcosxmlrpc::tcos_pci() pci_cmd=\"%s\"\n", pci_cmd);
-
-        fp=(FILE*)popen(pci_cmd, "r");
-        fret = fgets( line, sizeof line, fp);
-        remove_line_break(line);
-        pclose(fp);
-        return xmlrpc_build_value(env, "s", line );
-      }
+      return xmlrpc_build_value(env, "s", line );
+    }
   }
 
   /* never here */

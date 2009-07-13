@@ -47,19 +47,6 @@ typedef struct ip_address {
 
 
 
-/*FILE *popen(const char *orden, const char *tipo);*/
-/*int pclose(FILE *flujo);*/
-
-/*int gethostname(char *name, size_t len);*/
-/*int setenv(const char *nombre, const char *valor, int sobrescribir);*/
-/*int unsetenv(const char *name);*/
-
-/*int mkstemp(char *template);*/
-/*int snprintf(char *str, size_t size, const char *format, ...);*/
-
-
-/*int sscanf(const char *str, const char *format, ...);*/
-
 /* common.c */
 void remove_line_break( char *s );
 
@@ -79,8 +66,8 @@ int check_for_file(char *fname);
 #define OLD_VERSION_MINOR 920
 
 #if XMLRPC_VERSION_MAYOR > OLD_VERSION_MAYOR || ( (XMLRPC_VERSION_MAYOR == OLD_VERSION_MAYOR) && (XMLRPC_VERSION_MINOR > OLD_VERSION_MINOR) )
-    #define NEWAPI 1
-    #include <xmlrpc_server.h>
+  #define NEWAPI 1
+  #include <xmlrpc_server.h>
 #endif
 
 

@@ -42,7 +42,7 @@ xmlrpc_value *tcos_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* read what info search */
   xmlrpc_parse_value(env, in, "(sss)", &size, &user, &pass);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
    /* need login first */
   login_ok=validate_login(user,pass);
@@ -50,9 +50,9 @@ xmlrpc_value *tcos_screenshot(xmlrpc_env *env, xmlrpc_value *in, void *ud)
     return xmlrpc_build_value(env, "s", login_ok );
 
   if ( strlen(size) > 0)
-     snprintf( (char*) line, BSIZE, "%s %s", SCROT_CMD, size);
+    snprintf( (char*) line, BSIZE, "%s %s", SCROT_CMD, size);
   else
-     snprintf( (char*) line, BSIZE, "%s", SCROT_CMD);
+    snprintf( (char*) line, BSIZE, "%s", SCROT_CMD);
 
   dbgtcos("tcosxmlrpc::screenshot() exe=%s\n", line);
 

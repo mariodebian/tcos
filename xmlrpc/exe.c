@@ -25,10 +25,10 @@
 #include "exe.h"
 
 
-void 
+void
 job_exe( char *cmd )
 {
-  FILE *fp; 
+  FILE *fp;
   char job[BUFF_SIZE];
 
   dbgtcos("tcosxmlrpc::job_exe() exec=> \"%s\"\n", cmd);
@@ -42,7 +42,7 @@ job_exe( char *cmd )
   return;
 }
 
-void 
+void
 kill_exe( char *cmd )
 {
   FILE *fp;
@@ -68,11 +68,11 @@ xmlrpc_value *tcos_exe(xmlrpc_env *env, xmlrpc_value *in, void *ud)
      char *pass;
      char *login_ok;
 
-   dbgtcos("tcosxmlrpc::tcos_exe() Init \n");
+  dbgtcos("tcosxmlrpc::tcos_exe() Init \n");
 
-     xmlrpc_parse_value(env, in, "(sss)", &s, &user, &pass);
-     if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "error: params error");
+  xmlrpc_parse_value(env, in, "(sss)", &s, &user, &pass);
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "s", "error: params error");
 
 
   /* need login first */
@@ -93,27 +93,27 @@ xmlrpc_value *tcos_kill(xmlrpc_env *const env, xmlrpc_value *const in, void *con
 xmlrpc_value *tcos_kill(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 #endif
 {
-     char *s;
-     char *user;
-     char *pass;
-     char *login_ok;
+  char *s;
+  char *user;
+  char *pass;
+  char *login_ok;
 
-   dbgtcos("tcosxmlrpc::tcos_kill() Init \n");
+  dbgtcos("tcosxmlrpc::tcos_kill() Init \n");
 
-     xmlrpc_parse_value(env, in, "(sss)", &s, &user, &pass);
-     if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "error: params error");;
+  xmlrpc_parse_value(env, in, "(sss)", &s, &user, &pass);
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "s", "error: params error");;
 
   /* need login first */
   login_ok=validate_login(user,pass);
   if( strcmp(login_ok,  LOGIN_OK ) != 0 )
     return xmlrpc_build_value(env, "s", login_ok );
 
-   dbgtcos("tcosxmlrpc::tcos_kill s=\"%s\" \n", s);
+  dbgtcos("tcosxmlrpc::tcos_kill s=\"%s\" \n", s);
 
-     kill_exe(s);
+  kill_exe(s);
 
-     return xmlrpc_build_value(env, "s", s);
+  return xmlrpc_build_value(env, "s", s);
 }
 
 

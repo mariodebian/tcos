@@ -47,7 +47,7 @@ xmlrpc_value *tcos_echo(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    dbgtcos("tcosxmlrpc::tcos_echo() %s\n", s);
    return xmlrpc_build_value(env, "s", s);
  }
- 
+
 
 #if NEWAPI
 xmlrpc_value *tcos_status(xmlrpc_env *const env, xmlrpc_value *const in, void *const serverContext)
@@ -55,39 +55,38 @@ xmlrpc_value *tcos_status(xmlrpc_env *const env, xmlrpc_value *const in, void *c
 xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_data)
 #endif
 {
-   FILE *fp=NULL;
-   char *app=NULL;
-   char cmd[BUFF_SIZE];
-   char ret[BUFF_SIZE];
-   int fret;
+  FILE *fp=NULL;
+  char *app=NULL;
+  char cmd[BUFF_SIZE];
+  char ret[BUFF_SIZE];
+  int fret;
 
 
-   dbgtcos("tcosxmlrpc::tcos_status() Init \n");
+  dbgtcos("tcosxmlrpc::tcos_status() Init \n");
 
-   /* Parse app string */
-   xmlrpc_parse_value(env, in, "(s)", &app);
+  /* Parse app string */
+  xmlrpc_parse_value(env, in, "(s)", &app);
 
-   if (env->fault_occurred)
-	return xmlrpc_build_value(env, "s", "params error");
+  if (env->fault_occurred)
+    return xmlrpc_build_value(env, "s", "params error");
 
-   dbgtcos("tcosxmlrpc::tcos_status() pidof %s\n", app);
-   snprintf( (char*) &cmd, BUFF_SIZE, "pidof %s| grep -c \"[1234567890]\"",app);
-   dbgtcos("tcosxmlrpc::tcos_status() exec cmd=\"%s\"\n", cmd);
+  dbgtcos("tcosxmlrpc::tcos_status() pidof %s\n", app);
+  snprintf( (char*) &cmd, BUFF_SIZE, "pidof %s| grep -c \"[1234567890]\"",app);
+  dbgtcos("tcosxmlrpc::tcos_status() exec cmd=\"%s\"\n", cmd);
 
-   fp=(FILE*)popen(cmd, "r");
-   if (env->fault_occurred) {
-        pclose(fp);
-	return xmlrpc_build_value(env, "s", "exec error");
-   }
+  fp=(FILE*)popen(cmd, "r");
+  if (env->fault_occurred) {
+    pclose(fp);
+    return xmlrpc_build_value(env, "s", "exec error");
+  }
 
-   dbgtcos("tcosxmlrpc::tcos_status() reading from fp pointer\n");
-   fret = fscanf(fp, "%s", ret);
-   dbgtcos( "tcosxmlrpc::tcos_status() ret value=%s\n", ret);
-   pclose(fp);
+  dbgtcos("tcosxmlrpc::tcos_status() reading from fp pointer\n");
+  fret = fscanf(fp, "%s", ret);
+  dbgtcos( "tcosxmlrpc::tcos_status() ret value=%s\n", ret);
+  pclose(fp);
 
-   if (ret != NULL)
-       return xmlrpc_build_value(env, "s", ret);
-   else
-       return xmlrpc_build_value(env, "s", "error");
-
+  if (ret != NULL)
+    return xmlrpc_build_value(env, "s", ret);
+  else
+    return xmlrpc_build_value(env, "s", "error");
 }

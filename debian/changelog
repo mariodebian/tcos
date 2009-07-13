@@ -13,8 +13,10 @@ initramfs-tools-tcos (0.89.36+1) unstable; urgency=low
   * conf/tcos-modules.conf
     - Add new modules ide-gd_mod ide-cd_mod
   * Refactorize Makefiles and some XMLRPC code
+  * Set C code spaces to 2 and clean some old code
+  * Disable old screenshot.c method
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 08 Jul 2009 23:17:23 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 13 Jul 2009 10:59:38 +0200
 
 initramfs-tools-tcos (0.89.36) unstable; urgency=low
 

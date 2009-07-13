@@ -52,55 +52,55 @@ char *validate_tcos(char *user, char *pass)
   struct info *login=malloc(sizeof(struct info));
   fp = fopen ("/etc/tcospasswd", "r" );
   if (fp == NULL) {
-     dbgtcos("error validate_tcos(): file /etc/tcospasswd not exists.\n");
-     return (char*) LOGIN_ERROR;
+    dbgtcos("error validate_tcos(): file /etc/tcospasswd not exists.\n");
+    return (char*) LOGIN_ERROR;
   }
 
   fret = fgets( line, sizeof line, fp);
   /*remove_line_break(line);*/
   fclose(fp);
   strncpy(login->line, line, BSIZE);
-  
+
   /* split using ':' */
   tokens = split(login->line, ":");
 
   for(i = 0; tokens[i] != NULL; i++){
-      if (i==0) {
-        login->user=tokens[i];
-        dbgtcos("split_login() USER FOUND tokens[%d]='%s' user='%s'\n",i,tokens[i], login->user);
-      }
-      if (i == 1) {
-        login->pass=tokens[i];
-        login->pass[strlen(login->pass)-1]='\0';
-        #ifdef VISIBLE_PASSWD
-          dbgtcos("split_login() PASSWD FOUND tokens[%d]='%s', pass='%s'\n",i,tokens[i], login->pass);
-        #endif
-      }
+    if (i==0) {
+      login->user=tokens[i];
+      dbgtcos("split_login() USER FOUND tokens[%d]='%s' user='%s'\n",i,tokens[i], login->user);
+    }
+    if (i == 1) {
+      login->pass=tokens[i];
+      login->pass[strlen(login->pass)-1]='\0';
+      #ifdef VISIBLE_PASSWD
+        dbgtcos("split_login() PASSWD FOUND tokens[%d]='%s', pass='%s'\n",i,tokens[i], login->pass);
+      #endif
+    }
   }
 
-  #ifdef VISIBLE_PASSWD 
+  #ifdef VISIBLE_PASSWD
     dbgtcos( "validate_tcos() login->user=\"%s\" login->pass=\"%s\"\n", login->user, login->pass);
   #endif
 
   dbgtcos( "validate_tcos() check users user=\"%s\" my_user=\"%s\"\n", user, login->user);
 
   if ( strcmp(login->user, user) != 0 ) {
-     dbgtcos("error validate_passwd(): BAD USER.\n");
-     free_tokens(tokens);
-     return LOGIN_NOUSER;
+    dbgtcos("error validate_passwd(): BAD USER.\n");
+    free_tokens(tokens);
+    return LOGIN_NOUSER;
   }
 
   cryptpass=crypt(pass, PASS_ID );
 
-  #ifdef VISIBLE_PASSWD 
+  #ifdef VISIBLE_PASSWD
     dbgtcos("info validate_passwd(): the_pass=%s my_pass=%s \n", login->pass, cryptpass);
   #endif
 
   if ( strcmp(login->pass, cryptpass) == 0 ) {
-     dbgtcos("info validate_passwd(): LOGIN OK.\n");
-     free(login);
-     free_tokens(tokens);
-     return LOGIN_OK;
+    dbgtcos("info validate_passwd(): LOGIN OK.\n");
+    free(login);
+    free_tokens(tokens);
+    return LOGIN_OK;
   }
   dbgtcos("info validate_passwd(): BAD PASSWORD.\n");
   free(login);

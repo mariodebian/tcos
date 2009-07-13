@@ -71,32 +71,3 @@ char
   return (char*) LOGIN_ERROR;
 }
 
-
-char 
-*validate_login2(char *user, char *pw)
-{
-
-    /* check for /etc/shadow */
-    struct passwd *pwd;
-
-    pwd=getpwnam(user);
-    if (pwd == NULL) {
-      fprintf(stderr, "error get_passwd(): user not found.\n");
-      return LOGIN_NOUSER;
-    }
-
-    else if ( strcmp(pwd->pw_passwd, "x") == 0 ) {
-      fprintf(stderr, "info get_passwd(): shadow passwords.\n");
-      /* try /etc/shadow */
-      return validate_shadow(user, pw);
-    }
-
-    else {
-       fprintf(stderr, "info get_passwd(): no shadow passwords.\n");
-       /* try /etc/passwd */
-       return validate_passwd(user, pw);
-    }
-    return((char*) LOGIN_ERROR);    
-}
-
-

@@ -41,26 +41,26 @@ xmlrpc_value *tcos_login(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
   login_ok=validate_login(user, pass);
 
-/*  if ( login_ok == LOGIN_OK )*/
+  /*  if ( login_ok == LOGIN_OK )*/
   if ( strcmp(login_ok,  LOGIN_OK ) == 0 )
     return xmlrpc_build_value(env, "s", LOGIN_OK_MSG);
 
-/*  else if ( login_ok == LOGIN_NOUSER) */
+  /*  else if ( login_ok == LOGIN_NOUSER) */
   else if ( strcmp(login_ok,  LOGIN_NOUSER ) == 0 )
     return xmlrpc_build_value(env, "s", LOGIN_NOUSER_MSG);
 
-/*  else if ( login_ok == LOGIN_NOPASS) */
+  /*  else if ( login_ok == LOGIN_NOPASS) */
   else if (  strcmp(login_ok,  LOGIN_NOPASS ) == 0 )
     return xmlrpc_build_value(env, "s", LOGIN_NOPASS_MSG);
 
-/*  else if ( login_ok == LOGIN_NOPERMS) */
+  /*  else if ( login_ok == LOGIN_NOPERMS) */
   else if (  strcmp(login_ok,  LOGIN_NOPERMS ) == 0 )
     return xmlrpc_build_value(env, "s", LOGIN_NOPERMS_MSG);
 
-/*  else if ( login_ok == LOGIN_EXPIRED) */
+  /*  else if ( login_ok == LOGIN_EXPIRED) */
   else if (  strcmp(login_ok,  LOGIN_EXPIRED ) == 0 )
     return xmlrpc_build_value(env, "s", LOGIN_EXPIRED_MSG);
-    
+
   return xmlrpc_build_value(env, "s", LOGIN_ERROR);
 }
 

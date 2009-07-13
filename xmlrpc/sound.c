@@ -51,7 +51,7 @@ xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* read what option and cmdline params need */
   xmlrpc_parse_value(env, in, "(ssss)", &option, &cmdline, &user, &pass);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
   gethostname(hostname,BSIZE);
   fp=(FILE*)popen(MY_IP_ADDRESS, "r");
@@ -83,7 +83,7 @@ xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
    fp=(FILE*)popen( mycmd , "r");
    if (fp == NULL)
-      return xmlrpc_build_value(env, "s", SOUND_READING_ERROR );
+     return xmlrpc_build_value(env, "s", SOUND_READING_ERROR );
 
    /* put error msg into line var */
    strncpy(line, SOUND_ERROR, BSIZE);
@@ -91,9 +91,9 @@ xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    fret = fgets( line, sizeof line, fp);
    remove_line_break(line);
    pclose(fp);
-   
+
    if (env->fault_occurred) {
-        return xmlrpc_build_value(env, "s", SOUND_READING_ERROR);
+     return xmlrpc_build_value(env, "s", SOUND_READING_ERROR);
    }
 
    return xmlrpc_build_value(env, "s", line );

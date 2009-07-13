@@ -1,5 +1,5 @@
 /*
-* debug.c part of tcosxmlrpc
+* debug.h part of tcosxmlrpc
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
 *
 * This program is free software; you can redistribute it and/or
@@ -18,14 +18,6 @@
 */
 
 
-/*
-*  you can compile this file as standalone app with:
-*     gcc -Wall debug.c -o debug
-*
-*  Try exec:
-*     ./debug   [nothing to stdout or err]
-*     TCOS_DEBUG=1 ./debug  print some debug strings
-*/
 
 #include <stdio.h>
 

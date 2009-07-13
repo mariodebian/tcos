@@ -40,7 +40,7 @@
 #include "standalone.h"
 #include "pci.h"
 #include "exe.h"
-#include "screenshot.h"
+/*#include "screenshot.h"*/
 #include "xorg.h"
 #include "sound.h"
 #include "devices.h"
@@ -50,14 +50,10 @@
 #include "vlc.h"
 #include "rtp.h"
 #include "tnc.h"
-
 #include "get_screenshot.h"
 #include "reboot_poweroff.h"
-
 #include "dpms.h"
-
 #include "pam-usb.h"
-
 #include "simple-methods.h"
 
 
@@ -104,7 +100,7 @@ int main (int argc, char **argv)
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.pci", &tcos_pci, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.exe", &tcos_exe, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.kill", &tcos_kill, NULL);
-    xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.screenshot", &tcos_screenshot, NULL);
+    /*xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.screenshot", &tcos_screenshot, NULL);*/
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.xorg", &tcos_xorg, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.sound", &tcos_sound, NULL);
     xmlrpc_registry_add_method(&envP, registryP, NULL, "tcos.devices", &tcos_devices, NULL);
@@ -124,46 +120,46 @@ int main (int argc, char **argv)
 #else
     xmlrpc_server_abyss_add_method_w_doc("tcos.version", &tcos_version, NULL,
     ":s", "Tcos, Returns tcosxmlrpc version. (no auth needed)");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.echo", &tcos_echo, NULL,
     "s:s", "Tcos, debug class, returns string passed. (no auth needed)");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.status", &tcos_status, NULL,
     "s:s", "Tcos, returns 1 if app running 0 if not or error string. (no auth needed)");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.login", &tcos_login, NULL,
     "ss:s", "Tcos, Basic auth system.");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.logout", &tcos_logout, NULL,
     ":s", "Tcos, Basic auth system.");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.xauth", &tcos_xauth, NULL,
     "ss:s", "Tcos, authenticate with X cookies.");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.standalone", &tcos_standalone, NULL,
     "ss:s", "Tcos, Standalone. Return standalone values (no auth needed)");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.dbus", &tcos_dbus, NULL,
     "s:s", "Tcos, DBus. Exe with a wrapper some dbus events (auth needed)");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.pci", &tcos_pci, NULL,
     "s:s", "Tcos, PCI data stuff. Send pci_all to get pci bus ids. (no auth needed)");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.exe", &tcos_exe, NULL,
     "sss:s", "Tcos, Exec a command passed as string. (need login first)");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.kill", &tcos_kill, NULL,
     "sss:s", "Tcos, killall command passed as string. (need login first)");
-    
-    xmlrpc_server_abyss_add_method_w_doc("tcos.screenshot", &tcos_screenshot, NULL,
-    "ss:s", "Tcos, make a screenshot and return files. (need login first)");
+
+    /*xmlrpc_server_abyss_add_method_w_doc("tcos.screenshot", &tcos_screenshot, NULL,
+    "ss:s", "Tcos, make a screenshot and return files. (need login first)");*/
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.xorg", &tcos_xorg, NULL,
     "ssss:s", "Tcos, configure, change or get xorg.conf settings. (need login first)");
 
     xmlrpc_server_abyss_add_method_w_doc("tcos.sound", &tcos_sound, NULL,
     "ssss:s", "Tcos, configure, change or get sound settings.");
-    
+
     xmlrpc_server_abyss_add_method_w_doc("tcos.devices", &tcos_devices, NULL,
     "ssss:s", "Tcos, configure, change or get devices settings.");
 

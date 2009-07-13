@@ -53,7 +53,6 @@ SRCS	     := common.c \
 		pci.c \
 		reboot_poweroff.c \
 		rtp.c \
-		screenshot.c \
 		simple-methods.c \
 		sound.c \
 		standalone.c \
@@ -64,6 +63,10 @@ SRCS	     := common.c \
 		xauth.c \
 		xorg.c \
 		tcosxmlrpc.c
+
+# deleted parts
+#		screenshot.c \
+#
 
 OBJS		:= $(SRCS:.c=.o)
 

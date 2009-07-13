@@ -50,9 +50,9 @@ xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* read what option and cmdline params need */
   xmlrpc_parse_value(env, in, "(ssss)", &option, &cmdline, &cookie, &hostname);
   if (env->fault_occurred)
-        return xmlrpc_build_value(env, "s", "params error");
+    return xmlrpc_build_value(env, "s", "params error");
 
-   dbgtcos("tcosxmlrpc::tcos_pam_usb() option=%s cmdline=%s \n", option, cmdline);
+  dbgtcos("tcosxmlrpc::tcos_pam_usb() option=%s cmdline=%s \n", option, cmdline);
 
 
   /* need XAUTH first (only if not initusb) */
@@ -65,72 +65,72 @@ xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
     }
   }
 
-   /* if option == getpad use base64 to read file */
-   if ( strcmp(option, "getpad") == 0 ) {
-       dbgtcos("tcos_pam_usb() option getpad, read base64 file\n");
-       /* file is /mnt/__UUID__/.pamusb/__USER__.__SERVERHOSTNAME__.pad */
-       buf = readfile(cmdline, &len);
-       if (buf == NULL)
-            return xmlrpc_build_value(env, "s", PAM_USB_EMPTY );
-        e = base64_encode(buf, len, &elen);
+  /* if option == getpad use base64 to read file */
+  if ( strcmp(option, "getpad") == 0 ) {
+    dbgtcos("tcos_pam_usb() option getpad, read base64 file\n");
+    /* file is /mnt/__UUID__/.pamusb/__USER__.__SERVERHOSTNAME__.pad */
+    buf = readfile(cmdline, &len);
+    if (buf == NULL)
+      return xmlrpc_build_value(env, "s", PAM_USB_EMPTY );
+    e = base64_encode(buf, len, &elen);
     result = xmlrpc_build_value(env, "s", e );
     free(e);
     dbgtcos("tcos_pam_usb() option getpad, ok, returning base64 code (%d bytes)...\n", len);
     return result;
-   }
+  }
 
 
-   /* if option == savepad use base64 to write file */
-   if ( strncmp(option, "/mnt/", 5) == 0 ) {
-        dbgtcos("tcos_pam_usb() option savepad, save base64 file\n");
-        /* file is /mnt/__UUID__/.pamusb/__USER__.__SERVERHOSTNAME__.pad */
-        e = base64_encode( (const unsigned char *) cmdline, len, &elen);
-        fp = fopen(option, "w");
-        if (fp == NULL)
-            return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
-        fwret = fwrite(e, 1, elen, fp);
-        fclose(fp);
-        free(e);
+  /* if option == savepad use base64 to write file */
+  if ( strncmp(option, "/mnt/", 5) == 0 ) {
+    dbgtcos("tcos_pam_usb() option savepad, save base64 file\n");
+    /* file is /mnt/__UUID__/.pamusb/__USER__.__SERVERHOSTNAME__.pad */
+    e = base64_encode( (const unsigned char *) cmdline, len, &elen);
+    fp = fopen(option, "w");
+    if (fp == NULL)
+      return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
+    fwret = fwrite(e, 1, elen, fp);
+    fclose(fp);
+    free(e);
     dbgtcos("tcos_pam_usb() option savepad, ok, saving base64 code into '%s'...\n", option);
     return xmlrpc_build_value(env, "s", PAM_USB_OK );
-   }
+  }
 
-   /* if option == getpad use base64 to read file */
-   if ( strncmp(option, "//mnt/", 6) == 0 ) {
-       dbgtcos("tcos_pam_usb() option newpad, save base64 text into file in binary format\n");
-       /* file is /mnt/__UUID__/.pamusb/__USER__.__SERVERHOSTNAME__.pad */
-        len=(strlen(cmdline));
-        e = base64_decode( (const unsigned char *) cmdline, len, &elen);
-        fp = fopen(option, "w+");
-        if (fp == NULL)
-            return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
-        fwret = fwrite(e, 1, elen, fp);
-        fclose(fp);
-        free(e);
+  /* if option == getpad use base64 to read file */
+  if ( strncmp(option, "//mnt/", 6) == 0 ) {
+    dbgtcos("tcos_pam_usb() option newpad, save base64 text into file in binary format\n");
+    /* file is /mnt/__UUID__/.pamusb/__USER__.__SERVERHOSTNAME__.pad */
+    len=(strlen(cmdline));
+    e = base64_decode( (const unsigned char *) cmdline, len, &elen);
+    fp = fopen(option, "w+");
+    if (fp == NULL)
+      return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
+    fwret = fwrite(e, 1, elen, fp);
+    fclose(fp);
+    free(e);
     dbgtcos("tcos_pam_usb() option newpad, ok, saving base64 code into '%s'...\n", option);
     return xmlrpc_build_value(env, "s", PAM_USB_OK );
-   }
+  }
 
 
-   snprintf( (char*) mycmd, BSIZE, "%s %s '%s'", PAM_USB_WRAPPER, option, cmdline);
+  snprintf( (char*) mycmd, BSIZE, "%s %s '%s'", PAM_USB_WRAPPER, option, cmdline);
 
-   fp=(FILE*)popen( mycmd , "r");
-   if (fp == NULL)
-      return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
+  fp=(FILE*)popen( mycmd , "r");
+  if (fp == NULL)
+    return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR );
 
-   /* put error msg into line var */
-   strncpy(line, PAM_USB_ERROR, BSIZE);
+  /* put error msg into line var */
+  strncpy(line, PAM_USB_ERROR, BSIZE);
 
-   fret= fgets( line, sizeof line, fp);
-   remove_line_break(line);
-   pclose(fp);
-   dbgtcos("tcosxmlrpc::tcos_pam_usb(%s) = %s \n", mycmd, line);
+  fret= fgets( line, sizeof line, fp);
+  remove_line_break(line);
+  pclose(fp);
+  dbgtcos("tcosxmlrpc::tcos_pam_usb(%s) = %s \n", mycmd, line);
 
-   if (env->fault_occurred) {
-        return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR);
-   }
+  if (env->fault_occurred) {
+    return xmlrpc_build_value(env, "s", PAM_USB_READING_ERROR);
+  }
 
-   return xmlrpc_build_value(env, "s", line );
+  return xmlrpc_build_value(env, "s", line );
 }
 
 
