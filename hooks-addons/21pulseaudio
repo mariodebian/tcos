@@ -44,6 +44,8 @@ else
  mkdir -p ${DESTDIR}/usr/lib
  copydir /usr/lib/pulse-*   /usr/lib/
 
+ mkdir -p ${DESTDIR}/var/lib/pulse
+
  # clean unneeded modules
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*.la
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*jack*
@@ -63,6 +65,10 @@ else
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*http*
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*console-kit*
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*ladspa*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*bluetooth*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*augment*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*phone*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*position-event*
 
  # needed for pulse -> esound -> OSS
  [ -e /usr/lib/pulse-*/modules/libsocket-client.so ] && \
@@ -91,6 +97,8 @@ else
  mkdir -p $DESTDIR/etc/pulse
  cpifexists /etc/pulse/client.conf     /etc/pulse/
  cpifexists /etc/pulse/daemon.conf     /etc/pulse/
+ echo "shm-size-bytes = 16"         >> $DESTDIR/etc/pulse/daemon.conf
+ echo "disable-shm = yes"           >> $DESTDIR/etc/pulse/daemon.conf
 
  if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
    _SERVER=";\$(read_server "xdmcp-server")"
@@ -119,6 +127,12 @@ cat << FIN > /etc/pulse/default.pa
 load-module module-esound-sink server=127.0.0.1
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
+.ifexists module-x11-publish.so
+.nofail
+load-module module-x11-publish
+.fail
+.endif
+
 FIN
 
 else
@@ -131,6 +145,12 @@ load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1$_SERVER
 load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;\$(read_server "xdmcp-server")
 
 load-module module-esound-protocol-unix
+
+.ifexists module-x11-publish.so
+.nofail
+load-module module-x11-publish
+.fail
+.endif
 
 .nofail
 FIN
@@ -162,20 +182,23 @@ fi
 _log "STARTPULSEAUDIO starting pulseaudio server..."
 pulseaudio  \${OPTS}  &
 
-sleep 1
-
-# wait for Xorg is started
-
-while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
- sleep 2
-done
-       
-# wait until Xorg is complety started      
-sleep 5
-
-DISPLAY=:0 pax11publish -e
-
+# exit now, X11 publish is done with a module
 exit 0
+
+#sleep 1
+#
+# wait for Xorg is started
+#
+#while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
+# sleep 2
+#done
+#       
+# wait until Xorg is complety started      
+#sleep 5
+#
+#DISPLAY=:0 pax11publish -e
+#
+#exit 0
 
 EOF
   chmod +x  ${DESTDIR}/sbin/startpulseaudio
