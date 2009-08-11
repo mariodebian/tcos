@@ -261,6 +261,13 @@ fi
 
 /sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
 
+while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
+ sleep 2
+done
+
+# wait until Xorg is complety started
+sleep 2
+
 xterm  >> /tmp/initramfs.debug 2>&1 &
 twm  >> /tmp/initramfs.debug 2>&1 &
 
@@ -288,6 +295,13 @@ if [ -f $\XAUTHORITY ]; then
 fi
 
 /sbin/tryXorg  --xorgopts="\${TCOS_XORG_OPTS}" &
+
+while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
+ sleep 2
+done
+
+# wait until Xorg is complety started
+sleep 2
 
 # no window manager for freenx
 #twm  >> /tmp/initramfs.debug 2>&1 &
@@ -334,6 +348,13 @@ if [ -f \$XAUTHORITY ]; then
 fi
 
 /sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
+
+while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
+ sleep 2
+done
+
+# wait until Xorg is complety started
+sleep 2
 
 remoteuser=\$(read_cmdline_var "sshuser" "root")
 remotesshhost=\$(read_cmdline_var "sshhost" "\${SERVER}")

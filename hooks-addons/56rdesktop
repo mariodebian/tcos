@@ -32,6 +32,11 @@ fi
 
 Xorg \${TCOS_XORG_OPTS}  >> /tmp/initramfs.debug 2>&1 &
 
+while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
+ sleep 2
+done
+
+# wait until Xorg is complety started
 sleep 2
 
 # default server
