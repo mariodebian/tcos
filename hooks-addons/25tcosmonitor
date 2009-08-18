@@ -41,14 +41,12 @@ cpifexists ${TCOS_BINS}/save-udev.sh             /usr/sbin/
 cpifexists ${TCOS_BINS}/listener-daemon.sh       /usr/sbin/
 
 # need udevinfo in listener-daemon.sh
-if [ ! -e /usr/bin/udevinfo ]; then
+if [ ! -e /usr/bin/udevinfo ] || readlink /usr/bin/udevinfo | grep -q udevadm; then
   cat << EOF > $DESTDIR/usr/bin/udevinfo
 #!/bin/sh
-udevadm info \$@
+/sbin/udevadm info \$@
 EOF
   chmod +x $DESTDIR/usr/bin/udevinfo
-elif readlink /usr/bin/udevinfo | grep -q udevadm; then
-  echo "/sbin/udevadm /usr/bin/udevinfo" >> $DESTDIR/conf/links
 else
   cpifexists /usr/bin/udevinfo                     /usr/bin/
 fi
