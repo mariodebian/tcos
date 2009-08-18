@@ -61,7 +61,7 @@ xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
   ip=check_ip_address(ip_string);
 
-  dbgtcos("tcosxmlrpc::tcos_sound() option=%s cmdline=%s user=%s pass=%s\n", option, cmdline, user, pass);
+  dbgtcos("tcosxmlrpc::tcos_sound() option=%s cmdline=%s user=%s pass=**notshow**\n", option, cmdline, user);
 
   if ( (strcmp(pass, hostname ) == 0) || (strcmp(pass, ip.ipstr) == 0) ) {
     /* need XAUTH first */
