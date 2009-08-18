@@ -38,9 +38,7 @@
 #define MSG_BUFF 4096
 #define POLL_TIMEOUT 2*1000
 
-/*for usleep */
-#include <unistd.h>
-void usleep(unsigned long usec);
+
 
 int snprintf(char *str, size_t size, const char *format, ...);
 FILE *popen(const char *cmd, const char *type);
@@ -62,6 +60,13 @@ int file_exists (char * fileName)
     return 0;
 }
 
+#include <time.h>
+void mysleep(time_t sec, long nsec){
+    struct timespec ourtime;
+    ourtime.tv_sec=sec;
+    ourtime.tv_nsec=nsec;
+    nanosleep(&ourtime, NULL);
+}
 
 #define SAVE_UDEV "/usr/sbin/save-udev.sh"
 int found_device=0;
@@ -86,7 +91,7 @@ int getnumlines( char *fname )
         ++lines;
     }
     fclose(fp);
-    debug("  DEBUG: getnumlines of '%s' %d\n", fname, lines);
+    /*debug("  DEBUG: getnumlines of '%s' %d\n", fname, lines);*/
     return lines;
 }
 
@@ -176,12 +181,13 @@ int compare(char *fname1, char *fname2)
     }
 
     if (n1 == n2) {
-        debug("DEBUG: warning, files have the same number of lines %d\n", n1);
+        /*debug("DEBUG: warning, files have the same number of lines %d\n", n1);*/
         return 1;
     }
 
     if (n1 > n2) {
         /* mount */
+        debug("   DEBUG: compare MOUNT, diff=%d\n", n1-n2);
         old=fname1;
         new=fname2;
         action="mount";
@@ -222,7 +228,7 @@ int compare(char *fname1, char *fname2)
 
 int main (int argc, char *argv[]) {
     int fd_file;
-    struct pollfd fdarray[1];
+    struct pollfd fdarray;
     int nfds, rc;
     debug("DEBUG: *** comparing: %s <=> %s\n", argv[1], argv[2]);
 
@@ -234,11 +240,11 @@ int main (int argc, char *argv[]) {
     }
 
     for (;;) {
-        fdarray[0].fd = fd_file;
-        fdarray[0].events = POLLIN;
+        fdarray.fd = fd_file;
+        fdarray.events = POLLIN | POLLERR;
         nfds = 1;
 
-        rc = poll(fdarray, nfds, POLL_TIMEOUT);
+        rc = poll(&fdarray, 1, POLL_TIMEOUT);
 
         /*debug("DEBUG: rc is %d nfds is %d\n", rc, nfds);*/
 
@@ -247,10 +253,19 @@ int main (int argc, char *argv[]) {
             return -1;
         }
 
-        if(rc > 0) {
-            debug("  DEBUG: Changes detected at %s rc=%d\n", argv[1], rc);
-            usleep(200);
-            compare(argv[1], argv[2]);
+        else if(rc > 0) {
+            /*debug("  DEBUG: Changes detected at %s rc=%d revents=%d\n", argv[1], rc, fdarray.revents);*/
+            mysleep(0, 2000);
+            /* ugly hack to not eat all CPU when poll() return inmediatly */
+            if ( compare(argv[1], argv[2]) == 1){
+                /*printf("      sleeping 2 seconds \n");*/
+                mysleep(2, 0);
+            }
+
+        }
+        
+        else {
+            perror("ret value of poll() unknow\n");
         }
     }
 
