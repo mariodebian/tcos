@@ -15,6 +15,7 @@ if [ $TCOS_PRINTER ]; then
   [ -e /dev/lp0 ] && LP=/dev/lp0
   [ -e /dev/lp1 ] && LP=/dev/lp1
   [ -e /dev/usblp0 ] && LP=/dev/usblp0
+  [ -e /dev/usb/lp0 ] && LP=/dev/usb/lp0
 
   if [ "${LP}" = "" ]; then exit 0; fi
 

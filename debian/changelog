@@ -7,8 +7,9 @@ initramfs-tools-tcos (0.89.39) unstable; urgency=low
   * hooks-addons/25tcosmonitor: create wrapper of udevinfo if link or no
     exists
   * xmlrpc/sound.c: don't show plain password
+  * scripts/tcos-bottom/75print: Add /dev/usb/lp0 as printer device
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 18 Aug 2009 15:04:36 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 18 Aug 2009 15:11:58 +0200
 
 initramfs-tools-tcos (0.89.38) unstable; urgency=low
 
