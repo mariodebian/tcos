@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.89.39) unstable; urgency=low
+
+  * tcos_vnc() don't show plain password, vnc-controller.sh don't return
+    error with killall fail
+  * mount-listener poll() eats CPU and RAM, wait 2 seconds if no changes
+  * hooks-addons/03udev2: delete some not needed rules
+  * hooks-addons/25tcosmonitor: create wrapper of udevinfo if link or no
+    exists
+  * xmlrpc/sound.c: don't show plain password
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 18 Aug 2009 15:04:36 +0200
+
 initramfs-tools-tcos (0.89.38) unstable; urgency=low
 
   * Use upper PCI IDs
