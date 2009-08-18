@@ -63,7 +63,7 @@ xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* prepare action */
   sprintf( cmd , "%s %s %s %s:%s", VNC_CONTROLLER, action, args, user, pass );
 
-  dbgtcos("tcosxmlrpc::tcos_vnc() cmd=\"%s\"\n", cmd);
+  dbgtcos("tcosxmlrpc::tcos_vnc() cmd=\"%s %s %s %s:****\"\n", VNC_CONTROLLER, action, args, user);
 
   fp=(FILE*)popen(cmd, "r");
 

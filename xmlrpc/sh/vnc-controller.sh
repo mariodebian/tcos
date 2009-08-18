@@ -69,7 +69,9 @@ for arg in $1; do
      stopserver)
         if [ $STANDALONE = 0 ]; then
            killall -SIGKILL x11vnc
-           if [ $? = 0 ]; then echo "ok"; else echo "error: killing vnc server"; fi
+           # killall return != 0 if no proccess killed
+           #if [ $? = 0 ]; then echo "ok"; else echo "error: killing vnc server"; fi
+           echo "ok"
         else
            $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL x11vnc"
         fi
@@ -100,7 +102,9 @@ for arg in $1; do
      stopclient)
         if [ $STANDALONE = 0 ]; then
             killall -SIGKILL vncviewer
-            if [ $? = 0 ]; then echo "ok"; else echo "error: killing vncviewer"; fi
+            # killall return != 0 if no proccess killed
+            #if [ $? = 0 ]; then echo "ok"; else echo "error: killing vnc server"; fi
+            echo "ok"
         else
             $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL vncviewer"
         fi
@@ -113,7 +117,7 @@ for arg in $1; do
         chmod go+r "$3"
      ;;
      *)
-       echo "error"
+       echo "error: unknow action"
      ;;
   esac
 
