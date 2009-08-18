@@ -92,11 +92,20 @@ rm -f $DESTDIR/etc/udev/rules.d/85-pcmcia.rules
 rm -f $DESTDIR/etc/udev/rules.d/95-hal.rules
 rm -f $DESTDIR/etc/udev/rules.d/kino.rules
 
+# some deprecated and no used rules in my laptop
+rm -f $DESTDIR/etc/udev/rules.d/56-hp*
+rm -f $DESTDIR/etc/udev/rules.d/85-rt*
+rm -f $DESTDIR/etc/udev/rules.d/85-tosh*
+rm -f $DESTDIR/etc/udev/rules.d/usb_mode*
+rm -f $DESTDIR/etc/udev/rules.d/z60-hplip*
+
+
 
 # udev rules are now in /lib/udev/rules.d/
 rm -f $DESTDIR/lib/udev/rules.d/90-hal.rules
 rm -f $DESTDIR/lib/udev/rules.d/91-permissions.rules
-
+rm -f $DESTDIR/lib/udev/rules.d/*bluez*
+rm -f $DESTDIR/lib/udev/rules.d/*libmtp*
 
 # modify udev script to not wait in init-premount (wait in tcos-top/01busybox)
 #sed -i -e '/udevadm trigger/s/trigger/trigger --subsystem-match=net/g' $DESTDIR/scripts/init-premount/udev
