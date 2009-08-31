@@ -4,8 +4,10 @@ initramfs-tools-tcos (0.89.39+1) unstable; urgency=low
     - Only add shm settings if found in file (supported)
   * hooks-addons/03udev2:
     - Delete more not needed rules
+  * hooks-addons/20alsa:
+    - Only copy /etc/init.d/alsa-utils if found
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 31 Aug 2009 12:54:28 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 31 Aug 2009 15:17:05 +0200
 
 initramfs-tools-tcos (0.89.39) unstable; urgency=low
 

@@ -25,7 +25,7 @@ else
     fi
 
     mkdir -p $DESTDIR/etc/init.d/
-    cpifexists /etc/init.d/alsa-utils /etc/init.d/
+    [ -e /etc/init.d/alsa-utils ] && cpifexists /etc/init.d/alsa-utils /etc/init.d/
  
     if [ -d /etc/alsa ]; then
       copydir /etc/alsa/      /etc/
