@@ -97,8 +97,14 @@ else
  mkdir -p $DESTDIR/etc/pulse
  cpifexists /etc/pulse/client.conf     /etc/pulse/
  cpifexists /etc/pulse/daemon.conf     /etc/pulse/
- echo "shm-size-bytes = 16"         >> $DESTDIR/etc/pulse/daemon.conf
- echo "disable-shm = yes"           >> $DESTDIR/etc/pulse/daemon.conf
+
+ # limit PulseAudio SHM memory
+ if grep -q shm-size-bytes /etc/pulse/daemon.conf; then
+   echo "shm-size-bytes = 16"         >> $DESTDIR/etc/pulse/daemon.conf
+ fi
+ if grep -q disable-shm /etc/pulse/daemon.conf; then
+   echo "disable-shm = yes"           >> $DESTDIR/etc/pulse/daemon.conf
+ fi
 
  if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
    _SERVER=";\$(read_server "xdmcp-server")"
