@@ -106,6 +106,10 @@ rm -f $DESTDIR/lib/udev/rules.d/90-hal.rules
 rm -f $DESTDIR/lib/udev/rules.d/91-permissions.rules
 rm -f $DESTDIR/lib/udev/rules.d/*bluez*
 rm -f $DESTDIR/lib/udev/rules.d/*libmtp*
+rm -f $DESTDIR/lib/udev/rules.d/*libpi*
+rm -f $DESTDIR/lib/udev/rules.d/*libsane*
+rm -f $DESTDIR/lib/udev/rules.d/*v4l*
+
 
 # modify udev script to not wait in init-premount (wait in tcos-top/01busybox)
 #sed -i -e '/udevadm trigger/s/trigger/trigger --subsystem-match=net/g' $DESTDIR/scripts/init-premount/udev

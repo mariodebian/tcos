@@ -2,8 +2,10 @@ initramfs-tools-tcos (0.89.39+1) unstable; urgency=low
 
   * hooks-addons/21pulseaudio:
     - Only add shm settings if found in file (supported)
+  * hooks-addons/03udev2:
+    - Delete more not needed rules
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 31 Aug 2009 11:54:38 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 31 Aug 2009 12:54:28 +0200
 
 initramfs-tools-tcos (0.89.39) unstable; urgency=low
 
