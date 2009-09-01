@@ -1,5 +1,5 @@
 all:
-	@echo
+	@echo "  session-cmd: make all empty"
 
 include ../common.mk
 

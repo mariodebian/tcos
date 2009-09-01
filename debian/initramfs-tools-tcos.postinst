@@ -24,6 +24,7 @@ if [ -d /etc/tcos/templates ];then
    chmod -f -R 640 /etc/tcos/templates/tcos* 2>/dev/null || true
 fi
 
+# set SUID in tcos-net-controller (iptables wrapper)
 if [ -e /usr/lib/tcos/tnc ];then
    chown -f root:tcos /usr/lib/tcos/tnc
    chmod -f 4750 /usr/lib/tcos/tnc
@@ -102,7 +103,7 @@ fi
 [ ! -e /var/lib/tcos/tftp/conf ] && mkdir -p /var/lib/tcos/tftp/conf
 chown -f -R root:tcos /var/lib/tcos/tftp/conf
 chmod -f 775 /var/lib/tcos/tftp/conf
-chmod -f -R 664 /var/lib/tcos/tftp/conf/* 2>/dev/null || true
+chmod -f -R 664 /var/lib/tcos/tftp/conf/*  || true
 
 
 

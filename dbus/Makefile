@@ -1,7 +1,7 @@
 DESTDIR:=/
 
 all:
-	@echo
+	@echo "  dbus: make all empty"
 
 include ../common.mk
 

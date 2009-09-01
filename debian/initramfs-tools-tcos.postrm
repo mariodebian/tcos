@@ -9,8 +9,8 @@ case "$1" in
     	 #fi
  	 # delete all generated files and dirs
  	 rm -rf /var/lib/tcos/tftp
- 	 rm -rf /var/lib/tcos/files
  	 rm -rf /var/lib/tcos/fs-*
+ 	 rm -rf /var/cache/tcos
     ;;
 esac
 

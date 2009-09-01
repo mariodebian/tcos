@@ -1,21 +1,31 @@
 initramfs-tools-tcos for Debian
 -------------------------
 
+   Online doc:
+     http://wiki.tcosproject.org/Install/Debian (in some languages)
+     http://wiki.tcosproject.org/Install/Configure
+
    * Postinstall process:
 
-     - Configure a DHCP server:
-       - Edit /etc/dhcp3/dhcpd.conf or use example files
+     · Configure a DHCP server:
+       - You can install tcos-configurator package and launch it as root.
 
-     - Configure hostnames and users:
-       - Can use tcos-gdm-autologin script to create users and configure GDM
-         ( see man tcos-gdm-autologin )
-       - Can add hosts and user in manual mode.
+       - Edit /etc/dhcp3/dhcpd.conf with example files 
+        (at /usr/share/doc/initramfs-tools-tcos/examples )
 
-     - Generate network images:
-       - Can use gentcos (see man gentcos or gentcos --help)
-       - Can use tcosconfig wizard
+       - You can install dnsmasq and use example file too.
 
-     - Boot thin clients with PXE support or use an Etherboot floppy (package etherboot-tcos)
+     · Configure hostnames and users:
+       - Can use tcos-gdm-autologin script or tcos-configurator 
+         to create users and configure GDM ( see: man tcos-gdm-autologin )
 
+       - Can add host names (/etc/hosts) and users (adduser) in manual mode.
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 30 May 2007 23:48:46 +0200
+     · Generate network images:
+       - You can use tcosconfig wizard
+       - You can use gentcos (see man gentcos or gentcos --help)
+
+     · Boot thin clients with PXE support or use an Etherboot floppy 
+      (package etherboot-tcos and exec make-tcos-floppy)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 01 Sep 2009 19:04:01 +0200

@@ -1,6 +1,7 @@
-DEBUGCFLAGS	= -g -O2 -Wall -ansi -pedantic -std=c99 -DTCOS_VERSION="\"$(VERSION)\""
-CFLAGS		= -g -O2 -Wall -DTCOS_VERSION="\"$(VERSION)\""
-LDADD		= -lasound
+DEBUGCFLAGS	+= -g -O2 -Wall
+CFLAGS		+= -g -O2 -Wall
+TVERSION	= -DTCOS_VERSION="\"$(VERSION)\""
+LDADD		+= -lasound
 bin_PROGRAMS = tmixer
 TMIXER_SOURCES= tmixer-alsa.c tmixer-oss.c
 CC=gcc
@@ -8,17 +9,17 @@ CC=gcc
 all: tmixer
 
 tmixer: tmixer.c tmixer-oss.c tmixer-oss.h tmixer-alsa.c tmixer-alsa.h
-	$(QUIET_CC)$(GCC) -o $(bin_PROGRAMS) tmixer.c $(LDADD) $(CFLAGS)
+	$(QUIET_CC)$(GCC) -o $(bin_PROGRAMS) tmixer.c $(LDADD) $(CFLAGS) $(TVERSION)
 
 tmixer-alsa: tmixer-alsa.c tmixer-alsa.h
-	$(QUIET_CC)$(GCC) -o $(bin_PROGRAMS) tmixer-alsa.c $(LDADD) $(CFLAGS)
+	$(QUIET_CC)$(GCC) -o $(bin_PROGRAMS) tmixer-alsa.c $(LDADD) $(CFLAGS) $(TVERSION)
 
 tmixer-oss: tmixer-oss.c tmixer-oss.h
-	$(QUIET_CC)$(GCC) -o $(bin_PROGRAMS) tmixer-oss.c $(LDADD) $(CFLAGS)
+	$(QUIET_CC)$(GCC) -o $(bin_PROGRAMS) tmixer-oss.c $(LDADD) $(CFLAGS) $(TVERSION)
 
 
 debug: tmixer.c tmixer-oss.c tmixer-oss.h tmixer-alsa.c tmixer-alsa.h
-	$(CC) -o $(bin_PROGRAMS) tmixer.c $(LDADD) $(DEBUGCFLAGS)
+	$(CC) -o $(bin_PROGRAMS) tmixer.c $(LDADD) $(DEBUGCFLAGS) $(TVERSION)
 
 
 

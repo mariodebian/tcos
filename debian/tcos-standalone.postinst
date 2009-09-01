@@ -7,16 +7,6 @@ echo "TCOS_DATE=$(LC_ALL=C LC_MESSSAGES=C date)" > /var/lib/tcos/standalone/etc/
 echo "TCOS_VERSION=$2"                          >> /var/lib/tcos/standalone/etc/tcos.conf
 
 
-if [ -x "/etc/init.d/tcos-standalone" ]; then
-        update-rc.d tcos-standalone defaults  || true
-        if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
-                invoke-rc.d tcos-standalone restart || true
-        else
-                /etc/init.d/tcos-standalone restart || true
-        fi
-
-fi
-
 
 #DEBHELPER#
 

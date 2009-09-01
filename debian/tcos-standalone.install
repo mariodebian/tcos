@@ -1,5 +1,3 @@
-etc/init.d/tcos-standalone
-etc/default/tcos-standalone
 var/lib/tcos/standalone/*
 usr/share/locale/*
 usr/sbin/tcos-standalone

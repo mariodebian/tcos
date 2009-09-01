@@ -1,0 +1,3 @@
+/usr/lib/syslinux/menu.c32     /var/lib/tcos/tftp/menu.c32
+/usr/lib/syslinux/pxelinux.0   /var/lib/tcos/tftp/pxelinux.0
+/usr/lib/syslinux/vesamenu.c32 /var/lib/tcos/tftp/vesamenu.c32

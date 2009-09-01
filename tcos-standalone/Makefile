@@ -1,7 +1,6 @@
 LANGUAGES=es ca@valencia pt_BR qcv
 
-all:
-	@echo
+all: gmo
 
 include ../common.mk
 
@@ -12,7 +11,7 @@ clean:
 		rm -rf po/$$lang;\
 	done
 
-install: gmo
+install:
 	install -d $(DESTDIR)/$(PREFIX)/sbin
 	install -m 755 tcos-standalone.py $(DESTDIR)/$(PREFIX)/sbin/tcos-standalone
 

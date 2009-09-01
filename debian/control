@@ -2,80 +2,77 @@ Source: initramfs-tools-tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 4.0.0), libxmlrpc-c3-dev, libxau-dev, libxaw7-dev, 
+Build-Depends: debhelper (>= 7.0.0), cdbs, libxmlrpc-c3-dev, libxau-dev, libxaw7-dev, 
                libimlib2-dev, python, python-support (>= 0.3), pkg-config, libasound2-dev
-Standards-Version: 3.7.2
-XS-Python-Version: >= 2.4
+Standards-Version: 3.8.0
 Vcs-Git: http://tcosproject.org/git/initramfs-tools-tcos.git
 Vcs-Browser: http://tcosproject.org/cgit/cgit.cgi/initramfs-tools-tcos.git/
+Homepage: http://www.tcosproject.org
 
 Package: initramfs-tools-tcos
 Architecture: any
-Depends: tcos-core, initramfs-tools (>= 0.40), dhcp-client | dhcp3-client, atftpd, 
-         console-setup | console-data, libnss-db, iftop, strace, twm, debootstrap, mbr, 
-         libltdl3, debconf, grub, syslinux, squashfs-tools, pciutils, 
-         mknbi, dropbear, ltspfs-client | ltspfsd, genisoimage, portmap, acpid,
+Depends: tcos-core, initramfs-tools (>= 0.40), dhcp3-client | dhcp-client, 
+         console-setup | console-data, libnss-db, mbr, syslinux, 
+         squashfs-tools, pciutils, mknbi [ i386 ], dropbear, acpid, 
+         ltspfsd-core | ltspfs-client, genisoimage, portmap, mtools, 
          ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), tcos (<< 0.89.26)
-Recommends: pulseaudio, pulseaudio-utils, p910nd
-Description: tools for generating a thin client bootable image: TCOS
- This package contains tools to create and boot an initramfs for prepackaged
+Recommends: pulseaudio, pulseaudio-utils, p910nd, twm
+Description: Tools for generating a TCOS thin client bootable image
+ This package contains tools to create a bootable initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
  unpacks that archive into ram, mounts and uses it as initial root file system.
- From there thin client configure some hardware, download extra tools 
- ( /usr dir ) and connect to remote server using XMDCP, SSH -X, FreeNX, 
- rDesktop...
- .
- TCOS Thin client support for initramfs-tools.
+ Next thin client configure some hardware, download extra tools 
+ ( /usr compressed dir ) and connect to remote server using XMDCP, ssh -X, 
+ FreeNX, rDesktop...
 
 Package: tcos-core
 Architecture: any
-Depends: busybox | busybox-static , xterm, x11vnc, xvnc4viewer | xvncviewer, vlc, dosfstools, cdparanoia, 
-         scrot, eject, netpipes, libnotify-bin, python, python-utmp, rtptools, libsox-fmt-all, 
+Depends: busybox | busybox-static , xterm, x11vnc, xvnc4viewer | xvncviewer, dosfstools, cdparanoia, 
+         scrot, eject, netpipes, libnotify-bin, python, python-utmp, rtptools,
          libasound2-plugins, stunnel4, openssl, iproute, xdg-utils, pulseaudio-utils, 
-         python-dbus | python2.4-dbus, ${misc:Depends}, ${shlibs:Depends}
+         python-dbus, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
+Recommends: vlc, libsox-fmt-all
 XB-Python-Version: ${python:Versions}
-Description: common script and bins for generating a thin client bootable image: TCOS
+Description: Common script and bins for generating a thin client bootable image: TCOS
  This package contain common scripts, libs , bins and dependencies to
  generate network images or be used in standalone hosts.
- .
-  Homepage: http://www.tcosproject.org
+
 
 Package: tcos-standalone
 Architecture: all
-Depends: tcos-core (>= 0.88.0), tcosmonitor-common, gksu, python-gnome2-extras, python-gtk2, 
-         python-glade2, ethtool, ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
+Depends: tcos-core (>= 0.88.0), tcosmonitor-common, gksu, python, python-gnome2-extras, python-gtk2, 
+         python-glade2, ethtool, openssl, ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-core (<< 0.87.15)
 XB-Python-Version: ${python:Versions}
-Description: TCOS standalone GUI configurator
- This package contains a pygtk gui configurator and depends
- to install a standalone TCOS host
- .
-  Homepage: http://www.tcosproject.org
+Description: TCOS GUI configurator for standalone hosts
+ This package contains a PyGTK+ gui configurator and dependencies
+ to install and configure a standalone TCOS host.
+  .
+ With this package you can control installed clients from tcosmonitor.
+
 
 
 Package: tcos
 Architecture: all
-Depends: tcos-keyring, initramfs-tools-tcos (>= 0.84.5), 
-         tcos-usplash (>= 0.89.14) | tcos-splashy (>= 0.89.14), 
-         dhcp3-server | dhcp-server, tcosmonitor, 
-         openbsd-inetd | netkit-inetd | inetutils-inetd, pulseaudio, 
-         pulseaudio-utils, x11vnc, libasound2-plugins, mtools, 
-         ltspfs-server | ltspfs, esound | pulseaudio-esound-compat, cdebootstrap, 
-         python, python-configobj, fuse-utils, ${misc:Depends}, ${shlibs:Depends}
-Provides: tcos-server-utils
-Replaces: tcos-server-utils
-Suggests: pulseaudio-esound-compat, shfs-utils
+Depends: initramfs-tools-tcos (>= 0.84.5), 
+         dnsmasq | dhcp3-server | dhcp-server, 
+         dnsmasq | atftpd, 
+         tcosmonitor, tcosconfig, 
+         ltspfs | ltspfs-server, 
+         python, python-configobj, fuse-utils, 
+         ${misc:Depends}, ${shlibs:Depends}
+Recommends: tcos-configurator, tcos-usplash (>= 0.89.14) | tcos-splashy (>= 0.89.14), 
+           esound | pulseaudio-esound-compat
 XB-Python-Version: ${python:Versions}
-Description: new thin client implementation
+Description: New thin client implementation
  This is a system for generating thin client hosts using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminals.
  TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
- Xorg (6.9 or 7.x) and more utils.
+ Xorg and more utils.
  .
- This metapackage will install all required packages to make a 
- thin client server.
- .
-  Homepage: http://www.tcosproject.org
+ This metapackage install and recommends all required packages to make a 
+ TCOS thin client server.
+

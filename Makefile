@@ -22,7 +22,6 @@ include common.mk
 clean:
 	@find * |grep "~" | xargs rm -rf --
 	@rm -f build-stamp configure-stamp
-#	$(MAKE) -C daemonize clean
 	$(MAKE) -C hex2ascii  clean
 	$(MAKE) -C xmlrpc     clean
 	$(MAKE) -C udev       clean
@@ -44,14 +43,6 @@ distclean:
 
 config_svn:
 	svn propedit svn:ignore .
-
-#ubuntu-conf:
-#	if [ "$(DISTRO)" = "ubuntu" ]; then\
-#		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf ;\
-#		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl ;\
-#		sed -i 's/quiet splash/splash/g' $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos ;\
-#	fi
-
 
 install:
 	#  Creating directories
@@ -130,7 +121,6 @@ install:
 	install -m 644 conf/tcos.conf.nfs $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.nfs
 
 
-#	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_CONF)/tcos-modules.conf
 	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_DIR)/tcos-modules.conf
 
 	install -m 644 conf/tcos-generation-functions.sh $(DESTDIR)$(TCOS_DIR)/tcos-generation-functions.sh

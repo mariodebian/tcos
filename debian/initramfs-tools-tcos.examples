@@ -1,2 +1,3 @@
 tcos/dhcpd.conf
 tcos/dhcpd-without-mac.conf
+tcos/tcos.dnsmasq.conf

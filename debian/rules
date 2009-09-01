@@ -1,92 +1,12 @@
 #!/usr/bin/make -f
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
 
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/makefile.mk
 
-CFLAGS = -Wall -g
+# http://cdbs-doc.duckcorp.org/en/cdbs-doc.xhtml
+DEB_ISNATIVE=1
+DEB_DESTDIR := $(CURDIR)/debian/tmp
+DEB_DH_INSTALL_ARGS := --sourcedir=$(DEB_DESTDIR)
+DEB_MAKE_INSTALL_TARGET := install DESTDIR=$(DEB_DESTDIR)
 
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
-
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	touch configure-stamp
-
-
-build: build-stamp
-
-build-stamp: configure-stamp 
-	dh_testdir
-	$(MAKE)
-	touch build-stamp
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp
-	$(MAKE) clean
-
-	dh_clean 
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k 
-	dh_installdirs
-
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-
-	install -d $(CURDIR)/debian/tmp/usr/share/bug/tcos
-	install -m 755 debian/bugs $(CURDIR)/debian/tmp/usr/share/bug/tcos/script
-	install -m 644 debian/bug-control $(CURDIR)/debian/tmp/usr/share/bug/tcos/control
-
-
-	install -d $(CURDIR)/debian/tmp/etc/default
-	install -d $(CURDIR)/debian/tmp/etc/init.d
-	install -m 644 $(CURDIR)/debian/tcos-standalone.default $(CURDIR)/debian/tmp/etc/default/tcos-standalone
-	install -m 755 $(CURDIR)/debian/tcos-standalone.init $(CURDIR)/debian/tmp/etc/init.d/tcos-standalone
-
-	dh_link /usr/lib/syslinux/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
-	# support of pxelinux menu
-	dh_link /usr/lib/syslinux/menu.c32       /var/lib/tcos/tftp/menu.c32
-	dh_link /usr/lib/syslinux/vesamenu.c32   /var/lib/tcos/tftp/vesamenu.c32
-
-
-	@if [ `find $(CURDIR)/debian/ -name "*.py" | xargs grep __VERSION__ | wc -l` != 0 ]; then \
-		echo "__VERSION__ unparsed"; \
-		find *.py | xargs grep __VERSION__;\
-		exit 1; \
-	fi
-
-
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
-	dh_install --sourcedir=$(CURDIR)/debian/tmp --list-missing
-	dh_installman
-	dh_installinit -n
-	dh_pysupport
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+DEB_ALL_PACKAGES = initramfs-tools-tcos tcos-core tcos-standalone tcos

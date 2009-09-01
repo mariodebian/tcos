@@ -20,7 +20,11 @@ cpifexists $XORG_PATH/xauth   /usr/bin
 cpifexists $XORG_PATH/mcookie /usr/bin
 cpifexists $XORG_PATH/xhost   /usr/bin
 cpifexists $XORG_PATH/xterm   /usr/bin
-cpifexists $XORG_PATH/twm     /usr/bin
+if [ -e $XORG_PATH/twm ]; then
+  cpifexists $XORG_PATH/twm     /usr/bin
+else
+  _echo "    WARNING: twm package not found"
+fi
 
 # some xutils
 cpifexists $XORG_PATH/xset     /usr/bin
