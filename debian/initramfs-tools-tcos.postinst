@@ -34,6 +34,7 @@ fi
 [ ! -e /etc/tcos/modules ] && touch /etc/tcos/modules
 
 
+# FIXME, now tftp is /srv/tftp
 TFTPBOOT_DEFAULT=/var/lib/tftpboot
 TFTPBOOT=
 
@@ -43,7 +44,18 @@ function read_inetd() {
     if [ -f /etc/inetd.conf ]; then
       # get last word of tftp file
 
-      tmp=$(grep ^tftp /etc/inetd.conf | awk '{print $NF}')
+      tmp=$(grep ^tftp /etc/inetd.conf 2>/dev/null | awk '{print $NF}')
+        if [ -d "${tmp}" ]; then 
+         TFTPBOOT=${tmp}
+        fi
+    fi
+}
+
+function read_dnsmasq() {
+    # read tftp-root var from /etc/dnsmasq.conf
+    if [ -f /etc/dnsmasq.conf ]; then
+
+      tmp=$(grep ^tftp-root /etc/dnsmasq.conf 2>/dev/null | awk -F'=' '{print $2}')
         if [ -d "${tmp}" ]; then 
          TFTPBOOT=${tmp}
         fi
@@ -61,9 +73,16 @@ function read_from_conf() {
     fi
 }
 
+#
+# First we try to read from dnsmasq, second inetd and third conf file
+#
 
-# read from inetd
-read_inetd
+read_dnsmasq
+
+if [ -z "$TFTPBOOT" ]; then
+    # read from inetd
+    read_inetd
+fi
 
 if [ -z "$TFTPBOOT" ]; then
     # try with conf files
@@ -71,39 +90,33 @@ if [ -z "$TFTPBOOT" ]; then
 fi
 
 
-
-
 if [ -z "${TFTPBOOT}" ]; then
 
-  echo "***********************************************************"
-  echo "initramfs-tools-tcos: ERROR: can't read TFTPBOOT dir, please, install"
-  echo "         atftp package first."
+  mkdir -p $TFTPBOOT_DEFAULT
+  TFTPBOOT=$TFTPBOOT_DEFAULT
+  echo " * Created $TFTPBOOT_DEFAULT dir as TFTP root dir"
+fi
+
+if [ ! -d ${TFTPBOOT} ]; then
+   # create dir
+   mkdir -p "${TFTPBOOT}"
+fi
+
+# make symlink
+if [ -d ${TFTPBOOT}/tcos ] || [ ! -L ${TFTPBOOT}/tcos ]; then
   echo ""
-  echo "***********************************************************"
+  echo "Warning: You must delete ${TFTPBOOT}/tcos dir after upgrade"
+  echo "         new TCOS images will not work if you mantain this dir"
+  echo ""
+elif [ ! -e ${TFTPBOOT}/tcos ]; then
+  ln -s /var/lib/tcos/tftp ${TFTPBOOT}/tcos
+fi
 
-else
-  if [ ! -d ${TFTPBOOT} ]; then
-     # create dir
-     mkdir -p "${TFTPBOOT}"
-  fi
-
-  # make symlinks
-  if [ -d ${TFTPBOOT}/tcos ] && [ ! -L ${TFTPBOOT}/tcos ]; then
-    echo ""
-    echo "Warning: You must delete ${TFTPBOOT}/tcos dir after upgrade"
-    echo "         new TCOS images will not work if you mantain this dir"
-    echo ""
-
-  elif [ ! -e ${TFTPBOOT}/tcos ]; then
-    ln -s /var/lib/tcos/tftp ${TFTPBOOT}/tcos
-
-  fi
-fi 
 
 [ ! -e /var/lib/tcos/tftp/conf ] && mkdir -p /var/lib/tcos/tftp/conf
 chown -f -R root:tcos /var/lib/tcos/tftp/conf
 chmod -f 775 /var/lib/tcos/tftp/conf
-chmod -f -R 664 /var/lib/tcos/tftp/conf/*  || true
+chmod -f -R 664 /var/lib/tcos/tftp/conf/*  2>/dev/null || true
 
 
 

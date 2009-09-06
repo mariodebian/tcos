@@ -441,6 +441,14 @@ get_sync() {
           horiz_sync="30-85"
           vert_sync="50-80"
           ;;
+        "1440x900@60Hz")
+          horiz_sync="30-67"
+          vert_sync="50-75"
+          ;;
+        "1440x900@75Hz")
+          horiz_sync="30-85"
+          vert_sync="50-80"
+          ;;
         "1600x1024@85Hz")
           horiz_sync="30-70"
           vert_sync="50-90"

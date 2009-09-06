@@ -208,51 +208,40 @@ patch_version:
 	sed -i 's/__VERSION__/$(VERSION)/g' tcos-standalone/tcos-standalone.py
 	sed -i 's/__VERSION__/$(VERSION)/g' xmlrpc/sh/tcos-last
 
-patch_amd64: patch_version
-	if [ "$(ARCH)" != "i386" ]; then sed -i 's/mknbi,//g' debian/control ; fi
+patch_amd64:
+	#
+	#
+	#     obsolete amd64 patch
+	#
+	#
 
-patch_dapper: patch_amd64
-	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu DAPPER
-	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control	
-	sed -i 's/source:Version/Source-Version/g' debian/control
-	sed -i '/^Build/s/5.0.37.2/5.0.7ubuntu13/g' debian/control
-	sed -i '/python-support/s/0.3/0.1.1ubuntu1/g' debian/control
-	sed -i '/dh_pysupport/s/dh_pysupport/dh_python/g' debian/rules
-
-patch_edgy: patch_amd64
-	# PATCHING INITRAMFS_TOOLS_TCOS in Ubuntu EDGY
-	sed -i '/^Build/s/libusplash-dev/usplash-dev, libbogl-dev/g' debian/control	
-
-patch_feisty: patch_amd64
-	sed -i 's/libsox-fmt-all/sox/g' debian/control
-
-patch_gutsy: patch_amd64
-	sed -i 's/libsox-fmt-all/sox/g' debian/control
-
-patch_max: patch_amd64
+patch_max: patch_version
 	# nothing to patch
 
-patch_hardy: patch_amd64
-	# nothing to patch
 
-patch_intrepid: patch_amd64
+patch_hardy: patch_version
+	echo 6 > debian/compat
+	sed -i 's/7\.0\.0/6\.0\.0/g' debian/control
+	sed -i 's/3\.8\.0/3\.7\.2/g' debian/control
+
+patch_intrepid: patch_version
 	sed -i 's/libltdl3//g' debian/control
 
-patch_jaunty: patch_amd64
+patch_jaunty: patch_version
 	sed -i 's/libltdl3//g' debian/control
 
-patch_etch: patch_amd64
-	# PATCHING INITRAMFS_TOOLS_TCOS in Debian etch
-	sed -i '/^Build/s/libusplash-dev/usplash, libbogl-dev, libgd-dev/g' debian/control
-	sed -i 's/libsox-fmt-all/sox/g' debian/control
+patch_karmic: patch_version
+	sed -i 's/libltdl3//g' debian/control
 
-patch_lenny: patch_amd64
+
+
+patch_lenny: patch_version
 	# nothing to patch
 
-patch_testing: patch_amd64
+patch_testing: patch_version
 	# nothing to patch
 
-patch_unstable: patch_amd64
+patch_unstable: patch_version
 	# nothing to patch
 
 

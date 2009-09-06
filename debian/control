@@ -11,13 +11,26 @@ Homepage: http://www.tcosproject.org
 
 Package: initramfs-tools-tcos
 Architecture: any
-Depends: tcos-core, initramfs-tools (>= 0.40), dhcp3-client | dhcp-client, 
-         console-setup | console-data, libnss-db, mbr, syslinux, 
-         squashfs-tools, pciutils, mknbi [ i386 ], dropbear, acpid, 
-         ltspfsd-core | ltspfs-client, genisoimage, portmap, mtools, 
+Depends: tcos-core, 
+         initramfs-tools (>= 0.40), 
+         dhcp3-client | dhcp-client, 
+         console-setup | console-data, 
+         libnss-db, 
+         mbr, 
+         syslinux, 
+         squashfs-tools, 
+         pciutils, 
+         mknbi [ i386 ], 
+         debootstrap [ amd64 ], 
+         dropbear, 
+         acpid, 
+         ltspfsd-core | ltspfs-client, 
+         genisoimage, 
+         portmap, 
+         mtools, 
          ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), tcos (<< 0.89.26)
-Recommends: pulseaudio, pulseaudio-utils, p910nd, twm
+Recommends: pulseaudio, p910nd, twm
 Description: Tools for generating a TCOS thin client bootable image
  This package contains tools to create a bootable initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
@@ -28,10 +41,27 @@ Description: Tools for generating a TCOS thin client bootable image
 
 Package: tcos-core
 Architecture: any
-Depends: busybox | busybox-static , xterm, x11vnc, xvnc4viewer | xvncviewer, dosfstools, cdparanoia, 
-         scrot, eject, netpipes, libnotify-bin, python, python-utmp, rtptools,
-         libasound2-plugins, stunnel4, openssl, iproute, xdg-utils, pulseaudio-utils, 
-         python-dbus, ${misc:Depends}, ${shlibs:Depends}
+Depends: busybox | busybox-static , 
+         xterm, 
+         x11vnc, 
+         xvnc4viewer | xvncviewer, 
+         dosfstools, 
+         cdparanoia, 
+         scrot, 
+         eject, 
+         netpipes, 
+         libnotify-bin, 
+         rtptools,
+         libasound2-plugins, 
+         stunnel4, 
+         openssl, 
+         iproute, 
+         xdg-utils, 
+         pulseaudio-utils, 
+         python, 
+         python-utmp, 
+         python-dbus, 
+         ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
 Recommends: vlc, libsox-fmt-all
 XB-Python-Version: ${python:Versions}
@@ -42,8 +72,16 @@ Description: Common script and bins for generating a thin client bootable image:
 
 Package: tcos-standalone
 Architecture: all
-Depends: tcos-core (>= 0.88.0), tcosmonitor-common, gksu, python, python-gnome2-extras, python-gtk2, 
-         python-glade2, ethtool, openssl, ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
+Depends: tcos-core (>= 0.88.0), 
+         tcosmonitor-common, 
+         ethtool, 
+         openssl, 
+         gksu, 
+         python, 
+         python-gnome2-extras, 
+         python-gtk2, 
+         python-glade2, 
+         ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-core (<< 0.87.15)
 XB-Python-Version: ${python:Versions}
 Description: TCOS GUI configurator for standalone hosts
@@ -57,14 +95,16 @@ Description: TCOS GUI configurator for standalone hosts
 Package: tcos
 Architecture: all
 Depends: initramfs-tools-tcos (>= 0.84.5), 
-         dnsmasq | dhcp3-server | dhcp-server, 
-         dnsmasq | atftpd, 
+         tcos-tftp-dhcp | dnsmasq,
          tcosmonitor, tcosconfig, 
          ltspfs | ltspfs-server, 
-         python, python-configobj, fuse-utils, 
+         python, 
+         python-configobj, 
+         fuse-utils, 
          ${misc:Depends}, ${shlibs:Depends}
-Recommends: tcos-configurator, tcos-usplash (>= 0.89.14) | tcos-splashy (>= 0.89.14), 
-           esound | pulseaudio-esound-compat
+Recommends: tcos-configurator, 
+            tcos-usplash (>= 0.89.14) | tcos-splashy (>= 0.89.14), 
+            pulseaudio-esound-compat | esound
 XB-Python-Version: ${python:Versions}
 Description: New thin client implementation
  This is a system for generating thin client hosts using initramfs.
@@ -76,3 +116,10 @@ Description: New thin client implementation
  This metapackage install and recommends all required packages to make a 
  TCOS thin client server.
 
+
+Package: tcos-tftp-dhcp
+Architecture: all
+Depends: atftpd, dhcp3-server | dhcp-server
+Description: Metapackage to install TCOS with atftp and DHCP server
+ This metapackage depends on atftp and a DHCP daemon to provide server 
+ daemons needed to run a TCOS server.

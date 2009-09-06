@@ -14,23 +14,23 @@ if [ ${TCOS_PULSEAUDIO} ] && [  ${TCOS_SOUND} ]; then
 check1=0
 [ -x /usr/bin/pulseaudio ] && check1=1
 
-check2=0
-[ -e /usr/lib/pulse*/modules/module-esound-protocol-tcp.so ] && check2=1
-[ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib ] && check2=1
+#check2=0
+#[ -e /usr/lib/pulse*/modules/module-esound-protocol-tcp.so ] && check2=1
+#[ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib ] && check2=1
 
 if [ $check1 = 0 ]; then
    echo "    WARNING:"
    echo "      pulseaudio is not installed, disable it from tcos.conf!!!"
 
-elif [ $check2 = 0 ]; then
-   echo "    WARNING:"
-   echo "      pulseaudio-esound-compat is not installed, need some esound modules"
-   echo "      install this package or disable PulseAudio in /etc/tcos/tcos.conf"
-   echo "      You can install a cached package with:"
-   echo "      # gentcos -instpkg pulseaudio-esound-compat"
-   echo ""
-   echo "      See /usr/share/doc/gentcos/README.cache"
-   echo ""
+#elif [ $check2 = 0 ]; then
+#   echo "    WARNING:"
+#   echo "      pulseaudio-esound-compat is not installed, need some esound modules"
+#   echo "      install this package or disable PulseAudio in /etc/tcos/tcos.conf"
+#   echo "      You can install a cached package with:"
+#   echo "      # gentcos -instpkg pulseaudio-esound-compat"
+#   echo ""
+#   echo "      See /usr/share/doc/initramfs-tools-tcos/README.cache"
+#   echo ""
 
 else
 
@@ -74,23 +74,23 @@ else
  [ -e /usr/lib/pulse-*/modules/libsocket-client.so ] && \
       cpifexists /usr/lib/pulse-*/modules/libsocket-client.so /usr/lib/pulse-*/modules/
 
- if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules ]; then
-  _echo "    * PulseAudio copying esound compat [cached] modules..."
-  # warn about OLD cached version
-  PULSE_LIB_FILE=${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules/libprotocol-esound.so
-  if [ $(_ldd ${PULSE_LIB_FILE} | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
-    _echo ""
-    _echo "    *** WARNING ***"
-    _echo ""
-    _echo "       You have a old cached copy of pulseaudio-esound-compat package"
-    _echo "       Please remove and reinstall it or sound will not work:"
-    _echo ""
-    _echo "       gentcos -rmpkg pulseaudio-esound-compat"
-    _echo "       gentcos -instpkg pulseaudio-esound-compat"
-    _echo ""
-  fi
-  cp -ra ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules/*.so ${DESTDIR}/usr/lib/pulse-*/modules/
- fi
+ #if [ -d ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules ]; then
+ # _echo "    * PulseAudio copying esound compat [cached] modules..."
+ # # warn about OLD cached version
+ # PULSE_LIB_FILE=${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules/libprotocol-esound.so
+ # if [ $(_ldd ${PULSE_LIB_FILE} | grep -c -e "libpulsecore" -e "not found") = 0 ]; then
+ #   _echo ""
+ #   _echo "    *** WARNING ***"
+ #   _echo ""
+ #   _echo "       You have a old cached copy of pulseaudio-esound-compat package"
+ #   _echo "       Please remove and reinstall it or sound will not work:"
+ #   _echo ""
+ #   _echo "       gentcos -rmpkg pulseaudio-esound-compat"
+ #   _echo "       gentcos -instpkg pulseaudio-esound-compat"
+ #   _echo ""
+ # fi
+ # cp -ra ${TCOS_PKG_CACHE}/pulseaudio-esound-compat/usr/lib/pulse-*/modules/*.so ${DESTDIR}/usr/lib/pulse-*/modules/
+ #fi
 
 
  #copydir /etc/pulse                   /etc/
