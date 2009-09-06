@@ -1,3 +1,9 @@
+initramfs-tools-tcos (0.89.42) unstable; urgency=low
+
+  * Fix debian/initramfs-tools-tcos.postinst
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 06 Sep 2009 13:12:35 +0200
+
 initramfs-tools-tcos (0.89.41) unstable; urgency=low
 
   * bin/tcos-buildchroot:

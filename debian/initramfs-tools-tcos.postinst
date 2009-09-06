@@ -103,7 +103,7 @@ if [ ! -d ${TFTPBOOT} ]; then
 fi
 
 # make symlink
-if [ -d ${TFTPBOOT}/tcos ] || [ ! -L ${TFTPBOOT}/tcos ]; then
+if [ -d ${TFTPBOOT}/tcos ]; then
   echo ""
   echo "Warning: You must delete ${TFTPBOOT}/tcos dir after upgrade"
   echo "         new TCOS images will not work if you mantain this dir"
