@@ -140,9 +140,9 @@ call_mkinitramfs() {
  bash ${TCOS_DIR}/hooks-addons/clean_initramfs 
 
  echo -n "   * Updating module dependencies..."
- DEPMOD_ARGS="-ae"
+ DEPMOD_ARGS="-a -F /boot/System.map-${TCOS_KERNEL}"
  if depmod -h 2>&1|grep -q map; then
-   DEPMOD_ARGS="-aem"
+   DEPMOD_ARGS="-am -F /boot/System.map-${TCOS_KERNEL}"
  fi
  chroot ${DESTDIR}/ depmod $DEPMOD_ARGS ${TCOS_KERNEL}
  echo " done."
@@ -226,9 +226,9 @@ create_rootfs() {
  mkdir ${TCOS_VAR}/fs-${TCOS_KERNEL}
  mv ${OUTROOTFS_TMP}/* ${TCOS_VAR}/fs-${TCOS_KERNEL}/
  echo -n "   * Updating modules dependencies..."
- DEPMOD_ARGS="-ae"
+ DEPMOD_ARGS="-a -F -F /boot/System.map-${TCOS_KERNEL}"
  if depmod -h 2>&1|grep -q map; then
-   DEPMOD_ARGS="-aem"
+   DEPMOD_ARGS="-am -F /boot/System.map-${TCOS_KERNEL}"
  fi
  chroot ${TCOS_VAR}/fs-${TCOS_KERNEL}/ depmod $DEPMOD_ARGS ${TCOS_KERNEL}
  echo " done."

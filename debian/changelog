@@ -1,8 +1,9 @@
 initramfs-tools-tcos (0.89.42) unstable; urgency=low
 
   * Fix debian/initramfs-tools-tcos.postinst
+  * Call depmod with System.map file and remove '-e' argument
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 06 Sep 2009 13:12:35 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 06 Sep 2009 13:26:53 +0200
 
 initramfs-tools-tcos (0.89.41) unstable; urgency=low
 

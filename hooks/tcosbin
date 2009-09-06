@@ -231,9 +231,9 @@ fi
 # create allmodules.squashfs
 if [ $TCOS_ALL_MODULES ]; then
   _echo "Running depmod of kernel ${version}"
-  DEPMOD_ARGS="-ae"
+  DEPMOD_ARGS="-a -F /boot/System.map-${TCOS_KERNEL}"
   if depmod -h 2>&1|grep -q map; then
-    DEPMOD_ARGS="-aem"
+    DEPMOD_ARGS="-am -F /boot/System.map-${TCOS_KERNEL}"
   fi
   depmod $DEPMOD_ARGS ${version}
   _echo "     Creating allmodules-${version}.squashfs file"
