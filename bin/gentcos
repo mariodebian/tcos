@@ -144,7 +144,10 @@ call_mkinitramfs() {
  if depmod -h 2>&1|grep -q map; then
    DEPMOD_ARGS="-am -F /boot/System.map-${TCOS_KERNEL}"
  fi
- chroot ${DESTDIR}/ depmod $DEPMOD_ARGS ${TCOS_KERNEL}
+ mkdir -p ${DESTDIR}/boot/
+ cp /boot/System.map-${TCOS_KERNEL} ${DESTDIR}/boot/
+ chroot ${DESTDIR}/ /sbin/depmod $DEPMOD_ARGS ${TCOS_KERNEL}
+ rm -rf ${DESTDIR}/boot/
  echo " done."
 
  # compress again
@@ -225,12 +228,16 @@ create_rootfs() {
  rm -rf ${TCOS_VAR}/fs-${TCOS_KERNEL}
  mkdir ${TCOS_VAR}/fs-${TCOS_KERNEL}
  mv ${OUTROOTFS_TMP}/* ${TCOS_VAR}/fs-${TCOS_KERNEL}/
+
  echo -n "   * Updating modules dependencies..."
  DEPMOD_ARGS="-a -F -F /boot/System.map-${TCOS_KERNEL}"
  if depmod -h 2>&1|grep -q map; then
    DEPMOD_ARGS="-am -F /boot/System.map-${TCOS_KERNEL}"
  fi
- chroot ${TCOS_VAR}/fs-${TCOS_KERNEL}/ depmod $DEPMOD_ARGS ${TCOS_KERNEL}
+ mkdir -p ${TCOS_VAR}/fs-${TCOS_KERNEL}/boot/
+ cp /boot/System.map-${TCOS_KERNEL} ${TCOS_VAR}/fs-${TCOS_KERNEL}/boot/
+ chroot ${TCOS_VAR}/fs-${TCOS_KERNEL}/ /sbin/depmod $DEPMOD_ARGS ${TCOS_KERNEL}
+ rm -rf ${TCOS_VAR}/fs-${TCOS_KERNEL}/boot/
  echo " done."
  
  if [ -e /sbin/nbd-client ]; then

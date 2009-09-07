@@ -1,3 +1,20 @@
+initramfs-tools-tcos (0.89.43) unstable; urgency=low
+
+  * bin/gentcos:
+    - Copy and remove System.map file.
+  * bin/tcos-buildchroot:
+    - Update to work on Ubuntu karmic
+    - Add lost dependencies
+    - Merge Ubuntu and Debian code, remove cdebootstrap
+    - Preseed console-data, console-setup and dash too
+  * hooks-addons/05devices:
+    - Warn about different ltspfs versions
+  * hooks-addons/21pulseaudio:
+    - Copy linked libs of modules (new libudev)
+    - Use module-udev-detect if avalaible
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 07 Sep 2009 11:12:50 +0200
+
 initramfs-tools-tcos (0.89.42) unstable; urgency=low
 
   * Fix debian/initramfs-tools-tcos.postinst

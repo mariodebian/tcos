@@ -35,7 +35,20 @@ EOF
    chmod +x $DESTDIR/bin/ltspfs-set-xprop
 }
 
-
+warn_if_no_match_versions() {
+  if [ -e /usr/bin/ltspfs ] && [ "$(strings /usr/bin/ltspfs |grep -c -i ltspfs_token)" = 0 ]; then
+   _echo "  * ERROR:"
+   _echo ""
+   _echo "  LTSPFS have 2 different versions in boot image and server."
+   _echo "    Please install the same version or devices will not work."
+   _echo ""
+   _echo "   ltspfsd-core + ltspfs"
+   _echo ""
+   _echo "            or"
+   _echo ""
+   _echo "  ltspfs-client + ltspfs-server"
+  fi
+}
 
 if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
 
@@ -47,6 +60,7 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
      cpifexists ${TCOS_PKG_CACHE}/ltspfsd/usr/bin/ltspfsd /usr/bin
      if [ "$(strings `readlink $DESTDIR/usr/bin/ltspfsd` |grep -c ltspfs_token)" != 0 ]; then
        _echo "   * ltspfsd new auth version > 0.5"
+       warn_if_no_match_versions
      fi
    stat_after "ltspfsd [cached]"
 
@@ -55,6 +69,7 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
    cpifexists /usr/bin/ltspfsd /usr/bin
      if [ "$(strings `readlink $DESTDIR/usr/bin/ltspfsd` |grep -c ltspfs_token)" != 0 ]; then
        _echo "   * ltspfsd new auth version > 0.5"
+       warn_if_no_match_versions
      fi
    stat_after "ltspfsd"
 

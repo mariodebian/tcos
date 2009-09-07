@@ -51,7 +51,7 @@ else
 	  chmod 600 $DESTDIR/root/.ssh/id_rsa
         else
           _echo "  WARNING: $key not found !!!"
-          _echo "    You need to create ssh-key as \"${TCOS_ADMIN_USER}\" user"
+          _echo "    You need to create ssh-key as \"${TCOS_ADMIN_USER}\" user or select another user in preferences."
           _echo "    => $ ssh-keygen -t rsa"
         fi
         ####################

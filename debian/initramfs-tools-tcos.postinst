@@ -91,8 +91,6 @@ fi
 
 
 if [ -z "${TFTPBOOT}" ]; then
-
-  mkdir -p $TFTPBOOT_DEFAULT
   TFTPBOOT=$TFTPBOOT_DEFAULT
   echo " * Created $TFTPBOOT_DEFAULT dir as TFTP root dir"
 fi
@@ -100,15 +98,15 @@ fi
 if [ ! -d ${TFTPBOOT} ]; then
    # create dir
    mkdir -p "${TFTPBOOT}"
+   echo " * Created $TFTPBOOT dir as TFTP root dir"
+fi
+
+if [ ! -L ${TFTPBOOT}/tcos ]; then
+  rm -rf ${TFTPBOOT}/tcos
 fi
 
 # make symlink
-if [ -d ${TFTPBOOT}/tcos ]; then
-  echo ""
-  echo "Warning: You must delete ${TFTPBOOT}/tcos dir after upgrade"
-  echo "         new TCOS images will not work if you mantain this dir"
-  echo ""
-elif [ ! -e ${TFTPBOOT}/tcos ]; then
+if [ ! -e ${TFTPBOOT}/tcos ]; then
   ln -s /var/lib/tcos/tftp ${TFTPBOOT}/tcos
 fi
 

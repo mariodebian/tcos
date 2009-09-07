@@ -1,8 +1,8 @@
 #!/bin/bash
 #/*
-#* tcos-buildchrootThis script creates a chroot to build TCOS 32bits images
+#* tcos-buildchroot This script creates a chroot to build TCOS 32bits images
 #*
-#* Copyright (C) 2006,2007,2008  mariodebian at gmail
+#* Copyright (C) 2006-2009  mariodebian at gmail
 #*
 #* This program is free software; you can redistribute it and/or
 #* modify it under the terms of the GNU General Public License
@@ -47,9 +47,15 @@ TCOS_FLAVOUR=standard
 TCOS_MIRROR="http://www.tcosproject.org"
 
 
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash tinylogin ltspfs-client p910nd xvnc4viewer"
-TCOS_PACKAGES="${TCOS_PACKAGES} iftop strace twm x11vnc scrot cdparanoia dropbear console-data "
-TCOS_PACKAGES="${TCOS_PACKAGES} busybox rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils libasound2-plugins"
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash p910nd xvnc4viewer"
+TCOS_PACKAGES="${TCOS_PACKAGES} binutils console-tools acpid alsa-utils twm"
+TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
+
+
+DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools"
+DISTRO_PACKAGES="${DISTRO_PACKAGES} x11-utils debootstrap eject debconf grub syslinux squashfs-tools mknbi chroot"
+DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base xauth xserver-xorg-input-kbd xserver-xorg-input-mouse"
+
 
 # apt options (force-yes)
 APT_OPTS="-y --force-yes"
@@ -68,27 +74,11 @@ set_conf() {
       if [ ! $MIRROR ]; then MIRROR=$UBUNTU_DEF_MIRROR ; fi
       if [ ! $MIRROR2 ]; then MIRROR2=$UBUNTU_DEF_MIRROR2 ; fi
       MIRROR_EXTRAS="universe restricted multiverse"
-      DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools"
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap eject debconf grub syslinux squashfs-tools mknbi"
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 console-common console-data "
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} console-tools tcpd ssh"
-      TCOS_PACKAGES="acpid ${TCOS_PACKAGES}"
-      # need kernel modules unionfs and squashfs in linux-ubuntu-modules from distros grather than gutsy
-      if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" -o ${TCOS_DISTRO} = "intrepid" ];then
-        TCOS_PACKAGES="linux-ubuntu-modules-${TCOS_KERNEL} ${TCOS_PACKAGES}"
-      fi
-      if [ ${TCOS_DISTRO} != "intrepid" ]; then
-           DISTRO_PACKAGES="${DISTRO_PACKAGES} libltdl3"
-      fi
+      DISTRO_PACKAGES="console-setup ${DISTRO_PACKAGES}"
     else
       if [ ! $MIRROR ]; then MIRROR=$DEBIAN_DEF_MIRROR ; fi
-      DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools "
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} debootstrap libltdl3 eject debconf grub syslinux squashfs-tools mknbi "
-      DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base libkrb53 acpid console-tools"
-    fi
-
-    if [ ${TCOS_DISTRO} = "testing" -o ${TCOS_DISTRO} = "lenny" -o ${TCOS_DISTRO} = "unstable" -o ${TCOS_DISTRO} = "hardy" -o ${TCOS_DISTRO} = "intrepid" ];then
-      TCOS_PACKAGES="${TCOS_PACKAGES} xauth"
+      #DISTRO_PACKAGES="console-data ${DISTRO_PACKAGES} libltdl3 "
+      DISTRO_PACKAGES="console-data ${DISTRO_PACKAGES}"
     fi
 }
 
@@ -136,12 +126,6 @@ EOF
 }
 
 chrootcreate() {
-  TMP=""
-  TMP2=""
-  for pkg in $DISTRO_PACKAGES ; do
-    TMP="$TMP,$pkg"
-    TMP2="$TMP2 $pkg"
-  done
   mkdir -p ${TCOS_CHROOT}
  
   debootstrap --arch "${TCOS_ARCH}" ${TCOS_DISTRO} ${TCOS_CHROOT} ${MIRROR}
@@ -184,12 +168,38 @@ EOF
   mount --bind /proc ${TCOS_CHROOT}/proc
   mount --bind /sys ${TCOS_CHROOT}/sys
 
-  # pressed linux-image message
-  cat << EOF > ${TCOS_CHROOT}/pressed
+  # preseed linux-image message
+  cat << EOF > ${TCOS_CHROOT}/preseed
 linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/lilo-initrd-${TCOS_KERNEL}	boolean	false
 linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/preinst/bootloader-initrd-${TCOS_KERNEL}	boolean	false
 linux-image-${TCOS_KERNEL}	linux-image-${TCOS_KERNEL}/postinst/create-kimage-link-${TCOS_KERNEL}	boolean	false
 linux-image-${TCOS_KERNEL}	shared/kernel-image/really-run-bootloader	boolean	false
+console-common	console-data/keymap/policy	select	Don't touch keymap
+console-data	console-data/keymap/policy	select	Don't touch keymap
+console-setup	console-setup/variant	select	USA
+console-setup	console-setup/charmap	select	UTF-8
+console-setup	console-setup/layoutcode	string	us
+console-setup	console-setup/compose	select	No compose key
+console-setup	console-setup/fontsize-text	select	16
+console-setup	console-setup/optionscode	string	
+console-setup	console-setup/layout	select	USA
+console-setup	console-setup/detect	detect-keyboard	
+console-setup	console-setup/detected	note	
+console-setup	console-setup/variantcode	string	
+console-setup	console-setup/codesetcode	string	Uni1
+console-setup	console-setup/dont_ask_layout	error	
+console-setup	console-setup/modelcode	string	pc105
+console-setup	console-setup/ask_detect	boolean	false
+console-setup	console-setup/altgr	select	No AltGr key
+console-setup	console-setup/ttys	string	/dev/tty[1-6]
+console-setup	console-setup/model	select	Generic 105-key (Intl) PC
+console-setup	console-setup/fontsize-fb	select	16
+console-setup	console-setup/switch	select	No temporary switch
+console-setup	console-setup/codeset	select	. Combined - Latin; Slavic Cyrillic; Hebrew; basic Arabic
+console-setup	console-setup/toggle	select	No toggling
+console-setup	console-setup/fontface	select	Fixed
+console-setup	console-setup/fontsize	string	16
+dash	dash/sh	boolean	false
 EOF
 
   cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
@@ -205,12 +215,13 @@ CMD
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get $APT_OPTS update
+apt-get $APT_OPTS dist-upgrade
 apt-get install $APT_OPTS tcos-keyring
 apt-get $APT_OPTS update
-apt-get install $APT_OPTS ${TMP2} 
+apt-get install $APT_OPTS ${DISTRO_PACKAGES} 
 apt-get clean
-debconf-set-selections /pressed
-rm -f /pressed
+debconf-set-selections /preseed
+rm -f /preseed
 apt-get $APT_OPTS upgrade
 EOC
 
@@ -221,6 +232,7 @@ EOC
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} 
+apt-get install $APT_OPTS linux-ubuntu-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS linux-restricted-modules-${TCOS_KERNEL} 
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
 apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
@@ -243,7 +255,7 @@ apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
 apt-get clean
 /etc/init.d/dropbear stop || true
-rm -f /pressed
+rm -f /preseed
 EOC
   fi
 
@@ -278,14 +290,15 @@ if [ -e /etc/console-setup/boottime.kmap.gz ]; then
 fi
 
   cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="dialog" export DEBIAN_FRONTEND="dialog"
+export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get update
 apt-get $APT_OPTS dist-upgrade
-apt-get install $APT_OPTS ${TMP2} ${TCOS_PACKAGES}
-# need umount this directory to allow remove later chroot from distros grather than gutsy
+apt-get install $APT_OPTS ${TCOS_PACKAGES}
+apt-get install $APT_OPTS ${DISTRO_PACKAGES}
 apt-get clean
 EOC
 
+# need umount this directory to allow remove later chroot from distros grather than gutsy
 if [ -d ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ ]; then
   umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ >/dev/null 2>&1
 fi
@@ -328,17 +341,6 @@ if [ -f /etc/tcos/templates/tcosconfig.conf ]; then
     TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/templates/tcosconfig.conf | sed 's/"//g')
   fi
 fi
-
-
-# disable cached packages (esound is no used anymore)
-#[ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/pulseaudio-esound-compat ] && \
-#	chroot ${TCOS_CHROOT} gentcos -instpkg pulseaudio-esound-compat
-
-#[ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/libesd0 ] && \
-#	chroot ${TCOS_CHROOT} gentcos -instpkg libesd0
-
-#[ ! -d ${TCOS_CHROOT}/var/cache/tcos/packages/esound ] && \
-#	chroot ${TCOS_CHROOT} gentcos -instpkg esound
 
 
 mount --bind /proc ${TCOS_CHROOT}/proc
