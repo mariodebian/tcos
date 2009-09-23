@@ -568,6 +568,9 @@ else
   TCOS_ENABLE_FONT_SERVER="#"
 fi
 
+if [ "$TCOS_XORG_XKB" = "br" ]; then
+  TCOS_XORG_XKBMODEL="abnt2"
+fi
 
 debug "set_settings() xdriver=$xdriver xres=$xres xdepth=$xdepth xdpms=$xdpms"
 debug "xhorizsync=$xhorizsync xvertsync=$xvertsync xrefresh=$xrefresh xmousewheel=$xmousewheel"
