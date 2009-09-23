@@ -37,8 +37,8 @@ else
 
   cat << EOF > $DESTDIR/etc/usplash.conf
 # Usplash configuration file for tcos
-xres=1024
-yres=768
+xres=$TCOS_USPLASH_XRES
+yres=$TCOS_USPLASH_YRES
 EOF
 
 fi # end if TCOS_DISABLE_USPLASH
