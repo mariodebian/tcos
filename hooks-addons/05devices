@@ -83,6 +83,16 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
   fi
 fi
 
+if [ $TCOS_NTFS_3G ]; then
+   stat_before
+    # copy ntfs-3g bin and force load fuse
+    cpifexists /usr/bin/ntfs-3g /usr/bin/
+    echo "/usr/bin/ntfs-3g /sbin/mount.ntfs-3g" >> $DESTDIR/conf/links
+    manual_add_modules fuse
+    echo "fuse" >> $DESTDIR/etc/modules
+   stat_after "NTFS-3G tools"
+fi
+
 
 if [ ! $TCOS_AUTOFS ]; then
   _verbose "(05devices) TCOS_AUTOFS disabled"
