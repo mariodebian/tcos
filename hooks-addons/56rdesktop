@@ -30,6 +30,12 @@ if [ -f \$XAUTHORITY ]; then
   TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
 fi
 
+XKB=\${TCOS_XORG_XKB}
+if [ "\${XKB}" = "br" ]; then
+  XKB="pt-br"
+fi
+
+
 Xorg \${TCOS_XORG_OPTS}  >> /tmp/initramfs.debug 2>&1 &
 
 while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
@@ -40,14 +46,13 @@ done
 sleep 2
 
 # default server
-RDESKTOP_SERVER=\$(read_server "rdesktop-server")
-RDESKTOP_CMD="/usr/bin/rdesktop -5 -u \"\" -f -a 16 -k es \${RDESKTOP_SERVER}"
+RDESKTOP_SERVER=\$(read_server 'rdesktop' "$TCOS_RDESKTOP_SERVER")
+RDESKTOP_CMD="/usr/bin/rdesktop -5 -u \"\" -f -a 16 -k \${XKB} \${RDESKTOP_SERVER}"
 
 if [ -x /usr/bin/padsp ] && [ -d /proc/asound ]; then
-  RDESKTOP_CMD="padsp -s localhost /usr/bin/rdesktop -5 -r sound -u \"\" -f -a 16 -k es \${RDESKTOP_SERVER}"
+  RDESKTOP_CMD="padsp -s localhost /usr/bin/rdesktop -5 -r sound -u \"\" -f -a 16 -k \${XKB} \${RDESKTOP_SERVER}"
 fi
 
-# FIXME spanish keyboard (default)
 # -r sound
 # -u "" # empty username
 # -f -a 16 fullscreen and 16 color bits
@@ -60,6 +65,6 @@ EOF
 chmod +x $DESTDIR/sbin/startrdesktop
 
 # old redesktop cmd
-#/usr/bin/rdesktop -5 -f -a 16 -k es -T "Remotedesktop-Client: \${rdesktop}" \${rdesktop} > /dev/null 2>&1
+#/usr/bin/rdesktop -5 -f -a 16 -k \${XKB} -T "Remotedesktop-Client: \${rdesktop}" \${rdesktop} > /dev/null 2>&1
 stat_after "rDesktop"
 fi
