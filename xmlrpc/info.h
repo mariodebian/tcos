@@ -67,6 +67,9 @@
 #define MODULES_LOADED       TCOS_PATH"/getinfo.sh -i MODULES_LOADED"
 #define MODULES_NOTFOUND     TCOS_PATH"/getinfo.sh -i MODULES_NOTFOUND"
 
+/* get screensize */
+#define SCREENSIZE     TCOS_PATH"/getinfo.sh -i SCREENSIZE"
+
 #define BIG_BUFFER 5000
 
 /* messages */

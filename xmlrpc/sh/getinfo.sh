@@ -287,6 +287,10 @@ echo
 MODULES_NOTFOUND)
 modules_notfound
 ;;
+
+SCREENSIZE)
+DISPLAY=:0 screensize
+;;
 esac
 
 

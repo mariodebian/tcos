@@ -108,6 +108,10 @@ xmlrpc_value *tcos_info(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   else if ( strcmp(info, "modules_notfound" ) == 0)
     fp=(FILE*)popen(MODULES_NOTFOUND, "r");
 
+  /* MODULES METHODS */
+  else if ( strcmp(info, "screensize" ) == 0)
+    fp=(FILE*)popen(SCREENSIZE, "r");
+
   /* default method = error */
   else
     return xmlrpc_build_value(env, "s", INFO_UNKNOW );
