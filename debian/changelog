@@ -1,9 +1,14 @@
-initramfs-tools-tcos (0.89.44) UNRELEASED; urgency=low
+initramfs-tools-tcos (0.89.44) unstable; urgency=low
 
+  * Use abnt2 keymap for Brasil users
+  * Add support for NTFS-3G
+  * Add more info about dnsmasq and gPXE
+  * Allow to personalize usplash resolution
+  * Fix rdesktop IP detection and use correct keymap
   * xmlrpc/*:
     - Add support to get screensize in info.[ch]
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 25 Sep 2009 18:13:27 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 25 Sep 2009 23:46:32 +0200
 
 initramfs-tools-tcos (0.89.43) unstable; urgency=low
 
