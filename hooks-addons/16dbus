@@ -1,0 +1,50 @@
+# hook to include DBus
+# need dbus and dbus-x11 packages
+
+
+if [ $TCOS_DBUS ]; then
+
+stat_before
+
+
+mkdir -p $DESTDIR/var/run/dbus
+mkdir -p $DESTDIR/var/lib/dbus
+mkdir -p $DESTDIR/usr/lib/dbus-1.0
+mkdir -p $DESTDIR/etc/dbus-1/system.d
+mkdir -p $DESTDIR/etc/dbus-1/session.d
+
+cpifexists /usr/bin/dbus-daemon      /usr/bin/
+cpifexists /usr/bin/dbus-uuidgen     /usr/bin/
+cpifexists /usr/bin/dbus-launch      /usr/bin/
+
+cpifexists /usr/lib/dbus-1.0/dbus-daemon-launch-helper /usr/lib/dbus-1.0/
+
+cpifexists /etc/dbus-1/system.conf   /etc/dbus-1/
+cpifexists /etc/dbus-1/session.conf  /etc/dbus-1/
+
+if [ -f /etc/dbus-1/system.d/pulseaudio-system.conf ]; then
+  cpifexists /etc/dbus-1/system.d/pulseaudio-system.conf /etc/dbus-1/system.d/
+fi
+
+
+
+
+
+echo "messagebus:x:100:104::/var/run/dbus:/bin/false" >> $DESTDIR/etc/passwd
+
+cat << EOF > $DESTDIR/scripts/tcos-bottom/15dbus
+#!/bin/sh
+
+
+dbus-uuidgen --ensure
+
+start-stop-daemon --start --quiet --pidfile /var/run/dbus/dbus.pid \
+    --user messagebus --exec /usr/bin/dbus-daemon -- --system
+
+EOF
+
+chmod +x $DESTDIR/scripts/tcos-bottom/15dbus
+
+stat_after "DBus"
+
+fi # end of TCOS_DBUS
