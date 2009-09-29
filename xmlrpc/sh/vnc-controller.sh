@@ -26,8 +26,10 @@
 #   vnc-controller.sh startserver "authfile"
 #   vnc-controller.sh startserver "authfile" "user:pass"
 #
+#   vnc-controller.sh startscale "authfile" "__scaleX__x__scaleY__"
+#
 #   vnc-controller.sh stopserver
-#   vnc-controller.sh stopserver "user:pass" 
+#   vnc-controller.sh stopserver "user:pass"
 #
 #   vnc-controller.sh startclient "ip" "authfile"
 #   vnc-controller.sh startclient "ip" "authfile" "user:pass"
@@ -55,7 +57,19 @@ fi
 for arg in $1; do
   case $arg in
      startserver)
-        cmd=" -shared -noshm -forever -rfbauth $2"
+        cmd=" -shared -noshm -forever -reopen -rfbauth $2"
+        if [ $STANDALONE = 0 ]; then
+             killall -SIGKILL x11vnc
+            /sbin/daemonize.sh "x11vnc" "$cmd"
+            if [ $? = 0 ]; then echo "ok"; else echo "error: starting vnc server"; fi
+        else
+            $DBUS_HANDLER --auth=$3 --type=exec --text="killall -s KILL x11vnc" 2>/dev/null
+            # this returns ok if can send dbus msg, no need to parse
+            $DBUS_HANDLER --auth=$3 --type=exec --text="x11vnc $cmd" 2>/dev/null
+        fi
+     ;;
+     startscale)
+        cmd=" -shared -noshm -forever -reopen -rfbauth $2 -scale $3"
         if [ $STANDALONE = 0 ]; then
              killall -SIGKILL x11vnc
             /sbin/daemonize.sh "x11vnc" "$cmd"
