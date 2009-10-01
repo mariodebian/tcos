@@ -56,11 +56,11 @@ if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] 
 fi
 
 # 2.- Try with udevinfo
-PATH=$(find /sys/devices -name $(echo /dev/sda1 | awk -F"/" '{print $NF}')| awk -F"/block" '{print "/block"$2}')
-if [ "$PATH" != "" ]; then
-FSTYPE=$(udevinfo --query=env --path=$PATH| awk -F'=' '/^ID_FS_TYPE/ {print $2}')
+DPATH=$(find /sys/devices -name $(echo $DEVICE | awk -F"/" '{print $NF}')| awk -F"/block" '{print "/block"$2}')
+if [ "$DPATH" != "" ]; then
+  FSTYPE=$(udevinfo --query=env --path=$DPATH| awk -F'=' '/^ID_FS_TYPE/ {print $2}')
 else
-FSTYPE=""
+  FSTYPE=""
 fi
 
  case $FSTYPE in
