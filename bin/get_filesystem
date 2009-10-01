@@ -30,8 +30,39 @@ if [ "$DEVICE" = "" ]; then
 fi
 
 # 1.- Try with udev utils
+if [ -x /lib/udev/vol_id ]; then
+  FSTYPE=$(/lib/udev/vol_id -t $DEVICE 2>&1)
+else
+  FSTYPE=""
+fi
+ case $FSTYPE in
+  *unknow*)
+     FSTYPE="unknow"
+     ;;
+   *error*volume*)
+     FSTYPE="error"
+     ;;
+   *ntfs*)
+     FSTYPE=$NTFS_mode
+     ;;
+   *NTFS*)
+     FSTYPE=$NTFS_mode
+     ;;
+ esac   
 
-FSTYPE=$(/lib/udev/vol_id -t $DEVICE 2>&1)
+if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] ; then
+   echo_fs "$FSTYPE"
+   exit 0
+fi
+
+# 2.- Try with udevinfo
+PATH=$(find /sys/devices -name $(echo /dev/sda1 | awk -F"/" '{print $NF}')| awk -F"/block" '{print "/block"$2}')
+if [ "$PATH" != "" ]; then
+FSTYPE=$(udevinfo --query=env --path=$PATH| awk -F'=' '/^ID_FS_TYPE/ {print $2}')
+else
+FSTYPE=""
+fi
+
  case $FSTYPE in
   *unknow*)
      FSTYPE="unknow"
@@ -53,7 +84,8 @@ if [ "$FSTYPE" != "" ] && [ "$FSTYPE" != "unknow" ] && [ "$FSTYPE" != "error" ] 
 fi
 
 
-# 2.- Try with fstype
+
+# 3.- Try with fstype
 if [ -x $KLIBC_FSTYPE ]; then
 FSTYPE=$($KLIBC_FSTYPE $DEVICE 2>&1 | awk -F "=" '/^FSTYPE/ {print $2}')
  case $FSTYPE in
@@ -75,7 +107,7 @@ FSTYPE=$($KLIBC_FSTYPE $DEVICE 2>&1 | awk -F "=" '/^FSTYPE/ {print $2}')
 
 fi
 
-# 3.- Try with disktype
+# 4.- Try with disktype
 #  type=$(disktype $DEVICE 2>/dev/null | grep "file system")
 #  case "$type" in
 #   *ReiserFS*)
