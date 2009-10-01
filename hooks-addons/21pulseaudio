@@ -70,6 +70,17 @@ else
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*phone*
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*position-event*
 
+ # don't use suspend-idle (we don't use dbus yet to reload pulseaudio)
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*idle*
+
+ # don't copy x11 modules
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*x11*
+
+ # copy channel configuration files if exists
+ if [ -d /usr/share/pulseaudio/ ]; then
+   copydir /usr/share/pulseaudio /usr/share/
+ fi
+
  # needed for pulse -> esound -> OSS
  [ -e /usr/lib/pulse-*/modules/libsocket-client.so ] && \
       cpifexists /usr/lib/pulse-*/modules/libsocket-client.so /usr/lib/pulse-*/modules/
@@ -91,13 +102,6 @@ else
  cp /etc/pulse/client.conf     $DESTDIR/etc/pulse/
  cp /etc/pulse/daemon.conf     $DESTDIR/etc/pulse/
 
- # limit PulseAudio SHM memory
- if grep -q shm-size-bytes /etc/pulse/daemon.conf; then
-   echo "shm-size-bytes = 16"         >> $DESTDIR/etc/pulse/daemon.conf
- fi
- if grep -q disable-shm /etc/pulse/daemon.conf; then
-   echo "disable-shm = yes"           >> $DESTDIR/etc/pulse/daemon.conf
- fi
 
  if [ "$TCOS_SOUND_REMOTE_ESD" ]; then
    _SERVER=";\$(read_server "xdmcp-server")"
@@ -124,6 +128,20 @@ else
 . /conf/tcos-run-functions
 
 
+# limit PulseAudio SHM memory in low memory systems (<64MiB = 65536)
+if [ "\$(awk '/MemTotal/ {print $2}' /proc/meminfo)" -lt 65537 ]; then
+  if grep -q shm-size-bytes /etc/pulse/daemon.conf; then
+    echo "shm-size-bytes = 16"         >> /etc/pulse/daemon.conf
+  fi
+  if grep -q enable-shm /etc/pulse/daemon.conf; then
+    echo "enable-shm = no"           >> /etc/pulse/daemon.conf
+  fi
+fi
+
+# don't allow to exit_idle (by default 20 seconds)
+if grep -q exit-idle-time /etc/pulse/daemon.conf; then
+  echo "exit-idle-time = -1"           >> /etc/pulse/daemon.conf
+fi
 
 # generate conf
 rm -f /etc/pulse/default.pa
