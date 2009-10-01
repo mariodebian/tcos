@@ -1,3 +1,15 @@
+initramfs-tools-tcos (0.89.46) unstable; urgency=low
+
+  * pulseaudio: set exit-idle-time to -1, only set SHM if low memory <
+    64MiB, and don't copy udev or x11 modules
+  * create p910nd lock dir
+  * update Ubuntu Jaunty kernel to 2.6.28-15-generic
+  * don't run vol_id if not found, and add udevinfo detection method
+  * udev/tcos-udevd.sh udev/save-udev.sh: translate DEVPATH to old short
+    one
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 01 Oct 2009 16:03:36 +0200
+
 initramfs-tools-tcos (0.89.45) unstable; urgency=low
 
   * Allow to start x11vnc server in scale mode
