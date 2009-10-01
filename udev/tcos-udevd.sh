@@ -35,6 +35,14 @@ fi
    id_bus=$(get_env_var "ID_BUS")
    device=$(get_env_var "DEVNAME")
   devpath=$(get_env_var "DEVPATH")
+  if echo $devpath | grep -q "/devices/" ; then
+    # translate name
+    _devpath=$(echo "$devpath" | awk -F"/block" '{print "DEVPATH=/block"$2}')
+    echo "tcos-udevd.sh OLD ==>$devpath" >> /var/log/listener-daemon.log
+    echo "tcos-udevd.sh NEW ==>$_devpath" >> /var/log/listener-daemon.log
+    devpath=$_devpath
+  fi
+
   blockname=$(echo $devpath | awk -F"/" '{print $3}')
        part=$(echo $device | awk -F"/" '{print $3}')
 

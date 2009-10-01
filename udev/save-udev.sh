@@ -27,6 +27,14 @@ DEVPATH="/block/$DISK"
 
 [ -n "$DEVNAME" ] && [ -e $DEVNAME ] && export $($UDEVINFO --path=/sys$DEVPATH --query=env | grep -v "^DEVLINKS")
 
+if echo $DEVPATH | grep -q "/devices/" ; then
+  # translate name
+  _devpath=$(echo "$DEVPATH" | awk -F"/block" '{print "/block"$2}')
+  debug "save-udev.sh OLD ==>$DEVPATH"
+  debug "save-udev.sh NEW ==>$_devpath"
+  DEVPATH=$_devpath
+fi
+
 if [ "$ID_FS_LABEL_SAFE" ]; then
   ID_FS_LABEL=$ID_FS_LABEL_SAFE
 fi
