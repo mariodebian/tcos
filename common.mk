@@ -29,7 +29,7 @@ KERNEL_hardy="2.6.24-24-generic"
 
 KERNEL_intrepid="2.6.27-14-generic"
 
-KERNEL_jaunty="2.6.28-13-generic"
+KERNEL_jaunty="2.6.28-15-generic"
 
 KERNEL_karmic="2.6.31-9-generic"
 ##################################
