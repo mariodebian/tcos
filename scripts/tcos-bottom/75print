@@ -21,6 +21,7 @@ if [ $TCOS_PRINTER ]; then
 
   if [ -e /usr/bin/p910nd ]; then
 
+     mkdir -p /var/lock/p910nd
      /usr/bin/p910nd -f $LP > /var/log/p910nd.log 2>&1 &
 
   fi
