@@ -29,9 +29,13 @@ if [ "$DEVICE" = "" ]; then
   exit 1
 fi
 
-# 1.- Try with udev utils
+# 1.- Try with udev utils vol_id or blkid
 if [ -x /lib/udev/vol_id ]; then
   FSTYPE=$(/lib/udev/vol_id -t $DEVICE 2>&1)
+
+elif [ -x /usr/bin/blkid ]; then
+  FSTYPE=$(/usr/bin/blkid -o udev $DEVICE 2>&1| awk -F"=" '/ID_FS_TYPE=/ {print $2}')
+
 else
   FSTYPE=""
 fi

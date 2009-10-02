@@ -39,6 +39,13 @@ cpudev /etc/udev/rules.d/60-symlinks.rules    /etc/udev/rules.d/
 # ubuntu rules (create symlinks /dev/snd/*)
 cpudev /lib/udev/rules.d/40-alsa.rules        /lib/udev/rules.d/
 
+
+# new udev don't have vol_id => blkid
+#/sbin/blkid -p -o udev /dev/sdb1
+cpudev /sbin/blkid /usr/bin/
+
+
+
 # delete not usessfull rules
 rm -f $DESTDIR/etc/udev/rules.d/024_hpmud.rules
 rm -f $DESTDIR/etc/udev/rules.d/025_libgphoto2.rules
