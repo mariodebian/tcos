@@ -1,0 +1,18 @@
+#!/bin/sh
+# 
+
+quiet=n
+
+. /conf/tcos.conf
+
+if [ -z "$TCOS_NTPDATE" ]; then
+   exit 0
+fi
+
+
+/usr/bin/ntpdate $TCOS_NTPDATE_SERVER
+
+
+
+exit 0
+

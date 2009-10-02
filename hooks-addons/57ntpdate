@@ -1,0 +1,14 @@
+# hook to update date/time in thin clients
+
+
+if [ ! $TCOS_NTPDATE ]; then
+  _verbose "(57ntpdate) TCOS_NTPDATE"
+else
+  if [ ! -e /usr/sbin/ntpdate ]; then
+  _echo "   * ntpdate not installed"
+  fi
+  stat_before
+    cpifexists /usr/sbin/ntpdate   /usr/bin/
+  stat_after "ntpdate"
+
+fi
