@@ -36,6 +36,8 @@ cpudev /lib/udev/cdrom_id       /lib/udev
 cpudev /lib/udev/scsi_id        /lib/udev
 cpudev /etc/udev/rules.d/60-symlinks.rules    /etc/udev/rules.d/
 
+# ubuntu rules (create symlinks /dev/snd/*)
+cpudev /lib/udev/rules.d/40-alsa.rules        /lib/udev/rules.d/
 
 # delete not usessfull rules
 rm -f $DESTDIR/etc/udev/rules.d/024_hpmud.rules
