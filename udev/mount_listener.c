@@ -263,10 +263,10 @@ int main (int argc, char *argv[]) {
             }
 
         }
-        
+	/* poll() return 0 if no changes
         else {
             perror("ret value of poll() unknow\n");
-        }
+        }*/
     }
 
     /* never here */
