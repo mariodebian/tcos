@@ -53,11 +53,16 @@ else
   DBUS_HANDLER="/usr/lib/tcos/tcos-dbus-helper --username=${STANDALONE_USER} "
 fi
 
+REOPEN=""
+
+if x11vnc --help| grep -q "^\-reopen"; then
+  REOPEN=" -reopen "
+fi
 
 for arg in $1; do
   case $arg in
      startserver)
-        cmd=" -shared -noshm -forever -reopen -rfbauth $2"
+        cmd=" -shared -noshm -forever $REOPEN -rfbauth $2"
         if [ $STANDALONE = 0 ]; then
              killall -SIGKILL x11vnc
             /sbin/daemonize.sh "x11vnc" "$cmd"
@@ -69,7 +74,7 @@ for arg in $1; do
         fi
      ;;
      startscale)
-        cmd=" -shared -noshm -forever -reopen -rfbauth $2 -scale $3"
+        cmd=" -shared -noshm -forever $REOPEN -rfbauth $2 -scale $3"
         if [ $STANDALONE = 0 ]; then
              killall -SIGKILL x11vnc
             /sbin/daemonize.sh "x11vnc" "$cmd"
