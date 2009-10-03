@@ -291,7 +291,7 @@ function parse_pxelinuxcfg(){
 
         if [ -d /etc/tcos/pxelinux.d ]; then
             for f in /etc/tcos/pxelinux.d/*.hook ; do
-                exec $f || true
+                . $f || true
             done
         fi
 
