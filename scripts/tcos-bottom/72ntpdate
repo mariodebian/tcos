@@ -10,7 +10,7 @@ if [ -z "$TCOS_NTPDATE" ]; then
 fi
 
 
-/usr/bin/ntpdate $TCOS_NTPDATE_SERVER
+/usr/bin/ntpdate $TCOS_NTPDATE_SERVER >> /tmp/initramfs.debug 2>&1 &
 
 
 
