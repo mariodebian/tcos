@@ -288,5 +288,12 @@ function parse_pxelinuxcfg(){
             -e "s/__TFTP_MSG_HELP2__/${TFTP_MSG_HELP2}/g" \
             -e "s/__TFTP_MSG__/${TFTP_MSG}/g" ${DESTFILE}
         _verbose "(t-g-f) MENU_FILE=$(cat ${DESTFILE})"
+
+        if [ -d /etc/tcos/pxelinux.d ]; then
+            for f in /etc/tcos/pxelinux.d/*.hook ; do
+                exec $f || true
+            done
+        fi
+
 }
 

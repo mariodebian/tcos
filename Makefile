@@ -61,6 +61,7 @@ install:
 	install -d $(DESTDIR)/$(X11_CONF)
 
 	install -d $(DESTDIR)$(TCOS_CONF)/hacking
+	install -d $(DESTDIR)$(TCOS_CONF)/pxelinux.d
 	install -d $(DESTDIR)/usr/sbin
 	install -d $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg
 	install -d $(DESTDIR)$(TFTP_DIR)/conf/
@@ -79,6 +80,8 @@ install:
 	install -m 644 SecurityPolicy $(DESTDIR)/$(TCOS_CONF)
 
 	install -m 644 tcos/default.tpl $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl
+
+	install -m 644 tcos/tcos/example.dual.server.conf $DESTDIR/$(TCOS_CONF)/pxelinux.d/example.dual.server.hook
 
 	install -m 644 tcos/help.msg $(DESTDIR)$(TFTP_DIR)/
 	install -m 644 tcos/help2.msg $(DESTDIR)$(TFTP_DIR)/
