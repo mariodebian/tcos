@@ -10,6 +10,7 @@
 /etc/tcos/hooks
 /etc/tcos/hooks-addons
 /etc/tcos/conf.d
+/etc/tcos/pxelinux.d
 /etc/tcos/secrets
 /var/cache/tcos/packages
 /var/lib/tcos/tftp
