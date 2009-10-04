@@ -1,3 +1,20 @@
+initramfs-tools-tcos (0.89.47) unstable; urgency=low
+
+  * fix typo and use DPATH inseat of reserved var PATH
+  * udev/mount_listener.c don't show errors if poll() return 0
+  * hooks-addons/03udev: copy /lib/udev/rules.d/40-alsa.rules, 
+    Ubuntu Jaunty fix sound
+  * add support to update BIOS date/time with ntpdate, disabled by default
+  * use blkid, from util-linux (if avalaible) to get filesystem type
+  * call user scripts in /etc/tcos/pxelinux.d/*.hook files
+  * log ntpdate in initramfs.debug file
+  * fix typos in example install
+  * add new files to initramfs package
+  * check for reopen in x11vnc before using it
+  * fix exec pxelinux.d hooks and fix example hack
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 04 Oct 2009 15:43:59 +0200
+
 initramfs-tools-tcos (0.89.46) unstable; urgency=low
 
   * pulseaudio: set exit-idle-time to -1, only set SHM if low memory <
