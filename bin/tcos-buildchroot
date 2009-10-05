@@ -333,6 +333,7 @@ EOC
 
 chrootupdateimages() {
 cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
+cp /etc/localtime /etc/adjtime ${TCOS_CHROOT}/etc/
 TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/tcos.conf | sed 's/"//g')
 if [ -f /etc/tcos/templates/tcosconfig.conf ]; then
   mkdir -p ${TCOS_CHROOT}/etc/tcos/templates/
