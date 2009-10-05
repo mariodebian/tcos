@@ -10,8 +10,11 @@ if [ -z "$TCOS_NTPDATE" ]; then
 fi
 
 
-/usr/bin/ntpdate $TCOS_NTPDATE_SERVER >> /tmp/initramfs.debug 2>&1 &
-
+/usr/bin/ntpdate $TCOS_NTPDATE_SERVER >> /tmp/initramfs.debug 2>&1
+if [ $? = 0 ]; then
+  # save clock in BIOS
+  hwclock --systohc >> /tmp/initramfs.debug 2>&1
+fi
 
 
 exit 0

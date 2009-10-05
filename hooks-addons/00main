@@ -106,6 +106,7 @@ fi
 cpifexists /etc/localtime  /etc/
 [ -f /etc/adjtime ] && cpifexists /etc/adjtime    /etc/
 cpifexists /etc/securetty  /etc
+cpifexists /etc/services   /etc/
 
 # create (if not exists) empty modules file
 touch      $DESTDIR/etc/modules
