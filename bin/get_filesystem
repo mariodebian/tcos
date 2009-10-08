@@ -10,6 +10,10 @@ KLIBC_FSTYPE=/usr/lib/klibc/bin/fstype
 [ -x /bin/fstype ] && KLIBC_FSTYPE=/bin/fstype
 [ ! -x $KLIBC_FSTYPE ] && KLIBC_FSTYPE=/bin/not_found
 
+UDEVINFO="/usr/bin/udevinfo"
+[ -e /sbin/udevadm ] && UDEVINFO="/sbin/udevadm info"
+
+
 ONLY_FS=0
 if [ "$2" = "--only" ]; then
   ONLY_FS=1
@@ -62,7 +66,7 @@ fi
 # 2.- Try with udevinfo
 DPATH=$(find /sys/devices -name $(echo $DEVICE | awk -F"/" '{print $NF}')| awk -F"/block" '{print "/block"$2}')
 if [ "$DPATH" != "" ]; then
-  FSTYPE=$(udevinfo --query=env --path=$DPATH| awk -F'=' '/^ID_FS_TYPE/ {print $2}')
+  FSTYPE=$($UDEVINFO --query=env --path=$DPATH 2>/dev/null| awk -F'=' '/^ID_FS_TYPE/ {print $2}')
 else
   FSTYPE=""
 fi
