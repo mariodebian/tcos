@@ -56,8 +56,8 @@ sed "/modules/i\
 " $new_xorg > /etc/X11/xorg.conf.auto
 
 # disable HAL
-sed "/ServerLayout/i\
-Option \"AutoAddDevices\" \
+sed "/ServerLayout/a\
+Option \"AutoAddDevices\" \"off\" \
 " /etc/X11/xorg.conf.auto > /etc/X11/xorg.conf.auto.new
 mv /etc/X11/xorg.conf.auto.new /etc/X11/xorg.conf.auto
 
