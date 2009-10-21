@@ -119,7 +119,7 @@ cpifexists /lib/libnss_compat.so.2        /lib/
 cpifexists /lib/libnss_files.so.2         /lib/
 cpifexists /lib/libnss_nis.so.2           /lib/
 cpifexists /lib/libnss_dns.so.2           /lib/
-cpifexists /usr/lib/libnss_db.so.2        /usr/lib/
+[ -e /usr/lib/libnss_db.so.2 ] && cpifexists /usr/lib/libnss_db.so.2        /usr/lib/
 
 # new lib (needed for DNS calls)
 [ -e /lib/libnss_mdns4_minimal.so.2 ] && cpifexists /lib/libnss_mdns4_minimal.so.2 /lib/
