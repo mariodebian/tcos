@@ -52,7 +52,7 @@ TCOS_PACKAGES="${TCOS_PACKAGES} binutils console-tools acpid alsa-utils twm"
 TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
 
 
-DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools libnss-db xterm wget dosfstools"
+DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools xterm wget dosfstools"
 DISTRO_PACKAGES="${DISTRO_PACKAGES} x11-utils debootstrap eject debconf grub syslinux squashfs-tools mknbi"
 DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base xauth xserver-xorg-input-kbd xserver-xorg-input-mouse"
 
