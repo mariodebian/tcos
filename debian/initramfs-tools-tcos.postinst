@@ -92,7 +92,7 @@ fi
 
 if [ -z "${TFTPBOOT}" ]; then
   TFTPBOOT=$TFTPBOOT_DEFAULT
-  echo " * Created $TFTPBOOT_DEFAULT dir as TFTP root dir"
+  echo " * Using $TFTPBOOT_DEFAULT dir as TFTP root dir"
 fi
 
 if [ ! -d ${TFTPBOOT} ]; then
