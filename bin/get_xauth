@@ -32,6 +32,16 @@ else
    XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
 fi
 
+# standalone GDM login
+if [ "$user" = "" ] && [ -e "/var/lib/gdm/:0.Xauth" ]; then
+  XAUTHORITY="/var/lib/gdm/:0.Xauth"
+fi
+
+# standalone KDM login
+if [ "$user" = "" ] && [ -e "/usr/bin/kdm" ]; then
+  XAUTHORITY=$(find /var/run/xauth -type f | tail -1)
+fi
+
 echo -n "${XAUTHORITY}"
 
 exit 0
