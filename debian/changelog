@@ -1,3 +1,16 @@
+initramfs-tools-tcos (0.89.49) unstable; urgency=low
+
+  * remove libnss-db, new libc conflicts with it
+  * set home if getent fails
+  * bin/tcos-buildchroot: remove libnss-db from PACKAGES
+  * hooks-addons/00main: copy libnss_db.so.2 if exists
+  * bin/get_xauth: read cookie from GDM/KDM when no user is logged
+  * scripts/tcos-bottom/10ldconfig: export env vars in /root/.profile
+  * scripts/tcos-bottom/80shell: change order in PS1 var
+  * debian/initramfs-tools-tcos.postinst: fix typo
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 08 Nov 2009 14:57:29 +0100
+
 initramfs-tools-tcos (0.89.48) unstable; urgency=low
 
   * fix startscale STANDALONE auth argument
