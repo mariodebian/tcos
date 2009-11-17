@@ -109,6 +109,7 @@ xmousedev="/dev/input/mice"
 
 ENABLE_EVDEV="#"
 ENABLE_KBD=""
+EVDEV_MODEL="evdev"
 
 KBD_DEV=$(find /dev/input/by-path/ -name "*kbd*")
 if [ "$KBD_DEV" != "" ]; then
@@ -583,6 +584,7 @@ fi
 
 if [ "$TCOS_XORG_XKB" = "br" ]; then
   TCOS_XORG_XKBMODEL="abnt2"
+  EVDEV_MODEL="abnt2"
 fi
 
 
@@ -605,6 +607,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__disablesync__"/"${disablesync}"/g \
     -e s/"__xevdevenable__"/"${ENABLE_EVDEV}"/g \
     -e s/"__xkbdenable__"/"${ENABLE_KBD}"/g \
+    -e s/"__evdevmodel__"/"${EVDEV_MODEL}"/g \
     -e s/"__xkbmap__"/"${TCOS_XORG_XKB}"/g \
     -e s/"__xkbmodel__"/"${TCOS_XORG_XKBMODEL}"/g \
     -e s/"__xmousewheel__"/"${xmousewheel}"/g \

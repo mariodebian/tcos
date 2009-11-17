@@ -53,7 +53,7 @@ __xevdevenable__	Driver		"evdev"
 __xevdevenable__	Option		"Device"	"/dev/input/keyboard"
 __xevdevenable__	Option		"CoreKeyboard"
 __xevdevenable__	Option		"XkbRules"	"xorg"
-__xevdevenable__	Option		"XkbModel"	"evdev"
+__xevdevenable__	Option		"XkbModel"	"__evdevmodel__"
 __xevdevenable__	Option		"XkbLayout"	"__xkbmap__"
 __xevdevenable__EndSection
 
