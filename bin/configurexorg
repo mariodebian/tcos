@@ -107,6 +107,19 @@ xmouseprotocol="ImPS/2"
 xlocalfonts="#" # default disabled
 xmousedev="/dev/input/mice"
 
+ENABLE_EVDEV="#"
+ENABLE_KBD=""
+
+KBD_DEV=$(find /dev/input/by-path/ -name "*kbd*")
+if [ "$KBD_DEV" != "" ]; then
+  # link in /dev/input
+  [ ! -e /dev/input/keyboard ] && ln -s $KBD_DEV /dev/input/keyboard
+  if [ ! -e /usr/lib/xorg/modules/input/kbd_drv.so ]; then
+    # use EVDEV (Ubuntu don't install xserver-xorg-input-kbd)
+    ENABLE_EVDEV=""
+    ENABLE_KBD="#"
+  fi
+fi
 
 if [ -d /usr/lib/X11/fonts ] && [ ! -e /usr/share/fonts/X11 ] ; then
    mkdir -p /usr/share/fonts
@@ -572,6 +585,8 @@ if [ "$TCOS_XORG_XKB" = "br" ]; then
   TCOS_XORG_XKBMODEL="abnt2"
 fi
 
+
+
 debug "set_settings() xdriver=$xdriver xres=$xres xdepth=$xdepth xdpms=$xdpms"
 debug "xhorizsync=$xhorizsync xvertsync=$xvertsync xrefresh=$xrefresh xmousewheel=$xmousewheel"
 debug "xmousedev=$xmousedev2 xmouseprotocol=$xmouseprotocol2 xlocalfonts=$xlocalfonts"
@@ -588,6 +603,8 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xvertsync__"/"${xvertsync}"/g \
     -e s/"__xrefresh__"/"${xrefresh}"/g \
     -e s/"__disablesync__"/"${disablesync}"/g \
+    -e s/"__xevdevenable__"/"${ENABLE_EVDEV}"/g \
+    -e s/"__xkbdenable__"/"${ENABLE_KBD}"/g \
     -e s/"__xkbmap__"/"${TCOS_XORG_XKB}"/g \
     -e s/"__xkbmodel__"/"${TCOS_XORG_XKBMODEL}"/g \
     -e s/"__xmousewheel__"/"${xmousewheel}"/g \

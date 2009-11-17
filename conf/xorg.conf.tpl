@@ -32,23 +32,31 @@ Section "Module"
 	Load	"ddc"
 	Load	"dri"
 	Load	"extmod"
-	Load	"freetype"
 	Load	"glx"
 	Load	"int10"
 	Load	"record"
-	Load	"type1"
-	Load	"v4l"
 	Load	"vbe"
 EndSection
 
-Section "InputDevice"
-	Identifier	"Generic Keyboard"
-	Driver		"kbd"
-	Option		"CoreKeyboard"
-	Option		"XkbRules"	"xorg"
-	Option		"XkbModel"	"__xkbmodel__"
-	Option		"XkbLayout"	"__xkbmap__"
-EndSection
+__xkbdenable__Section "InputDevice"
+__xkbdenable__	Identifier	"Generic Keyboard"
+__xkbdenable__	Driver		"kbd"
+__xkbdenable__	Option		"CoreKeyboard"
+__xkbdenable__	Option		"XkbRules"	"xorg"
+__xkbdenable__	Option		"XkbModel"	"__xkbmodel__"
+__xkbdenable__	Option		"XkbLayout"	"__xkbmap__"
+__xkbdenable__EndSection
+
+__xevdevenable__Section "InputDevice"
+__xevdevenable__	Identifier	"Generic Keyboard"
+__xevdevenable__	Driver		"evdev"
+__xevdevenable__	Option		"Device"	"/dev/input/keyboard"
+__xevdevenable__	Option		"CoreKeyboard"
+__xevdevenable__	Option		"XkbRules"	"xorg"
+__xevdevenable__	Option		"XkbModel"	"evdev"
+__xevdevenable__	Option		"XkbLayout"	"__xkbmap__"
+__xevdevenable__EndSection
+
 
 Section "InputDevice"
 	Identifier	"Serial Mouse0"

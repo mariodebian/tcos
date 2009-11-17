@@ -45,6 +45,9 @@ cpudev /lib/udev/rules.d/40-alsa.rules        /lib/udev/rules.d/
 cpudev /sbin/blkid /usr/bin/
 
 
+# needed by evdev driver
+cpudev /lib/udev/rules.d/60-persistent-input.rules /lib/udev/rules.d/
+cpudev /etc/udev/rules.d/60-persistent-input.rules /etc/udev/rules.d/
 
 # delete not usessfull rules
 rm -f $DESTDIR/etc/udev/rules.d/024_hpmud.rules
