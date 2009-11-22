@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.89.50) unstable; urgency=low
+
+  * Depend on ltspfsd-core and ltspfs
+  * Use evdev as keyboard driver when kbd is not found
+  * put XbdModel=abnt2 in evdev driver
+  * update depends, change to i386 the thin client depends
+  * update kernels
+  * revert arch depends
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 22 Nov 2009 20:14:37 +0100
+
 initramfs-tools-tcos (0.89.49) unstable; urgency=low
 
   * remove libnss-db, new libc conflicts with it
