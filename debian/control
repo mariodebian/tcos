@@ -94,7 +94,7 @@ Description: TCOS GUI configurator for standalone hosts
 Package: tcos
 Architecture: all
 Depends: initramfs-tools-tcos (>= 0.84.5), 
-         tcos-tftp-dhcp | dnsmasq,
+         dnsmasq | tcos-tftp-dhcp,
          tcosmonitor, tcosconfig, 
          ltspfs, 
          python, 
