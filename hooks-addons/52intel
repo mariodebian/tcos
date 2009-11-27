@@ -71,11 +71,7 @@
 cat << EOF > $DESTDIR/sbin/disable_dpms
 #!/bin/sh
 
-# wait for Xorg
-while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
- sleep 2
-done
-
+waitforX
 # disable dpms
 sleep 2
 xset -dpms

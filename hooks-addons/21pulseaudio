@@ -221,12 +221,8 @@ sleep 1
 #
 # wait for Xorg is started
 #
-while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
- sleep 2
-done
-#       
-# wait until Xorg is complety started      
-sleep 5
+waitforX
+sleep 1
 #
 DISPLAY=:0 pax11publish -e
 #

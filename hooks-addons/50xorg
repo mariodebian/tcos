@@ -32,6 +32,8 @@ cpifexists $XORG_PATH/xsetroot /usr/bin
 cpifexists $XORG_PATH/sessreg  /usr/bin
 cpifexists $XORG_PATH/xkbcomp  /usr/bin
 
+# bin to wait until Xorg is started
+cpifexists ${TCOS_BINS}/waitforX  /usr/bin/
 
 mkdir -p $DESTDIR/var/log
 mkdir -p $DESTDIR/etc/X11/xserver
@@ -269,12 +271,8 @@ fi
 
 /sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
 
-while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
- sleep 2
-done
-
-# wait until Xorg is complety started
-sleep 2
+waitforX
+sleep 1
 
 xterm  >> /tmp/initramfs.debug 2>&1 &
 twm  >> /tmp/initramfs.debug 2>&1 &
@@ -304,12 +302,8 @@ fi
 
 /sbin/tryXorg  --xorgopts="\${TCOS_XORG_OPTS}" &
 
-while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
- sleep 2
-done
-
-# wait until Xorg is complety started
-sleep 2
+waitforX
+sleep 1
 
 # no window manager for freenx
 #twm  >> /tmp/initramfs.debug 2>&1 &
@@ -357,12 +351,8 @@ fi
 
 /sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
 
-while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
- sleep 2
-done
-
-# wait until Xorg is complety started
-sleep 2
+waitforX
+sleep 1
 
 remoteuser=\$(read_cmdline_var "sshuser" "root")
 remotesshhost=\$(read_cmdline_var "sshhost" "\${SERVER}")

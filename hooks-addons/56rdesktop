@@ -38,12 +38,8 @@ fi
 
 Xorg \${TCOS_XORG_OPTS}  >> /tmp/initramfs.debug 2>&1 &
 
-while [ "\$(pidof Xorg | sed '/^\$/d')" = "" ] ; do
- sleep 2
-done
-
-# wait until Xorg is complety started
-sleep 2
+waitforX
+sleep 1
 
 # default server
 RDESKTOP_SERVER=\$(read_server 'rdesktop' "$TCOS_RDESKTOP_SERVER")
