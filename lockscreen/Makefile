@@ -2,18 +2,21 @@ LOCK = lockscreen
 XRES = screensize
 LOCKVNC = lockvnc
 LOCKVLC = lockvlc
+WAITFORX = waitforX
 SOURCES = lockscreen2.c
 XRES_SOURCES = screensize.c
 LOCKVNC_SOURCES = lockvnc.c
 LOCKVLC_SOURCES = lockvlc.c
+WAITFORX_SOURCES = waitforX.c
 LIBS= -I/usr/lib
 LOCKLIBS+=$(shell pkg-config --libs imlib2)
 CFLAGS+=$(shell pkg-config --cflags imlib2)
 LDADD+=-O2 -ansi -pedantic -Wall -lXaw $(LIBS) $(CFLAGS)
+LDADD_WAITFORX+=-O2 -ansi -pedantic -Wall -lX11 $(LIBS)
 CC=gcc
 
 
-all: $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC)
+all: $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX)
 
 include ../common.mk
 
@@ -30,8 +33,11 @@ $(LOCKVNC):
 $(LOCKVLC):
 	$(QUIET_CC)$(CC) $(LOCKVLC_SOURCES) $(LDADD) -o $(LOCKVLC)
 
+$(WAITFORX):
+	$(QUIET_CC)$(CC) $(WAITFORX_SOURCES) $(LDADD_WAITFORX) -o $(WAITFORX)
+
 clean:
-	$(QUIET_CL)rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) *~
+	$(QUIET_CL)rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX) *~
 
 debug: clean
 	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK) -DDEBUG=1
@@ -46,4 +52,5 @@ install:
 	install -m 755 $(XRES)        $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(LOCKVNC)   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(LOCKVLC)   $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 $(WAITFORX)  $(DESTDIR)/$(TCOS_BINS)/
 	install -m 644 lockscreen.png $(DESTDIR)/$(PREFIX)/share/tcos-core/lockscreen.png
