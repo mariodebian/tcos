@@ -1,13 +1,13 @@
 # hooks addon to export USB devices with USB/IP
 # need usbip-tools and modules
 
-if [ -x /usr/bin/usbip ]; then
+if [ -x /usr/sbin/usbip ]; then
 
    stat_before
 
-    cpifexists /usr/bin/usbip         /usr/bin
-    cpifexists /usr/bin/usbipd        /usr/bin
-    cpifexists /usr/bin/bind_driver   /usr/bin
+    cpifexists /usr/sbin/usbip         /usr/bin
+    cpifexists /usr/sbin/usbipd        /usr/bin
+    cpifexists /usr/sbin/usbip_bind_driver   /usr/bin
 
     cpifexists /usr/bin/lsusb         /usr/bin
 
