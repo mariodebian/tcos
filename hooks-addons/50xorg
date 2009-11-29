@@ -35,6 +35,9 @@ cpifexists $XORG_PATH/xkbcomp  /usr/bin
 # bin to wait until Xorg is started
 cpifexists ${TCOS_BINS}/waitforX  /usr/bin/
 
+
+cpifexists ${TCOS_BINS}/get_vga_vendor  /usr/bin/
+
 mkdir -p $DESTDIR/var/log
 mkdir -p $DESTDIR/etc/X11/xserver
 mkdir -p $DESTDIR/etc/X11/PreRun

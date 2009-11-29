@@ -238,7 +238,8 @@ debug "detect_driver()"
 #fi
 
 if [ -d /usr/share/xserver-xorg/pci/ ]; then
-  xpci=$(lspci -n -s $(lspci | awk '/VGA/ {print $1}') | tail -1 | awk '{print $3}' | tr [a-z] [A-Z])
+  xpci=$(lspci -vn | awk '/VGA/ {print $3}' | tail -1 | tr [a-z] [A-Z])
+  #xpci=$(lspci -n -s $(lspci | awk '/VGA/ {print $1}') | tail -1 | awk '{print $3}' | tr [a-z] [A-Z])
   if [ "${xpci}" != "" ]; then
     # get last line
     _xdev=$(grep "${xpci}" /usr/share/xserver-xorg/pci/xorg.pciids| awk '{print $1}' | tail -1)
@@ -533,7 +534,7 @@ get_sync() {
           ;;
       esac
     debug "get_sync() $horiz_sync:$vert_sync"
-    echo "$horiz_sync:$vert_sync"  
+    echo "$horiz_sync:$vert_sync"
 }
 
 
@@ -644,7 +645,7 @@ getsimple() {
  elif [ "${value}" = "" ]; then
   value=1
  fi
- echo -n "$1=${value} " 
+ echo -n "$1=${value} "
 }
 
 getvalue() {
@@ -747,7 +748,7 @@ fi
 
 if [ ${restartxorg} = 1 ]; then
   debug "restarting xorg...."
-  /sbin/start-stop-daemon --start --quiet --background --exec /sbin/restartxorg > /dev/null 2>&1 
+  /sbin/start-stop-daemon --start --quiet --background --exec /sbin/restartxorg > /dev/null 2>&1
 fi
 
 exit 0

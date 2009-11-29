@@ -18,40 +18,11 @@ quiet=n
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
-#test1=0
-#test1=\$(grep -c "VIA Nehemiah" /proc/cpuinfo)
-
-#rgrep -h 1106 /usr/share/xserver-xorg/pci/ | sed -e 's/1106/1106:/g'| sort| uniq
-#1106:3108
-#1106:3118
-#1106:3122
-#1106:3157
-#1106:3230
-#1106:3343
-#1106:3344
-#1106:3371
-#1106:7205
-
 test1=0
-test1=\$(lspci -n |grep -c  -e "1106:3108" -e "1106:3118" \
--e "1106:3122" -e "1106:3157" -e "1106:3230" -e "1106:3343" \
--e "1106:3344" -e "1106:3371" -e "1106:7205")
-
-#
-# lspci -n is more quickly 0,35 seg => 0,06 seg
-#
-
-#test1=0
-#test1=\$(lspci|grep -c UniChrome)
-
-#test2=0
-#test2=\$(lspci|grep -c CLE266)
-
-#test3=0
-#test3=\$(lspci|grep -c Chrome9)
+test1=$(get_vga_vendor 1106)
 
 
-if [ "\$test1" = "0" ]; then
+if [ "\$test1" != "1" ]; then
    # not in client with chip VIA unichrome
    exit 0
 fi

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+
+
+VENDOR=$(lspci -vn | awk '/VGA/ {print $3}' | tail -1 | tr [a-z] [A-Z] | awk -F":" '{print $1}')
+
+
+if [ "$1" != "" ]; then
+  if [ "$(echo $1| tr [a-z] [A-Z])" = "$VENDOR" ]; then
+    echo "1"
+  else
+    echo "0"
+  fi
+  exit 0
+fi
+
+echo $VENDOR
