@@ -11,7 +11,7 @@ quiet=n
 . /conf/tcos-run-functions
 
 #ids="2064w 1064sg 2164w g100 g200 g400 g550"
-test1=\$(get_vga_vendor 102B")
+test1=\$(get_vga_vendor "102B")
 
 
 if [ "\$test1" != "1" ]; then
