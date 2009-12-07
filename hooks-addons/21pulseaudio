@@ -86,7 +86,7 @@ else
       cpifexists /usr/lib/pulse-*/modules/libsocket-client.so /usr/lib/pulse-*/modules/
 
 
- # delete modules and copya again to copy linked libs
+ # delete modules and copy again to put linked libs
  for _lib in $DESTDIR/usr/lib/pulse-*/modules/*so; do 
      librel=$(basename $_lib)
      rm -f $_lib
