@@ -11,8 +11,9 @@ initramfs-tools-tcos (0.89.51) unstable; urgency=low
   * tcos-genbootchart: move to /usr/bin
   * hooks-addons/05devices call ltspfs-set-xprop in X11/PreRun
   * Update copyright
+  * fix path in tcos-genbootchart
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 07 Dec 2009 21:23:11 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 07 Dec 2009 21:37:52 +0100
 
 initramfs-tools-tcos (0.89.50) unstable; urgency=low
 
