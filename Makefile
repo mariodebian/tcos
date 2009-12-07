@@ -160,7 +160,7 @@ install:
 
 
 	install -m 755 bin/tcos-bootchartd   $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 bin/tcos-genbootchart $(DESTDIR)/usr/sbin/tcos-genbootchart
+	install -m 755 bin/tcos-genbootchart $(DESTDIR)/usr/bin/tcos-genbootchart
 
 	install -m 644 conf/xorg.conf.tpl $(DESTDIR)$(TCOS_CONF)/xorg.conf.tpl
 
