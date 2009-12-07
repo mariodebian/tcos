@@ -28,14 +28,21 @@ Licenses:
          if not, write to the Free Software Foundation, Inc., 59 Temple Place,
        
     lockscreen/waitforX.c:
-        * Copyright (c) 1986, 1998  The Open Group
-        * http://distro.ibiblio.org/pub/linux/distributions/tinycorelinux/2.x/release/src/waitforX.c
+        Copyright (c) 1986, 1998  The Open Group
+        based on xinit.c code (waitforserver)
+        http://distro.ibiblio.org/pub/linux/distributions/tinycorelinux/2.x/release/src/waitforX.c
+
+    lockscreen/[lockscreen.c|lockscreen2.c]:
+        Based on screen_locker.c - screen-locker, which is part of the iTALC client-software
+        iTALC/Client-software
+        Copyright (c) 2004-2005 Tobias Doerffel <tobias@doerffel.de>
+
 
     xmlrpc/common.c: (base64 stuff)
-        * Base64 encoding/decoding (RFC1341)
-        * Copyright (c) 2005, Jouni Malinen <j@w1.fi>
-        * Adapted to TCOS by Mario Izquierdo (no line breaks output to stdout)
-        * http://www.koders.com/c/fidC4909D9B4301A6E931115BCFD347E5DB79620A7D.aspx?s=base64_table#L20
+        Base64 encoding/decoding (RFC1341)
+        Copyright (c) 2005, Jouni Malinen <j@w1.fi>
+        Adapted to TCOS by Mario Izquierdo (no line breaks output to stdout)
+        http://www.koders.com/c/fidC4909D9B4301A6E931115BCFD347E5DB79620A7D.aspx?s=base64_table#L20
 
      session-cmd/*:
         Scripts to exit from gnome using sockets
