@@ -63,6 +63,7 @@ install:
 	install -d $(DESTDIR)$(TCOS_CONF)/hacking
 	install -d $(DESTDIR)$(TCOS_CONF)/pxelinux.d
 	install -d $(DESTDIR)/usr/sbin
+	install -d $(DESTDIR)/usr/bin
 	install -d $(DESTDIR)$(TFTP_DIR)/pxelinux.cfg
 	install -d $(DESTDIR)$(TFTP_DIR)/conf/
 

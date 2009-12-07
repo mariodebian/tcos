@@ -1,0 +1,102 @@
+FIREFOX_VERSION=3.5.4
+FIREFOX_DOWNLOADED_DIR=/var/cache/tcos/localapps/firefox/
+FIREFOX_DOWNLOAD="http://download.mozilla.org/?product=firefox-${FIREFOX_VERSION}&os=linux&lang=es-ES"
+
+if [ ! -d $FIREFOX_DOWNLOADED_DIR ]; then
+  mkdir -p /var/cache/tcos/localapps/firefox/
+  echo " * Downloading Firefox $FIREFOX_VERSION .."
+  wget -q "$FIREFOX_DOWNLOAD" -o /var/cache/tcos/localapps/firefox/firefox.tar.bz2
+  ( cd /var/cache/tcos/localapps/firefox/ && tar -jxf firefox.tar.bz2 )
+  ( cd /var/cache/tcos/localapps/firefox/ && mv firefox/* ./ && rm -f firefox.tar.bz2)
+fi
+
+stat_before
+
+mkdir -p $DESTDIR/usr/local/lib
+cp -ra $FIREFOX_DOWNLOADED_DIR $DESTDIR/usr/local/lib/firefox-$FIREFOX_VERSION
+
+## copy linked libs
+LIBS=$(LD_LIBRARY_PATH=$FIREFOX_DOWNLOADED_DIR:$LD_LIBRARY_PATH ldd $FIREFOX_DOWNLOADED_DIR/firefox-bin | awk '{print $3}'| grep lib| grep -v "i686/cmov"| grep ^/usr/lib)
+LIBS2=$(LD_LIBRARY_PATH=$FIREFOX_DOWNLOADED_DIR:$LD_LIBRARY_PATH ldd $FIREFOX_DOWNLOADED_DIR/crashreporter | awk '{print $3}'| grep lib| grep -v "i686/cmov"| grep ^/usr/lib)
+
+for lib in $LIBS $LIBS2; do
+  if [ ! -e $DESTDIR/$lib ]; then
+     _echo "      * copying lib '$lib'"
+     cpifexists $lib /usr/lib/
+  fi
+done
+
+
+mkdir -p $DESTDIR/etc/pango
+cat << EOF > $DESTDIR/etc/pango/pango.modules
+/usr/lib/pango/1.6.0/modules/pango-basic-x.so BasicScriptEngineX PangoEngineShape PangoRenderX common:
+/usr/lib/pango/1.6.0/modules/pango-basic-fc.so BasicScriptEngineFc PangoEngineShape PangoRenderFc latin:* cyrillic:* greek:* armenian:* georgian:* runic:* ogham:* bopomofo:* cherokee:* coptic:* deseret:* ethiopic:* gothic:* han:* hiragana:* katakana:* old-italic:* canadian-aboriginal:* yi:* braille:* cypriot:* limbu:* osmanya:* shavian:* linear-b:* ugaritic:* glagolitic:* cuneiform:* phoenician:* common:
+EOF
+
+mkdir -p $DESTDIR/usr/lib/pango/1.6.0/modules
+cpifexists /usr/lib/pango/1.6.0/modules/pango-basic-x.so  /usr/lib/pango/1.6.0/modules
+cpifexists /usr/lib/pango/1.6.0/modules/pango-basic-fc.so /usr/lib/pango/1.6.0/modules
+
+
+## metacity
+#cpifexists /usr/bin/metacity /usr/bin
+
+mkdir -p $DESTDIR/var/lib/dbus/
+cpifexists /var/lib/dbus/machine-id /var/lib/dbus/
+
+## metacity theme
+mkdir -p $DESTDIR/usr/share/themes/
+cp -ra /usr/share/themes/Simple/ $DESTDIR/usr/share/themes/
+
+## gconf
+mkdir -p $DESTDIR/usr/lib/libgconf2-4
+cpifexists /usr/lib/libgconf2-4/gconfd-2 /usr/lib/libgconf2-4/
+
+## fonts list
+cpifexists /usr/bin/xlsfonts /usr/bin
+
+################# LAUNCHER ########################
+
+cat << EOF > $DESTDIR/sbin/startlocalx
+#!/bin/sh
+export DISPLAY=:0
+export HOME=/root
+
+# make links needed by firefox
+[ ! -e /bin/pwd ] && ln -s /bin/busybox /bin/pwd
+[ ! -e /bin/ls ] && ln -s /bin/busybox /bin/ls
+[ ! -e /usr/bin/firefox ] && ln -s /usr/local/lib/firefox-$FIREFOX_VERSION/firefox /usr/bin/firefox
+
+
+if [ -f \$XAUTHORITY ]; then
+  TCOS_XORG_OPTS="\$TCOS_XORG_OPTS -auth \$XAUTHORITY"
+fi
+
+/sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
+
+waitforX
+sleep 2
+
+# set background color
+xsetroot -cursor_name left_ptr -solid "#338899" 2>/tmp/initramfs.debug
+
+## metacity
+#/usr/bin/metacity &
+
+## launch as fullscreen?
+while [ 1 ]; do
+  if [ "\$(pidof firefox)" = "" ]; then
+    /usr/bin/firefox
+  else
+    sleep 10
+  fi
+done
+
+
+
+sleep 10
+
+EOF
+chmod +x $DESTDIR/sbin/startlocalx
+
+stat_after "Firefox LOCAL"
