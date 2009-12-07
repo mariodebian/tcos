@@ -1,3 +1,19 @@
+initramfs-tools-tcos (0.89.51) unstable; urgency=low
+
+  * new bin waitforX, to e used in startup scripts
+  * copy waitforX and use it instead of 'pidof Xorg'
+  * dnsmasq by default
+  * detect VGA vendor with new script get_vga_vendor
+  * update USBIP bins PATH
+  * add 2 new openchrome cards
+  * hooks-addons/53mga: fix typo
+  * hooks-addons/21pulseaudio: fix typo
+  * tcos-genbootchart: move to /usr/bin
+  * hooks-addons/05devices call ltspfs-set-xprop in X11/PreRun
+  * Update copyright
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 07 Dec 2009 21:23:11 +0100
+
 initramfs-tools-tcos (0.89.50) unstable; urgency=low
 
   * Depend on ltspfsd-core and ltspfs
