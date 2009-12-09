@@ -132,6 +132,12 @@ Section "DRI"
 	Mode	0666
 EndSection
 
+
+__enable_composite__Section "Extensions"
+__enable_composite__    Option "Composite" "Disable"
+__enable_composite__EndSection
+
+
 #Section "ServerFlags"
 #    Option      "blank time"    "0"
 #

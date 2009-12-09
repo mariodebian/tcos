@@ -589,6 +589,12 @@ if [ "$TCOS_XORG_XKB" = "br" ]; then
 fi
 
 
+if [ "$TCOS_COMPOSITE" = "1" ]; then
+  ENABLE_COMPOSITE=""
+else
+  ENABLE_COMPOSITE="#"
+fi
+
 
 debug "set_settings() xdriver=$xdriver xres=$xres xdepth=$xdepth xdpms=$xdpms"
 debug "xhorizsync=$xhorizsync xvertsync=$xvertsync xrefresh=$xrefresh xmousewheel=$xmousewheel"
@@ -606,6 +612,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"__xvertsync__"/"${xvertsync}"/g \
     -e s/"__xrefresh__"/"${xrefresh}"/g \
     -e s/"__disablesync__"/"${disablesync}"/g \
+    -e s/"__enable_composite__"/"${ENABLE_COMPOSITE}"/g \
     -e s/"__xevdevenable__"/"${ENABLE_EVDEV}"/g \
     -e s/"__xkbdenable__"/"${ENABLE_KBD}"/g \
     -e s/"__evdevmodel__"/"${EVDEV_MODEL}"/g \
