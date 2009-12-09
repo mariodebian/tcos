@@ -590,9 +590,9 @@ fi
 
 
 if [ "$TCOS_COMPOSITE" = "1" ]; then
-  ENABLE_COMPOSITE=""
-else
   ENABLE_COMPOSITE="#"
+else
+  ENABLE_COMPOSITE=""
 fi
 
 
