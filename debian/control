@@ -10,26 +10,28 @@ Vcs-Browser: http://tcosproject.org/cgit/cgit.cgi/initramfs-tools-tcos.git/
 Homepage: http://www.tcosproject.org
 
 Package: initramfs-tools-tcos
-Architecture: any
+Architecture: all
 Depends: tcos-core, 
          initramfs-tools (>= 0.40), 
          dhcp3-client | dhcp-client, 
          console-setup | console-data,
-         mbr,
-         syslinux,
          squashfs-tools,
          pciutils,
-         mknbi [ i386 ],
          debootstrap [ amd64 ],
-         dropbear,
-         acpid,
          ltspfsd-core,
-         genisoimage, 
          portmap, 
-         mtools, 
          ${misc:Depends}, ${shlibs:Depends}
+Recommends: mbr, 
+            syslinux,
+            mtools,
+            acpid,
+            pulseaudio,
+            dropbear,
+            p910nd,
+            genisoimage, 
+            mknbi [ i386 ],
+            twm
 Conflicts: tcosmonitor (<< 0.1.23.2), tcos (<< 0.89.26)
-Recommends: pulseaudio, p910nd, twm
 Description: Tools for generating a TCOS thin client bootable image
  This package contains tools to create a bootable initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
@@ -50,10 +52,7 @@ Depends: busybox | busybox-static ,
          eject, 
          netpipes, 
          libnotify-bin, 
-         rtptools,
          libasound2-plugins, 
-         stunnel4, 
-         openssl, 
          iproute, 
          xdg-utils, 
          pulseaudio-utils, 
@@ -61,8 +60,12 @@ Depends: busybox | busybox-static ,
          python-utmp, 
          python-dbus, 
          ${misc:Depends}, ${shlibs:Depends}
+Recommends: vlc, 
+            libsox-fmt-all,
+            rtptools,
+            stunnel4, 
+            openssl
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
-Recommends: vlc, libsox-fmt-all
 XB-Python-Version: ${python:Versions}
 Description: Common script and bins for generating a thin client bootable image: TCOS
  This package contain common scripts, libs , bins and dependencies to
@@ -94,16 +97,16 @@ Description: TCOS GUI configurator for standalone hosts
 Package: tcos
 Architecture: all
 Depends: initramfs-tools-tcos (>= 0.84.5), 
-         dnsmasq | tcos-tftp-dhcp,
-         tcosmonitor, tcosconfig, 
-         ltspfs, 
          python, 
          python-configobj, 
-         fuse-utils, 
          ${misc:Depends}, ${shlibs:Depends}
 Recommends: tcos-configurator, 
-            tcos-usplash (>= 0.89.14) | tcos-splashy (>= 0.89.14), 
+            dnsmasq | tcos-tftp-dhcp,
+            tcosmonitor, tcosconfig, 
+            ltspfs, 
+           fuse-utils, 
             pulseaudio-esound-compat | esound
+Suggest: tcos-usplash | tcos-splashy
 XB-Python-Version: ${python:Versions}
 Description: New thin client implementation
  This is a system for generating thin client hosts using initramfs.
