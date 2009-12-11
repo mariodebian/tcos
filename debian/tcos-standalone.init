@@ -27,10 +27,10 @@ DAEMON_WWW="/var/lib/tcos/standalone/www"
 
 SCRIPTNAME=/etc/init.d/$NAME
 DEFAULT_CONF=/etc/default/tcos-standalone
-TCOS_STANDALONE_START=1
+TCOS_STANDALONE_START=0
 
 # Exit if the package is not installed
-[ ! -e $DAEMON_ARGS ] && exit 0
+[ ! -e $DAEMON ] && exit 0
 
 # Read configuration file if it is present
 [ -e "$DEFAULT_CONF" ] && . ${DEFAULT_CONF}
@@ -50,27 +50,32 @@ do_start()
         # don't start if start-stop-daemon is not a ELF file (installing in chroot)
         if [ $(file /sbin/start-stop-daemon |grep -c ELF) != "1" ] ; then
           log_begin_msg "Fake start-stop-daemon detected, not starting "
-          return 0 
+          return 0
         fi
 
         # start stunnel4
-        if [ "$TCOS_XMLRPC_SSL" = "1" ] && [ -x $(which stunnel4) ] ; then
+        if [ "$TCOS_XMLRPC_SSL" = "1" ] && [ -x "$(which stunnel4)" ] ; then
            # fix permissions
            chown -R stunnel4:stunnel4 /var/lib/tcos/standalone/lib/stunnel4/
-           [ -e /var/lib/tcos/standalone/log/stunnel.log ] && chown stunnel4:stunnel4 /var/lib/tcos/standalone/log/stunnel.log
+           [ -e /var/lib/tcos/standalone/log/stunnel.log ] && \
+               chown stunnel4:stunnel4 /var/lib/tcos/standalone/log/stunnel.log
 
-           # start with custom certificate or tcos.pem
-           #if [ -f /etc/tcos/ssl/tcos-custom.pem ]; then
-           #  stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel-custom.conf > /dev/null 2>&1 &
-           #else
-           #  stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
-           #fi
-	   [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
-           openssl req -new -x509 -nodes -days 365 -out /var/lib/tcos/standalone/etc/stunnel/tcos.pem -keyout /var/lib/tcos/standalone/etc/stunnel/tcos.pem -subj "/C=/ST=/L=/CN=localhost/emailAddress=root@localhost" 2>/dev/null
+           # generate SSL cert
+	   [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && \
+               rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
+
+           openssl req -new -x509 -nodes -days 365 \
+              -out /var/lib/tcos/standalone/etc/stunnel/tcos.pem \
+              -keyout /var/lib/tcos/standalone/etc/stunnel/tcos.pem \
+              -subj "/C=/ST=/L=/CN=localhost/emailAddress=root@localhost" 2>/dev/null
+
+           TMP_FILE=$(mktemp /tmp/tcos.ssl.XXXXXXXX)
+
            chmod 600 /var/lib/tcos/standalone/etc/stunnel/tcos.pem
-           dd if=/dev/urandom of=/tmp/temp_file_ssl count=2 2>/dev/null
-           openssl dhparam -rand /tmp/temp_file_ssl 256 >> /var/lib/tcos/standalone/etc/stunnel/tcos.pem 2>/dev/null
-           rm -f /tmp/temp_file_ssl
+           dd if=/dev/urandom of=$TMP_FILE count=2 2>/dev/null
+           openssl dhparam -rand $TMP_FILE 256 >> /var/lib/tcos/standalone/etc/stunnel/tcos.pem 2>/dev/null
+           rm -f $TMP_FILE
+
            stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
         fi
         $DAEMON $DAEMON_ARGS >> /var/lib/tcos/standalone/log/tcos-standalone.log 2>&1 || return 2
@@ -86,9 +91,10 @@ do_stop()
 	if [ -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid ] ; then
           kill -9 $(cat /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid) 2>/dev/null
           rm -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid
-          [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
+          [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && \
+              rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
           # empty log file
-          :> /var/lib/tcos/standalone/log/stunnel.log
+          cat /dev/null > /var/lib/tcos/standalone/log/stunnel.log
         fi
 
         kill $(cat /var/lib/tcos/standalone/log/abyss.pid 2>/dev/null ) 2> /dev/null
