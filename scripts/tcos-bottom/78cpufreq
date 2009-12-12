@@ -1,0 +1,19 @@
+#!/bin/sh
+# 
+
+quiet=n
+
+. /conf/tcos.conf
+
+
+if [ "$TCOS_CPUFREQ" = "1" ]; then
+
+  modprobe acpi-cpufreq
+  modprobe cpufreq_powersave
+  if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
+    echo powersave > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+  fi
+
+fi
+
+exit 0

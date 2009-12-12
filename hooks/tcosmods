@@ -68,7 +68,7 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
        _echo "   * Not Sound ISA modules"
        SOUNDISA_MODULES=""
     else
-       ISADIR=$(find /lib/modules/${TCOS_KERNEL}/ -type d -name isa)
+       #ISADIR=$(find /lib/modules/${TCOS_KERNEL}/ -type d -name isa)
        #SOUNDISA_MODULES=$(find ${ISADIR} -type f -exec basename '{}' \; | sed s/".ko"//g)
        SOUNDISA_MODULES="snd-gusmax snd-gusclassic snd-gusextreme snd-gus-synth snd-gus-lib snd-interwave-stb snd-interwave snd-opl3sa2 snd-als100 snd-miro snd-opti93x snd-opti92x-ad1848 snd-opti92x-cs4231 snd-adlib snd-es18xx snd-dt019x snd-sb8 snd-sb16 snd-es968 snd-sb16-csp snd-sb8-dsp snd-sbawe snd-sb16-dsp snd-sb-common snd-emu8000-synth snd-sgalaxy snd-cs4236-lib snd-cs4231 snd-cs4231-lib snd-cs4236 snd-cs4232 snd-es1688 snd-es1688-lib snd-sscape snd-ad1848-lib snd-ad1848 snd-cmi8330 snd-azt2320 snd-ad1816a snd-wavefront"
     fi
@@ -162,6 +162,20 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
        rm -rf ${DESTDIR}/lib/modules/${version}/kernel/drivers/ata/
        rm -f ${DESTDIR}/sbin/vgchange
        rm -f ${DESTDIR}/lib/libdevmapper*
+    fi
+
+
+    if [ "$TCOS_CPUFREQ" = "1" ]; then
+        # modprobe -l| grep cpufreq_| awk -F"/" '{print $NF}'| sed -e 's/.ko//g'
+        CPUFREQ_MODS=$(modprobe --set-version="${TCOS_KERNEL}" --list 2>/dev/null| awk -F"/" '/cpufreq_/ {print $NF}'| sed -e s/".ko"//g)
+        CPUFREQ_CPU_MODS=$(modprobe --set-version="${TCOS_KERNEL}" --list 2>/dev/null| awk -F"/" '/cpu\/cpufreq/ {print $NF}' | sed -e s/".ko"//g)
+         _echo "   TCOS adding CPUFREQ modules"
+        for _mod in $CPUFREQ_MODS; do
+            tcos_manual_add_modules $_mod
+        done
+        for _mod in $CPUFREQ_CPU_MODS; do
+            tcos_manual_add_modules $_mod
+        done
     fi
 
 fi
