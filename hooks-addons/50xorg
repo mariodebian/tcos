@@ -117,10 +117,20 @@ fi
 
 # MODULES
 mkdir -p $DESTDIR/usr/lib/xorg/modules/input/
-cp -ra /usr/lib/xorg/modules/lib*so $DESTDIR/usr/lib/xorg/modules/
-cp -ra /usr/lib/xorg/modules/input/* $DESTDIR/usr/lib/xorg/modules/input/
+
+for _ext in $(ls /usr/lib/xorg/modules/lib*so); do
+    cpifexists $_ext /usr/lib/xorg/modules/
+done
+
+for _inp in $(ls /usr/lib/xorg/modules/input/*); do
+    cpifexists $_inp /usr/lib/xorg/modules/input/
+done
+
 mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
-cp -ra /usr/lib/xorg/modules/linux/lib*so $DESTDIR/usr/lib/xorg/modules/linux/
+
+for _lnx in $(ls /usr/lib/xorg/modules/linux/lib*so); do
+    cpifexists $_lnx /usr/lib/xorg/modules/linux/
+done
 
 
 # DRIVERS and EXTENSIONS
