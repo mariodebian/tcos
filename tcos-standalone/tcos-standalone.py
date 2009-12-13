@@ -38,7 +38,7 @@ from gettext import bindtextdomain, textdomain
 from locale import setlocale, LC_ALL
 
 from subprocess import Popen, PIPE, STDOUT
-import popen2
+#import popen2
 from threading import Thread
 
 #import threading
@@ -311,8 +311,10 @@ class TcosStandalone:
     def exe_cmd(self, cmd, verbose=1):
         print_debug("exe_cmd() cmd=%s" %cmd)
         output=[]
-        (stdout, stdin) = popen2.popen2(cmd)
-        stdin.close()
+        p=Popen(cmd, shell=True, bufsize=0, stdout=PIPE, stderr=STDOUT, close_fds=True)
+        stdout = p.stdout
+        #(stdout, stdin) = popen2.popen2(cmd)
+        #stdin.close()
         for line in stdout:
             if line != '\n':
                 line=line.replace('\n', '')
