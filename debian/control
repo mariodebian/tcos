@@ -104,7 +104,7 @@ Recommends: tcos-configurator,
             ltspfs, 
            fuse-utils, 
             pulseaudio-esound-compat | esound
-Suggest: tcos-usplash | tcos-splashy
+Suggests: tcos-usplash | tcos-splashy
 XB-Python-Version: ${python:Versions}
 Description: New thin client implementation
  This is a system for generating thin client hosts using initramfs.
