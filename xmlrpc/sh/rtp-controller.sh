@@ -30,21 +30,7 @@ if [ -e /conf/tcos-run-functions ]; then
   # running in thin client
   STANDALONE=0
   export XAUTHORITY=/root/.Xauthority
-  if [ -d /usr/lib/sox ]  && [ ! -f /tmp/sox.libs ]; then
-    # update sox libs
-    for lib in $(find /usr/lib/sox/ -type f); do
-      ln -s $lib $(echo $lib | awk -F"\.so" '{print $1".so"}')    >> /tmp/sox.libs 2>&1
-      ln -s $lib $(echo $lib | awk -F"\.so" '{print $1".so.0"}')  >> /tmp/sox.libs 2>&1
-    done
-  fi
-  cat << EOF > /etc/asound.conf
-pcm.!default {
-    type pulse
-}
-ctl.!default {
-    type pulse
-}
-EOF
+
   DAEMONIZE="/sbin/daemonize.sh"
   PACTL="/sbin/pactl-controller.sh"
   MASTER=$(/sbin/soundctl.sh --getlevel Master 2>/dev/null | sed 's/%//g')
@@ -125,15 +111,7 @@ for arg in $1; do
             $DAEMONIZE "$PACTL" "start-recv $2"
             if [ $? = 0 ]; then echo "ok"; else echo "error: starting pulse recv module"; fi
         else
-            mkfifo /tmp/audiofifo 2>/dev/null
-            if [ $STANDALONE = 0 ]; then
-               $DAEMONIZE "rtpdump" "-F payload -o /tmp/audiofifo $2/1234"
-               $DAEMONIZE "play" "-t raw -r 11025 -s -2 -c 2 -B /tmp/audiofifo"
-               if [ $? = 0 ]; then echo "ok"; else echo "error: starting rtp play"; fi
-            else
-               $DAEMONIZE "rtpdump" "-F payload -o /tmp/audiofifo $2/1234"
-               $DBUS_HANDLER --auth=$3 --type=exec --text="play -t raw -r 11025 -s -2 -c 2 -B /tmp/audiofifo"
-            fi
+            echo "error: pulseaudio version not supported"
         fi
      ;;
      stoprtp-recv)
@@ -142,17 +120,7 @@ for arg in $1; do
            $DAEMONIZE "$PACTL" "stop-recv $index"
             if [ $? = 0 ]; then echo "ok"; else echo "error: stopping pulse recv module"; fi
         else
-           if [ $STANDALONE = 0 ]; then
-              killall -SIGKILL play 2>/dev/null
-              killall -SIGKILL rtpdump 2>/dev/null
-              rm -f /tmp/audiofifo /etc/asound.conf
-              if [ $? = 0 ]; then echo "ok"; else echo "error: stopping rtp play"; fi
-           else
-              $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL play" 2>/dev/null
-              killall -s KILL rtpdump 2>/dev/null
-              rm -f /tmp/audiofifo
-              if [ $? = 0 ]; then echo "ok"; else echo "error: stopping rtp play"; fi
-           fi
+            echo "error: pulseaudio version not supported"
         fi
      ;;
      startrtp-send)

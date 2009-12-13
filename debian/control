@@ -61,8 +61,6 @@ Depends: busybox | busybox-static ,
          python-dbus, 
          ${misc:Depends}, ${shlibs:Depends}
 Recommends: vlc, 
-            libsox-fmt-all,
-            rtptools,
             stunnel4, 
             openssl
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
