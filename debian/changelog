@@ -1,3 +1,21 @@
+initramfs-tools-tcos (0.89.52) unstable; urgency=low
+
+  * Enable/disable composite Xorg extension
+  * fix if::else TCOS_COMPOSITE
+  * downgrade some depends to recommends
+  * cosmetic hanges in standalone init script
+  * bin/tcos-buildchroot: copy /etc/localtime /etc/adjtime if exists
+  * hooks-addons/50xorg: copy linked libs
+  * add TCOS_CPUFREQ support with powersave scaling governor
+  * tcos-standalone/tcos-standalone.py replace obsolete popen2 with
+    subprocess
+  * scripts/tcos-bottom/30devices: disable -a in ltspfsd, not needed
+    anymore
+  * remove rtptools and sox depends, audio multicast use pulseaudio
+    native RTP module
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 13 Dec 2009 19:07:00 +0100
+
 initramfs-tools-tcos (0.89.51) unstable; urgency=low
 
   * new bin waitforX, to e used in startup scripts
