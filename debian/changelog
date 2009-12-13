@@ -13,8 +13,9 @@ initramfs-tools-tcos (0.89.52) unstable; urgency=low
     anymore
   * remove rtptools and sox depends, audio multicast use pulseaudio
     native RTP module
+  * fix typo suggest => suggests
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 13 Dec 2009 19:07:00 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 13 Dec 2009 19:24:56 +0100
 
 initramfs-tools-tcos (0.89.51) unstable; urgency=low
 
