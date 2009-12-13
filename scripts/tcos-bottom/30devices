@@ -61,13 +61,7 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
   # start ltspfsd daemon
   log_begin_msg "Start ltspfs daemon"
   _log "LTSPFS Starting ltspfs daemon"
-      # configure ltspfsd with noauth when starting bootchartd
-      if grep -q bootchartd /proc/cmdline ; then
-          ltspfsd -a
-      else
-          # AUTH works ok
-          ltspfsd 
-      fi
+      ltspfsd
   log_end_msg $?
  fi
 fi # end of TCOS_REMOTEFS=ltspfs
