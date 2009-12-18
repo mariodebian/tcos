@@ -123,6 +123,7 @@ install:
 	install -m 644 conf/tcos.conf.all $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.all
 	install -m 644 conf/tcos.conf.low $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.low
 	install -m 644 conf/tcos.conf.nfs $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.nfs
+	install -m 644 conf/tcos.conf.light $(DESTDIR)$(TCOS_DIR)/templates/tcos.conf.light
 
 
 	install -m 644 conf/tcos-modules.conf $(DESTDIR)$(TCOS_DIR)/tcos-modules.conf
