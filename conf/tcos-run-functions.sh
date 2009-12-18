@@ -69,7 +69,7 @@ kill_xorg() {
 
 kill_all() {
   # FIXME better scan ps output
-  process="ltspfsd print_server pulseaudio ivs dhclient esd"
+  process="ltspfsd p9100 pulseaudio ivs dhclient dropbear tcosxmlrpc"
   for proc in ${process}; do
      log_begin_msg "Stopping ${proc}"
        killall $proc >  /dev/null 2>&1 &
