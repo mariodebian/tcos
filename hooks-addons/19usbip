@@ -1,7 +1,7 @@
 # hooks addon to export USB devices with USB/IP
 # need usbip-tools and modules
 
-if [ -x /usr/sbin/usbip ]; then
+if [ $TCOS_USBIP ] && [ -x /usr/sbin/usbip ]; then
 
    stat_before
 
