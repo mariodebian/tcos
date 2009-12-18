@@ -1,3 +1,28 @@
+initramfs-tools-tcos (0.89.53) unstable; urgency=low
+
+  * move some tcos-bottom script later
+  * scripts/tcos-bottom/80shell: stop bootchart if exists
+  * scripts/tcos-bottom/57devices: test ltspfsd
+  * scripts/tcos-bottom/55mount_listener: only start if USB and IDE is
+    enabled
+  * set chmod +x in scripts
+  * bin/tcos-genbootchart: use DISPLAY if not arg is passed
+  * set 2.6.32-trunk-486 for Debian unstable
+  * conf/base.conf: add TCOS_USBIP new var, disabled by default
+  * hooks-addons/19usbip: use new var TCOS_USBIP
+  * debian/tcos-standalone.init: provides tcos-standalone
+  * debian/copyright: replace (C) with ©
+  * debian/control: add misc:Depends and fix typo
+  * xmlrpc/man/update-tcospasswd.1 tcos-standalone/tcos-standalone.1
+    bin/tcos-gdm-autologin.1 bin/tcos-buildchroot.1 bin/gentcos.1: split
+    lines longer than 80 chars
+  * Makefile conf/tcos.conf.light: Add new light template run in 46 MB
+  * conf/tcos-run-functions.sh: update list of killed apps
+  * tcos-standalone/tcos-standalone.desktop: remove obsolete Encoding
+  * New XMLRPC method: config, read vars from tcos.conf in thin client
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 18 Dec 2009 19:04:14 +0100
+
 initramfs-tools-tcos (0.89.52) unstable; urgency=low
 
   * Enable/disable composite Xorg extension
