@@ -65,7 +65,7 @@ Recommends: vlc,
             openssl
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
 XB-Python-Version: ${python:Versions}
-Description: Common script and bins for generating a thin client bootable image: TCOS
+Description: Common scripts and bins for generating a thin client bootable image: TCOS
  This package contain common scripts, libs , bins and dependencies to
  generate network images or be used in standalone hosts.
 
@@ -119,7 +119,7 @@ Description: New thin client implementation
 
 Package: tcos-tftp-dhcp
 Architecture: all
-Depends: atftpd, dhcp3-server | dhcp-server
+Depends: atftpd, dhcp3-server | dhcp-server, ${misc:Depends}
 Description: Metapackage to install TCOS with atftp and DHCP server
  This metapackage depends on atftp and a DHCP daemon to provide server 
  daemons needed to run a TCOS server.
