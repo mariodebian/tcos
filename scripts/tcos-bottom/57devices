@@ -57,7 +57,7 @@ fi
 ###################################################
 
 if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
- if [ "$(which ltspfsd)" ] ; then
+ if [ -x "$(which ltspfsd)" ] ; then
   # start ltspfsd daemon
   log_begin_msg "Start ltspfs daemon"
   _log "LTSPFS Starting ltspfs daemon"
