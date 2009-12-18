@@ -10,7 +10,7 @@ quiet=n
 
 # kill bootchart
 if grep -q bootchartd /proc/cmdline ; then
-  /sbin/tcos-bootchartd stop
+  [ -x /sbin/tcos-bootchartd ] && /sbin/tcos-bootchartd stop
 fi
 
 TCOS_TTY=$(read_cmdline_var "ttys" "${TCOS_TTY}")
