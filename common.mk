@@ -17,7 +17,7 @@ KERNEL_lenny="2.6.26-2-486"
 
 KERNEL_testing="2.6.30-2-486"
 
-KERNEL_unstable="2.6.31-1-486"
+KERNEL_unstable="2.6.32-trunk-486"
 
 KERNEL_experimental="2.6.31-1-486"
 
