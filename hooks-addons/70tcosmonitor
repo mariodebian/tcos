@@ -29,6 +29,7 @@ cpifexists ${TCOS_BINS}/pactl-controller.sh      /sbin/
 cpifexists /usr/bin/vncviewer              /usr/bin/
 
 cpifexists ${TCOS_BINS}/soundctl.sh /sbin/
+cpifexists ${TCOS_BINS}/configctl.sh /sbin/
 
 # udev process
 cpifexists ${TCOS_BINS}/tcos-udevd.sh           /sbin/

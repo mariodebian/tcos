@@ -64,6 +64,7 @@ SRCS	     := common.c \
 		vnc.c \
 		xauth.c \
 		xorg.c \
+		config.c \
 		tcosxmlrpc.c
 
 # deleted parts
@@ -118,6 +119,7 @@ install:
 	# Install tcosxmlrpc utils
 	install -m 755 sh/screenshot.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/soundctl.sh      $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 sh/configctl.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/getinfo.sh       $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/useallmodules.sh $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/devicesctl.sh    $(DESTDIR)/$(TCOS_BINS)/
