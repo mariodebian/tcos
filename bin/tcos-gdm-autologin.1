@@ -1,13 +1,14 @@
 .TH tcos-gdm-autologin 1 "Nov 19, 2006" "tcos-gdm-autologin man page"
 
 .SH NAME
-tcos-gdm-autologin \- TCOS tool to configure GDM, create users and edit /etc/hosts form TCOS network
+tcos-gdm-autologin \- TCOS tool to configure GDM, create users and edit
+/etc/hosts form TCOS network
 
 .SH DESCRIPTION
 
 .PP
-\fBtcos-gdm-autologin\fP is a python script that configure some GDM vars, create users, and edit /etc/hosts to 
-put in ip hostname pairs.
+\fBtcos-gdm-autologin\fP is a python script that configure some GDM vars, 
+create users, and edit /etc/hosts to put in ip hostname pairs.
 
 
 .SH OPTIONS
@@ -18,17 +19,17 @@ put in ip hostname pairs.
 
 .B --configure
   Set this vars in /etc/gdm/gdm.conf:
-     [daemon]
-     TimedLoginEnable=true
-     TimedLogin=/usr/sbin/tcos-gdm-autologin|
-     TimedLoginDelay=10
+    [daemon]
+    TimedLoginEnable=true
+    TimedLogin=/usr/sbin/tcos-gdm-autologin|
+    TimedLoginDelay=10
 
-     [security]
-     AllowRemoteAutoLogin=true
-     DisallowTCP=false
-     
-     [xdmcp]
-     Enable=true
+    [security]
+    AllowRemoteAutoLogin=true
+    DisallowTCP=false
+
+    [xdmcp]
+    Enable=true
 
 .B --add
  This option will ask for user/host names prefix to add to system config.
@@ -39,10 +40,10 @@ put in ip hostname pairs.
 
  Will generate the following:
 
-   user: myhost1 pass: myhost1 home: /home/myhost1 (extracted from SKEL)
-   user: myhost2 pass: myhost2 home: /home/myhost2 (extracted from SKEL)
-   user: myhost3 pass: myhost3 home: /home/myhost3 (extracted from SKEL)
-   user: myhost4 pass: myhost4 home: /home/myhost4 (extracted from SKEL)
+   user: myhost1 pass: myhost1 home: /home/myhost1
+   user: myhost2 pass: myhost2 home: /home/myhost2
+   user: myhost3 pass: myhost3 home: /home/myhost3
+   user: myhost4 pass: myhost4 home: /home/myhost4
 
    host: 192.168.0.1 hostname= myhost1
    host: 192.168.0.2 hostname= myhost2
@@ -56,7 +57,7 @@ put in ip hostname pairs.
 .B --nodelete
  Not uncompress SKEL, put in gdm.conf something like this:
 
-     TimedLogin=/usr/sbin/tcos-gdm-autologin \-\-nodelete|
+   TimedLogin=/usr/sbin/tcos-gdm-autologin \-\-nodelete|
 
 
 .B --help

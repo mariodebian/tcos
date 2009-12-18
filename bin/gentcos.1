@@ -67,7 +67,8 @@ Create initramfs-x.x.x-nfs  and copy to /var/lib/tcos/tftp
 .IP \-rootfs
 Creates an complete TCOS and uncompress in /var/lib/tcos/fs-x.x.x
 
-NOTE:  Need a NFS server (apt-get install nfs-kernel-server) and this line in /etc/exports:
+NOTE:  Need a NFS server (apt-get install nfs-kernel-server) and
+this line in /etc/exports:
 
 .B /var/lib/tcos  192.168.0.0/255.255.255.0
 (ro,no_root_squash,sync,no_subtree_check)

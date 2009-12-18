@@ -39,7 +39,8 @@ tcos-buildchroot \- TCOS tool to create and manage a TCOS chroot.
  Install a selection of packages (see man cdebootstrap)
 
 .B --version=etch
- Set Debian/Ubuntu codename of chroot. (NOTE Debian unstable sometimes don\'t work)
+ Set Debian/Ubuntu codename of chroot. 
+ (NOTE Debian unstable sometimes don\'t work)
 
 .B --forcedistro=ubuntu
  Set DISTRIBUTION (debian or ubuntu)
@@ -54,7 +55,8 @@ tcos-buildchroot \- TCOS tool to create and manage a TCOS chroot.
  Set an alternate TCOS mirror to download packages.
 
 .B --kversion=2.6.18-5-486
- Set kernel version (recomended use default of TCOS in every Debian/Ubuntu codename)
+ Set kernel version 
+ (recomended use default of TCOS in every Debian/Ubuntu codename)
 
 .B --gentcos="-tftp "
  Set gentcos cmdline options (use double " )
@@ -62,7 +64,8 @@ tcos-buildchroot \- TCOS tool to create and manage a TCOS chroot.
 .SH EXAMPLES
 
 .B Build chroot:
-    tcos-buildchroot \-\-create \-\-arch=386 \-\-dir=/var/lib/tcos/chroot \-\-kversion=2.6.18-5-486 \-\-mirror=http://ftp.uk.debian.org/debian 
+    tcos-buildchroot \-\-create \-\-arch=386 \-\-dir=/var/lib/tcos/chroot 
+    \-\-kversion=2.6.18-5-486 \-\-mirror=http://ftp.uk.debian.org/debian 
 
 .B Update chroot:
     tcos-buildchroot \-\-update \-\-dir=/var/lib/tcos/chroot
