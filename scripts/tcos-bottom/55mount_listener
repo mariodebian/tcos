@@ -16,6 +16,12 @@ if [ "${nodevices}" = "1" ]; then
   exit 0 
 fi
 
+if [ "$(configctl.sh --get TCOS_DISABLE_USB)" = "1" ] || \
+   [ "$(configctl.sh --get TCOS_DISABLE_IDE)" = "1" ]; then
+  _log "Devices disabled"
+  exit 0
+fi
+
 if [ -x /usr/sbin/listener-daemon.sh ]; then
    /usr/sbin/listener-daemon.sh > /var/log/listener-daemon.log 2>&1 &
 fi
