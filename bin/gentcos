@@ -96,10 +96,6 @@ if [ ! -e /etc/tcos/chroot ] && [ -d /opt/tcos ]; then
    echo ""
 fi
 
-# ugly hack to avoid edit /etc/tcos/tcos.conf file
-cp ${TCOS_CONF}/tcos.conf ${TCOS_CONF}/tcos.conf.orig > /dev/null 2>&1
-# TCOS-Config save file before or after call gentcos
-
 
 _exit () {
  if [ "$1" = "1" ];then
@@ -116,7 +112,6 @@ _exit () {
  rm -f ${INITRAMFS}
  rm -f ${INITRAMFS}-nfs
  rm -rf ${OUTROOTFS_TMP}
- cp ${TCOS_CONF}/tcos.conf.orig ${TCOS_CONF}/tcos.conf > /dev/null 2>&1
  # exit wrapper
  #echo "DONE"
  exit $1
