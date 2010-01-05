@@ -48,7 +48,7 @@ TCOS_MIRROR="http://www.tcosproject.org"
 
 
 TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash p910nd xvnc4viewer"
-TCOS_PACKAGES="${TCOS_PACKAGES} binutils console-tools acpid alsa-utils twm"
+TCOS_PACKAGES="${TCOS_PACKAGES} binutils console-tools acpid alsa-utils twm dropbear mbr"
 TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
 
 
