@@ -7,7 +7,7 @@ if ! getent group tcos >/dev/null; then
 fi
 
 # make sure that tcos.conf is not all readable
-chmod -f 640 /etc/tcos/tcos.conf
+chmod -f 644 /etc/tcos/tcos.conf
 chown -f root:tcos /etc/tcos/tcos.conf
 
 chmod -f 775 /var/lib/tcos/tftp/pxelinux.cfg
