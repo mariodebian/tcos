@@ -2,8 +2,7 @@
 
 
 
-VENDOR=$(lspci -vn | awk '/VGA/ {print $3}' | tail -1 | tr [a-z] [A-Z] | awk -F":" '{print $1}')
-
+VENDOR=$(lspci -nn| awk '/VGA/ {if ( $(NF-1) == "(rev" ){print $(NF-2)} else print $NF }'| sed -e 's/\[//g' -e 's/\]//g' | tr [a-z] [A-Z] | awk -F":" '{print $1}')
 
 if [ "$1" != "" ]; then
   if [ "$(echo $1| tr [a-z] [A-Z])" = "$VENDOR" ]; then
