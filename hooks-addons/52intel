@@ -5,6 +5,7 @@
 cat << EOF > $DESTDIR/sbin/disable_dpms
 #!/bin/sh
 
+sleep 2
 waitforX
 # disable dpms
 sleep 2

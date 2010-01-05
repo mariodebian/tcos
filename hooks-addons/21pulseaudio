@@ -128,8 +128,8 @@ else
 . /conf/tcos-run-functions
 
 
-# limit PulseAudio SHM memory in low memory systems (<64MiB = 65536)
-if [ "\$(awk '/MemTotal/ {print $2}' /proc/meminfo)" -lt 65537 ]; then
+# limit PulseAudio SHM memory in low memory systems (<96MiB = 98304)
+if [ "\$(awk '/MemTotal/ {print \$2}' /proc/meminfo)" -lt 98305 ]; then
   if grep -q shm-size-bytes /etc/pulse/daemon.conf; then
     echo "shm-size-bytes = 16"         >> /etc/pulse/daemon.conf
   fi
@@ -217,12 +217,12 @@ _log "STARTPULSEAUDIO starting pulseaudio server..."
 pulseaudio  \${OPTS}  &
 
 
-sleep 1
+sleep 4
 #
 # wait for Xorg is started
 #
 waitforX
-sleep 1
+sleep 2
 #
 DISPLAY=:0 pax11publish -e
 #

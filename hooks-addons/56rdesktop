@@ -38,6 +38,7 @@ fi
 
 Xorg \${TCOS_XORG_OPTS}  >> /tmp/initramfs.debug 2>&1 &
 
+sleep 2
 waitforX
 sleep 1
 

@@ -23,16 +23,15 @@ create_launcher() {
 
 if [ "\$1" != "now" ]; then
   time1=2
-  time2=5
 else 
   time1=0
-  time2=0
 fi
 
+sleep \$time1
 waitforX
 
 # wait until Xorg is complety started
-sleep \$time2
+sleep \$time1
 echo "ltspfs-set-xprop::setting xprop value"
 
 export DISPLAY=:0 
