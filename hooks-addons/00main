@@ -127,7 +127,7 @@ cpifexists /lib/libnss_dns.so.2           /lib/
 
 
 # needed for NFS
-cpifexists /sbin/portmap        /sbin
+[ -x /sbin/portmap ] && cpifexists /sbin/portmap        /sbin
 
 
 # create some dirs

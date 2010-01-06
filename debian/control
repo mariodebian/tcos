@@ -19,7 +19,6 @@ Depends: tcos-core,
          pciutils,
          debootstrap [ amd64 ],
          ltspfsd-core,
-         portmap, 
          ${misc:Depends}, ${shlibs:Depends}
 Recommends: mbr, 
             syslinux,
