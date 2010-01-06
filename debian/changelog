@@ -1,3 +1,14 @@
+initramfs-tools-tcos (0.89.54) unstable; urgency=low
+
+  * remove backup of tcos.conf
+  * better method to get VGA vendor
+  * add dropbear and mbr packages in chroot
+  * change perms 644 to tcos.conf
+  * wait before Xorg is launched a bit more time
+  * don't depend on portmap (Debian unstable)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Jan 2010 17:27:33 +0100
+
 initramfs-tools-tcos (0.89.53) unstable; urgency=low
 
   * move some tcos-bottom script later
