@@ -19,7 +19,7 @@ quiet=n
 . /conf/tcos-run-functions
 
 test1=0
-test1=$(get_vga_vendor 1106)
+test1=\$(get_vga_vendor 1106)
 
 
 if [ "\$test1" != "1" ]; then
