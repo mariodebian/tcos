@@ -50,10 +50,13 @@ if [ "${FONT_SERVER}" = "" ]; then
   FONT_SERVER=${SERVER}
 fi
 
+if [ "TCOS_ENABLE_FONT_SERVER" = "1" ]; then
 # add font server
 sed "/modules/i\
 \	FontPath     \"tcp/${FONT_SERVER}:7100\"\
+\	FontPath     \"tcp/${FONT_SERVER}:7101\"\
 " $new_xorg > /etc/X11/xorg.conf.auto
+fi
 
 # disable HAL
 sed "/ServerLayout/a\
