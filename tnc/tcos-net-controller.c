@@ -35,6 +35,8 @@
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <net/route.h>
+#include <ifaddrs.h>
+#include <netdb.h>
 
 #define GROUP "tcos"
 #define IPTABLES "/sbin/iptables"
@@ -58,6 +60,10 @@ int getgroups(int size, gid_t list[]);
 
 /* int strcmp(const char *str1, const char *str2); */
 char *strtok( char *str1, const char *str2 );
+
+int getnameinfo(const struct sockaddr *sa, socklen_t salen,
+                char *host, size_t hostlen,
+                char *serv, size_t servlen, int flags);
 
 #define MAXTOKENS       256
 #define MAXLINE         1024     /* fgets buff */
@@ -395,24 +401,32 @@ add_iptables_user(char **args) {
 
 char 
 *ip_by_eth(char *dev) {
+   struct ifaddrs *ifaddr, *ifa;
+   int family, s;
+   static char host[255]="error";
 
-    struct sockaddr_in *sin;
-    struct ifreq ifr;
-    int fd; 
+   if (getifaddrs(&ifaddr) == -1) {
+       perror("getifaddrs");
+       return host;
+   }
 
+   for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
+       family = ifa->ifa_addr->sa_family;
+       if( strcmp( dev, ifa->ifa_name) == 0 ) {
+           if (family == AF_INET) {
+                s = getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in),
+                                host, 255, NULL, 0, 1);
+                if (s != 0) {
+                   return "error";
+                }
+                /*fprintf(stderr, "iface=%s ip=%s\n", ifa->ifa_name, host);*/
+                return host;
+            }
+       }
+   }
 
-    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
-        return "error";
-
-    strcpy( ifr.ifr_name, dev );
-
-    if (ioctl( fd, SIOCGIFADDR, &ifr ) == 0) { 
-       sin = (struct sockaddr_in *)&ifr.ifr_addr;
-       close( fd );
-       return inet_ntoa( sin->sin_addr );
-    }
-    return "error";
-
+   freeifaddrs(ifaddr);
+   return host;
 }
 
 int 
@@ -523,6 +537,10 @@ int main(int argc, char **argv) {
         printf("ok");
      }
   }
+  else if ( strcmp( argv[1], "ip") == 0 && argc == 3) {
+     /*fprintf(stderr, "ip_by_eth(%s)=%s\n", argv[2], ip_by_eth(argv[2]));*/
+     printf("%s\n", ip_by_eth(argv[2]));
+  }
   else {
     fprintf(stderr, "ERROR => Bad command line arguments\n");
     fprintf(stderr, "tnc :: tcos-net-controller usage\n");
@@ -531,6 +549,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "\t tnc route-add ip-multicast netmask ethX\n");
     fprintf(stderr, "\t tnc route-del ip-multicast netmask ethX\n");
     fprintf(stderr, "\t tnc status username\n");
+    fprintf(stderr, "\t tnc ip [iface]\n\n");
     return(1);
   }
 
@@ -551,6 +570,9 @@ void create_route(struct rtentry *p, char **args) {
     sinmask.sin_family = AF_INET;
 
     sindst.sin_addr.s_addr = inet_addr( args[2] );
+    if ( strcmp( ip_by_eth(args[4]), "error") == 0 ) {
+        return;
+    }
     singw.sin_addr.s_addr = inet_addr( ip_by_eth(args[4]) );
     sinmask.sin_addr.s_addr = inet_addr( args[3] );
 
