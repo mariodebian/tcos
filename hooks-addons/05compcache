@@ -5,6 +5,7 @@
 
 
 if [ $TCOS_COMPCACHE ]; then
+  stat_before
 
   tcos_manual_add_modules ramzswap
 
@@ -41,6 +42,7 @@ modprobe -q --ignore-install ramzswap disksize_kb="\$kbytes"
 
 EOF
 
-chmod 0755 $DESTDIR/scripts/init-top/compcache
+  chmod 0755 $DESTDIR/scripts/init-top/compcache
 
+  stat_after "Compcache support ($TCOS_COMPCACHE_PERCENT%)"
 fi
