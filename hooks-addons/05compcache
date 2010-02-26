@@ -1,0 +1,46 @@
+# hook for compcache
+# based on Ubuntu initramfs hook
+#
+#
+
+
+if [ $TCOS_COMPCACHE ]; then
+
+  tcos_manual_add_modules ramzswap
+
+  # need swapon for preference option (busybox swapon don't have it)
+  cpifexists /sbin/swapon /sbin/
+
+  [ -x /usr/sbin/rzscontrol ] && cpifexists /usr/sbin/rzscontrol /usr/sbin/
+
+  mkdir -p $DESTDIR/etc/udev/rules.d
+
+cat << EOF > $DESTDIR/etc/udev/rules.d/80-compcache.rules
+KERNEL=="ramzswap0", ACTION=="add", RUN+="/sbin/swapon -p 100 /dev/ramzswap0 2>/dev/null"
+EOF
+
+
+
+cat << EOF > $DESTDIR/scripts/init-top/compcache
+#!/bin/sh
+
+
+# find total amount of available ram
+TOTAL_RAM=\$(awk '/MemTotal/ {print \$1}' /proc/meminfo)
+
+# Do not use compcache if we have more than 256M
+if [ "\${TOTAL_RAM}" -gt 262144 ]; then
+    exit 0
+fi
+
+# add TCOS_COMPCACHE_PERCENT% of RAM (by default 20)
+kbytes="\$((\$TOTAL_RAM * $TCOS_COMPCACHE_PERCENT / 100))"
+
+
+modprobe -q --ignore-install ramzswap disksize_kb="\$kbytes"
+
+EOF
+
+chmod 0755 $DESTDIR/scripts/init-top/compcache
+
+fi
