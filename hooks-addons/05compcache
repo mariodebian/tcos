@@ -27,7 +27,7 @@ cat << EOF > $DESTDIR/scripts/init-top/compcache
 
 
 # find total amount of available ram
-TOTAL_RAM=\$(awk '/MemTotal/ {print \$1}' /proc/meminfo)
+TOTAL_RAM=\$(grep MemTotal /proc/meminfo |tr -d ': [A-Z][a-z]')
 
 # Do not use compcache if we have more than 256M
 if [ "\${TOTAL_RAM}" -gt 262144 ]; then
