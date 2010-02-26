@@ -36,7 +36,9 @@
 
 #include "tmixer-alsa.h"
 
-
+#define LEVEL_BASIC		(1<<0)
+#define LEVEL_INACTIVE		(1<<1)
+#define LEVEL_ID		(1<<2)
 
 static int quiet = 0;
 static int debugflag = 0;
@@ -169,7 +171,6 @@ static const char *control_access(snd_ctl_elem_info_t *info)
 
 #define check_range(val, min, max) \
 	(no_check ? (val) : ((val < min) ? (min) : (val > max) ? (max) : (val))) 
-
 #if 0
 static int convert_range(int val, int omin, int omax, int nmin, int nmax)
 {
@@ -211,12 +212,29 @@ static int convert_prange(int val, int min, int max)
 #define convert_prange1(val, min, max) \
 	ceil((val) * ((max) - (min)) * 0.01 + (min))
 
-static long onlyget_percent(long pvol, long pmin, long pmax) {
-	long vol;
-	vol=convert_prange(pvol, pmin, pmax);
-	return vol;
+static const char *get_percent(int val, int min, int max)
+{
+	static char str[32];
+	int p;
+	
+	p = convert_prange(val, min, max);
+	/*sprintf(str, "%i [%i%%]", val, p);*/
+	sprintf(str, "%i", p);
+	return str;
 }
 
+#if 0
+static const char *get_percent1(int val, int min, int max, int min_dB, int max_dB)
+{
+	static char str[32];
+	int p, db;
+
+	p = convert_prange(val, min, max);
+	db = convert_db_range(val, min, max, min_dB, max_dB);
+	sprintf(str, "%i [%i%%] [%i.%02idB]", val, p, db / 100, abs(db % 100));
+	return str;
+}
+#endif
 
 static long get_integer(char **ptr, long min, long max)
 {
@@ -304,7 +322,7 @@ static int set_capture_dB(snd_mixer_elem_t *elem,
 	return snd_mixer_selem_set_capture_dB(elem, c, value, 0);
 }
 
-static struct volume_ops_set vol_ops[2] = {
+static const struct volume_ops_set vol_ops[2] = {
 	{
 		.has_volume = snd_mixer_selem_has_playback_volume,
 		.v = {{ snd_mixer_selem_get_playback_volume_range,
@@ -453,7 +471,7 @@ static void decode_tlv(unsigned int spaces, unsigned int *tlv, unsigned int tlv_
 	unsigned int type = tlv[0];
 	unsigned int size;
 	unsigned int idx = 0;
-	
+
 	if (tlv_size < 2 * sizeof(unsigned int)) {
 		printf("TLV size error!\n");
 		return;
@@ -484,12 +502,12 @@ static void decode_tlv(unsigned int spaces, unsigned int *tlv, unsigned int tlv_
 		printf("dBscale-");
 		if (size != 2 * sizeof(unsigned int)) {
 			while (size > 0) {
-				printf("0x%x", tlv[idx++]);
+				printf("0x%08x,", tlv[idx++]);
 				size -= sizeof(unsigned int);
 			}
 		} else {
 			printf("min=");
-			print_dB(tlv[2]);
+			print_dB((int)tlv[2]);
 			printf(",step=");
 			print_dB(tlv[3] & 0xffff);
 			printf(",mute=%i", (tlv[3] >> 16) & 1);
@@ -500,7 +518,7 @@ static void decode_tlv(unsigned int spaces, unsigned int *tlv, unsigned int tlv_
 		printf("dBlinear-");
 		if (size != 2 * sizeof(unsigned int)) {
 			while (size > 0) {
-				printf("0x%x", tlv[idx++]);
+				printf("0x%08x,", tlv[idx++]);
 				size -= sizeof(unsigned int);
 			}
 		} else {
@@ -511,10 +529,30 @@ static void decode_tlv(unsigned int spaces, unsigned int *tlv, unsigned int tlv_
 		}
 		break;
 #endif
+#ifdef SND_CTL_TLVT_DB_RANGE
+	case SND_CTL_TLVT_DB_RANGE:
+		printf("dBrange-\n");
+		if ((size / (6 * sizeof(unsigned int))) != 0) {
+			while (size > 0) {
+				printf("0x%08x,", tlv[idx++]);
+				size -= sizeof(unsigned int);
+			}
+			break;
+		}
+		idx = 0;
+		while (idx < size) {
+			print_spaces(spaces + 2);
+			printf("rangemin=%i,", tlv[0]);
+			printf(",rangemax=%i\n", tlv[1]);
+			decode_tlv(spaces + 4, tlv + 2, 6 * sizeof(unsigned int));
+			idx += 6 * sizeof(unsigned int);
+		}
+		break;
+#endif
 	default:
 		printf("unk-%i-", type);
 		while (size > 0) {
-			printf("0x%x", tlv[idx++]);
+			printf("0x%08x,", tlv[idx++]);
 			size -= sizeof(unsigned int);
 		}
 		break;
@@ -555,7 +593,7 @@ static int show_control(const char *space, snd_hctl_elem_t *elem,
 		       snd_ctl_elem_info_get_step(info));
 		break;
 	case SND_CTL_ELEM_TYPE_INTEGER64:
-		printf(",min=%lli,max=%lli,step=%lli\n", 
+		printf(",min=%Li,max=%Li,step=%Li\n", 
 		       snd_ctl_elem_info_get_min64(info),
 		       snd_ctl_elem_info_get_max64(info),
 		       snd_ctl_elem_info_get_step64(info));
@@ -595,7 +633,7 @@ static int show_control(const char *space, snd_hctl_elem_t *elem,
 				printf("%li", snd_ctl_elem_value_get_integer(control, idx));
 				break;
 			case SND_CTL_ELEM_TYPE_INTEGER64:
-				printf("%lli", snd_ctl_elem_value_get_integer64(control, idx));
+				printf("%Li", snd_ctl_elem_value_get_integer64(control, idx));
 				break;
 			case SND_CTL_ELEM_TYPE_ENUMERATED:
 				printf("%u", snd_ctl_elem_value_get_enumerated(control, idx));
@@ -670,9 +708,7 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 	snd_mixer_selem_channel_id_t chn;
 	long pmin = 0, pmax = 0;
 	long cmin = 0, cmax = 0;
-	/*long pvol, cvol;*/
 	long pvol;
-	/*int psw, csw;*/
 	int psw;
 	int pmono, cmono, mono_ok = 0;
 	/*long db;*/
@@ -684,13 +720,16 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 		return -ENOENT;
 	}
 	
-	if ( snd_mixer_selem_is_enum_playback(elem) || snd_mixer_selem_is_enum_capture(elem) || snd_mixer_selem_is_enumerated(elem) ) {
-        /* don't show enumerates */
+	/* don't show enumerates */
+	if ( snd_mixer_selem_is_enumerated(elem) ) {
+		/*printf("DEBUG ENUMERATE not show '%s'\n", snd_mixer_selem_id_get_name(id) );
+		printf("           enumerated    %d\n", snd_mixer_selem_is_enumerated(elem));*/
 		return 0;
 	}
 	
 	if ( !snd_mixer_selem_has_playback_volume(elem) && snd_mixer_selem_has_capture_volume(elem) ) {
 	    /* don't show only capture channels */
+		/*printf("DEBUG capture not show %s\n", snd_mixer_selem_id_get_name(id) );*/
 	    return 0;
 	}
 
@@ -731,7 +770,6 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 			}
 			/*printf("\n");*/
 		}
-
 		pmono = snd_mixer_selem_has_playback_channel(elem, SND_MIXER_SCHN_MONO) &&
 		        (snd_mixer_selem_is_playback_mono(elem) || 
 			 (!snd_mixer_selem_has_playback_volume(elem) &&
@@ -753,7 +791,7 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 					/*printf("Playback");*/
 					title = 1;
 					snd_mixer_selem_get_playback_volume(elem, SND_MIXER_SCHN_MONO, &pvol);
-					printf("%ld", onlyget_percent(pvol, pmin, pmax));
+					printf("%s", get_percent(pvol, pmin, pmax));
 					/*if (!snd_mixer_selem_get_playback_dB(elem, SND_MIXER_SCHN_MONO, &db)) {
 						printf(" [");
 						print_dB(db);
@@ -783,7 +821,7 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 				/*printf("==> %s%s:", space, snd_mixer_selem_channel_name(chn));*/
 				if (!pmono && !cmono && snd_mixer_selem_has_common_volume(elem)) {
 					snd_mixer_selem_get_playback_volume(elem, chn, &pvol);
-					printf("%ld,", onlyget_percent(pvol, pmin, pmax));
+					printf("%s,", get_percent(pvol, pmin, pmax));
 					printed=1;
 				}
 				if (!pmono && !cmono && snd_mixer_selem_has_common_switch(elem)) {
@@ -800,7 +838,7 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 							/*printf(" Playback");*/
 							title = 1;
 							snd_mixer_selem_get_playback_volume(elem, chn, &pvol);
-							printf("%ld,", onlyget_percent(pvol, pmin, pmax));
+							printf("%s,", get_percent(pvol, pmin, pmax));
 							printed=1;
 						}
 					}
@@ -1190,7 +1228,7 @@ typedef struct channel_mask {
 	char *name;
 	unsigned int mask;
 } channel_mask_t;
-static channel_mask_t chanmask[] = {
+static const channel_mask_t chanmask[] = {
 	{"frontleft", 1 << SND_MIXER_SCHN_FRONT_LEFT},
 	{"frontright", 1 << SND_MIXER_SCHN_FRONT_RIGHT},
 	{"frontcenter", 1 << SND_MIXER_SCHN_FRONT_CENTER},
@@ -1207,7 +1245,7 @@ static channel_mask_t chanmask[] = {
 
 static unsigned int channels_mask(char **arg, unsigned int def)
 {
-	channel_mask_t *c;
+	const channel_mask_t *c;
 
 	for (c = chanmask; c->name; c++) {
 		if (strncasecmp(*arg, c->name, strlen(c->name)) == 0) {
@@ -1455,7 +1493,7 @@ static int sset(unsigned int argc, char *argv[], int roflag, int keep_handle)
 	if (!elem) {
 		if (ignore_error)
 			return 0;
-		error("Unable to find simple control '%s',%i", snd_mixer_selem_id_get_name(sid), snd_mixer_selem_id_get_index(sid));
+		error("Unable to find simple control '%s',%i\n", snd_mixer_selem_id_get_name(sid), snd_mixer_selem_id_get_index(sid));
 		snd_mixer_close(handle);
 		handle = NULL;
 		return -ENOENT;
@@ -1517,7 +1555,7 @@ static void events_remove(snd_hctl_elem_t *helem)
 	printf("\n");
 }
 
-int element_callback(snd_hctl_elem_t *elem, unsigned int mask)
+static int element_callback(snd_hctl_elem_t *elem, unsigned int mask)
 {
 	if (mask == SND_CTL_EVENT_MASK_REMOVE) {
 		events_remove(elem);
@@ -1541,7 +1579,7 @@ static void events_add(snd_hctl_elem_t *helem)
 	snd_hctl_elem_set_callback(helem, element_callback);
 }
 
-int ctl_callback(snd_hctl_t *ctl, unsigned int mask,
+static int ctl_callback(snd_hctl_t *ctl, unsigned int mask,
 		 snd_hctl_elem_t *elem)
 {
 	if (mask & SND_CTL_EVENT_MASK_ADD)
@@ -1595,7 +1633,7 @@ static void sevents_remove(snd_mixer_selem_id_t *sid)
 	printf("event remove: '%s',%i\n", snd_mixer_selem_id_get_name(sid), snd_mixer_selem_id_get_index(sid));
 }
 
-int melem_event(snd_mixer_elem_t *elem, unsigned int mask)
+static int melem_event(snd_mixer_elem_t *elem, unsigned int mask)
 {
 	snd_mixer_selem_id_t *sid;
 	snd_mixer_selem_id_alloca(&sid);
@@ -1620,7 +1658,7 @@ static void sevents_add(snd_mixer_elem_t *elem)
 	snd_mixer_elem_set_callback(elem, melem_event);
 }
 
-int mixer_event(snd_mixer_t *mixer, unsigned int mask,
+static int mixer_event(snd_mixer_t *mixer, unsigned int mask,
 		snd_mixer_elem_t *elem)
 {
 	if (mask & SND_CTL_EVENT_MASK_ADD)
@@ -1746,7 +1784,7 @@ int main(int argc, char *argv[]) {
 #endif
 	int morehelp, level = 0;
 	int read_stdin = 0;
-	static struct option long_option[] =
+	static const struct option long_option[] =
 	{
 		{"help", 0, NULL, 'h'},
 		{"card", 1, NULL, 'c'},
