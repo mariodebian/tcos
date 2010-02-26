@@ -14,7 +14,7 @@ maybe_break ldconfig
 
 # update lib cache
 log_begin_msg "Updating lib cache"
- /usr/sbin/ldconfig & >> /tmp/initramfs.debug 2>&1
+ /usr/sbin/ldconfig >> /tmp/initramfs.debug 2>&1 &
 log_end_msg $?
 
 # needed for ssh login
