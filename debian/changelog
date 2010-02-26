@@ -1,3 +1,17 @@
+initramfs-tools-tcos (0.89.55) unstable; urgency=low
+
+  * fix dolar escape in openchrome start script
+  * bin/tryXorg.sh: configure fonts servers xfs and xfstt
+  * tmixer/tmixer-alsa.c: Fix hidden channels, only hide enumerates
+    (alsa 1.0.22)
+  * Add support for compcache (ramzswap)
+  * hooks-addons/05compcache: Show info when compcache is enabled
+  * scripts/tcos-bottom/10ldconfig: don't show errors in ldconfig
+  * tnc/tcos-net-controller.c: change ip_by_eth function
+  * hooks-addons/05compcache: fix TOTAL_RAM
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 26 Feb 2010 17:36:05 +0100
+
 initramfs-tools-tcos (0.89.54) unstable; urgency=low
 
   * remove backup of tcos.conf
