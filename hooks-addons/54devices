@@ -21,21 +21,22 @@ create_launcher() {
 #!/bin/sh
 # wait for Xorg
 
+export DISPLAY=:0
+export XAUTHORITY=/root/.Xauthority
+
 if [ "\$1" != "now" ]; then
-  time1=2
-else 
-  time1=0
+  sleep 2
 fi
 
-sleep \$time1
+echo "ltspfs-set-xprop::waitforX"
 waitforX
 
 # wait until Xorg is complety started
-sleep \$time1
-echo "ltspfs-set-xprop::setting xprop value"
+if [ "\$1" != "now" ]; then
+  sleep 5
+fi
 
-export DISPLAY=:0 
-export XAUTHORITY=/root/.Xauthority
+echo "ltspfs-set-xprop::setting xprop value"
 echo "xprop -root -f LTSPFS_TOKEN 8s -set LTSPFS_TOKEN \$(cat /var/run/ltspfs_token)"
 xprop -root -f LTSPFS_TOKEN 8s -set LTSPFS_TOKEN \$(cat /var/run/ltspfs_token)
 
