@@ -34,6 +34,9 @@ echo "messagebus:x:100:104::/var/run/dbus:/bin/false" >> $DESTDIR/etc/passwd
 
 cat << EOF > $DESTDIR/scripts/tcos-bottom/15dbus
 #!/bin/sh
+if [ "\$1" = "prereqs" ]; then
+  exit 0
+fi
 
 
 dbus-uuidgen --ensure

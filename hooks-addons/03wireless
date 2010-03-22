@@ -73,6 +73,9 @@ else
        cp -ra ${firmwaredir}/zd1211/ ${DESTDIR}${firmwaredir}
        cat << EOF > $DESTDIR/scripts/tcos-top/02zydas_firmware
 #!/bin/sh
+if [ "\$1" = "prereqs" ]; then
+  exit 0
+fi
 
 mkdir -p /usr/lib/hotplug/firmware/
 ln -s ${firmwaredir}/zd1211/zd1211_ub /usr/lib/hotplug/firmware/zd1211-WS11Ub.fw

@@ -31,6 +31,9 @@ EOF
   cat << EOF > $DESTDIR/scripts/init-top/000bootchartd
 #!/bin/sh
 #
+if [ "\$1" = "prereqs" ]; then
+  exit 0
+fi
 
 if grep -q bootchartd /proc/cmdline ; then
  /sbin/daemonize.sh /sbin/tcos-bootchartd start 

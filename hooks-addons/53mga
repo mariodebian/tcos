@@ -3,6 +3,9 @@
 cat << EOF > ${DESTDIR}/scripts/tcos-bottom/15mga
 #!/bin/sh
 #
+if [ "\$1" = "prereqs" ]; then
+  exit 0
+fi
 
 quiet=n
 
