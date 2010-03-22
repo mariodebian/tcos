@@ -14,6 +14,16 @@ fi
 
 find $DESTDIR/etc/ -name "*dpkg-old" | xargs rm -f
 
+# clean ORDER files, TCOS use numbers
+rm -f $DESTDIR/scripts/*/ORDER
+cat << EOF >> $DESTDIR/scripts/functions
+cache_run_scripts()
+{
+return
+}
+
+EOF
+
 # replace /bin/sh => /bin/busybox
 rm -f $DESTDIR/bin/sh
 (cd $DESTDIR/bin && ln -s busybox sh)
@@ -55,6 +65,9 @@ create_links "umount"
 mkdir -p $DESTDIR/scripts/tcos-bottom
 cat << EOF > $DESTDIR/scripts/tcos-bottom/00linkcreator
 #!/bin/sh
+if [ "\$1" = "prereqs" ]; then
+  exit 0
+fi
 
 [ ! -e /conf/links ] && exit
 cat /conf/links | while read line ; do
@@ -96,7 +109,7 @@ create_link /usr/lib/xorg/modules/drivers/i810_drv.so /usr/lib/xorg/modules/driv
 create_link /usr/share/X11/xkb/rules/evdev.lst /usr/share/X11/xkb/rules/base.lst
 
 
-( cd $DESTDIR/bin && rm -f zcat ; ln -s gunzip zcat )
+#( cd $DESTDIR/bin && rm -f zcat ; ln -s gunzip zcat )
 if [ -d $DESTDIR/lib/cmds ]; then
    ( cd $DESTDIR/lib/cmds && rm -f poweroff && ln -s reboot poweroff )
 fi
