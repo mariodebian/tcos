@@ -162,13 +162,18 @@ rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
 # delete linked nvidia driver (10Mb)
 rm -f $DESTDIR/usr/lib/libGL*
 
+LIBGL_PATH=/usr/lib/
+if [ -e /usr/lib/mesa/libGL.so.1 ]; then
+  LIBGL_PATH=/usr/lib/mesa/
+fi
+
 # delete vnc extension
 rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so
 
 if [ $TCOS_XORG_OPENGL ]; then
  _echo "    * OpenGL support is ENABLED"
- if [ "$(strings /usr/lib/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
-       [ "$(strings /usr/lib/libGL.so.1|grep -c -i fgl)" != 0 ]; then
+ if [ "$(strings $LIBGL_PATH/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
+       [ "$(strings $LIBGL_PATH/libGL.so.1|grep -c -i fgl)" != 0 ]; then
 
    if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
       rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
@@ -196,7 +201,7 @@ if [ $TCOS_XORG_OPENGL ]; then
   cpifexists /usr/lib/xorg/modules/extensions/libglx.so    /usr/lib/xorg/modules/extensions/
   [ -e /usr/lib/xorg/modules/extensions/libGLcore.so ] && \
        cpifexists /usr/lib/xorg/modules/extensions/libGLcore.so /usr/lib/xorg/modules/extensions/
-  cpifexists /usr/lib/libGL.so.1  /usr/lib/
+  cpifexists $LIBGL_PATH/libGL.so.1  /usr/lib/
   [ -e /usr/lib/libGLcore.so.1 ] && cpifexists /usr/lib/libGLcore.so.1  /usr/lib/
   [ -e /usr/lib/libGLU.so.1 ] && cpifexists /usr/lib/libGLU.so.1 /usr/lib/
  fi # end of NVIDIA/ATI strings
