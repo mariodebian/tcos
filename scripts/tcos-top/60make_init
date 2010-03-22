@@ -1,5 +1,8 @@
 #!/bin/sh
 # 
+if [ "$1" = "prereqs" ]; then
+  exit 0
+fi
 
 
 . /scripts/functions
