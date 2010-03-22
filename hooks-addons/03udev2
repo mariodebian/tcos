@@ -27,6 +27,9 @@ cpudev /lib/udev/udev_run_devd       /lib/udev
 cpudev /lib/udev/udev_run_hotplugd   /lib/udev
 cpudev /lib/udev/logger.agent        /lib/udev
 
+# new for keyboard and mouse rules
+cpudev /lib/udev/input_id            /lib/udev
+
 
 # new udev > 111
 cpudev /lib/udev/rule_generator.functions      /lib/udev
