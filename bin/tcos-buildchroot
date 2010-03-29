@@ -333,6 +333,8 @@ EOC
 
 chrootupdateimages() {
 cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
+mkdir -p ${TCOS_CHROOT}/usr/share/tcos-core/
+[ -e /usr/share/tcos-core/lockscreen-custom.png ] && cp /usr/share/tcos-core/lockscreen-custom.png ${TCOS_CHROOT}/usr/share/tcos-core/
 [ -e /etc/localtime ] && cp /etc/localtime ${TCOS_CHROOT}/etc/
 [ -e /etc/adjtime ] && cp /etc/adjtime ${TCOS_CHROOT}/etc/
 TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/tcos.conf | sed 's/"//g')
