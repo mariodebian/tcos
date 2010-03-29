@@ -29,6 +29,8 @@ import socket
 from time import time, ctime, localtime
 
 import pwd,grp
+import re
+import ipaddr
 
 import utmp
 from UTMPCONST import *
@@ -56,6 +58,35 @@ def print_debug(txt):
     if debug:
         print >> sys.stderr, "tcos-last DEBUG: %s"%(txt)
 
+
+def parseIPAddress(ipstr, return_ipv4=True):
+    if re.match("[a-z]|[A-Z]", ipstr):
+        print_debug( "NOT ip => %s"%ipstr )
+        return ipstr
+    
+    if ipstr.endswith(':0.0'):
+        ipstr=ipstr.replace(':0.0', '')
+    
+    if ipstr.endswith(':0'):
+        ipstr=ipstr.replace(':0', '')
+    
+    if ipstr=='':
+        return ''
+    
+    if len(ipstr) == 4:
+        ipstr=parseHexIP(ipstr)
+    
+    try:
+        ip=ipaddr.IPAddress(ipstr)
+    except:
+        return None
+    ipv4=ip
+    if return_ipv4 and ip.version == 6:
+        ipv4=ip.ipv4_mapped.exploded
+    return str(ipv4)
+
+
+
 try:
     opts, args = getopt.getopt(sys.argv[1:], ":hd", ["host=", "debug", "tcosdisplay", "user", "userid", "time", "pid", "ingroup="])
 except getopt.error, msg:
@@ -73,7 +104,7 @@ for o, a in opts:
     if o == "--host":
         HOST=a
     if o == "--tcosdisplay":
-        HOST=os.environ['DISPLAY'].split(":")[0]
+        HOST=parseIPAddress(os.environ["DISPLAY"])
     
     if o == "--user":
         ACTION="user"
@@ -140,9 +171,17 @@ def GetLast(ip):
                 if not b:
                     break
                 if b[0] == USER_PROCESS:
-                    print_debug("  => Searching for host \"%s:0\", hostname=%s found host=%s ut_line=%s"%(ip, hostname, b.ut_host,b.ut_line))
-                    if b.ut_host == "%s:0"%(ip) or b.ut_line == "%s:0"%(ip) or b.ut_host == "%s"%hostname :
-                        if b.ut_line.startswith("pts/") and not os.path.isdir("/proc/%s"%b.ut_pid): continue
+                    #print_debug("  => Searching for host \"%s:0\", hostname=%s found host=%s ut_line=%s user=%s"%(ip, hostname, b.ut_host,b.ut_line, b.ut_user))
+                    # 
+                    print_debug(" ==> '%s' != '%s' ut_line=%s" %(parseIPAddress(b.ut_host), ip, b.ut_line) )
+                    #parseIPAddress(b.ut_line) == "%s:0"%(ip) or \
+                    if parseIPAddress(b.ut_host) == "%s"%(ip) or \
+                       parseIPAddress(b.ut_host) == "%s"%(ip) or \
+                       parseIPAddress(b.ut_host) == "%s"%hostname :
+                        # found line ???
+                        print_debug("    => found line ?? user=%s"%b.ut_user)
+                        if b.ut_line.startswith("pts/") and not \
+                           os.path.isdir("/proc/%s"%b.ut_pid): continue
                         print_debug(" Ip \"%s:0\" => found host=%s hostname=%s ut_line=%s user=%s pid=%s"%(ip, hostname, b.ut_host,b.ut_line, b.ut_user, b.ut_pid))
                         last=b
             a.endutent()

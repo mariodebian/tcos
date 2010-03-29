@@ -58,6 +58,7 @@ Depends: busybox | busybox-static ,
          python, 
          python-utmp, 
          python-dbus, 
+         python-ipaddr,
          ${misc:Depends}, ${shlibs:Depends}
 Recommends: vlc, 
             stunnel4, 
