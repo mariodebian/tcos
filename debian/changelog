@@ -1,3 +1,20 @@
+initramfs-tools-tcos (0.89.56) unstable; urgency=low
+
+  * xmlrpc/sh/devicesctl.sh hooks-addons/54devices: ensure LTSPFS_TOKEN
+    is set
+  * add prereqs in scripts headers
+  * hooks-addons/03udev2: copy input_id helper
+  * hooks-addons/50xorg: copy libGL.so.1 from mesa dir if exists
+  * hooks-addons/clean_initramfs: remove ORDER files an overwrite
+    cache_run_scripts
+  * add prereqs in some other scripts
+  * remove console-tools from chroot packages
+  * bin/tcos-buildchroot: copy lockscreen-custom.png if found
+  * xmlrpc/sh/tcos-last: check IP with ipaddr module
+  * conf/80export_pulseaudio: use python to get DISPLAY
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 30 Mar 2010 17:44:09 +0200
+
 initramfs-tools-tcos (0.89.55) unstable; urgency=low
 
   * fix dolar escape in openchrome start script
