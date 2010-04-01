@@ -77,7 +77,7 @@ FANCYTTY=
 
 EOF
 
-cpifexists /etc/lsb-base-logging.sh /etc
+[ -e /etc/lsb-base-logging.sh ] && cpifexists /etc/lsb-base-logging.sh /etc
 cpifexists /usr/bin/tput /bin
 cpifexists /usr/bin/expr /bin
 
