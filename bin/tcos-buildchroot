@@ -288,6 +288,10 @@ if [ -e /etc/console-setup/boottime.kmap.gz ]; then
 	mkdir -p ${TCOS_CHROOT}/etc/console-setup
 	cp /etc/console-setup/boottime.kmap.gz ${TCOS_CHROOT}/etc/console-setup/
 fi
+if [ -e /etc/console-setup/cached.kmap.gz ]; then
+	mkdir -p ${TCOS_CHROOT}/etc/console-setup
+	cp /etc/console-setup/cached.kmap.gz ${TCOS_CHROOT}/etc/console-setup/
+fi
 
   cat << EOC | chroot ${TCOS_CHROOT}
 export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
@@ -330,13 +334,21 @@ EOC
 }
 
 ###############################################################################
-
+chrootcp() {
+  if [ -e "$1" ]; then
+    mkdir -p "${TCOS_CHROOT}/$(dirname $1)"
+    cp "$1" "${TCOS_CHROOT}/$(dirname $1)/"
+  fi
+}
 chrootupdateimages() {
 cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
-mkdir -p ${TCOS_CHROOT}/usr/share/tcos-core/
-[ -e /usr/share/tcos-core/lockscreen-custom.png ] && cp /usr/share/tcos-core/lockscreen-custom.png ${TCOS_CHROOT}/usr/share/tcos-core/
-[ -e /etc/localtime ] && cp /etc/localtime ${TCOS_CHROOT}/etc/
-[ -e /etc/adjtime ] && cp /etc/adjtime ${TCOS_CHROOT}/etc/
+
+# copy some files
+chrootcp /usr/share/tcos-core/lockscreen-custom.png
+chrootcp /etc/default/console-setup
+chrootcp /etc/default/keyboard
+chrootcp /etc/adjtime
+
 TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/tcos.conf | sed 's/"//g')
 if [ -f /etc/tcos/templates/tcosconfig.conf ]; then
   mkdir -p ${TCOS_CHROOT}/etc/tcos/templates/
