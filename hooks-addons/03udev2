@@ -52,6 +52,28 @@ cpudev /sbin/blkid /usr/bin/
 cpudev /lib/udev/rules.d/60-persistent-input.rules /lib/udev/rules.d/
 cpudev /etc/udev/rules.d/60-persistent-input.rules /etc/udev/rules.d/
 
+# new in Ubuntu Lucid
+cpudev /lib/udev/rules.d/60-cdrom_id.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/60-persistent-alsa.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/78-sound-card.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/80-drivers.rules /lib/udev/rules.d/
+
+# new xorg+udev rules
+cpudev /lib/udev/rules.d/64-xorg-xkb.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/65-xorg-evdev.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/69-xserver-xorg-input-wacom.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/78-graphics-card.rules /lib/udev/rules.d/
+[ -e /etc/default/keyboard ] && cpifexists /etc/default/keyboard /etc/default/
+
+# console setup
+cpudev /lib/udev/rules.d/95-keyboard-force-release.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/95-keymap.rules /lib/udev/rules.d/
+cpudev /lib/udev/rules.d/85-console-setup.rules /lib/udev/rules.d/
+cpudev /lib/udev/console-setup-tty /lib/udev/
+cpudev /lib/udev/keymap /lib/udev/
+[ -d /lib/udev/keymaps/ ] && cp -ra /lib/udev/keymaps $DESTDIR/lib/udev/
+
+
 # delete not usessfull rules
 rm -f $DESTDIR/etc/udev/rules.d/024_hpmud.rules
 rm -f $DESTDIR/etc/udev/rules.d/025_libgphoto2.rules
@@ -124,6 +146,7 @@ rm -f $DESTDIR/lib/udev/rules.d/*libmtp*
 rm -f $DESTDIR/lib/udev/rules.d/*libpi*
 rm -f $DESTDIR/lib/udev/rules.d/*libsane*
 rm -f $DESTDIR/lib/udev/rules.d/*v4l*
+rm -f $DESTDIR/lib/udev/rules.d/*-dm.*
 
 
 # modify udev script to not wait in init-premount (wait in tcos-top/01busybox)
