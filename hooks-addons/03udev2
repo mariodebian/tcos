@@ -63,6 +63,7 @@ cpudev /lib/udev/rules.d/64-xorg-xkb.rules /lib/udev/rules.d/
 cpudev /lib/udev/rules.d/65-xorg-evdev.rules /lib/udev/rules.d/
 cpudev /lib/udev/rules.d/69-xserver-xorg-input-wacom.rules /lib/udev/rules.d/
 cpudev /lib/udev/rules.d/78-graphics-card.rules /lib/udev/rules.d/
+mkdir -p $DESTDIR/etc/default
 [ -e /etc/default/keyboard ] && cpifexists /etc/default/keyboard /etc/default/
 
 # console setup
@@ -72,7 +73,7 @@ cpudev /lib/udev/rules.d/85-console-setup.rules /lib/udev/rules.d/
 cpudev /lib/udev/console-setup-tty /lib/udev/
 cpudev /lib/udev/keymap /lib/udev/
 [ -d /lib/udev/keymaps/ ] && cp -ra /lib/udev/keymaps $DESTDIR/lib/udev/
-
+cpudev /lib/udev/findkeyboards /lib/udev/
 
 # delete not usessfull rules
 rm -f $DESTDIR/etc/udev/rules.d/024_hpmud.rules
