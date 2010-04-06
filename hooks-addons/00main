@@ -103,6 +103,7 @@ fi
 [ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/
 [ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
 
+cpifexists /sbin/depmod    /sbin/
 cpifexists /etc/localtime  /etc/
 [ -f /etc/adjtime ] && cpifexists /etc/adjtime    /etc/
 cpifexists /etc/securetty  /etc
