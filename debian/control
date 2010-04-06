@@ -1,4 +1,4 @@
-Source: initramfs-tools-tcos
+Source: tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>

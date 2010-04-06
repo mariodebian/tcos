@@ -1,3 +1,9 @@
+tcos (0.89.57) unstable; urgency=low
+
+  * Rename sources from initramfs-tools-tcos to tcos
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 06 Apr 2010 16:06:53 +0200
+
 initramfs-tools-tcos (0.89.56) unstable; urgency=low
 
   * xmlrpc/sh/devicesctl.sh hooks-addons/54devices: ensure LTSPFS_TOKEN
