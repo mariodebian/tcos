@@ -1,8 +1,10 @@
 # hook addon for keymap
 
-if [ -e $DESTDIR/bin/loadkeys ] && [ -f $DESTDIR/etc/console/boottime.kmap.gz ]; then
-  # don't copy again if exists
-  _verbose "(13kbmap) No copy keymaps again"
+if [ -e $DESTDIR/bin/loadkeys ]; then
+  if [ -e $DESTDIR/etc/console/boottime.kmap.gz ] || [ -e /etc/console-setup/cached.kmap.gz ] ; then
+    # don't copy again if exists
+    _verbose "(13kbmap) No copy keymaps again"
+  fi
 else
 
 
@@ -18,6 +20,12 @@ else
   if [ -f /etc/console-setup/boottime.kmap.gz ]; then
     mkdir -p $DESTDIR/etc/console
     cp -ra /etc/console-setup/boottime.kmap.gz $DESTDIR/etc/console
+  fi
+
+  # for new console-setup
+  if [ -f /etc/console-setup/cached.kmap.gz ]; then
+    mkdir -p $DESTDIR/etc/console-setup
+    cp -ra /etc/console-setup/cached.kmap.gz $DESTDIR/etc/console-setup
   fi
 
 fi
