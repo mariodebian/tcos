@@ -1,0 +1,100 @@
+# hook-addon for plymouth support
+
+if [ ! -e /bin/plymouth ]; then
+  _verbose "(90plymouth) PLYMOUTH not installed"
+else
+
+if [ $TCOS_DISABLE_PLYMOUTH ]; then
+  rm -f ${DESTDIR}/lib/plymouth
+  rm -f ${DESTDIR}/sbin/plymouthd
+  rm -f ${DESTDIR}/bin/plymouth
+  rm -rf ${DESTDIR}/usr/share/plymouth ${DESTDIR}/lib/plymouth ${DESTDIR}/usr/lib/plymouth
+  cat << EOF > ${DESTDIR}/sbin/plymouthd
+#!/bin/sh
+exit 0
+EOF
+  chmod +x ${DESTDIR}/sbin/plymouthd
+  cp ${DESTDIR}/sbin/plymouthd ${DESTDIR}/bin/plymouth
+  _verbose "(90plymouth) TCOS_DISABLE_PLYMOUTH enabled !!!"
+else #TCOS_DISABLE_PLYMOUTH not found
+
+stat_before
+PLY_PATH="/usr/share/plymouth"
+
+# in ubuntu /lib/plymouth
+if [ -d /lib/plymouth/themes ]; then
+  PLY_PATH="/lib/plymouth"
+fi
+
+THEMES="$PLY_PATH/themes"
+THEME="$(/usr/sbin/plymouth-set-default-theme || true)"
+if [ -n "${THEME}" ]
+then
+	THEME="${THEMES}/${THEME}/${THEME}.plymouth"
+fi
+
+
+PLUGIN_PATH="$(plymouth --get-splash-plugin-path)"
+PLUGINS="details.so text.so label.so"
+MODULE="${PLUGIN_PATH}/$(sed -n 's/^ModuleName=\(.*\)/\1/p' ${THEME}).so"
+
+# copy plugin and images for current theme
+copy_exec "${MODULE}"
+mkdir -p "${DESTDIR}/${THEMES}"
+IMAGES="$(sed -n 's/^ImageDir=\(.*\)/\1/p' ${THEME})"
+# No images in text mode:
+if [ -n "${IMAGES}" ]
+then
+	cp -r "${IMAGES}" "${DESTDIR}/${THEMES}"
+fi
+
+# copy binaries and base plugins
+copy_exec /bin/plymouth
+copy_exec /sbin/plymouthd
+
+for PLUGIN in ${PLUGINS}
+do
+	copy_exec ${PLUGIN_PATH}/${PLUGIN}
+done
+
+
+
+echo "TCOS $TCOS_VESRION" >> $DESTDIR/etc/debian_version
+#FIXME put tcos logo
+[ -e $PLY_PATH/debian-logo.png ] && cp $PLY_PATH/debian-logo.png "${DESTDIR}/$PLY_PATH"
+
+# copy files for font rendering
+mkdir -p "${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu"
+mkdir -p "${DESTDIR}/usr/lib/pango/1.6.0/modules"
+mkdir -p "${DESTDIR}/etc/fonts/conf.d"
+mkdir -p "${DESTDIR}/var/cache/fontconfig"
+cp -a /usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf "${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu"
+cp -a /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf  "${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu"
+cp -a /etc/fonts/fonts.conf "${DESTDIR}/etc/fonts"
+cp -rL /etc/fonts/conf.d/60-latin.conf "${DESTDIR}/etc/fonts/conf.d"
+copy_exec /usr/lib/pango/1.6.0/modules/pango-basic-fc.so
+copy_exec /usr/lib/pango/1.6.0/module-files.d/libpango1.0-0.modules
+copy_exec /usr/lib/libpango-1.0.so.0
+copy_exec /usr/lib/libpangoft2-1.0.so.0
+copy_exec /usr/lib/libpangocairo-1.0.so.0
+
+# copy config files
+mkdir -p "${DESTDIR}/etc/plymouth"
+cp -a /etc/plymouth/plymouthd.conf "${DESTDIR}/etc/plymouth/"
+cp -a $PLY_PATH/plymouthd.defaults "${DESTDIR}/usr/share/plymouth/"
+
+# copy renderers
+copy_exec $PLUGIN_PATH/renderers/frame-buffer.so
+copy_exec $PLUGIN_PATH/renderers/drm.so
+
+# add drm/fb modules
+manual_add_modules intel-agp
+manual_add_modules ati-agp
+manual_add_modules i915
+manual_add_modules radeon
+
+stat_after "** EXPERIMENTAL ** Plymouth support"
+
+fi # end if TCOS_DISABLE_PLYMOUTH
+
+fi # end if no plymouth installed

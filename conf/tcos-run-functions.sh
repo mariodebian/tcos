@@ -47,6 +47,13 @@ start_usplash() {
 }
 
 kill_usplash() {
+  if [ -x /bin/plymouth ]; then
+    if ! plymouth --ping; then
+      /bin/plymouth --quit
+    fi
+    return
+  fi
+  # usplash
   if [ -x /sbin/usplash ]; then
     usplash_write "QUIT"  2> /dev/null
     killall usplash       2> /dev/null
