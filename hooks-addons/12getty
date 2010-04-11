@@ -1,8 +1,25 @@
 # getty console
 
-have_getty=$($DESTDIR/bin/busybox getty --help  2>&1 | grep -c -i usage)
+# use fgetty if found
+#/sbin/fgetty
+#/bin/fgetty-login
+#/bin/fgetty-login2
+#/bin/checkpassword
 
-cat << EOF > $DESTDIR/sbin/rungetty
+if [ -e /sbin/fgetty ]; then
+  stat_before
+  cpifexists /sbin/fgetty        /sbin/
+  cpifexists /bin/fgetty-login   /bin/
+  cpifexists /bin/fgetty-login2  /bin/
+  cpifexists /bin/checkpassword  /bin/
+
+  cat << EOF > $DESTDIR/bin/login
+#!/bin/sh
+fgetty-login \$@
+EOF
+  chmod +x $DESTDIR/bin/login
+
+  cat << EOF > $DESTDIR/sbin/rungetty
 #!/bin/sh
 
 
@@ -15,29 +32,16 @@ if [ "\${CONSOLE_NUMBER}" = "" ]; then
   exit 1
 fi
 
-
 while [ 1 ]; do
-  if [ "$have_getty" = "0" ]; then
-    echo ""
-    echo ""
-    echo "Press enter to activate this console..."
-    read enter
-    sh
-  else
-    busybox getty \$VEL \$CONSOLE_NUMBER
+    fgetty \$CONSOLE_NUMBER --noclear &>/dev/null
     sleep 2
-  fi
 done
 
 
 EOF
+  chmod +x $DESTDIR/sbin/rungetty
 
-chmod +x $DESTDIR/sbin/rungetty
 
+  stat_after "fgetty (login)"
+fi # end of -e /sbin/fgetty
 
-cat << EOF > $DESTDIR/bin/login
-#!/bin/sh
-busybox login \$@
-EOF
-
-chmod +x $DESTDIR/bin/login

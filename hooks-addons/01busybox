@@ -26,9 +26,9 @@ if [ $DESTDIR/bin/busybox ]; then
   fi
 
   # check for busybox static
-  if ldd /bin/busybox | grep -q libc; then
-    _echo "    busybox (not-static) getty and login disabled"
-  fi
+  #if ldd /bin/busybox | grep -q libc; then
+  #  _echo "    busybox (not-static) getty and login disabled"
+  #fi
 
 
 else
