@@ -201,7 +201,13 @@ fi
   _log "DHCLIENT $TCOS_NET_LINK"
   dhclient $TCOS_NET_LINK >> /tmp/initramfs.debug  2>&1
   myip=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases     | head -1| awk '{print $2}' | sed s/";"//g)
-  dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
+
+  if grep -q "server-name" /var/lib/dhcp/dhclient.leases; then
+    dhcpserver=$(grep 'server-name' /var/lib/dhcp/dhclient.leases | awk -F'"' '{print $2}')
+  else
+    dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
+  fi
+
   hostname=$(grep 'host-name' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}' | sed s/\"//g)
   TCOS_NET_ACTIVE=$(grep 'interface' /var/lib/dhcp/dhclient.leases  | head -1| awk '{print $2}' | sed s/";"//g | sed s/\"//g)
  log_end_msg 0
@@ -210,7 +216,13 @@ fi
 if [ "$(route -n 2>&1| grep -c $TCOS_NET_ACTIVE)" = "0" ]; then
    log_begin_msg "Forcing net for dhcp3-client"
      myip=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases     | head -1| awk '{print $2}' | sed s/";"//g)
-     dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $3}' | sed s/";"//g)
+
+     if grep -q "server-name" /var/lib/dhcp/dhclient.leases; then
+       dhcpserver=$(grep 'server-name' /var/lib/dhcp/dhclient.leases | awk -F'"' '{print $2}')
+     else
+       dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
+     fi
+
      netmask=$(grep 'subnet-mask' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $3}' | sed s/";"//g)
      gateway=$(grep 'routers' /var/lib/dhcp/dhclient.leases     | head -1| awk '{print $3}' | sed s/";"//g)
      #ifconfig $TCOS_NET_ACTIVE down
