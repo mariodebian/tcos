@@ -7,6 +7,7 @@
 #TCOS_XORG_DRI_SIS=
 #TCOS_XORG_DRI_TRIDENT=
 #TCOS_XORG_DRI_UNICHROME=
+#TCOS_XORG_DRI_MATROX=
 
 
 
@@ -30,6 +31,7 @@ if [ $TCOS_XORG_DRI_ATI ]; then
     copy_dri r128_dri.so
     copy_dri r200_dri.so
     copy_dri r300_dri.so
+    copy_dri r600_dri.so
     copy_dri radeon_dri.so
   stat_after "ATI DRI"
 fi
@@ -50,6 +52,7 @@ fi
 if [ $TCOS_XORG_DRI_TRIDENT ]; then
   stat_before
     copy_dri trident_dri.so
+    copy_dri tdfx_dri.so
   stat_after "Trident DRI"
 fi
 
@@ -57,6 +60,13 @@ if [ $TCOS_XORG_DRI_UNICHROME ]; then
   stat_before
     copy_dri unichrome_dri.so
   stat_after "Unichrome DRI"
+fi
+
+if [ $TCOS_XORG_DRI_MATROX ]; then
+  stat_before
+    copy_dri mach64_dri.so
+    copy_dri mga_dri.so
+  stat_after "Matrox DRI"
 fi
 
 
