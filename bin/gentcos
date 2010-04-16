@@ -656,6 +656,8 @@ fix_nvidia_ati() {
     tcos_inst_pkg "xserver-xorg-core libgl1-mesa-glx"
     rm -rf   ${TCOS_PKG_CACHE}/fix-nvidia-ati
     mkdir -p ${TCOS_PKG_CACHE}/fix-nvidia-ati
+
+    [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libglx.so ] && \
     mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/extensions/libglx.so \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libglx.so
        
@@ -667,7 +669,8 @@ fix_nvidia_ati() {
     [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/libwfb.so ] && \
        mv ${TCOS_PKG_CACHE}/xserver-xorg-core/usr/lib/xorg/modules/libwfb.so \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so
-       
+    
+    [ -e ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/libGL.so.1.2 ] && \
     mv ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/libGL.so.1.2 \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2
 
