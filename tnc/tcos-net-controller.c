@@ -231,8 +231,8 @@ status_iptables_user(char *args) {
    char cmd[BSIZE];
    char line[BSIZE];
    char *fret;
-
-    sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | awk 'BEGIN{count=0}{if ($NF == %d || $NF == \"%s\") count++}END{print count}'", IPTABLES, DEVNULL, (int)get_uid(args), args);
+    /* iptables rules with tcos argument, allow not remove other rules. */
+    sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | grep TCOS_TNC | awk 'BEGIN{count=0}{if ($(NF-3) == %d || $(NF-3) == \"%s\") count++}END{print count}'", IPTABLES, DEVNULL, (int)get_uid(args), args);
 #ifdef DEBUG
     debug("status_iptables_user() %s\n",cmd); 
 #endif
@@ -268,10 +268,10 @@ flush_iptables_user(char *arg1, char *arg2) {
     strncpy(substring, arg2+13, strlen(arg2));
 
     if ( strcmp( substring, "no") == 0 ) {
-        sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | awk '{if ($NF == %d || $NF == \"%s\") print $1}' | tac | tr \"\\n\" \" \"", IPTABLES, DEVNULL, (int)get_uid(arg1), arg1);
+        sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | grep TCOS_TNC | awk '{if ($(NF-3) == %d || $(NF-3) == \"%s\") print $1}' | tac | tr \"\\n\" \" \"", IPTABLES, DEVNULL, (int)get_uid(arg1), arg1);
     }
     else {
-        sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | awk '{if (($NF == %d || $NF == \"%s\")  && ($3 == \"tcp\")) print $1}' | tac | tr \"\\n\" \" \"", IPTABLES, DEVNULL, (int)get_uid(arg1), arg1);
+        sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | grep TCOS_TNC | awk '{if (($(NF-3) == %d || $(NF-3) == \"%s\")  && ($3 == \"tcp\")) print $1}' | tac | tr \"\\n\" \" \"", IPTABLES, DEVNULL, (int)get_uid(arg1), arg1);
     }
 
     free(substring);
@@ -344,7 +344,7 @@ add_iptables_user(char **args) {
        tokens = split(substring, delim);
        for(j = 0; tokens[j] != NULL; j++){
             if (check_port(tokens[j]) == 0) {
-               sprintf( cmd, "%s -A OUTPUT -p tcp --dport %s -m owner --uid-owner %s -j DROP %s", IPTABLES, tokens[j], args[5], DEVNULL);
+               sprintf( cmd, "%s -A OUTPUT -p tcp --dport %s -m owner --uid-owner %s -m comment --comment TCOS_TNC -j DROP %s", IPTABLES, tokens[j], args[5], DEVNULL);
 #ifdef DEBUG
                debug("add_iptables_user() cmd=%s\n",cmd);
 #endif
@@ -369,7 +369,7 @@ add_iptables_user(char **args) {
 
     if ( strcmp( substring, "no") == 0 ) {
        /* Allow loopback for user*/
-       sprintf( cmd, "%s -A OUTPUT -d 127.0.0.0/255.0.0.0 -m owner --uid-owner %s -j ACCEPT %s", IPTABLES, args[5], DEVNULL);
+       sprintf( cmd, "%s -A OUTPUT -d 127.0.0.0/8 -m owner --uid-owner %s -m comment --comment TCOS_TNC -j ACCEPT %s", IPTABLES, args[5], DEVNULL);
 #ifdef DEBUG
        debug("add_iptables_user() cmd=%s\n",cmd);
 #endif
@@ -382,7 +382,7 @@ add_iptables_user(char **args) {
        }
     
        /* Block output ! network*/
-       sprintf( cmd, "%s -A OUTPUT -d ! %s -m owner --uid-owner %s -j DROP %s", IPTABLES,  dirred, args[5], DEVNULL);
+       sprintf( cmd, "%s -A OUTPUT -d ! %s -m owner --uid-owner %s -m comment --comment TCOS_TNC -j DROP %s", IPTABLES,  dirred, args[5], DEVNULL);
 #ifdef DEBUG
        debug("add_iptables_user() cmd=%s\n",cmd);
 #endif
