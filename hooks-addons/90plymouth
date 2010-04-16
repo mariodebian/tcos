@@ -1,15 +1,15 @@
 # hook-addon for plymouth support
 
-if [ ! -e /bin/plymouth ]; then
-  _verbose "(90plymouth) PLYMOUTH not installed"
+if [ ! -x /bin/plymouth ]; then
+  _verbose "(90plymouth) Plymouth not installed"
 else
 
 if [ $TCOS_DISABLE_PLYMOUTH ]; then
-  rm -f ${DESTDIR}/lib/plymouth
-  rm -f ${DESTDIR}/sbin/plymouthd
-  rm -f ${DESTDIR}/bin/plymouth
-  rm -rf ${DESTDIR}/usr/share/plymouth ${DESTDIR}/lib/plymouth ${DESTDIR}/usr/lib/plymouth
-  rm -f ${DESTDIR}/scripts/*/plymouth
+  rm -f ${DESTDIR}/lib/plymouth 2>/dev/null
+  rm -f ${DESTDIR}/sbin/plymouthd 2>/dev/null
+  rm -f ${DESTDIR}/bin/plymouth 2>/dev/null
+  rm -rf ${DESTDIR}/usr/share/plymouth ${DESTDIR}/lib/plymouth ${DESTDIR}/usr/lib/plymouth 2>/dev/null
+  rm -f ${DESTDIR}/scripts/*/plymouth 2>/dev/null
   cat << EOF > ${DESTDIR}/sbin/plymouthd
 #!/bin/sh
 exit 0
@@ -20,6 +20,12 @@ EOF
 else #TCOS_DISABLE_PLYMOUTH not found
 
 stat_before
+
+
+
+cpifexists /sbin/plymouthd /sbin
+cpifexists /bin/plymouth /bin
+
 PLY_PATH="/usr/share/plymouth"
 
 # in ubuntu /lib/plymouth
@@ -27,75 +33,68 @@ if [ -d /lib/plymouth/themes ]; then
   PLY_PATH="/lib/plymouth"
 fi
 
-THEMES="$PLY_PATH/themes"
-THEME="$(/usr/sbin/plymouth-set-default-theme || true)"
-if [ -n "${THEME}" ]
-then
-	THEME="${THEMES}/${THEME}/${THEME}.plymouth"
-fi
-
-
-PLUGIN_PATH="$(plymouth --get-splash-plugin-path)"
-PLUGINS="details.so text.so label.so"
-MODULE="${PLUGIN_PATH}/$(sed -n 's/^ModuleName=\(.*\)/\1/p' ${THEME}).so"
-
-# copy plugin and images for current theme
-copy_exec "${MODULE}"
-mkdir -p "${DESTDIR}/${THEMES}"
-IMAGES="$(sed -n 's/^ImageDir=\(.*\)/\1/p' ${THEME})"
-# No images in text mode:
-if [ -n "${IMAGES}" ]
-then
-	cp -r "${IMAGES}" "${DESTDIR}/${THEMES}"
-fi
-
-# copy binaries and base plugins
-copy_exec /bin/plymouth
-copy_exec /sbin/plymouthd
-
-for PLUGIN in ${PLUGINS}
-do
-	copy_exec ${PLUGIN_PATH}/${PLUGIN}
-done
-
-
+mkdir -p ${DESTDIR}/${PLY_PATH}
+mkdir -p ${DESTDIR}/${PLY_PATH}/renderers
+mkdir -p ${DESTDIR}/${PLY_PATH}/themes
 
 echo "TCOS $TCOS_VESRION" >> $DESTDIR/etc/debian_version
-#FIXME put tcos logo
-[ -e $PLY_PATH/debian-logo.png ] && cp $PLY_PATH/debian-logo.png "${DESTDIR}/$PLY_PATH"
 
-# copy files for font rendering
-mkdir -p "${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu"
-mkdir -p "${DESTDIR}/usr/lib/pango/1.6.0/modules"
-mkdir -p "${DESTDIR}/etc/fonts/conf.d"
-mkdir -p "${DESTDIR}/var/cache/fontconfig"
-cp -a /usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf "${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu"
-cp -a /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf  "${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu"
-cp -a /etc/fonts/fonts.conf "${DESTDIR}/etc/fonts"
-cp -rL /etc/fonts/conf.d/60-latin.conf "${DESTDIR}/etc/fonts/conf.d"
-copy_exec /usr/lib/pango/1.6.0/modules/pango-basic-fc.so
-copy_exec /usr/lib/pango/1.6.0/module-files.d/libpango1.0-0.modules
-copy_exec /usr/lib/libpango-1.0.so.0
-copy_exec /usr/lib/libpangoft2-1.0.so.0
-copy_exec /usr/lib/libpangocairo-1.0.so.0
+THEMES="$PLY_PATH/themes"
+THEME=$(readlink -f ${THEMES}/${TCOS_PLYMOUTH}/${TCOS_PLYMOUTH}.plymouth)
+MODULE=$(grep "ModuleName *= *" ${THEME} | sed 's/ModuleName *= *//')
+TEXT_THEME=$(readlink -f ${THEMES}/text.plymouth)
+MODULE_TEXT=$(grep "ModuleName *= *" ${TEXT_THEME} | sed 's/ModuleName *= *//')
 
-# copy config files
-mkdir -p "${DESTDIR}/etc/plymouth"
-cp -a /etc/plymouth/plymouthd.conf "${DESTDIR}/etc/plymouth/"
-cp -a $PLY_PATH/plymouthd.defaults "${DESTDIR}/usr/share/plymouth/"
+# plugin that is always required
+cpifexists $PLY_PATH/details.so ${PLY_PATH}
 
-# copy renderers
-copy_exec $PLUGIN_PATH/renderers/frame-buffer.so
-copy_exec $PLUGIN_PATH/renderers/drm.so
+# copy the default themes
+cp -a ${PLY_PATH}/themes/details ${DESTDIR}${PLY_PATH}/themes/
 
-# add drm/fb modules
-manual_add_modules intel-agp
-manual_add_modules ati-agp
-manual_add_modules i915
-manual_add_modules radeon
 
-stat_after "** EXPERIMENTAL ** Plymouth support"
+if [ -n "$TEXT_THEME" ]; then
+	rm -f  ${DESTDIR}${PLY_PATH}/themes/text.plymouth 2>/dev/null
+	ln -s $TEXT_THEME ${DESTDIR}${PLY_PATH}/themes/text.plymouth
+	cp -a $(dirname $TEXT_THEME) ${DESTDIR}${PLY_PATH}/themes/
+	cpifexists /lib/plymouth/$MODULE_TEXT.so ${PLY_PATH}
+fi
 
-fi # end if TCOS_DISABLE_PLYMOUTH
 
-fi # end if no plymouth installed
+if [ -n "$THEME" ]; then
+	rm -f ${DESTDIR}${PLY_PATH}/themes/default.plymouth 2>/dev/null
+	ln -s $THEME ${DESTDIR}${PLY_PATH}/themes/default.plymouth
+	cp -a $(dirname $THEME) ${DESTDIR}${PLY_PATH}/themes/
+	cpifexists ${PLY_PATH}/$MODULE.so ${PLY_PATH}
+
+	# if we have a non-text theme, make sure we copy all the support libs
+	cpifexists ${PLY_PATH}/label.so ${PLY_PATH}
+
+	# output renderers
+	cpifexists ${PLY_PATH}/renderers/frame-buffer.so ${PLY_PATH}/renderers/
+	cpifexists ${PLY_PATH}/renderers/drm.so ${PLY_PATH}/renderers/
+	cpifexists ${PLY_PATH}/renderers/vga16fb.so ${PLY_PATH}/renderers/
+
+	[ -e $PLY_PATH/${TCOS_PLYMOUTH}.png ] && cp $PLY_PATH/${TCOS_PLYMOUTH}.png ${DESTDIR}${PLY_PATH}
+	[ -e $PLY_PATH/ubuntu-logo.png ] && cp $PLY_PATH/ubuntu-logo.png ${DESTDIR}${PLY_PATH}
+	[ -e $PLY_PATH/debian-logo.png ] && cp $PLY_PATH/debian-logo.png ${DESTDIR}${PLY_PATH}
+
+	# and copy the font support files needed in order to actually display
+	# any text
+	# mkdir -p ${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu
+        [ -e /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf ] && rm -f /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf
+	mkdir -p ${DESTDIR}/etc/fonts/conf.d
+	mkdir -p ${DESTDIR}/usr/lib/pango/1.6.0/module-files.d
+	mkdir -p ${DESTDIR}/usr/lib/pango/1.6.0/modules
+	# cp /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf ${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu/
+	cp /etc/fonts/fonts.conf ${DESTDIR}/etc/fonts/fonts.conf
+	cp -L /etc/fonts/conf.d/60-latin.conf ${DESTDIR}/etc/fonts/conf.d
+	cp /usr/lib/pango/1.6.0/module-files.d/libpango1.0-0.modules ${DESTDIR}/usr/lib/pango/1.6.0/module-files.d/
+	cp /usr/lib/pango/1.6.0/modules/pango-basic-fc.so ${DESTDIR}/usr/lib/pango/1.6.0/modules/pango-basic-fc.so
+fi
+  
+stat_after "Plymouth support"
+
+
+fi 
+
+fi 
