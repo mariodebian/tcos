@@ -377,7 +377,8 @@ get_sync() {
  case "$RES" in
         "640x480@60Hz")
           horiz_sync="28-33"
-          vert_sync="43-72"
+          # Some old monitors only support max 60Hz
+          vert_sync="43-60"
           ;;
         "640x480@72Hz")
           horiz_sync="28-38"
@@ -385,7 +386,7 @@ get_sync() {
           ;;
         "800x600@60Hz")
           horiz_sync="28-38"
-          vert_sync="43-72"
+          vert_sync="43-60"
           ;;
         "800x600@72Hz")
           horiz_sync="28-48"
@@ -540,11 +541,19 @@ get_sync() {
 
 set_settings() {
 
+TCOS_ENABLE_XDRIVER_FULLAUTODETECT=""
+
 if [ "$xdriver" != "auto" ]; then
   autodetect_xdriver=0
 fi
 
+if [ "$xdriver" = "fullauto" ]; then
+   # Try Xorg to detect all?
+   TCOS_ENABLE_XDRIVER_FULLAUTODETECT="#"
+fi
+
 if [ "$xdriver" = "auto" ] || [ $autodetect_xdriver = 1 ]; then
+   # Try Xorg to detect?
    detect_driver
    if [ "$xdriver" = "auto" ]; then
       xdriver="vesa"
@@ -627,6 +636,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
     -e s/"unix\/:7100"/"tcp\/${SERVER}:7100"/g \
     -e s/"__xfontserver__"/"${SERVER}"/g \
     -e s/"__enable_font_server__"/"${TCOS_ENABLE_FONT_SERVER}"/g \
+    -e s/"__enable_xdriver_fullautodetect__"/"${TCOS_ENABLE_XDRIVER_FULLAUTODETECT}"/g \
     -e s/"__dontzap__"/"${xzap}"/g \
     -e s/"__xdontzap__"/"${xdontzap}"/g \
     -e s/"__usemodes__"/"${usemodes}"/g \

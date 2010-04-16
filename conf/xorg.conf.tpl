@@ -87,22 +87,21 @@ __xmousewheel__	Option		"Emulate3Buttons"	"true"
 __xmousewheel__	Option		"ZAxisMapping"		"4 5"
 EndSection
 
-Section "Device"
-	Identifier	"Generic Video Card"
-	Driver		"__xdriver__"
-__xdriver_via__        Option          "EnableAGPDMA"
-__xdriver_via__        Option          "DisableIRQ"
-__xdriver_via__        #Option          "VBEModes" "true"
-__xdriver_via__        #Option          "VBERestore"    "true"
-
-EndSection
+__enable_xdriver_fullautodetect__Section "Device"
+__enable_xdriver_fullautodetect__	Identifier	"Generic Video Card"
+__enable_xdriver_fullautodetect__	Driver		"__xdriver__"
+__enable_xdriver_fullautodetect__	__xdriver_via__        Option          "EnableAGPDMA"
+__enable_xdriver_fullautodetect__	__xdriver_via__        Option          "DisableIRQ"
+__enable_xdriver_fullautodetect__	__xdriver_via__        #Option          "VBEModes" "true"
+__enable_xdriver_fullautodetect__	__xdriver_via__        #Option          "VBERestore"    "true"
+__enable_xdriver_fullautodetect__EndSection
 
 Section "Monitor"
 	Identifier	"Generic Monitor"
 __xdpms__	Option		"DPMS"
-__disablesync__	HorizSync	__xhorizsync__
-__disablesync__	VertRefresh	__xvertsync__
-__xdriver_amd__	UseModes	"Cimarron"
+__enable_xdriver_fullautodetect__	__disablesync__	HorizSync	__xhorizsync__
+__enable_xdriver_fullautodetect__	__disablesync__	VertRefresh	__xvertsync__
+__enable_xdriver_fullautodetect__	__xdriver_amd__	UseModes	"Cimarron"
 EndSection
 
 __usemodes__
@@ -113,8 +112,9 @@ Section "Screen"
 	Monitor		"Generic Monitor"
 	DefaultDepth	__xdepth__
 	SubSection "Display"
+		Viewport   0 0
 		Depth		__xdepth__
-		Modes		"__xres__" "1024x768" "800x600" "640x480" 
+__enable_xdriver_fullautodetect__		Modes		"__xres__" "1024x768" "800x600" "640x480" 
 	EndSubSection
 EndSection
 
@@ -163,6 +163,7 @@ __dontzap__
 #xdpms=__xdpms__
 #xfontserver=__xfontserver__
 #enablefontserver=__enable_font_server__
+#enablexdriverfullautodetect=__enable_xdriver_fullautodetect__
 #xdontzap=__xdontzap__
 #xdriver_via=__xdriver_via__
 #xkbmap=__xkbmap__
