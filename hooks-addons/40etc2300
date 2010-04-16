@@ -1,32 +1,45 @@
 # hook addon for EPATEC eTC2300
 
 
-if [ $TCOS_ETC2300 ]; then
-  rm -f ${DESTDIR}/lib/usplash
-  rm -f ${DESTDIR}/sbin/usplash
-  rm -f ${DESTDIR}/sbin/usplash_write
-  rm -f $DESTDIR/usr/lib/usplash/*.so
-  cat << EOF > ${DESTDIR}/sbin/usplash
+cat << EOF > ${DESTDIR}/scripts/tcos-bottom/15etc2300
 #!/bin/sh
-exit 0
-EOF
-  chmod +x ${DESTDIR}/sbin/usplash
-  cat << EOF > ${DESTDIR}/sbin/usplash_write
-#!/bin/sh
-exit 0
-EOF
-  chmod +x ${DESTDIR}/sbin/usplash_write
-  stat_before
- 
-    manual_add_modules sis5513
-    if [ "$(modprobe --set-version="${TCOS_KERNEL}" -l| grep -c snd-sis7019)" = "0" ]; then
-      manual_add_modules ac97_codec
-      manual_add_modules sis7019
-    else
-      manual_add_modules snd-sis7019
-    fi
+#
 
-  stat_after "eTC2300 modules support (usplash disabled)"
-else
-  _verbose "(40etc2300) TCOS_ETC2300 disabled"
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
 fi
+
+
+quiet=n
+
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
+
+test1=\$(lspci -n |grep -c "1039:5315")
+
+
+if [ "\$test1" = "0" ]; then
+   # no client with chip Silicon Integrated Systems [SiS] 550 PCI/AGP VGA Display Adapter
+   exit 0
+fi
+
+echo "TCOS_XORG_VIDEO_DRIVER=auto" >> /conf/tcos.conf
+
+EOF
+chmod +x ${DESTDIR}/scripts/tcos-bottom/15etc2300
+
+stat_before
+ 
+  manual_add_modules sis5513
+  if [ "$(modprobe --set-version="${TCOS_KERNEL}" -l| grep -c snd-sis7019)" = "0" ]; then
+    manual_add_modules ac97_codec
+    manual_add_modules sis7019
+  else
+    manual_add_modules snd-sis7019
+  fi
+
+stat_after "eTC2300 modules support (usplash disabled)"
+
