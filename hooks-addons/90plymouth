@@ -9,6 +9,7 @@ if [ $TCOS_DISABLE_PLYMOUTH ]; then
   rm -f ${DESTDIR}/sbin/plymouthd
   rm -f ${DESTDIR}/bin/plymouth
   rm -rf ${DESTDIR}/usr/share/plymouth ${DESTDIR}/lib/plymouth ${DESTDIR}/usr/lib/plymouth
+  rm -f ${DESTDIR}/scripts/*/plymouth
   cat << EOF > ${DESTDIR}/sbin/plymouthd
 #!/bin/sh
 exit 0
