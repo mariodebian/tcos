@@ -25,6 +25,7 @@
 
 export DISPLAY=:0
 VOLUME=85
+VOLUME_MIC=75
 
 if [ -e /conf/tcos-run-functions ]; then
   # running in thin client
@@ -60,10 +61,10 @@ else
 fi
 
 set_volume() {
-  [ "$MASTER" = "unknow" ] && MASTER=85
-  [ "$MASTER_FRONT" = "unknow" ] && MASTER_FRONT=85
-  [ "$PCM" = "unknow" ] && PCM=85
-  [ "$FRONT" = "unknow" ] && FRONT=85
+  [ "$MASTER" = "unknow" ] && MASTER=$VOLUME
+  [ "$MASTER_FRONT" = "unknow" ] && MASTER_FRONT=$VOLUME
+  [ "$PCM" = "unknow" ] && PCM=$VOLUME
+  [ "$FRONT" = "unknow" ] && FRONT=$VOLUME
 
   $MIXER sset 'PCM' 'on' >/dev/null 2>&1
   $MIXER sset 'Master' 'on' >/dev/null 2>&1
@@ -71,32 +72,50 @@ set_volume() {
   $MIXER sset 'Front' 'on' >/dev/null 2>&1
   [ $PCM -lt $VOLUME ] && $MIXER sset 'PCM' $VOLUME >/dev/null 2>&1
   [ $MASTER -lt $VOLUME ] && $MIXER sset 'Master' $VOLUME >/dev/null 2>&1
-  [ $MASTER_FRONT -lt ${1} ] && $MIXER sset 'Master Front' $VOLUME >/dev/null 2>&1
+  [ $MASTER_FRONT -lt $VOLUME ] && $MIXER sset 'Master Front' $VOLUME >/dev/null 2>&1
   [ $FRONT -lt $VOLUME ] && $MIXER sset 'Front' $VOLUME >/dev/null 2>&1
 }
 
 set_mic() {
-  [ "$MIC" = "unknow" ] && MIC=85
-  [ "$FRONT_MIC" = "unknow" ] && FRONT_MIC=85
-  [ "$REAR_MIC" = "unknow" ] && REAR_MIC=85
+  [ "$MIC" = "unknow" ] && MIC=$VOLUME_MIC
+  [ "$FRONT_MIC" = "unknow" ] && FRONT_MIC=$VOLUME_MIC
+  [ "$REAR_MIC" = "unknow" ] && REAR_MIC=$VOLUME_MIC
 
   $MIXER sset 'Mic' 'on' >/dev/null 2>&1
   $MIXER sset 'Front Mic' 'on' >/dev/null 2>&1
   $MIXER sset 'Rear Mic' 'on' >/dev/null 2>&1
   $MIXER sset 'Mic Boost (+20dB)' 'off' >/dev/null 2>&1
   $MIXER sset 'Mic Boost' 'off' >/dev/null 2>&1
-  [ $MIC -lt $VOLUME ] && $MIXER sset 'Mic' $VOLUME >/dev/null 2>&1
-  [ $FRONT_MIC -lt $VOLUME ] && $MIXER sset 'Front Mic' $VOLUME >/dev/null 2>&1
-  [ $REAR_MIC -lt $VOLUME ] && $MIXER sset 'Rear Mic' $VOLUME >/dev/null 2>&1
-  $MIXER sset 'Capture' 100% >/dev/null 2>&1
-  $MIXER sset 'Capture,0' 100% >/dev/null 2>&1
-  $MIXER sset 'Capture,1' 100% >/dev/null 2>&1
+  $MIXER sset 'Front Mic Boost' 'off' >/dev/null 2>&1
+  $MIXER sset 'Rear Mic Boost' 'off' >/dev/null 2>&1
+  $MIXER sset 'Mic Boost (+20dB)' 0% >/dev/null 2>&1
+  $MIXER sset 'Mic Boost' 0% >/dev/null 2>&1
+  $MIXER sset 'Front Mic Boost' 0% >/dev/null 2>&1
+  $MIXER sset 'Rear Mic Boost' 0% >/dev/null 2>&1
+  $MIXER sset 'Mic' $VOLUME_MIC >/dev/null 2>&1
+  $MIXER sset 'Front Mic' $VOLUME_MIC >/dev/null 2>&1
+  $MIXER sset 'Rear Mic' $VOLUME_MIC >/dev/null 2>&1
+  $MIXER sset 'Capture' cap >/dev/null 2>&1
+  $MIXER sset 'Capture,0' cap >/dev/null 2>&1
+  $MIXER sset 'Capture,1' cap >/dev/null 2>&1
+  $MIXER sset 'Capture,2' cap >/dev/null 2>&1
+  $MIXER sset 'Capture,3' cap >/dev/null 2>&1
+  $MIXER sset 'Capture' 90% >/dev/null 2>&1
+  $MIXER sset 'Capture,0' 90% >/dev/null 2>&1
+  $MIXER sset 'Capture,1' 90% >/dev/null 2>&1
+  $MIXER sset 'Capture,2' 90% >/dev/null 2>&1
+  $MIXER sset 'Capture,3' 90% >/dev/null 2>&1
 }
 
 set_mute_mic() {
   $MIXER sset 'Mic' 'off' >/dev/null 2>&1
   $MIXER sset 'Front Mic' 'off' >/dev/null 2>&1
   $MIXER sset 'Rear Mic' 'off' >/dev/null 2>&1
+  $MIXER sset 'Capture' nocap >/dev/null 2>&1
+  $MIXER sset 'Capture,0' nocap >/dev/null 2>&1
+  $MIXER sset 'Capture,1' nocap >/dev/null 2>&1
+  $MIXER sset 'Capture,2' nocap >/dev/null 2>&1
+  $MIXER sset 'Capture,3' nocap >/dev/null 2>&1
 }
 
 
