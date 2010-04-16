@@ -15,8 +15,8 @@ maybe_break tftp
 
 
 
-if [ -d /usr/share ]; then
-  # we have mounted /usr/share with other method
+if [ -e /usr/bin/Xorg ]; then
+  # we have a mounted /usr with other method
   exit 0
 fi
 
