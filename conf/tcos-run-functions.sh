@@ -21,7 +21,7 @@ done
 }
 
 
-start_usplash() {
+start_splash() {
   # kill usplash if cmdline have "nousplash" or "nosplash"
   for x in $(cat /proc/cmdline); do
         case $x in
@@ -35,7 +35,13 @@ start_usplash() {
   done
 
   if [ -x /sbin/usplash ]; then
-        /sbin/usplash -c &
+        [ -f /etc/usplash.conf ] && . /etc/usplash.conf
+	if [ "$xres" ] && [ "$xres" != 0 ] && \
+	   [ "$yres" ] && [ "$yres" != 0 ]; then
+		/sbin/usplash -c -x "$xres" -y "$yres" &
+	else
+		/sbin/usplash -c &
+	fi
         /sbin/usplash_write "TEXT Starting usplash..."
         /sbin/usplash_write "TIMEOUT 180"
         /sbin/usplash_write "SUCCESS ok"
@@ -44,9 +50,14 @@ start_usplash() {
         /sbin/splashy boot
         /sbin/splashy_update timeout180
   fi
+  if [ -x /sbin/plymouthd ]; then
+        printf '\033[?25l' > /dev/tty7
+        /sbin/plymouthd --mode=boot --pid-file=/dev/.initramfs/plymouth.pid
+        /bin/plymouth --show-splash
+  fi
 }
 
-kill_usplash() {
+kill_splash() {
   if [ -x /bin/plymouth ]; then
     if ! plymouth --ping; then
       /bin/plymouth --quit
@@ -56,7 +67,16 @@ kill_usplash() {
   # usplash
   if [ -x /sbin/usplash ]; then
     usplash_write "QUIT"  2> /dev/null
-    killall usplash       2> /dev/null
+    i=0
+    # Like usplash init script
+    while [ "$(pidof usplash | sed '/^$/d')" != "" ] ; do
+	i=$(($i + 1))
+	if [ $i -gt 10 ]; then
+		killall -SIGKILL usplash 2>/dev/null
+		break
+	fi
+	sleep 1
+    done
     #chvt 1              2> /dev/null # this cause some problems :(
   fi
   if [ -x /sbin/splashy_update ]; then
