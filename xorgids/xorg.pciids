@@ -102,6 +102,10 @@ intel 8086:2E20
 intel 8086:2E10
 intel 8086:2E32
 intel 8086:2E30
+intel 8086:2A42
+intel 8086:2E02
+intel 8086:2E22
+intel 8086:2E12
 mach64 1002:4354
 mach64 1002:4358
 mach64 1002:4554
@@ -442,6 +446,7 @@ openchrome 1106:3230
 openchrome 1106:3371
 openchrome 1106:3157
 openchrome 1106:3343
+openchrome 1106:1122
 r128 1002:4C45
 r128 1002:4C46
 r128 1002:4D46
@@ -946,6 +951,9 @@ radeon 1002:9610
 radeon 1002:9611
 radeon 1002:9612
 radeon 1002:9613
+radeon 1002:9440
+radeon 1002:9441
+radeon 1002:9442
 rendition 1163:0001
 rendition 1163:2000
 s3 5333:88D0
