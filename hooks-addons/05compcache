@@ -25,6 +25,13 @@ EOF
 cat << EOF > $DESTDIR/scripts/init-top/compcache
 #!/bin/sh
 
+# new header not using prereqs
+if [ "\$1" = "prereqs" ]; then
+  echo ""
+  exit 0
+fi
+
+quiet=n
 
 # find total amount of available ram
 TOTAL_RAM=\$(grep MemTotal /proc/meminfo |tr -d ': [A-Z][a-z]')
