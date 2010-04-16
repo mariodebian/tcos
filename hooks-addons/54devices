@@ -64,7 +64,7 @@ if [ "$TCOS_REMOTEFS" = "ltspfs" ]; then
   fi
 fi
 
-if [ $TCOS_NTFS_3G ]; then
+if [ $TCOS_NTFS_3G ] && [ ! -e /usr/share/initramfs-tools/hooks/ntfs_3g ]; then
    stat_before
     # copy ntfs-3g bin and force load fuse
     cpifexists /usr/bin/ntfs-3g /usr/bin/
