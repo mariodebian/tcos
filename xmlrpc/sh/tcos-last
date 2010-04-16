@@ -27,6 +27,7 @@ import sys, os
 import getopt
 import socket
 from time import time, ctime, localtime
+from subprocess import Popen, PIPE, STDOUT
 
 import pwd,grp
 import re
@@ -176,11 +177,10 @@ def GetLast(ip):
                     print_debug(" ==> '%s' != '%s' ut_line=%s" %(parseIPAddress(b.ut_host), ip, b.ut_line) )
                     #parseIPAddress(b.ut_line) == "%s:0"%(ip) or \
                     if parseIPAddress(b.ut_host) == "%s"%(ip) or \
-                       parseIPAddress(b.ut_host) == "%s"%(ip) or \
                        parseIPAddress(b.ut_host) == "%s"%hostname :
                         # found line ???
                         print_debug("    => found line ?? user=%s"%b.ut_user)
-                        if b.ut_line.startswith("pts/") and not \
+                        if b.ut_line.startswith("pts/") or not \
                            os.path.isdir("/proc/%s"%b.ut_pid): continue
                         print_debug(" Ip \"%s:0\" => found host=%s hostname=%s ut_line=%s user=%s pid=%s"%(ip, hostname, b.ut_host,b.ut_line, b.ut_user, b.ut_pid))
                         last=b
@@ -243,14 +243,31 @@ elif ACTION == "pid":
     print data['pid']
 
 elif ACTION == "ingroup":
+    usersingroup=[]
     try:
-        usersingroup=grp.getgrnam(INGROUP)[3]
+        # grp not work well with ldap users.
+        cmd="groups %s 2>/dev/null" %data['user']
+        output=[]
+        p = Popen(cmd, shell=True, bufsize=0, stdout=PIPE, stderr=STDOUT, close_fds=True).stdout
+        for line in p.readlines():
+            if line != '\n':
+                line=line.replace('\n', '')
+                output.append(line)
+        print_debug("cmd %s: %s" %(cmd,output))
+        usersingroup=output[0].split()
+        #usersingroup=grp.getgrnam(INGROUP)[3]
     except Exception, err:
         usersingroup=[]
 
+    if len(usersingroup) == 0:
+        try:
+            usersingroup=grp.getgrnam(INGROUP)[3]
+        except:
+            pass
+
     exclude="noexclude"
-    for user in usersingroup:
-        if data['user'] == user:
+    for group in usersingroup:
+        if INGROUP == group:
             exclude="exclude"
 
     print exclude
