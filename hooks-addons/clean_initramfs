@@ -32,6 +32,8 @@ create_links() {
  ( cd $DESTDIR/bin && rm -f $1 ; ln -s busybox $1)
 }
 
+# Some scripts without correct permissions
+chmod -R a+x ${DESTDIR}/scripts
 
 create_links "date"
 create_links "bash"
@@ -157,10 +159,17 @@ fi
 
 if [ "$TCOS_DISABLE_USPLASH" = "1" ]; then
   _echo "  * Remove usplash"
-  rm -f ${DESTDIR}/lib/usplash
-  rm -f ${DESTDIR}/sbin/usplash
-  rm -f ${DESTDIR}/sbin/usplash_write
-  rm -f ${DESTDIR}/scripts/init-top/*usplash*
+  rm -f ${DESTDIR}/lib/usplash 2>/dev/null
+  rm -f ${DESTDIR}/sbin/usplash 2>/dev/null
+  rm -f ${DESTDIR}/sbin/usplash_write 2>/dev/null
+  rm -f ${DESTDIR}/scripts/init-top/*usplash* 2>/dev/null
+fi
+
+if [ "$TCOS_DISABLE_PLYMOUTH" = "1" ]; then
+  rm -f ${DESTDIR}/scripts/*/plymouth 2>/dev/null
+  rm -rf ${DESTDIR}/lib/plymouth 2>/dev/null
+  rm -f ${DESTDIR}/sbin/plymouthd 2>/dev/null
+  rm -f ${DESTDIR}/bin/plymouth 2>/dev/null
 fi
 
 # experimental delete, not needed LIBS
