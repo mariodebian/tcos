@@ -32,7 +32,7 @@ if [ "${TCOS_INCLUDE_INIT}" = "1" ]; then
 kill_xorg
 
 clear
-start_usplash
+start_splash
 
     log_begin_msg "Rebooting"
     log_end_msg 0
@@ -56,7 +56,7 @@ EOF
 
 kill_xorg
 clear
-start_usplash
+start_splash
 
     log_begin_msg "Poweroff system"
     log_end_msg 0
