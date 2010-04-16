@@ -7,7 +7,7 @@ fi
 quiet=n
 . /conf/tcos.conf
 
-
+[ "$TCOS_XORG_VIDEO_DRIVER" = "fullauto" ] && exit 0
 
 test_intel=0
 test_intel=$(get_vga_vendor 8086)
