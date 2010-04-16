@@ -52,6 +52,8 @@ if [ -n "$TCOS_PULSEAUDIO" ]; then
   log_end_msg $?
 fi
 
+TCOS_VOLUME_MIC=75
+
 # setting volumes, set after sound server initialization
 log_begin_msg "Setting audio levels to ${TCOS_VOLUME}%"
   _log "INITSOUND Setting volume to ${TCOS_VOLUME}"
@@ -67,19 +69,33 @@ log_begin_msg "Setting audio levels to ${TCOS_VOLUME}%"
   tmixer -c 0 sset 'Master Front' on                     >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Master Digital' ${TCOS_VOLUME}       >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Master Digital' on                   >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Mic' ${TCOS_VOLUME}                  >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Front Mic' ${TCOS_VOLUME}            >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Rear Mic' ${TCOS_VOLUME}             >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Mic' on                              >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Front Mic' on                        >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Rear Mic' on                         >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic' ${TCOS_VOLUME_MIC}              >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Front Mic' ${TCOS_VOLUME_MIC}        >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Rear Mic' ${TCOS_VOLUME_MIC}         >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic' off                             >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Front Mic' off                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Rear Mic' off                        >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Mic Boost (+20dB)' off               >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Mic Boost' off                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Rear Mic Boost' off                  >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Front Mic Boost' off                 >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic Boost (+20dB)' 0%                >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Mic Boost' 0%                        >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Rear Mic Boost' 0%                   >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Front Mic Boost' 0%                  >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Headphone' ${TCOS_VOLUME}            >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Headphone' on                        >> /tmp/initramfs.debug 2>&1
   tmixer -c 0 sset 'Speaker' on                          >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Capture,0' 100%                      >> /tmp/initramfs.debug 2>&1
-  tmixer -c 0 sset 'Capture,1' 100%                      >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture' cap                         >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,0' cap                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,1' cap                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,2' cap                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,3' cap                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture' 90%                         >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,0' 90%                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,1' 90%                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,2' 90%                       >> /tmp/initramfs.debug 2>&1
+  tmixer -c 0 sset 'Capture,3' 90%                       >> /tmp/initramfs.debug 2>&1
 log_end_msg 0
 
 update_progress
