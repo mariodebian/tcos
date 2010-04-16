@@ -32,6 +32,8 @@ log_begin_msg "Loading Via Openchrome drivers"
   modprobe drm
   modprobe via
 
+[ "\$TCOS_XORG_VIDEO_DRIVER" = "fullauto" ] && exit 0
+
   if [ -f /usr/lib/xorg/modules/drivers/openchrome_drv.so ]; then
     configurexorg --newsettings --xdriver=openchrome --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug
   else
@@ -84,6 +86,7 @@ if [ $TCOS_XORG_DRIVER_OPENCHROME ];then
 
 	elif [ $TCOS_XORG_DRIVER_OPENCHROME ] && [ "$test_driver2" != 0 ] ; then
 	 stat_before
+        manual_add_modules via_chrome9
 	    cpifexists /usr/lib/libchromeXvMC.so /usr/lib
 	    cpifexists /usr/lib/libchromeXvMCPro.so /usr/lib
 	    [ -e /etc/X11/XvMCConfig ] && cpifexists /etc/X11/XvMCConfig /etc/X11

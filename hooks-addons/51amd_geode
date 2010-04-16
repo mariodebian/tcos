@@ -36,6 +36,8 @@ if [ "\$test1" = "0" ] || [ "\$test2" = "1" ] ; then
    exit 0
 fi
 
+[ "\$TCOS_XORG_VIDEO_DRIVER" = "fullauto" ] && exit 0
+
 log_begin_msg "Loading xserver AMD Geode Support"
 
     if [ -f /usr/lib/xorg/modules/drivers/amd_drv.so ]; then
