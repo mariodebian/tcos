@@ -708,8 +708,11 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 	snd_mixer_selem_channel_id_t chn;
 	long pmin = 0, pmax = 0;
 	long cmin = 0, cmax = 0;
-	long pvol;
-	int psw;
+    // Allow control capture channels for rtp, mic..etc
+	long pvol, cvol;
+	//long pvol;
+	int psw, csw;
+	//int psw;
 	int pmono, cmono, mono_ok = 0;
 	/*long db;*/
 	snd_mixer_elem_t *elem;
@@ -727,12 +730,11 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 		return 0;
 	}
 	
-	if ( !snd_mixer_selem_has_playback_volume(elem) && snd_mixer_selem_has_capture_volume(elem) ) {
+	//if ( !snd_mixer_selem_has_playback_volume(elem) && snd_mixer_selem_has_capture_volume(elem) ) {
 	    /* don't show only capture channels */
-		/*printf("DEBUG capture not show %s\n", snd_mixer_selem_id_get_name(id) );*/
-	    return 0;
-	}
-
+	 //   return 0;
+	//}
+	
 
 
 	if ( level & LEVEL_BASIC ) {
@@ -740,10 +742,10 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 	    printf("%s,", snd_mixer_selem_id_get_name(id) );
 		/*printf("%sCapabilities:", space);*/
 		
-		if( snd_mixer_selem_has_common_volume(elem) || snd_mixer_selem_has_playback_volume(elem) ) {
+		if( snd_mixer_selem_has_common_volume(elem) || snd_mixer_selem_has_playback_volume(elem) || snd_mixer_selem_has_capture_volume(elem) ) {
 		    printf("volume|");
 		}
-		if ( snd_mixer_selem_has_common_switch(elem) || snd_mixer_selem_has_playback_switch(elem) ) {
+		if ( snd_mixer_selem_has_common_switch(elem) || snd_mixer_selem_has_playback_switch(elem) || snd_mixer_selem_has_capture_switch(elem) ) {
 		    printf("switch|");
 		}
 		
@@ -810,6 +812,36 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 			}
 		}
 
+		if (pmono && snd_mixer_selem_has_capture_channel(elem, SND_MIXER_SCHN_MONO)) {
+			int title = 0;
+			if (!mono_ok) {
+				/*printf("%s%s:", space, "Mono");*/
+				mono_ok = 1;
+			}
+			if (!snd_mixer_selem_has_common_volume(elem)) {
+				if (snd_mixer_selem_has_capture_volume(elem)) {
+					/*printf("Playback");*/
+					title = 1;
+					snd_mixer_selem_get_capture_volume(elem, SND_MIXER_SCHN_MONO, &cvol);
+					printf("%s", get_percent(cvol, cmin, cmax));
+					/*if (!snd_mixer_selem_get_playback_dB(elem, SND_MIXER_SCHN_MONO, &db)) {
+						printf(" [");
+						print_dB(db);
+						printf("]");
+					}*/
+				}
+			}
+			if (!snd_mixer_selem_has_common_switch(elem)) {
+				if (snd_mixer_selem_has_capture_switch(elem)) {
+					/*if (!title)
+						printf(" Capture");*/
+					snd_mixer_selem_get_capture_switch(elem, SND_MIXER_SCHN_MONO, &csw);
+					/*printf(" [%s]", psw ? "on" : "off");*/
+					printf(",%s", csw ? "on" : "off");
+				}
+			}
+		}
+
 		/*if (pmono || cmono)
 			printf("\n");*/
 		if (!pmono || !cmono) {
@@ -818,6 +850,8 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 				    (cmono || !snd_mixer_selem_has_capture_channel(elem, chn)))
 					continue;
 				int printed=0;
+
+			if (snd_mixer_selem_has_playback_channel(elem, chn)) {
 				/*printf("==> %s%s:", space, snd_mixer_selem_channel_name(chn));*/
 				if (!pmono && !cmono && snd_mixer_selem_has_common_volume(elem)) {
 					snd_mixer_selem_get_playback_volume(elem, chn, &pvol);
@@ -853,6 +887,46 @@ static int show_selem(snd_mixer_t *handle, snd_mixer_selem_id_t *id, const char 
 						}
 					}
 				}
+			}
+
+				if (snd_mixer_selem_has_capture_channel(elem, chn)) {
+					/*printf("==> %s%s:", space, snd_mixer_selem_channel_name(chn));*/
+					if (!pmono && !cmono && snd_mixer_selem_has_common_volume(elem)) {
+						snd_mixer_selem_get_capture_volume(elem, chn, &cvol);
+						printf("%s,", get_percent(cvol, cmin, cmax));
+						printed=1;
+					}
+					if (!pmono && !cmono && snd_mixer_selem_has_common_switch(elem)) {
+						snd_mixer_selem_get_capture_switch(elem, chn, &csw);
+						/*printf(" [%s]", psw ? "on" : "off");*/
+						printf("%s", csw ? "on" : "off");
+						printed=1;
+					}
+				
+					if (!pmono && snd_mixer_selem_has_capture_channel(elem, chn)) {
+						int title = 0;
+						if (!snd_mixer_selem_has_common_volume(elem)) {
+							if (snd_mixer_selem_has_capture_volume(elem)) {
+								/*printf(" Playback");*/
+								title = 1;
+								snd_mixer_selem_get_capture_volume(elem, chn, &cvol);
+								printf("%s,", get_percent(cvol, cmin, cmax));
+								printed=1;
+							}
+						}
+						if (!snd_mixer_selem_has_common_switch(elem)) {
+							if (snd_mixer_selem_has_capture_switch(elem)) {
+								/*if (!title)
+									printf(" Capture");*/
+								snd_mixer_selem_get_capture_switch(elem, chn, &csw);
+								/*printf(" [%s]", psw ? "on" : "off");*/
+								printf("%s", csw ? "on" : "off");
+								printed=1;
+							}
+						}
+					}
+				}
+
 				/* only want one channel */
 				if( printed > 0) {
 				    break;
