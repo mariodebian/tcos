@@ -23,20 +23,6 @@ while read module args; do
 done
 
 
-if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
- # setup root passwd
- log_begin_msg "Updating root password"
-
-   [ -e /dev/log ] || mknod /dev/log c 21 5
-   rm -f /etc/.pwd.lock
-
-   echo "root:${TCOS_ROOT_PASSWD}" | chpasswd  2>&1 >/dev/null
- log_end_msg $?
-else
- _log "INITTCOS not updating root passwd, using generation root passwd"
-fi
-
-
 # load modules
 if [ -x /usr/bin/pcimodules ]; then
     for mod in $(pcimodules) ; do
