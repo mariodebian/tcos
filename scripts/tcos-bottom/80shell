@@ -20,7 +20,7 @@ TCOS_TTY=$(read_cmdline_var "ttys" "${TCOS_TTY}")
 
 export PS1="($(whoami)@$(hostname)) # "
 
-kill_usplash
+kill_splash
 grep -q " startx=N " /proc/cmdline && chvt 1
 
 # empty memory cache

@@ -106,7 +106,7 @@ fi
 startx=$(read_cmdline_var "startx" "${startx}")
 
 if [ "${startx}" != "N" ]; then
-  kill_usplash
+  kill_splash
 fi
 
 

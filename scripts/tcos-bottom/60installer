@@ -17,7 +17,7 @@ INSTALLER=$(read_cmdline_var "installer" "0")
 INSTALLER_UPDATE=$(read_cmdline_var "installer-update" "0")
 
 if [ "${INSTALLER}" = "1" ]; then
-   kill_usplash
+   kill_splash
    chvt 1
    # launch installer
    #clear
@@ -30,7 +30,7 @@ if [ "${INSTALLER}" = "1" ]; then
    echo ""
    sh
 elif [ "${INSTALLER_UPDATE}" = "1" ]; then
-   kill_usplash
+   kill_splash
    chvt 1
    # launch installer
    #clear
