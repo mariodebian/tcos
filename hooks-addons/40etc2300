@@ -41,5 +41,5 @@ stat_before
     manual_add_modules snd-sis7019
   fi
 
-stat_after "eTC2300 modules support (usplash disabled)"
+stat_after "eTC2300 thin client hacks"
 
