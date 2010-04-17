@@ -1,3 +1,62 @@
+tcos (0.89.58) unstable; urgency=low
+
+  [ Mario Izquierdo (mariodebian) ]
+  * initial work supporting plymouth
+  * hooks-addons/12getty hooks-addons/01busybox debian/control: use
+    fgetty to protect shells
+  * scripts/tcos-top/05network: read 'server-name' from dhclient.leases
+    if exists for dhcpserver var
+  * hooks-addons/90plymouth: delete plymouth scripts if disabled
+  * scripts/tcos-bottom/05inittcos: don't change root password on boot,
+    use hashed
+  * hooks-addons/00users: use tcospasswd to generate a password hash and
+    put in the image, don't use chpasswd
+
+  [ Ignacio Vidal ]
+  * xorgids/xorg.pciids: add new IDS
+  * xmlrpc/var/etc/stunnel/*: Remove extra spaces
+  * xmlrpc/sh/tcos-last: remove duplicate line and use groups command to
+    search users in group
+  * xmlrpc/sh/getinfo.sh: use pcimodules intead of discover
+  * xmlrpc/sh/*: set volumes for capture devices
+  * tnc/tcos-net-controller.c: use TCOS_TNC label for our iptables rules
+  * tmixer/tmixer-alsa.c: Allow control capture channels for rtp, mic...
+  * bin/gentcos: cache libglx.so and LibGL.so.1.2 if exists
+  * conf/base.conf: comment new fullauto setting
+  * bin/configurexorg conf/xorg.conf.tpl: use new fullauto and update
+    refresh settings for old monitors
+  * conf/tcos-modules.conf: add scsi-transport-spi i830 mga r128 radeon
+    savage sis tdfx new modules
+  * conf/tcos-run-functions.sh: kill and start plymouth/usplash in same
+    function
+  * hooks-addons/00main: create /usr/lib before copying things to it
+  * hooks-addons/05compcache: add prereqs header
+  * hooks-addons/19usbip: update usbip paths
+  * hooks-addons/40etc2300: refactorize and search for a PCI id
+  * hooks-addons/51dri: add TCOS_XORG_DRI_MATROX and new dri files of
+    radeon and trdent
+  * hooks-addons/54devices: don't copy if /usr/share/initramfs-
+    tools/hooks/ntfs_3g exists
+  * hooks-addons/clean_initramfs: make +x all scripts and delete usplash
+    or plymouth if disabled
+  * scripts/tcos-bottom/40initsound: add more channels
+  * scripts/tcos-premount/40tftp: test if /usr/bin/Xorg is found instead
+    of /usr/share dir
+  * scripts/tcos-top/01busybox: test for usplash before calling it
+  * scripts/tcos-bottom/22intel: exit if fullauto is set
+  * scripts/tcos-bottom/25startx scripts/tcos-bottom/60installer
+    scripts/tcos-bottom/80shell: change usplash => splash
+  * hooks-addons/96modules: disable splash if sisfb is needed
+  * hooks-addons/51amd_geode hooks-addons/51via_openchrome: exit if
+    fullauto is set
+  * hooks-addons/00init: rename usplash => splash
+  * hooks-addons/90plymouth hooks-addons/95usplash_timeout
+
+  [ Mario Izquierdo (mariodebian) ]
+  * New release 0.89.58
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 17 Apr 2010 15:59:10 +0200
+
 tcos (0.89.57) unstable; urgency=low
 
   * Rename sources from initramfs-tools-tcos to tcos
