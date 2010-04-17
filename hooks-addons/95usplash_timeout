@@ -39,7 +39,7 @@ fi
 
 
 EOF
-chmod +x $DESTDIR/scripts/init-top/00_nousplash
+chmod +x $DESTDIR/scripts/init-top/00_nosplash
 
 cat << EOF >> $DESTDIR/scripts/init-top/usplash
 
