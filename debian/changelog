@@ -1,3 +1,10 @@
+tcos (0.89.59) unstable; urgency=low
+
+  * move logo.xpm.gz from /etc/tcos to /usr/share/initramfs-tools-tcos
+  * Release 0.89.59
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 17 Apr 2010 16:09:06 +0200
+
 tcos (0.89.58) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]
