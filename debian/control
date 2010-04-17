@@ -31,7 +31,9 @@ Recommends: mbr,
             genisoimage, 
             mknbi [ i386 ],
             twm,
-            binutils
+            binutils,
+            alsa-base, 
+            xfonts-100dpi
 Conflicts: tcosmonitor (<< 0.1.23.2), tcos (<< 0.89.26)
 Description: Tools for generating a TCOS thin client bootable image
  This package contains tools to create a bootable initramfs for prepackaged
