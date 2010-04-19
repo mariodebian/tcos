@@ -7,7 +7,7 @@ root_shadow="root:$(/usr/sbin/tcospasswd root):13562:0:99999:7:::"
 
 if [ "${TCOS_ROOT_PASSWD}" != "" ]; then
    # generate shadow hash
-   root_shadow="root:$(/usr/sbin/tcospasswd '${TCOS_ROOT_PASSWD}'):13562:0:99999:7:::"
+   root_shadow="root:$(/usr/sbin/tcospasswd ${TCOS_ROOT_PASSWD}):13562:0:99999:7:::"
 fi
 
 
@@ -15,7 +15,7 @@ fi
 if [ -e /etc/tcos/secrets/tcosmonitor-secret ]; then
    secret1="$(cat /etc/tcos/secrets/tcosmonitor-secret | awk -F":" '{print $1}')"
    secret2="$(cat /etc/tcos/secrets/tcosmonitor-secret | awk -F":" '{print $2}')"
-   secret2_passwd="$(/usr/sbin/tcospasswd "$secret2")"
+   secret2_passwd="$(/usr/sbin/tcospasswd $secret2)"
    echo "$secret1:$secret2_passwd" > $DESTDIR/etc/tcospasswd
    root_shadow="root:${secret2_passwd}:13562:0:99999:7:::"
 fi
