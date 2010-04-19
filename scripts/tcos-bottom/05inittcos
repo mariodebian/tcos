@@ -26,7 +26,7 @@ done
 # load modules
 if [ -x /usr/bin/pcimodules ]; then
     for mod in $(pcimodules) ; do
-    modprobe -s -k "$mod" > /tmp/initramfs.debug 2>&1 &
+    modprobe -s -k "$mod" >> /tmp/initramfs.debug 2>&1 &
     done
 fi
 # detect Xorg kernel module and driver
