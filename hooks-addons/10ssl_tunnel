@@ -21,10 +21,7 @@ else
 
 cat << EOF > ${DESTDIR}/etc/stunnel/stunnel.conf
 cert = /etc/stunnel/tcos.pem
-sslVersion = SSLv2
-TIMEOUTclose=0
-TIMEOUTconnect=2
-TIMEOUTidle=2
+sslVersion=all
 foreground=yes
 syslog=no
 session=1
@@ -46,7 +43,9 @@ pty=no
 [tcosxmlrpc]
 accept=8999
 connect=8998
-
+TIMEOUTclose=0
+TIMEOUTconnect=2
+TIMEOUTidle=2
 EOF
 
    #if [ -e /etc/tcos/ssl/tcos-custom.pem ]; then
