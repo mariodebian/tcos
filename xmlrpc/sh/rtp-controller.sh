@@ -44,7 +44,7 @@ if [ -e /conf/tcos-run-functions ]; then
   MIXER="tmixer -c 0 "
 else
   STANDALONE=1
-  STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
+  #STANDALONE_USER=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }' |head -1)
   STANDALONE_USER=$(/usr/lib/tcos/tcos-last --user 2>/dev/null)
   if [ "${STANDALONE_USER}" = "" ]; then echo "error: no standalone user connected"; exit 1; fi
   DBUS_HANDLER="/usr/lib/tcos/tcos-dbus-helper --username=${STANDALONE_USER} "
