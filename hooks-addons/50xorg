@@ -54,6 +54,17 @@ cp ${TCOS_CONF}/xorg.conf.tpl ${DESTDIR}/conf/xorg.conf.tpl
 install -m 755 ${TCOS_BINS}/configurexorg ${DESTDIR}/sbin/configurexorg
 install -m 755 ${TCOS_BINS}/tryXorg.sh    ${DESTDIR}/sbin/tryXorg
 
+
+# new xorg.conf.d configuration files
+XORG_CONF_PATH=/usr/lib/X11/xorg.conf.d/
+[ -d /usr/share/X11/xorg.conf.d ] && XORG_CONF_PATH=/usr/share/X11/xorg.conf.d/
+
+for f in $(find $XORG_CONF_PATH -type f 2>/dev/null); do
+  mkdir -p $DESTDIR/$XORG_CONF_PATH
+  cp $f $DESTDIR/$XORG_CONF_PATH
+done
+
+
 # include xorg PCI IDS file
 mkdir -p ${DESTDIR}/usr/share/xserver-xorg/pci/
 cpifexists ${TCOS_DIR}/inc/xorg.pciids /usr/share/xserver-xorg/pci/
