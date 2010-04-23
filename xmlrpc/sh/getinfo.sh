@@ -91,10 +91,9 @@ fi
 }
 
 
-# FIXME discover is not avalaible anymore
 modules_notfound() {
  #discover_modules=$(grep Discover /tmp/initramfs.debug 2>/dev/null | awk -F ":" '{print $2}')
- discover_modules=$(pcimodules 2> /dev/null | grep -E -v '^ *$')
+ discover_modules=$(/bin/pcimodules 2> /dev/null | grep -E -v '^ *$')
  loaded_modules=$(lsmod| grep -v ^Module| awk '{print $1}'| sed s/'\n'/''/g)
 
  loaded=""
