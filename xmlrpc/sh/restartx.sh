@@ -3,6 +3,6 @@
 # restartx.sh shell script to restart 
 
 
-restartxorg &
+$(which restartxorg) &
 
 exit 0
