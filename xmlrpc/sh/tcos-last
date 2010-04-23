@@ -172,6 +172,14 @@ def GetLast(ip):
                 if not b:
                     break
                 if b[0] == USER_PROCESS:
+                    uthost=str(tcosmonitor.shared.parseIPAddress(b.ut_host))
+                    utline=str(tcosmonitor.shared.parseIPAddress(b.ut_line))
+                    half1="%s" %(uthost[:(len(uthost)/2)])
+                    half2="%s" %(uthost[(len(uthost)/2):])
+                    if half1 == half2 and str(tcosmonitor.shared.parseIPAddress(mitad1)) == utline:
+                        b.ut_host = mitad1 
+                    else:
+                        b.ut_host = uthost
                     #print_debug("  => Searching for host \"%s:0\", hostname=%s found host=%s ut_line=%s user=%s"%(ip, hostname, b.ut_host,b.ut_line, b.ut_user))
                     # 
                     print_debug(" ==> '%s' != '%s' ut_line=%s" %(parseIPAddress(b.ut_host), ip, b.ut_line) )
