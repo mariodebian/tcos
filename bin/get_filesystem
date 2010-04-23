@@ -40,6 +40,9 @@ if [ -x /lib/udev/vol_id ]; then
 elif [ -x /usr/bin/blkid ]; then
   FSTYPE=$(/usr/bin/blkid -o udev $DEVICE 2>&1| awk -F"=" '/ID_FS_TYPE=/ {print $2}')
 
+elif [ -x /sbin/blkid ]; then
+  FSTYPE=$(/sbin/blkid -o udev $DEVICE 2>&1| awk -F"=" '/ID_FS_TYPE=/ {print $2}')
+
 else
   FSTYPE=""
 fi
