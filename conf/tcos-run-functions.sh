@@ -59,11 +59,9 @@ start_splash() {
 
 kill_splash() {
   if [ -x /bin/plymouth ]; then
-    if ! plymouth --ping; then
-      /bin/plymouth --quit
-    fi
-    return
+    /bin/plymouth --quit 2>/dev/null
   fi
+
   # usplash
   if [ -x /sbin/usplash ]; then
     usplash_write "QUIT"  2> /dev/null
@@ -84,6 +82,7 @@ kill_splash() {
     /sbin/splashy_update exit  2> /dev/null
     killall splashy     2> /dev/null
   fi
+  return
 }
 
 kill_xorg() {
