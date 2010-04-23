@@ -1,6 +1,7 @@
 # Hook addon for user password stuff
 
 cpifexists /etc/login.defs    /etc
+cpifexists /usr/sbin/tcospasswd /usr/sbin
 
 # the root password by default is "root"
 root_shadow="root:$(/usr/sbin/tcospasswd root):13562:0:99999:7:::"
