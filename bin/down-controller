@@ -23,10 +23,10 @@ sleep $2
 
 case $1 in
    poweroff)
-      poweroff
+      $(which poweroff)
       ;;
    reboot)
-      reboot
+      $(which reboot)
       ;;
 esac
 
