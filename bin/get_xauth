@@ -30,13 +30,18 @@ if [ -e "${home}/.Xauthority" ]; then
    XAUTHORITY=$home/.Xauthority
 else
    XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
-   [ -z $XAUTHORITY ] && XAUTHORITY=$(xauth info 2>/dev/null | grep ^Authority | awk '{print $3}')
-   [ -z $XAUTHORITY ] && XAUTHORITY="$(find /var/run/gdm/ -name auth-for-* -user ${user} 2>/dev/null | head -1)/database"
+   [ -z $XAUTHORITY ] && XAUTHORITY=$(xauth info 2>/dev/null | xauth info| awk '/^Authority/ {print $3}')
+   [ -z $XAUTHORITY ] && XAUTHORITY="$(find /var/run/gdm*/ -name auth-for-* -user ${user} 2>/dev/null | head -1)/database"
 fi
 
 # standalone GDM login
 if [ "$user" = "" ] && [ -e "/var/lib/gdm/:0.Xauth" ]; then
   XAUTHORITY="/var/lib/gdm/:0.Xauth"
+fi
+
+# standalone GDM3 login
+if [ "$user" = "" ] && find /var/run/gdm3/ -type f 2>/dev/null| grep -q "auth-for-Debian-gdm" ; then
+  XAUTHORITY=$(find /var/run/gdm3/ -type f 2>/dev/null| grep "auth-for-Debian-gdm")
 fi
 
 # standalone KDM login
