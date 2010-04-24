@@ -252,10 +252,21 @@ fi
 
 # search for other hosts
 TCOS_TFTP_SERVER=$(read_cmdline_var 'tftpserver' "${dhcpserver}")
-TCOS_XDMCP_SERVER=$(read_cmdline_var 'xserver' "${dhcpserver}")
+
+if grep -q "x-display-manager" /var/lib/dhcp/dhclient.leases; then
+  TCOS_XDMCP_SERVER=$(grep "x-display-manager" /var/lib/dhcp/dhclient.leases | tail -1| awk '{print $3}'| sed -e 's/;//g')
+else
+  TCOS_XDMCP_SERVER=$(read_cmdline_var 'xserver' "${dhcpserver}")
+fi
+
 TCOS_RDESKTOP_SERVER=$(read_cmdline_var 'rdesktop' "${dhcpserver}")
 TCOS_NFS_SERVER=$(read_cmdline_var 'nfsserver' "${dhcpserver}")
-TCOS_FONT_SERVER=$(read_cmdline_var 'fontserver' "${dhcpserver}")
+
+if grep -q "font-servers" /var/lib/dhcp/dhclient.leases; then
+  TCOS_FONT_SERVER=$(grep font-servers /var/lib/dhcp/dhclient.leases | tail -1| awk '{print $3}'| sed -e 's/;//g')
+else
+  TCOS_FONT_SERVER=$(read_cmdline_var 'fontserver' "${dhcpserver}")
+fi
 
 # Setup the hostname
 log_begin_msg "Setting hostname to ${hostname}"
