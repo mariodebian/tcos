@@ -32,6 +32,8 @@ from subprocess import Popen, PIPE, STDOUT
 import pwd,grp
 import re
 import ipaddr
+import binascii
+import IPy
 
 import utmp
 from UTMPCONST import *
@@ -59,31 +61,62 @@ def print_debug(txt):
     if debug:
         print >> sys.stderr, "tcos-last DEBUG: %s"%(txt)
 
+def is_bin(txt):
+    if txt in ['3a', '2e', '61', '62', '63', '64', '65', '66']:
+        # txt is ':' or '.' or a letter between a-f
+        return False
+    try:
+        txt=int(txt)
+    except ValueError:
+        # can't convert txt to int, txt is hexadecimal aka binary
+        return True
+    
+    if txt >= 30 and txt <= 39:
+        # txt is between 0(0x30) and 9(0x39)
+        return False
+    # return binary by default
+    return True
+
 
 def parseIPAddress(ipstr, return_ipv4=True):
-    if re.match("[a-z]|[A-Z]", ipstr):
-        print_debug( "NOT ip => %s"%ipstr )
-        return ipstr
-    
+    """
+    pass an string or binary IP and return IPV4
+    """
+    newip=[]
+    isBin=False
+
     if ipstr.endswith(':0.0'):
         ipstr=ipstr.replace(':0.0', '')
     
     if ipstr.endswith(':0'):
         ipstr=ipstr.replace(':0', '')
+
+    # hostname must start with letter and contain letters numbers and '-' or '.'
+    if re.match(r'^[a-zA-Z][a-zA-Z0-9.-]+$', ipstr):
+        # ipstr is a hostname
+        return ipstr
+
+    for it in ipstr:
+        eol=is_bin(binascii.hexlify(it))
+        if eol:
+            isBin=True
+        #print_debug("%s => %s string=%s"%(it, binascii.hexlify(it), eol) )
+        newip.append(binascii.hexlify(it))
     
-    if ipstr=='':
-        return ''
+    if isBin:
+        ip=ipaddr.IPAddress(IPy.parseAddress("0x" + "".join(newip) )[0])
+    else:
+        try:
+            ip=ipaddr.IPAddress(ipstr)
+        except Exception:
+            #except Exception, err:
+            #print_debug("parseIPAddress() Exception, error=%s"%err)
+            return ipstr
     
-    if len(ipstr) == 4:
-        ipstr=parseHexIP(ipstr)
-    
-    try:
-        ip=ipaddr.IPAddress(ipstr)
-    except:
-        return None
     ipv4=ip
-    if return_ipv4 and ip.version == 6:
+    if return_ipv4 and ip.version == 6 and ip.ipv4_mapped:
         ipv4=ip.ipv4_mapped.exploded
+    
     return str(ipv4)
 
 
@@ -172,12 +205,12 @@ def GetLast(ip):
                 if not b:
                     break
                 if b[0] == USER_PROCESS:
-                    uthost=str(tcosmonitor.shared.parseIPAddress(b.ut_host))
-                    utline=str(tcosmonitor.shared.parseIPAddress(b.ut_line))
+                    uthost=str(parseIPAddress(b.ut_host))
+                    utline=str(parseIPAddress(b.ut_line))
                     half1="%s" %(uthost[:(len(uthost)/2)])
                     half2="%s" %(uthost[(len(uthost)/2):])
-                    if half1 == half2 and str(tcosmonitor.shared.parseIPAddress(mitad1)) == utline:
-                        b.ut_host = mitad1 
+                    if half1 == half2 and str(parseIPAddress(half1)) == utline:
+                        b.ut_host = half1
                     else:
                         b.ut_host = uthost
                     #print_debug("  => Searching for host \"%s:0\", hostname=%s found host=%s ut_line=%s user=%s"%(ip, hostname, b.ut_host,b.ut_line, b.ut_user))
