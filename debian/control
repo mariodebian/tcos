@@ -17,7 +17,6 @@ Depends: tcos-core,
          console-setup | console-data,
          squashfs-tools,
          pciutils,
-         debootstrap [ amd64 ],
          ltspfsd-core,
          ${misc:Depends}, ${shlibs:Depends}
 Recommends: mbr, 
@@ -29,11 +28,12 @@ Recommends: mbr,
             fgetty,
             p910nd,
             genisoimage, 
-            mknbi [ i386 ],
+            mknbi,
             twm,
             binutils,
             alsa-base, 
-            xfonts-100dpi
+            xfonts-100dpi,
+            debootstrap
 Conflicts: tcosmonitor (<< 0.1.23.2), tcos (<< 0.89.26)
 Description: Tools for generating a TCOS thin client bootable image
  This package contains tools to create a bootable initramfs for prepackaged
