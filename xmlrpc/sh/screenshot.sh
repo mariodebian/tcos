@@ -39,9 +39,9 @@ else
      export XAUTHORITY=$home/.Xauthority
   else
       XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
-      [ -z $XAUTHORITY ] && XAUTHORITY=$(xauth info 2>/dev/null | grep ^Authority | awk '{print $3}') 
-      [ -z $XAUTHORITY ] && XAUTHORITY="$(find /var/run/gdm/ -name auth-for-* -user ${user} 2>/dev/null | head -1)/database"
-     export XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
+      [ -z $XAUTHORITY ] && XAUTHORITY=$(xauth info 2>/dev/null | awk '/^Authority/ {print $3}')
+      [ -z $XAUTHORITY ] && XAUTHORITY="$(find /var/run/gdm*/ -name auth-for-* -user ${user} 2>/dev/null | head -1)/database"
+      export XAUTHORITY
   fi
   export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
   beepoff="xset b off"
