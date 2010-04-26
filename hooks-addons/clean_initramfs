@@ -33,7 +33,9 @@ create_links() {
 }
 
 # Some scripts without correct permissions
-chmod -R a+x ${DESTDIR}/scripts
+chmod -R a+x ${DESTDIR}/scripts/panic/
+chmod -R a+x ${DESTDIR}/scripts/init-*/
+chmod -R a+x ${DESTDIR}/scripts/tcos-*/
 
 create_links "date"
 create_links "bash"
