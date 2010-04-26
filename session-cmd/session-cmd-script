@@ -22,7 +22,7 @@
 ######### changed by mariodebian ########
 [ -e /etc/default/tcos-standalone ] && . /etc/default/tcos-standalone
 
-DISPLAY_HOST=$(echo $DISPLAY| awk -F ":" '{print $1}')
+DISPLAY_HOST=$(python -c 'import os; import tcosmonitor.shared; print tcosmonitor.shared.parseIPAddress(os.environ["DISPLAY"])')
 if [ -z ${DISPLAY_HOST} ] && [ "${TCOS_STANDALONE_START}" != "1" ]; then
   exit 0
 fi
