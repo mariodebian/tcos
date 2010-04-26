@@ -23,7 +23,6 @@
 set -e
 
 [ -r /etc/tcos/tcos.conf ] && . /etc/tcos/tcos.conf
-[ ${TCOS_DIR} ] && . ${TCOS_DIR}/tcos-generation-functions.sh
 
 # title of popup
 TITLE="TCOS"
@@ -92,7 +91,11 @@ case ${MODE} in
       if [ `ps -U $(socket_basename) | grep -c -e "ksmserver" -e "start_kdeinit"` -eq 2 ];then
           dcop ksmserver default logout 0 -1 -1
       else
-          gnome-session-save --kill --silent
+          if [ $(gnome-session-save --help | grep -c force-logout) -ge 1 ]; then 
+             gnome-session-save --force-logout
+          else
+             gnome-session-save --kill --silent
+          fi
       fi
       ;;
    NOSCREENSAVER)
