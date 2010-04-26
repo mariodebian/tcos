@@ -60,6 +60,10 @@ install:
 	install -d $(DESTDIR)/$(TCOS_BINS)
 	install -d $(DESTDIR)/$(X11_CONF)
 
+	install -m 640 ssl/tcos_ca.crt       $(DESTDIR)$(TCOS_CONF)/ssl/
+	install -m 640 ssl/tcos_dh1024.pem   $(DESTDIR)$(TCOS_CONF)/ssl/
+	install -m 640 ssl/tcos_server.pem   $(DESTDIR)$(TCOS_CONF)/ssl/
+
 	install -d $(DESTDIR)$(TCOS_CONF)/hacking
 	install -d $(DESTDIR)$(TCOS_CONF)/pxelinux.d
 	install -d $(DESTDIR)/usr/sbin
@@ -155,7 +159,7 @@ install:
 	install -m 755 bin/daemonize.sh    $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/get_xauth       $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/clear-logs      $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 bin/rsync-controller  $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/get-xdg-desktop   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/down-controller   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/get_server        $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/clean_string.sh   $(DESTDIR)/$(TCOS_BINS)/
