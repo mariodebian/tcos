@@ -74,7 +74,7 @@ for o, a in opts:
             sys.exit(1)
 
 
-if  username and (type in ["mess", "exec", "kill", "killall"]) and text :
+if  username and (type in ["mess", "exec", "kill", "killall", "sendfiles"]) and text :
     response=dbus_iface.GotSignal([ [admin, passwd], [username] , [type] , [text] ])
     print "ok"
 else:
