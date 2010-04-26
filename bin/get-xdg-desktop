@@ -1,0 +1,60 @@
+#!/bin/bash
+# -------
+# File:        get-xdg-desktop.sh
+# Description: get-xdg-desktop backend to resolve real path of Desktop with distros >= Ubuntu gutsy
+# Author:      Ignacio Vidal <vidal_joshur@gva.es>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston MA 02110-1301 USA
+# --------
+set -e 
+
+home=$(getent passwd ${USER} | head -1 | awk -F":" '{print $6}')
+DESKTOP_DIR="Desktop"
+
+if [ -r /etc/xdg/user-dirs.conf ];then
+
+enabled=$(awk -F "=" '/^enabled=/ {print $2}' /etc/xdg/user-dirs.conf)
+
+  if [ ! -z ${enabled} -a ${enabled} = "True" ];then
+
+    XDG_CONFIG_HOME=$(awk -F "=" '/^XDG_CONFIG_HOME=/ {print $2}' /etc/xdg/user-dirs.conf)
+    XDG_CONFIG_DIRS=$(awk -F "=" '/^XDG_CONFIG_DIRS=/ {print $2}' /etc/xdg/user-dirs.conf)
+
+    # if not custom config-path found in /etc/xdg/users-dirs.conf use default config in users home
+    [ -z ${XDG_CONFIG_HOME} ] && XDG_CONFIG_HOME="${home}/.config"
+    [ -z ${XDG_CONFIG_DIRS} ] && XDG_CONFIG_DIRS="/user-dirs.dirs"
+
+    XDG_PATH="${XDG_CONFIG_HOME}${XDG_CONFIG_DIRS}"
+    
+    # obtain path to real Desktop 
+    [ -r ${XDG_PATH} ] && DESKTOP_DIR=$(basename $(awk -F "=" '/^XDG_DESKTOP_DIR=/ {print $2}' ${XDG_PATH} | sed s/\"//g))
+
+    if [ -z ${DESKTOP_DIR} ];then
+        # if var not specified in config try defaults dirs for var Desktop, this file only contain basenames
+        [ -r /etc/xdg/user-dirs.defaults ] && DESKTOP_DIR=$(awk -F "=" '/^DESKTOP=/ {print $2}' /etc/xdg/user-dirs.defaults)
+        
+        # if empty var Desktop again, then is "Desktop"?
+        [ -z ${DESKTOP_DIR} ] && DESKTOP_DIR="Desktop"
+
+    fi
+
+  fi
+
+fi
+
+
+echo ${home}/${DESKTOP_DIR}
+
+exit 0
