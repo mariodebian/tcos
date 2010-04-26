@@ -1,0 +1,152 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+##########################################################################
+# TcosMonitor writen by MarioDebian <mariodebian@gmail.com>
+#
+#    TcosMonitor version __VERSION__
+#
+# Copyright (c) 2006 Mario Izquierdo <mariodebian@gmail.com>
+#
+# """Demo taken from M2Crypto.ftpslib's FTP/TLS client.
+#
+# This client interoperates with M2Crypto's Medusa-based FTP/TLS
+# server as well as Peter Runestig's patched-for-TLS OpenBSD FTP 
+# server.
+#
+# Copyright (c) 1999-2004 Ng Pheng Siong. All rights reserved."""
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+###########################################################################
+
+
+import M2Crypto
+import os
+import sys
+import xml.sax.saxutils
+import getopt
+import subprocess, threading
+
+debug=False
+
+def print_debug(txt):
+    if debug:
+        print >> sys.stderr, "tcos-ftpclient DEBUG: %s"%(txt)
+      
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], ":hd", ["dir=", "server=", "open=", "debug"])
+except getopt.error, msg:
+    print msg
+    print "for command line options use tcos-ftpclient --help"
+    sys.exit(2) 
+    
+
+listOfFiles = []
+SERVER = None
+LOCAL_DIR = None
+OPEN = False
+#TIME_FORMAT = "%y%m%d"    # YYMMDD, like 030522 
+
+for o, a in opts:
+    if o == "--dir":
+        LOCAL_DIR=a
+    if o == "--server":
+        SERVER=a
+    if o == "--open":
+        OPEN=a
+    if o == "--debug":
+        debug=True
+        
+def __escape__(self, txt):
+    return xml.sax.saxutils.escape(txt, self.__dic__)
+        
+def makeListOfFiles(remoteFileName):
+    # Strips the file name from a line of a
+    # directory listing, and gets file from the
+    # server.  Depends on filenames
+    # with no embedded spaces or extra dots.
+    listOfFiles.append(remoteFileName)
+
+def cleanproc(proc):
+    try:
+        os.waitpid(proc.pid, os.WCONTINUED)
+    except os.error, err:
+        print_debug("OSError exception: %s" %err)
+            
+def open_files(filename):
+    if os.path.isfile("/usr/bin/gnome-open"):
+        cmd="/usr/bin/gnome-open %s" %filename
+    elif os.path.isfile("/usr/bin/xdg-open"):
+        cmd="/usr/bin/xdg-open %s" %filename
+    else:
+        return
+        
+    print_debug ( "open_files() %s" %(cmd) )
+    p = subprocess.Popen(cmd, shell=True, close_fds=True)
+    try:
+        th=threading.Thread(target=cleanproc, args=(p,) )
+        th.start()
+        print_debug("Threads count: %s" %threading.activeCount())
+    except Exception, err:
+        print_debug ( "open_files() error, error=%s" %(err) )
+    return
+
+def active():
+    ctx = M2Crypto.SSL.Context('sslv23')
+    try:
+        f = M2Crypto.ftpslib.FTP_TLS(ssl_ctx=ctx)
+        f.connect(SERVER, 8997)
+    except Exception:
+        sys.exit(2)
+    f.auth_tls()
+    f.set_pasv(0)
+    f.login('anonymous', '')
+    f.prot_p()
+    #f.retrlines('LIST')
+    f.retrlines('NLST', makeListOfFiles)
+    
+    if LOCAL_DIR == None: 
+        print "Incorrect path to download files"
+        sys.exit(2)
+        
+    if not os.path.isdir(LOCAL_DIR): 
+        os.mkdir(LOCAL_DIR)
+    
+    for remoteFileName in listOfFiles:
+        filename=os.path.join(LOCAL_DIR,remoteFileName)
+        if os.path.isfile(filename):
+            print_debug("TCOS-FTPCLIENT: filename=%s already exists." %(remoteFileName))
+            continue
+        
+        localFile=file(filename, 'wb')
+        print_debug("TCOS-FTPCLIENT: Getting filename=%s to dir=%s" %(remoteFileName, LOCAL_DIR))
+
+        try:
+            f.retrbinary('RETR %s' % remoteFileName, localFile.write)
+            localFile.flush()
+            localFile.close()
+        except Exception:
+            pass
+        if OPEN:
+            open_files(filename)
+    f.quit()
+
+
+if __name__ == '__main__':
+    M2Crypto.threading.init()
+    active()
+    M2Crypto.threading.cleanup()
+
