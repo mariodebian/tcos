@@ -231,7 +231,7 @@ force_add_module() {
         # end of force copy
 }
 
-function parse_pxelinuxcfg(){
+parse_pxelinuxcfg() {
         if [ $TCOS_NETBOOT_MENU ] && [ -z $2 ]; then
           TEMPLATE=${TCOS_CONF}/${TCOS_PXECFG_MENU}
           _verbose "(t-g-f) BOOT_MENU=1"
