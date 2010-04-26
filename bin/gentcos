@@ -351,7 +351,7 @@ ${GENISO} -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b isolinux/isolinux.bin
 }
 
 
-function usage() {
+usage() {
 echo -e "Usage:
   $WHITE$(basename $0)$NORMAL $RED-tftp$NORMAL  [-o=initrd-pc1]           PXE (>= 64 Mb)
           $RED-nfs$NORMAL   [$GREEN-rootfs$NORMAL]                 LTSP like (28 - 64 Mb)
@@ -375,7 +375,7 @@ echo -e "Usage:
 _exit 0
 }
 
-function _help() {
+_help() {
 echo -e "
 This is gentcos help info about generating net init images.
 
