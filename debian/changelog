@@ -1,3 +1,45 @@
+tcos (0.89.61) unstable; urgency=low
+
+  [ Mario Izquierdo (mariodebian) ]
+  * xmlrpc/sh/tcos-last: update parseIPAddress function and fix typo
+    mitad => half
+  * xmlrpc/sh/screenshot.sh: use /var/run/gdm*/ valid for Ubuntu and
+    Debian
+  * bin/get_xauth: use /var/run/gdm*/ valid for Ubuntu and Debian
+  * scripts/tcos-top/05network: read x-display-manager and font-servers
+    from dhclient.leases, option 48 and 49
+  * debian/control: remove arch Depends in a all package, move to
+    Recommends
+
+  [ Ignacio Vidal ]
+  * bin/get-xdg-desktop: new script to get Desktop dir
+  * ssl: Add FTPSSL default certs
+  * xmlrpc/sh/tcos-ftpclient new FTPSSL client
+  * hooks-addons/03udev2: remove init-bottom/udev
+  * xmlrpc/sh/screenshot.sh: test for XAUTH in /root folder
+  * bin/gentcos: remove bashism function
+  * bin/get_xauth: test for XAUTH in /root folder
+  * bin/rsync-controller: remove old file
+  * conf/tcos-generation-functions.sh: remove bashism function
+  * Makefile: Install new get-xdg-desktop and ssl and not install rsync-
+    controller
+  * debian/control: add ethtools to Recommends
+  * debian/tcos-core.postinst debian/tcos-core.install, unstall and
+    chmod ssl dir
+  * hooks-addons/clean_initramfs: chmod +x all /scripts
+  * xmlrpc/sh/tcos-dbus.py: add DBus arg sendfiles
+  * xmlrpc/Makefile: install sh/tcos-ftpclient
+  * session-cmd/session-cmd-script: use tcosmonitor.shared to get
+    DISPLAY
+  * session-cmd/session-cmd-send: fix echo call
+  * session-cmd/session-cmd-exec: don't load tcos-generation functions
+    and use logout in gnome-session when avalaible
+
+  [ Mario Izquierdo (mariodebian) ]
+  * Release 0.89.61
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 30 Apr 2010 15:52:18 +0200
+
 tcos (0.89.60) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]
