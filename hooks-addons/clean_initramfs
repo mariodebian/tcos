@@ -33,7 +33,7 @@ create_links() {
 }
 
 # Some scripts without correct permissions
-chmod -R a+x ${DESTDIR}/scripts/panic/
+chmod -R a+x ${DESTDIR}/scripts/panic/ 2>/dev/null
 chmod -R a+x ${DESTDIR}/scripts/init-*/
 chmod -R a+x ${DESTDIR}/scripts/tcos-*/
 
