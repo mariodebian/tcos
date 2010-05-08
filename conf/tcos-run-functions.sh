@@ -194,11 +194,12 @@ rm -f /tmp/downloading
 touch /tmp/downloading
 /sbin/down-listener &
 tftp -g -r ${1} -l ${2} $(read_server "tftp-server") > /dev/null 2> /tmp/download_file.log
-rm -f /tmp/downloading
 if [ $? = 0 ] ;then
+ rm -f /tmp/downloading
  _log "download_file() OK"
  return 0
 else
+ rm -f /tmp/downloading
  _log "download_file() Error"
  cat /tmp/download_file.log >> /tmp/initramfs.debug 2> /dev/null
  rm /tmp/download_file.log > /dev/null 2>&1
