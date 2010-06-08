@@ -47,7 +47,7 @@ TCOS_FLAVOUR=standard
 TCOS_MIRROR="http://www.tcosproject.org"
 
 
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos tcos-usplash p910nd xvnc4viewer"
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos p910nd xvnc4viewer"
 TCOS_PACKAGES="${TCOS_PACKAGES} binutils acpid alsa-utils twm dropbear mbr"
 TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
 
@@ -236,6 +236,7 @@ apt-get install $APT_OPTS linux-ubuntu-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS linux-restricted-modules-${TCOS_KERNEL} 
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
 apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
+echo "*** tcos-usplash is only in old distros, don't worry if fail ***"; apt-get install $APT_OPTS tcos-usplash
 apt-get clean
 /etc/init.d/dropbear stop || true
 EOC
@@ -253,6 +254,7 @@ export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND=
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL}
 apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
+echo "*** tcos-usplash is only in old distros, don't worry if fail ***"; apt-get install $APT_OPTS tcos-usplash
 apt-get clean
 /etc/init.d/dropbear stop || true
 rm -f /preseed
