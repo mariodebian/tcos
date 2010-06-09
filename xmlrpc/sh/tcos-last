@@ -104,7 +104,10 @@ def parseIPAddress(ipstr, return_ipv4=True):
         newip.append(binascii.hexlify(it))
     
     if isBin:
-        ip=ipaddr.IPAddress(IPy.parseAddress("0x" + "".join(newip) )[0])
+        try:
+            ip=ipaddr.IPAddress(IPy.parseAddress("0x" + "".join(newip) )[0])
+        except:
+            return ipstr
     else:
         try:
             ip=ipaddr.IPAddress(ipstr)
