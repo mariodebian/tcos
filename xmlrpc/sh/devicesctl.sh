@@ -242,7 +242,7 @@ if [ "$1" = "--gethdd" ]; then
 fi
 
 if [ "$1" = "--getid" ]; then
-  output=$($UDEVINFO --query=env --name=$2| grep -e "^ID_VENDOR=" -e "^ID_MODEL="| awk -F"=" '{print $2}' 2>/dev/null)
+  output=$($UDEVINFO --query=env --name=$2| grep -e "^ID_VENDOR=" -e "^ID_MODEL="| | sed 's/[[:blank:]]/_/g' | awk -F"=" '{print $2}' 2>/dev/null)
   need_parse=1
 fi
 

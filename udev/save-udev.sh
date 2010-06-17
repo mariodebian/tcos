@@ -25,7 +25,7 @@ DISK=$(echo "$PART" | cut -c-3)
 DEVPATH="/block/$DISK"
 [ "$PART" != "$DISK" ] && DEVPATH="/block/$DISK/$PART"
 
-[ -n "$DEVNAME" ] && [ -e $DEVNAME ] && export $($UDEVINFO --path=/sys$DEVPATH --query=env | grep -v "^DEVLINKS")
+[ -n "$DEVNAME" ] && [ -e $DEVNAME ] && export $($UDEVINFO --path=/sys$DEVPATH --query=env | grep -v "^DEVLINKS" | sed 's/[[:blank:]]/_/g')
 
 if echo $DEVPATH | grep -q "/devices/" ; then
   # translate name
