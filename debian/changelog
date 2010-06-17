@@ -1,3 +1,20 @@
+tcos (0.89.62) unstable; urgency=low
+
+  * conf/tcos-run-functions.sh: download_file() read 0 from tftp command
+    not from rm
+  * hooks-addons/clean_initramfs: be silent if /scripts/panic/ don't
+    exists
+  * bin/tcos-buildchroot install tcos-usplash standalone, Ubuntu Lucid
+    don't have usplash
+  * move cdparanoia from tcos-core to initramfs-tools-tcos
+  * tcos-core must depends on python-ipy
+  * xmlrpc/sh/tcos-last don't crash if IP is binary
+  * bin/tcos-buildchroot: copy /etc/hosts to chroot
+  * udev/save-udev.sh xmlrpc/sh/devicesctl.sh replace spaces with
+    underscores, fix some mount issues, thanks Nacho
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 17 Jun 2010 18:13:53 +0200
+
 tcos (0.89.61) unstable; urgency=low
 
   [ Mario Izquierdo (mariodebian) ]
