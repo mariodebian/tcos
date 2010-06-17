@@ -15,25 +15,25 @@ KERNEL_etch="2.6.18-6-486"
 
 KERNEL_lenny="2.6.26-2-486"
 
-KERNEL_testing="2.6.30-2-486"
+KERNEL_testing="2.6.32-5-486"
 
-KERNEL_unstable="2.6.32-trunk-486"
+KERNEL_unstable="2.6.32-5-486"
 
-KERNEL_experimental="2.6.31-1-486"
+KERNEL_experimental="2.6.32-5-486"
 
 KERNEL_gutsy="2.6.22-16-generic"
 
 KERNEL_max="2.6.24-24-generic"
 
-KERNEL_hardy="2.6.24-25-generic"
+KERNEL_hardy="2.6.24-28-generic"
 
 KERNEL_intrepid="2.6.27-15-generic"
 
-KERNEL_jaunty="2.6.28-16-generic"
+KERNEL_jaunty="2.6.28-19-generic"
 
-KERNEL_karmic="2.6.31-14-generic"
+KERNEL_karmic="2.6.31-22-generic"
 
-KERNEL_lucid="2.6.32-4-generic"
+KERNEL_lucid="2.6.32-22-generic"
 ##################################
 
 
