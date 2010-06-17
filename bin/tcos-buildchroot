@@ -350,6 +350,7 @@ chrootcp /usr/share/tcos-core/lockscreen-custom.png
 chrootcp /etc/default/console-setup
 chrootcp /etc/default/keyboard
 chrootcp /etc/adjtime
+chrootcp /etc/hosts
 
 TCOS_KERNEL=$(awk -F"=" '/^TCOS_KERNEL=/ {print $2}' ${TCOS_CHROOT}/etc/tcos/tcos.conf | sed 's/"//g')
 if [ -f /etc/tcos/templates/tcosconfig.conf ]; then
