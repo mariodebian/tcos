@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# Daemon to generate UDEV event of insert CDROM/DVD
+#
+#
+[ ! -x /sbin/blkid ] && exit 0
+[ ! -e /dev/cdrom  ] && exit 0
+
+# seconds in loop
+TIMEOUT=3
+UDEVINFO="/usr/bin/udevinfo"
+output_file="/tmp/tcos-udevd.log"
+
+[ -x /sbin/udevadm ] && UDEVINFO="/sbin/udevadm info"
+
+# blkid -p /dev/cdrom
+# STDOUT error: /dev/cdrom: No medium found
+# RETURN VALUE 2
+#
+# **INSERT MEDIA** example
+# STDOUT /dev/cdrom: LABEL="MaX 6.0" TYPE="iso9660" USAGE="filesystem" 
+# RETURN VALUE 0
+
+
+# run in foreground
+
+while [ 1 ]; do
+
+  OUTPUT=$(/sbin/blkid -p /dev/cdrom 2>&1)
+  RETURN=$?
+  #echo "cdrom-mount OUTPUT='$OUTPUT' RETURN='$RETURN'"
+
+  if [ "$RETURN" = "0" ]; then
+    export $($UDEVINFO --name=/dev/cdrom --query=env | grep -v "^DEVLINKS" | sed 's/[[:blank:]]/_/g')
+    export ACTION=add
+
+    if echo $DEVPATH | grep -q "/devices/" ; then
+      # translate name
+      _devpath=$(echo "$DEVPATH" | awk -F"/block" '{print "/block"$2}')
+      DEVPATH=$_devpath
+    fi
+
+    if [ "$ID_FS_LABEL" = "" ]; then
+      # if no label CDROM is detecting...
+      continue
+    fi
+
+    if [ -f /tmp/cdrom-mount ] && [ "$ID_FS_LABEL" = "$(cat /tmp/cdrom-mount)" ]; then
+      echo "$ID_FS_LABEL mounted" >/dev/null
+    else
+      echo "ID_BUS=$ID_BUS#DEVNAME=$DEVNAME#ACTION=$ACTION#ID_FS_LABEL=$ID_FS_LABEL#ID_FS_TYPE=$ID_FS_TYPE#ID_VENDOR=$ID_VENDOR#ID_MODEL=$ID_MODEL#DEVPATH=$DEVPATH" >> $output_file
+    fi
+    # save a lock file with $ID_FS_LABEL
+    echo "$ID_FS_LABEL" > /tmp/cdrom-mount
+  else # RETURN != 0
+    # clean lock file
+    rm -f /tmp/cdrom-mount
+  fi
+  sleep $TIMEOUT
+
+done

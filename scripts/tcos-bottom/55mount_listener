@@ -29,4 +29,9 @@ if [ -x /usr/sbin/listener-daemon.sh ]; then
    /usr/sbin/listener-daemon.sh > /var/log/listener-daemon.log 2>&1 &
 fi
 
+
+if [ -x /usr/sbin/cdrom-mount ]; then
+   /usr/sbin/cdrom-mount > /var/log/cdrom-mount.log 2>&1 &
+fi
+
 exit 0

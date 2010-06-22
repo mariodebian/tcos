@@ -15,6 +15,7 @@ install:
 	install -m 755 mount-listener         $(DESTDIR)$(TCOS_BINS)/
 	install -m 755 listener-daemon.sh     $(DESTDIR)$(TCOS_BINS)/
 	install -m 755 save-udev.sh           $(DESTDIR)$(TCOS_BINS)/
+	install -m 755 cdrom-mount            $(DESTDIR)$(TCOS_BINS)/
 	install -m 644 050_tcos_devices.rules $(DESTDIR)$(TCOS_XMLRPC_DIR)/
 
 clean:
