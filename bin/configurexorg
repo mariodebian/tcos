@@ -31,6 +31,7 @@ autodetect_xdriver=1
 force_xdriver=0
 xdriver_via="#"
 xdriver_amd="#"
+TCOS_XORG_CONF=
 
 . /conf/tcos.conf
 . /conf/tcos-run-functions
@@ -550,6 +551,8 @@ fi
 if [ "$xdriver" = "fullauto" ]; then
    # Try Xorg to detect all?
    TCOS_ENABLE_XDRIVER_FULLAUTODETECT="#"
+   [ -d /usr/share/X11/xorg.conf.d ] && TCOS_XORG_CONF=/usr/share/X11/xorg.conf.d/
+   [ -d /usr/lib/X11/xorg.conf.d ]   && TCOS_XORG_CONF=/usr/lib/X11/xorg.conf.d/
 fi
 
 if [ "$xdriver" = "auto" ] || [ $autodetect_xdriver = 1 ]; then
@@ -646,6 +649,7 @@ sed -e s/"__xdriver__"/"${xdriver}"/g \
 
 
 
+
 save_settings() {
  # backup old settings
  [ -f ${outputfile} ] && mv ${outputfile} ${outputfile}.${stamp}
@@ -653,6 +657,23 @@ save_settings() {
  if [ -f ${tmp_xorg_file} ]; then
   cat ${tmp_xorg_file} > ${outputfile}
  fi
+
+if [ -d "${TCOS_XORG_CONF}" ]; then
+  # fullauto delete /etc/X11/xorg.conf
+  rm -f "${outputfile}"
+
+  # create ${TCOS_XORG_CONF}/60-fonts.conf
+  cat << EOF > ${TCOS_XORG_CONF}/60-fonts.conf
+
+Section "Files"
+	FontPath	"/usr/share/X11/fonts/misc"
+	FontPath	"/usr/share/X11/fonts/100dpi"
+	FontPath        "tcp/${SERVER}:7100"                    # local font server
+	FontPath        "tcp/${SERVER}:7101" # Truetype xfstt fonts
+EndSection
+
+EOF
+fi
 }
 
 getsimple() {
