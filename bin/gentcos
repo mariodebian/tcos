@@ -118,21 +118,32 @@ _exit () {
 }
 
 call_mkinitramfs() {
+ rm -rf /tmp/mkinitramfs_*
  NEWINITRAMFS=$1
+ #echo "mkinitramfs $MKVERBOSE -d ${TCOS_CONF} -o ${NEWINITRAMFS} ${TCOS_KERNEL}"
  mkinitramfs $MKVERBOSE -d ${TCOS_CONF} -o ${NEWINITRAMFS} ${TCOS_KERNEL}
 
+ # test for empty initramfs
+ if [ ! -s ${NEWINITRAMFS} ]; then
+   # workaround for this change http://bugs.debian.org/514938
+   MKDIR=$(echo /tmp/mkinitramfs_*)
+   echo "  Temp initramfs is empty (Debian BUG 514938) rebuilding..."
+   [ ! -d "${MKDIR}" ] && ( echo "  **ERROR** initramfs is empty and no /tmp/mkinitramfs_* dirs found" ; exit 1)
+   (cd "${MKDIR}" && find . | cpio --quiet --dereference -o -H newc | gzip > "${NEWINITRAMFS}" )
+
+   # clean mkinitramfs temp files
+   rm -rf /tmp/mkinitramfs*
+ fi
 
  # uncompress
- DESTDIR2="$(mktemp -t -d mkinitramfs_XXXXXX)" || exit 1
- ( cd ${DESTDIR2} && \
-   cp ${NEWINITRAMFS} ./initrd.gz && \
-   gunzip initrd.gz && \
-   cpio -i < initrd 2>/dev/null && \
-   rm initrd)
- 
+ DESTDIR2="$(mktemp -t -d gentcos_XXXXXX)"
+ zcat ${NEWINITRAMFS} > ${DESTDIR2}/initrd
+ ( cd ${DESTDIR2} && cpio -i < initrd 2>/dev/null )
+ rm "${DESTDIR2}/initrd"
+
  export DESTDIR="${DESTDIR2}"
  # clean dir
- bash ${TCOS_DIR}/hooks-addons/clean_initramfs 
+ bash ${TCOS_DIR}/hooks-addons/clean_initramfs
 
  echo -n "   * Updating module dependencies..."
  DEPMOD_ARGS="-a -F /boot/System.map-${TCOS_KERNEL}"
@@ -147,7 +158,15 @@ call_mkinitramfs() {
 
  # compress again
  rm -f ${NEWINITRAMFS}
- (cd "${DESTDIR2}" && find . | cpio --quiet -o -H newc | gzip >"${NEWINITRAMFS}") || exit 1
+
+ # LZMA gets 11 MB and GZIP 9,9, disable LZMA for now
+ #if grep -q -i ^config_rd_lzma /boot/config-${TCOS_KERNEL}; then
+ #  echo -n "   * Using LZMA (experimental) to compress image..."
+ #  (cd "${DESTDIR2}" && find . | cpio --quiet -o -H newc | lzop -9 > "${NEWINITRAMFS}" )
+ #  echo " done."
+ #else
+   (cd "${DESTDIR2}" && find . | cpio --quiet -o -H newc | gzip > "${NEWINITRAMFS}" )
+ #fi
 
  rm -rf "${DESTDIR2}"
 }
