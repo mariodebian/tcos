@@ -80,12 +80,12 @@ if [ -n "$THEME" ]; then
 
 	# and copy the font support files needed in order to actually display
 	# any text
-	# mkdir -p ${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu
-        [ -e /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf ] && rm -f /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf
+	mkdir -p ${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu
 	mkdir -p ${DESTDIR}/etc/fonts/conf.d
 	mkdir -p ${DESTDIR}/usr/lib/pango/1.6.0/module-files.d
 	mkdir -p ${DESTDIR}/usr/lib/pango/1.6.0/modules
-	# cp /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf ${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu/
+	[ -e /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf ] && \
+            cp /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf ${DESTDIR}/usr/share/fonts/truetype/ttf-dejavu/
 	cp /etc/fonts/fonts.conf ${DESTDIR}/etc/fonts/fonts.conf
 	cp -L /etc/fonts/conf.d/60-latin.conf ${DESTDIR}/etc/fonts/conf.d
 	cp /usr/lib/pango/1.6.0/module-files.d/libpango1.0-0.modules ${DESTDIR}/usr/lib/pango/1.6.0/module-files.d/
