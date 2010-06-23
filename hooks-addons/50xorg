@@ -152,7 +152,7 @@ cpifexists /usr/lib/xorg/modules/drivers/vesa_drv.so /usr/lib/xorg/modules/drive
 
 if [ $TCOS_XORG_ALLDRIVERS ]; then
     driver_dir=/usr/lib/xorg/modules/drivers
-    _echo "    xorg: installing all drivers...."
+    _echo "    xorg: installing all drivers..."
     for _drv in $(ls ${driver_dir}/*so|grep -v -e nvidia -e vmware -e vbox); do
         cpifexists $_drv ${driver_dir}/
     done
