@@ -33,6 +33,7 @@ log_begin_msg "Loading Via Openchrome drivers"
   modprobe via
 
 [ "\$TCOS_XORG_VIDEO_DRIVER" = "fullauto" ] && exit 0
+[ "\$TCOS_XORG_VIDEO_DRIVER" = "xorgauto" ] && exit 0
 
   if [ -f /usr/lib/xorg/modules/drivers/openchrome_drv.so ]; then
     configurexorg --newsettings --xdriver=openchrome --outputfile=/etc/X11/xorg.conf 2>> /tmp/initramfs.debug

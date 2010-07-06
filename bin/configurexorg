@@ -551,6 +551,10 @@ fi
 if [ "$xdriver" = "fullauto" ]; then
    # Try Xorg to detect all?
    TCOS_ENABLE_XDRIVER_FULLAUTODETECT="#"
+fi
+
+if [ "$xdriver" = "xorgauto" ]; then
+   # Leave Xorg to autodetect all
    [ -d /usr/share/X11/xorg.conf.d ] && TCOS_XORG_CONF=/usr/share/X11/xorg.conf.d/
    [ -d /usr/lib/X11/xorg.conf.d ]   && TCOS_XORG_CONF=/usr/lib/X11/xorg.conf.d/
 fi
@@ -659,7 +663,7 @@ save_settings() {
  fi
 
 if [ -d "${TCOS_XORG_CONF}" ]; then
-  # fullauto delete /etc/X11/xorg.conf
+  # xorgauto delete /etc/X11/xorg.conf
   rm -f "${outputfile}"
 
   # create ${TCOS_XORG_CONF}/60-fonts.conf
