@@ -98,8 +98,14 @@ elif [ -x /sbin/dhclient ]; then
  # dhcp and network stuff
  cpifexists /sbin/dhclient     /sbin/
  mkdir -p $DESTDIR/var/lib/dhcp/
- cpifexists /etc/dhclient-script   /etc/
- cpifexists /etc/dhclient.conf     /etc/
+ [ -e /etc/dhclient-script ]  && cpifexists /etc/dhclient-script   /etc/
+ [ -e /sbin/dhclient-script ] && cpifexists /sbin/dhclient-script   /sbin/
+ [ -e /etc/dhclient.conf ]    && cpifexists /etc/dhclient.conf     /etc/
+
+ # new version (4.1.1-P1-7) use libcrypto, move to /lib
+ if ldd /sbin/dhclient| grep -q libcrypto; then
+   mv $DESTDIR/usr/lib/libcrypto.so* $DESTDIR/lib/
+ fi
 
 else
   _echo ""
