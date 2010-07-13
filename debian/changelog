@@ -1,3 +1,13 @@
+tcos (0.89.64) unstable; urgency=low
+
+  * hooks-addons/12getty: fix Debian lenny fgetty launch in background
+  * bin/tcos-buildchroot: add fgetty to TCOS_PACKAGES and console-tools
+    to Debian chroot
+  * bin/configurexorg: fix xorgauto, use only if Xorg support it
+    (xorg.conf.d dir)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 13 Jul 2010 18:22:41 +0200
+
 tcos (0.89.63) unstable; urgency=low
 
   * xmlrpc/sh/devicesctl.sh: fix typo, double ||
