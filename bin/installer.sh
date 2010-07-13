@@ -164,7 +164,7 @@ install_kernel () {
     cdroms=$(awk '/iso9660/ {print $1}' /etc/fstab)
     mkdir /cdrom
     for cdrom in $cdroms; do
-       mount $cdrom /cdrom &>/dev/null
+       mount $cdrom /cdrom 2>/dev/null
        echo "Waiting for cdrom ${cdrom}..."
        sleep 5
        if [ $(grep -c "/cdrom" /proc/mounts) -gt 0 ]; then

@@ -236,7 +236,7 @@ create_rootfs() {
  
  old_dir=$(pwd)
  cd ${OUTROOTFS_TMP}
- cpio -i < initramfs &> /dev/null
+ cpio -i < initramfs 2> /dev/null
  rm -f initramfs
 
  rm -rf ${TCOS_VAR}/fs-${TCOS_KERNEL}

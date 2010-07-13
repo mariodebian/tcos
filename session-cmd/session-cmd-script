@@ -34,7 +34,7 @@ LIB_FILE="/usr/lib/tcos/session-cmd-common.sh"
 EXEC_SCRIPT="/usr/lib/tcos/session-cmd-exec"
 
 # kill before launching again
-killall -w faucet &>/dev/null
+killall -w faucet >/dev/null 2>&1
 
 sleep 2
 
