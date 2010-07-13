@@ -33,7 +33,7 @@ if [ "\${CONSOLE_NUMBER}" = "" ]; then
 fi
 
 while [ 1 ]; do
-    fgetty \$CONSOLE_NUMBER --noclear &>/dev/null
+    fgetty \$CONSOLE_NUMBER --noclear >/dev/null 2>&1
     sleep 2
 done
 
