@@ -47,7 +47,7 @@ TCOS_FLAVOUR=standard
 TCOS_MIRROR="http://www.tcosproject.org"
 
 
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos p910nd xvnc4viewer"
+TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos p910nd xvnc4viewer fgetty"
 TCOS_PACKAGES="${TCOS_PACKAGES} binutils acpid alsa-utils twm dropbear mbr"
 TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
 
@@ -78,7 +78,7 @@ set_conf() {
     else
       if [ ! $MIRROR ]; then MIRROR=$DEBIAN_DEF_MIRROR ; fi
       #DISTRO_PACKAGES="console-data ${DISTRO_PACKAGES} libltdl3 "
-      DISTRO_PACKAGES="console-data ${DISTRO_PACKAGES}"
+      DISTRO_PACKAGES="console-tools console-data ${DISTRO_PACKAGES}"
     fi
 }
 
