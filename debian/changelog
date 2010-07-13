@@ -1,3 +1,22 @@
+tcos (0.89.63) unstable; urgency=low
+
+  * xmlrpc/sh/devicesctl.sh: fix typo, double ||
+  * common.mk update kernels
+  * add support to automount CDROM/DVD need new version of tcos-devices-
+    ng
+  * bin/gentcos: Add a workaround for Debian bug #514938, rebuild
+    initramfs if cpio fails
+  * hooks-addons/50xorg: cosmetic change 3 dots
+  * bin/configurexorg: change fullauto method to not user xorg.conf, use
+    /usr/[share|lib]/X11/xorg.conf.d/ and set remote fons
+  * hooks-addons/90plymouth: fix delete DejaVuSans.ttf font
+  * hooks-addons/01dhclient: fix new ISC dhcp client and move libcrypto
+    to /lib if needed
+  * rename new fullauto to xorgauto
+  * Update Ubuntu Lucid kernel to 2.6.32-23
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 13 Jul 2010 12:02:08 +0200
+
 tcos (0.89.62) unstable; urgency=low
 
   * conf/tcos-run-functions.sh: download_file() read 0 from tftp command

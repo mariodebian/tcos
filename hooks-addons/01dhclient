@@ -6,7 +6,8 @@
 touch $DESTDIR/etc/hosts.allow
 touch $DESTDIR/etc/hosts.deny
 cpifexists /etc/host.conf        /etc/
-cpifexists /etc/nsswitch.conf    /etc/
+#cpifexists /etc/nsswitch.conf    /etc/
+sed '/hosts:/ chosts:          files dns' /etc/nsswitch.conf > $DESTDIR/etc/nsswitch.conf
 
 # put DNS server
 dns1=$(grep ^nameserver /etc/resolv.conf 2>/dev/null | grep -v "127.0.0.1" | head -1 | awk '{print $2}')
