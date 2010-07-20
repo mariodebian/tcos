@@ -28,6 +28,7 @@ if [ $ID -ne 0 ]; then
 fi
 
 . /etc/tcos/tcos.conf
+[ -e /etc/tcos/version.conf ] && . /etc/tcos/version.conf
 . ${TCOS_DIR}/tcos-generation-functions.sh
 . /usr/share/initramfs-tools/hook-functions
 
@@ -175,6 +176,7 @@ call_mkinitramfs() {
 # some functions 
 create_initramfs() {
  # call mkinitramfs
+ _echo "TCOS $DISTRIBUTION/$TCOS_DISTRO/$TCOS_ARCH  $TCOS_VERSION"
  _echo "Creating initramfs with ${TCOS_KERNEL} kernel..."
  call_mkinitramfs ${INITRAMFS}
 
