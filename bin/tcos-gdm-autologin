@@ -36,10 +36,39 @@ Usage:
 
 import os, sys
 import getopt
-import popen2
+from subprocess import Popen, PIPE, STDOUT
 from socket import gethostbyaddr as gethostname
 
 GDM_CONF_FILE="/etc/gdm/gdm.conf"
+# try to edit correct file (Ubuntu use -custom file)
+if os.path.isfile(GDM_CONF_FILE + "-custom"):
+    GDM_CONF_FILE=GDM_CONF_FILE+"-custom"
+
+if os.path.isfile("/etc/gdm/gdm-cdd.conf"):
+    GDM_CONF_FILE="/etc/gdm/gdm-cdd.conf"
+
+# in new Ubuntu create empty file and use it
+if os.path.isfile("/etc/gdm/gdm.schemas") and not os.path.isfile("/etc/gdm/custom.conf"):
+    # create empty file
+    f=open("/etc/gdm/custom.conf", 'w')
+    f.write('\n')
+    f.close()
+
+# new GDM in Ubuntu Karmic
+if os.path.isfile("/etc/gdm/custom.conf"):
+    GDM_CONF_FILE="/etc/gdm/custom.conf"
+
+# in Debian unstable GDM is installed in /etc/gdm3 create empty file and use it
+if os.path.isdir("/etc/gdm3") and not os.path.isfile("/etc/gdm3/daemon.conf"):
+    # create empty file
+    f=open("/etc/gdm3/daemon.conf", 'w')
+    f.write('\n')
+    f.close()
+
+# new GDM in Debian unstable
+if os.path.isfile("/etc/gdm3/daemon.conf"):
+    GDM_CONF_FILE="/etc/gdm3/daemon.conf"
+
 HOME_TEMPLATE="/root/skel.tar.gz"
 USER_GROUPS=["fuse"]
 
@@ -206,17 +235,19 @@ def show_login():
     print username    
 
 def read_exe_output(cmd):
+    p = Popen(cmd, shell=True, bufsize=0, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output=[]
-    if noaction:
-        print_debug("NOACTION: read_exe_output() cmd=%s" %(cmd) )
-        return output
-    (stdout, stdin) = popen2.popen2(cmd)
-    stdin.close()
-    for line in stdout:
+    for line in stdout.readlines():
         if line != '\n':
             line=line.replace('\n', '')
             output.append(line)
-    return output
+    if len(output) == 0:
+        return ""
+    elif len(output) > 1:
+        if verbose==1:
+            print_debug ( "exe_cmd(%s) %s" %(cmd, output) )
+        return output
+    return []
 
 
 def restore_home(home, username):
