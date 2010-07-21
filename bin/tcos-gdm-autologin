@@ -73,31 +73,42 @@ HOME_TEMPLATE="/root/skel.tar.gz"
 USER_GROUPS=["fuse"]
 
 
-debug=False
+debug=True
 configure=False
 add=False
 delete_home=True
 noaction=False
+local=""
 
 # this is the values needed to connect to GDM from thin clients
 TCOS_GDM={
 "daemon":[
     {"TimedLoginEnable":"true"},
     {"TimedLogin":"/usr/sbin/tcos-gdm-autologin|"},
-    {"TimedLoginDelay":"10"}
+    {"TimedLoginDelay":"5"}
     ],
 "security":[
     {"AllowRemoteAutoLogin":"true"},
     {"DisallowTCP":"false"}
     ],
 "xdmcp":[
-    {"Enable":"true"}
+    {"Enable":"true"},
+    {"MaxPending":"60"},
+    {"MaxWaitIndirect":"80"},
+    {"MaxWait":"75"},
+    {"PingIntervalSeconds":"35"},
+    {"MaxPendingIndirect":"30"},
+    {"MaxSessions":"40"},
+    {"DisplaysPerHost":"4"},
     ]
 }
 
 def print_debug(txt):
     if debug:
-        sys.stderr.write("%s::%s\n" %("tcos-gdm-autologin", txt))
+        f=open('/var/log/tcos-gdm-autologin.log', 'a')
+        f.write("[%s] %s::%s\n" %(os.getpid(), "tcos-gdm-autologin", txt) )
+        f.close()
+        #sys.stderr.write("%s::%s\n" %("tcos-gdm-autologin", txt))
         #print "%s::%s" %("tcos-gdm-autologin", txt)
 
 def usage():
@@ -115,7 +126,7 @@ def usage():
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], ":hd", 
-        ["help", "debug", "configure", "skel=", "add", "nodelete", "noaction"])
+        ["help", "debug", "configure", "skel=", "add", "nodelete", "noaction", "local="])
 except getopt.error, msg:
     print msg
     print "for command line options use tcos-gdm-autologin --help"
@@ -141,9 +152,22 @@ for o, a in opts:
         
     if o == "--skel":
         HOME_TEMPLATE=a
+
+    if o == "--local":
+        local=a
+
     if o in ("-h", "--help"):
         usage()
         sys.exit(0)
+
+
+print_debug("--------------------------------------------------------")
+if "DISPLAY" in os.environ:
+    print_debug( "DISPLAY=%s"%(os.environ['DISPLAY']) )
+else:
+    print_debug("DISPLAY not set")
+
+
 
 ########################################################
 #
@@ -200,8 +224,9 @@ def show_login():
     display=None
     host, display =  os.environ["DISPLAY"].split(':')
     if host == "":
-        print_debug ( "localdisplay no have username" )
-        sys.exit(1)
+        print_debug ( "localdisplay return local='%s'"%local )
+        print "%s"%local
+        sys.exit(0)
     if is_ip(host):
         try:
             host=gethostname(host)[0]
@@ -232,6 +257,7 @@ def show_login():
         restore_home(home, username)
     else:
         print_debug("Not restoring home...")
+    print_debug("show_login() returning '%s'"%username)
     print username    
 
 def read_exe_output(cmd):
