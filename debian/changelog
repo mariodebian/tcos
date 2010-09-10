@@ -1,3 +1,15 @@
+tcos (0.89.65) unstable; urgency=low
+
+  * bin/gentcos bin/installer.sh session-cmd/session-cmd-script: don't
+    use '&>' to redirect all output
+  * bin/gentcos: add distro and tcos version to gentcos output
+  * bin/tcos-gdm-autologin: update popen2 => subprocess and search a GDM
+    conf file in other sites
+  * bin/tcos-gdm-autologin: add support for setting user if DISPLAY is
+    local and log debug in /var/log/tcos-gdm-autologin.log
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 10 Sep 2010 19:54:29 +0200
+
 tcos (0.89.64) unstable; urgency=low
 
   * hooks-addons/12getty: fix Debian lenny fgetty launch in background
