@@ -85,14 +85,30 @@ def parseIPAddress(ipstr, return_ipv4=True):
     newip=[]
     isBin=False
 
-    if ipstr.endswith(':0.0'):
-        ipstr=ipstr.replace(':0.0', '')
-    
-    if ipstr.endswith(':0'):
-        ipstr=ipstr.replace(':0', '')
+    if ipstr == "::1":
+        # localhost in IPV6
+        return "127.0.0.1"
+
+    # GDM when change username use a $DISPLAY like this "::12"
+    if re.match("::([0-9]{1,9})$", ipstr):
+        return ""
+
+    # XEPHYR NAME ':20.0'
+    if re.match(":([0-9]{1,9}|[0-9]{1,9}.[0-9]{1,9})$", ipstr):
+        return ""
+
+    # match x.x.x.x:0 or x.x.x.x:0.0
+    if re.match(".*:([0-9]{1,9}|[0-9{1-9}].[0-9{1-9}])$", ipstr):
+        #print_debug("delete display from IP\n\n")
+        ipstr=ipstr.rsplit(":", 1)[0]
+
+    # match "localhost:10"
+    if re.match("[a-zA-Z].*:([0-9]{1,9})", ipstr):
+        ipstr=ipstr.rsplit(":", 1)[0]
+        return ipstr
 
     # hostname must start with letter and contain letters numbers and '-' or '.'
-    if re.match(r'^[a-zA-Z][a-zA-Z0-9.-]+$', ipstr):
+    if re.match("^[a-zA-Z][a-zA-Z0-9.-]+$", ipstr):
         # ipstr is a hostname
         return ipstr
 
@@ -103,6 +119,9 @@ def parseIPAddress(ipstr, return_ipv4=True):
         #print_debug("%s => %s string=%s"%(it, binascii.hexlify(it), eol) )
         newip.append(binascii.hexlify(it))
     
+    if ipstr == '':
+        return ''
+    
     if isBin:
         try:
             ip=ipaddr.IPAddress(IPy.parseAddress("0x" + "".join(newip) )[0])
@@ -111,13 +130,14 @@ def parseIPAddress(ipstr, return_ipv4=True):
     else:
         try:
             ip=ipaddr.IPAddress(ipstr)
-        except Exception:
-            #except Exception, err:
-            #print_debug("parseIPAddress() Exception, error=%s"%err)
+        #except Exception:
+        except Exception, err:
+            print_debug("      parseIPAddress() Exception, error=%s"%err)
             return ipstr
     
     ipv4=ip
     if return_ipv4 and ip.version == 6 and ip.ipv4_mapped:
+        #print_debug("  IPV6 found  %s"%ip)
         ipv4=ip.ipv4_mapped.exploded
     
     return str(ipv4)
@@ -195,6 +215,25 @@ def GetLast(ip):
 
     hostname=GetHostname(ip)        
     print_debug("GetLast() ip=%s hostname=%s "%(ip,hostname))
+
+    # try to connect with GDM througth dbus to read all 
+    # sessions & display info, better than read wtmp
+    try:
+        import tcosmonitor.Sessions
+        app=tcosmonitor.Sessions.Sessions()
+        for session in app.sessions:
+            if session.remote_host_name == ip:
+                print_debug("GetLast() session=%s"%session)
+                data= {"pid":0, 
+                        "user":session.user, 
+                        "host":parseIPAddress(session.remote_host_name),
+                        "time":session.since, 
+                        "timelogged":session.diff}
+                return data
+    except Exception, err:
+        print_debug("GetLast() Exception, no DBUS Session support, old GDM, err='%s'"%err)
+        #import traceback
+        #traceback.print_exc(file=sys.stderr)
 
     for i in range(10):
         last_file=WTMP_FILE
