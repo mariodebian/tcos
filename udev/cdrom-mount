@@ -4,7 +4,11 @@
 #
 #
 [ ! -x /sbin/blkid ] && exit 0
-[ ! -e /dev/cdrom  ] && exit 0
+
+# detect CDROM
+CDROM=$(devicesctl.sh --getcdrom| awk -F"|" '{print $1}')
+[ "$CDROM" = ""  ] && exit 0
+CDROM="/dev/$CDROM"
 
 # seconds in loop
 TIMEOUT=3
@@ -26,12 +30,12 @@ output_file="/tmp/tcos-udevd.log"
 
 while [ 1 ]; do
 
-  OUTPUT=$(/sbin/blkid -p /dev/cdrom 2>&1)
+  OUTPUT=$(/sbin/blkid -p $CDROM 2>&1)
   RETURN=$?
   #echo "cdrom-mount OUTPUT='$OUTPUT' RETURN='$RETURN'"
 
   if [ "$RETURN" = "0" ]; then
-    export $($UDEVINFO --name=/dev/cdrom --query=env | grep -v "^DEVLINKS" | sed 's/[[:blank:]]/_/g')
+    export $($UDEVINFO --name=$CDROM --query=env | grep -v "^DEVLINKS" | sed 's/[[:blank:]]/_/g')
     export ACTION=add
 
     if echo $DEVPATH | grep -q "/devices/" ; then
