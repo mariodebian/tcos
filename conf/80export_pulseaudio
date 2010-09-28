@@ -2,9 +2,13 @@
 # Startup script for export_pulseaudio
 #
 
-DISPLAY_HOST=$(python -c 'import os; import tcosmonitor.shared; print tcosmonitor.shared.parseIPAddress(os.environ["DISPLAY"])')
+if [ -f /usr/share/pyshared/tcosmonitor/shared.py ]; then
+  DISPLAY_HOST=$(python /usr/share/pyshared/tcosmonitor/shared.py "$DISPLAY" 2>/dev/null)
+else
+  DISPLAY_HOST=$(python -c 'import os; import tcosmonitor.shared; print tcosmonitor.shared.parseIPAddress(os.environ["DISPLAY"])')
+fi
 
-if [ ! -z ${DISPLAY_HOST} ]; then
+if [ ! -z "${DISPLAY_HOST}" ]; then
   # export PulseAudio server
   export PULSE_SERVER="${DISPLAY_HOST}"
   ## don't export ESPEAKER VAR, eats a lot of bandwich if detected
