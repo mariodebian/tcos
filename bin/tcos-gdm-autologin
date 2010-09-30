@@ -38,6 +38,7 @@ import os, sys
 import getopt
 from subprocess import Popen, PIPE, STDOUT
 from socket import gethostbyaddr as gethostname
+import pwd
 
 GDM_CONF_FILE="/etc/gdm/gdm.conf"
 # try to edit correct file (Ubuntu use -custom file)
@@ -105,11 +106,13 @@ TCOS_GDM={
 
 def print_debug(txt):
     if debug:
-        f=open('/var/log/tcos-gdm-autologin.log', 'a')
-        f.write("[%s] %s::%s\n" %(os.getpid(), "tcos-gdm-autologin", txt) )
-        f.close()
-        #sys.stderr.write("%s::%s\n" %("tcos-gdm-autologin", txt))
-        #print "%s::%s" %("tcos-gdm-autologin", txt)
+        try:
+            f=open('/var/log/tcos-gdm-autologin.log', 'a')
+            f.write("[%s] %s::%s\n" %(os.getpid(), "tcos-gdm-autologin", txt) )
+            f.close()
+        except:
+            sys.stderr.write("%s::%s\n" %("tcos-gdm-autologin", txt))
+        ##print "%s::%s" %("tcos-gdm-autologin", txt)
 
 def usage():
     print "tcos-gdm-autologin help:"
@@ -222,7 +225,8 @@ def show_login():
     host=None
     home=None
     display=None
-    host, display =  os.environ["DISPLAY"].split(':')
+    # FIXME use tcosmonitor.shared.parseIPAddress
+    host, display =  os.environ["DISPLAY"].rsplit(':', 1)
     if host == "":
         print_debug ( "localdisplay return local='%s'"%local )
         print "%s"%local
@@ -234,22 +238,16 @@ def show_login():
         except:
             print_debug("show_login() error converting IP to hostname")
     
-    # read home for hostname:user
-    f=open("/etc/passwd", "r")
-    data=f.readlines()
-    f.close()
-    newdata=[]
-    for line in data:
-        newdata.append(line.replace('\n', ''))
-    data=newdata
-    for line in data:
-        if host == line.split(':')[0]:
-            (username, home) = ( line.split(':')[0], line.split(':')[5] )
-            
-    if not username or not os.path.isdir(home):
+    
+    try:
+        data=pwd.getpwnam(host)
+    except:
         print "no_username_configured_for_host_%s" %(host)
-        print_debug("ERROR, username=%s or home=%s not set or not found in /etc/passwd." %(username, home))
+        print_debug("ERROR, host (%s) not found in users." %(host))
         sys.exit(1)
+    
+    home=data.pw_dir
+    username=data.pw_name
     
     # kill all user processes
     execmd("pkill -9 -u %s" %(username))
@@ -260,18 +258,20 @@ def show_login():
     print_debug("show_login() returning '%s'"%username)
     print username    
 
-def read_exe_output(cmd):
+def read_exe_output(cmd, verbose=0):
+    print_debug("read_exe_output() cmd='%s'"%cmd)
     p = Popen(cmd, shell=True, bufsize=0, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output=[]
-    for line in stdout.readlines():
+    for line in p.stdout.readlines():
         if line != '\n':
             line=line.replace('\n', '')
             output.append(line)
+    print_debug("read_exe_output() output=%s"%output)
     if len(output) == 0:
         return ""
-    elif len(output) > 1:
+    elif len(output) >= 1:
         if verbose==1:
-            print_debug ( "exe_cmd(%s) %s" %(cmd, output) )
+            print_debug ( "read_exe_output(%s) %s" %(cmd, output) )
         return output
     return []
 
