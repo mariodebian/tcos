@@ -108,6 +108,10 @@ elif [ -x /sbin/dhclient ]; then
    mv $DESTDIR/usr/lib/libcrypto.so* $DESTDIR/lib/
  fi
 
+ if ldd /sbin/dhclient| grep -q libz; then
+   mv $DESTDIR/usr/lib/libz.so.* $DESTDIR/lib/
+ fi
+
 else
   _echo ""
   _echo "    ERROR:"
