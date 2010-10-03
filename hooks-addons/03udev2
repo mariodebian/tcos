@@ -164,4 +164,7 @@ sed -i -e '/depmod/s/depmod/#depmod/g' $DESTDIR/init
 rm -f ${DESTDIR}/scripts/init-premount/devpts
 rm -f ${DESTDIR}/scripts/init-bottom/dropbear
 rm -f ${DESTDIR}/scripts/init-premount/dropbear
-rm -f ${DESTDIR}/scripts/init-bottom/udev
+
+if [ "${BOOT}" != "tcos-nfs" ]; then
+  rm -f ${DESTDIR}/scripts/init-bottom/udev
+fi
