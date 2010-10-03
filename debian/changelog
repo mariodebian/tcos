@@ -1,3 +1,25 @@
+tcos (0.89.67) unstable; urgency=low
+
+  * xmlrpc/sh/tcos-last update parseIpAddress and add tcosmonitor
+    Sessions support (dbus+gdm+consolekit)
+  * udev/cdrom-mount: read first CDROM device with devicesctl.sh
+  * conf/80export_pulseaudio: call shared.py instead of importing
+    modules
+  * bin/tcos-gdm-autologin: fix some errors in read_exe_output and use
+    pwd instead of read /etc/passwd
+  * debian/control: allow isc-dhcp-client ash dhcp client
+  * hooks-addons/01dhclient: move libz.so to /lib
+  * hooks-addons/05compcache: use Inactive - 500KB if kbytes > AVALAIBLE
+  * hooks-addons/99clean_nfs_image: move liblzo.so before deleting
+    /usr/lib
+  * hooks-addons/03udev2: don't delete udev script if booting in NFS
+    mode
+  * hooks/tcosnfs: add comcache to NFS initrd image
+  * scripts/tcos-top/60make_init: fix udev script patch and use cat
+    instead of link files in NFS root
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 03 Oct 2010 17:10:22 +0200
+
 tcos (0.89.66) unstable; urgency=low
 
   * update Ubuntu Lucid kernel to 2.6.32-24
