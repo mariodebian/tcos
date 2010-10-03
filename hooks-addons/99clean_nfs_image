@@ -51,6 +51,7 @@ rm -f ${DESTDIR}/scripts/init-top/*framebuffer*
 rm -f ${DESTDIR}/sbin/resume
 rm -f ${DESTDIR}/bin/strace
 
+mv ${DESTDIR}/usr/lib/liblzo*so* ${DESTDIR}/lib/ >/dev/null 2>&1
 rm -rf ${DESTDIR}/usr/lib
 
 
