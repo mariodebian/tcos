@@ -28,6 +28,10 @@ if grep -q bootchartd /proc/cmdline ; then
   mv /tmp/bootchart/* /root/tmp/bootchart
 fi
 
+UDEV_SCRIPT=/scripts/init-premount/udev
+[ -e /scripts/init-top/udev ] && UDEV_SCRIPT=/scripts/init-top/udev
+
+
 rm -f /root/sbin/init
 cat << EOF > /root/sbin/init
 #!/bin/sh
@@ -48,7 +52,8 @@ fi
 
 # start udev again
 log_begin_msg "Re-Discovering hardware"
-/scripts/init-premount/udev
+$UDEV_SCRIPT
+find / -type f >/dev/null 2>&1
 log_end_msg \$?
 
 
@@ -60,35 +65,23 @@ chmod +x /root/sbin/init
 
 
 
-move_file() {
-# $1 orig
-# $2 dest
- mkdir -p ${2}/$(dirname ${1})
- if [ -f $1 ]; then
-  mv ${1} ${2}/$(dirname ${1})
-  ln -s ${2}/${1} ${1}
- else
-  touch $2/$1
- fi
-}
+mkdir -p /root/proc /root/dev /root/sys
+mkdir -p /root/var/run /root/var/www /root/var/log /root/tmp
 
-move_file /var/lib/dhcp/dhclient.leases /root
-move_file /etc/hostname     /root
-move_file /etc/hosts        /root
-move_file /etc/resolv.conf  /root
-move_file /tmp/progress     /root
-move_file /tmp/initramfs.debug /root
-
-move_file /var/log/messages /root
-move_file /tmp/less_ram     /root
+mkdir -p /root/var/lib/dhcp
+cat /var/lib/dhcp/dhclient.leases > /root/var/lib/dhcp/dhclient.leases
+cat /etc/hostname > /root/etc/hostname
+cat /etc/hosts > /root/etc/hosts
+cat /etc/resolv.conf > /root/etc/resolv.conf
+cat /etc/modules > /root/etc/modules
+cat /tmp/progress > /root/tmp/progress
+cat /tmp/initramfs.debug > /root/tmp/initramfs.debug
+cat /var/log/messages > /root/var/log/messages
+cat /tmp/less_ram > /root/tmp/less_ram
 
 touch /etc/mtab
-move_file /etc/mtab         /root
+cat /etc/mtab > /root/etc/mtab
 
-mkdir -p /root/proc
-mkdir -p /root/dev
-mkdir -p /root/sys
-
-
+[ -e /etc/console/boottime.kmap.gz ] && cat /etc/console/boottime.kmap.gz > /root/etc/console/boottime.kmap.gz
 
 exit 0
