@@ -44,6 +44,11 @@ fi
 # add TCOS_COMPCACHE_PERCENT% of RAM (by default 20)
 kbytes="\$((\$TOTAL_RAM * $TCOS_COMPCACHE_PERCENT / 100))"
 
+AVALAIBLE_RAM=\$(grep 'Inactive:' /proc/meminfo |tr -d ': [A-Z][a-z]')
+if [ "\${kbytes}" -gt "\${AVALAIBLE_RAM}" ]; then
+  kbytes=\$(( \${AVALAIBLE_RAM} - 500 ))
+fi
+
 
 modprobe -q --ignore-install ramzswap disksize_kb="\$kbytes"
 
