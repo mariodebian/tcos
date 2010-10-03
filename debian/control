@@ -13,7 +13,7 @@ Package: initramfs-tools-tcos
 Architecture: all
 Depends: tcos-core, 
          initramfs-tools (>= 0.40), 
-         dhcp3-client | dhcp-client, 
+         isc-dhcp-client | dhcp3-client | dhcp-client, 
          console-setup | console-data,
          squashfs-tools,
          pciutils,
