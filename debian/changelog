@@ -1,3 +1,9 @@
+tcos (0.89.67.1) max; urgency=low
+
+  * Add Ubuntu Maverick
+
+ -- Mario Izquierdo Rodríguez (Thinetic Systems SLNE) <mario.izquierdo@thinetic.es>  Fri, 15 Oct 2010 17:52:38 +0200
+
 tcos (0.89.67) unstable; urgency=low
 
   * xmlrpc/sh/tcos-last update parseIpAddress and add tcosmonitor

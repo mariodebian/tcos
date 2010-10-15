@@ -34,6 +34,8 @@ KERNEL_jaunty="2.6.28-19-generic"
 KERNEL_karmic="2.6.31-22-generic"
 
 KERNEL_lucid="2.6.32-24-generic"
+
+KERNEL_maverick="2.6.35-22-generic"
 ##################################
 
 
