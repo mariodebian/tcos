@@ -41,6 +41,6 @@ sleep 2
 UNIX_SOCKET="$(create_socket)" || exit 0
 rm -f "${UNIX_SOCKET}.sock" "${UNIX_SOCKET}.pid"
 cd /tmp
-faucet "${UNIX_SOCKET}.sock" --unix --daemon --pidfile "${UNIX_SOCKET}.pid" --in xargs ${EXEC_SCRIPT} >/dev/null 2>&1
-chmod  600 "${UNIX_SOCKET}.sock" "${UNIX_SOCKET}.pid"
+umask 0177
+faucet "${UNIX_SOCKET}.sock" --unix --pidfile "${UNIX_SOCKET}.pid" --in xargs ${EXEC_SCRIPT} >/dev/null 2>&1
 exit 0
