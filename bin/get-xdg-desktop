@@ -39,7 +39,7 @@ enabled=$(awk -F "=" '/^enabled=/ {print $2}' /etc/xdg/user-dirs.conf)
     XDG_PATH="${XDG_CONFIG_HOME}${XDG_CONFIG_DIRS}"
     
     # obtain path to real Desktop 
-    [ -r ${XDG_PATH} ] && DESKTOP_DIR=$(basename $(awk -F "=" '/^XDG_DESKTOP_DIR=/ {print $2}' ${XDG_PATH} | sed s/\"//g))
+    [ -r ${XDG_PATH} ] && DESKTOP_DIR=$(basename "$(awk -F '=' '/^XDG_DESKTOP_DIR=/ {print $2}' ${XDG_PATH} | sed s/\"//g)")
 
     if [ -z ${DESKTOP_DIR} ];then
         # if var not specified in config try defaults dirs for var Desktop, this file only contain basenames
@@ -54,7 +54,7 @@ enabled=$(awk -F "=" '/^enabled=/ {print $2}' /etc/xdg/user-dirs.conf)
 
 fi
 
-
+[ ! -d "${home}/${DESKTOP_DIR}" ] && mkdir -p "${home}/${DESKTOP_DIR}"
 echo ${home}/${DESKTOP_DIR}
 
 exit 0
