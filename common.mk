@@ -5,14 +5,6 @@ PACKAGE=initramfs-tools-tcos
 ##################################
 # kernel default versions
 
-KERNEL_dapper="2.6.15-29-386"
-
-KERNEL_edgy="2.6.17-12-generic"
-
-KERNEL_feisty="2.6.20-17-generic"
-
-KERNEL_etch="2.6.18-6-486"
-
 KERNEL_lenny="2.6.26-2-486"
 
 KERNEL_testing="2.6.32-5-486"
@@ -21,19 +13,12 @@ KERNEL_unstable="2.6.32-5-486"
 
 KERNEL_experimental="2.6.32-5-486"
 
-KERNEL_gutsy="2.6.22-16-generic"
-
-KERNEL_max="2.6.24-24-generic"
-
-KERNEL_hardy="2.6.24-28-generic"
-
-KERNEL_intrepid="2.6.27-15-generic"
-
 KERNEL_jaunty="2.6.28-19-generic"
 
 KERNEL_karmic="2.6.31-22-generic"
 
-KERNEL_lucid="2.6.32-24-generic"
+KERNEL_lucid="2.6.32-25-generic"
+KERNEL_max="2.6.32-25-generic"
 
 KERNEL_maverick="2.6.35-22-generic"
 ##################################
