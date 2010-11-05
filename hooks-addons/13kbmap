@@ -26,7 +26,6 @@ else
   if [ -f /etc/console-setup/cached.kmap.gz ]; then
     mkdir -p $DESTDIR/etc/console-setup
     cp -ra /etc/console-setup/cached.kmap.gz $DESTDIR/etc/console-setup
-    echo "/etc/console-setup/cached.kmap.gz /etc/console-setup/boottime.kmap.gz" >> $DESTDIR/conf/links
   fi
 
 fi

@@ -37,7 +37,9 @@ fi
 if [ "$(which loadkeys)" ]; then
  _log "INITTCOS loading keymap"
  log_begin_msg "Loading default server keymap"
-   loadkeys -q /etc/console/boottime.kmap.gz >> /tmp/initramfs.debug 2>&1 &
+   [ -e /etc/console/boottime.kmap.gz ] && loadkeys -q /etc/console/boottime.kmap.gz >> /tmp/initramfs.debug 2>&1 &
+   [ -e /etc/console-setup/cached.kmap.gz ] && loadkeys -q /etc/console-setup/cached.kmap.gz >> /tmp/initramfs.debug 2>&1 &
+   [ -e /etc/console-setup/boottime.kmap.gz ] && loadkeys -q /etc/console-setup/boottime.kmap.gz >> /tmp/initramfs.debug 2>&1 &
  log_end_msg $?
 else
  _log "INITTCOS not loading default keymap"
