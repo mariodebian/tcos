@@ -1,3 +1,19 @@
+tcos (0.89.68) unstable; urgency=low
+
+  * Fix facet zombie process, go to /tmp and redirect stderr and stdout,
+    thanks to Fede Heinz <fheinz@vialibre.org.ar>
+  * session-cmd-script set umask 0177 and don't use --daemon, thanks
+    again to Fede Heinz <fheinz@vialibre.org.ar>
+  * session-cmd-script: try to call shared.py directly to get :0.0 IP
+  * bin/tcos-buildchroot: don't install GRUB, and remove it if installed
+  * hooks-addons/13kbmap: link cached.kmap.gz to boottime.kmap.gz
+  * bin/get-xdg-desktop: safe eval XDG_DESKTOP_DIR (allow spaces) and
+    create if not exists
+  * common.mk: remove obsolete kernel versions and update Ubuntu Lucid
+    and MaX
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 05 Nov 2010 16:29:28 +0100
+
 tcos (0.89.67.1) unstable; urgency=low
 
   * Add Ubuntu Maverick
