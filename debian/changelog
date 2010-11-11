@@ -1,3 +1,12 @@
+tcos (0.89.69) unstable; urgency=low
+
+  * hooks-addons/13kbmap scripts/tcos-bottom/05inittcos: really fix
+    console keymaps
+  * hooks-addons/clean_initramfs hooks/tcosbin: remove mdadm scripts
+  * bin/get_xauth: fix XAUTHORITY handling
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 11 Nov 2010 18:48:17 +0100
+
 tcos (0.89.68) unstable; urgency=low
 
   * Fix facet zombie process, go to /tmp and redirect stderr and stdout,
