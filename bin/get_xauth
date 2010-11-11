@@ -31,7 +31,7 @@ if [ -e "${home}/.Xauthority" ]; then
 else
    XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
    [ -z $XAUTHORITY ] && XAUTHORITY=$(xauth info 2>/dev/null | awk '/^Authority/ {print $3}')
-   [ -z $XAUTHORITY -o "$XAUTHORITY" = "/root/.Xauthority" ] && XAUTHORITY="$(find /var/run/gdm*/ -name auth-for-* -user ${user} 2>/dev/null | head -1)/database"
+   [ -z $XAUTHORITY ] && [ "$XAUTHORITY" != "/root/.Xauthority" ] && XAUTHORITY="$(find /var/run/gdm*/ -name auth-for-* -user ${user} 2>/dev/null | head -1)/database"
 fi
 
 # standalone GDM login
