@@ -142,6 +142,7 @@ if [ $TCOS_DISABLE_ACPI ] ; then
   rm -rf $DESTDIR/scripts/nfs*
   rm -rf $DESTDIR/scripts/init-premount/thermal
   rm -rf $DESTDIR/sbin/mdadm
+  rm -rf $DESTDIR/scripts/init-premount/mdadm
   rm -rf $DESTDIR/sbin/mdrun
   rm -rf $DESTDIR/sbin/vgchange
   rm -rf $DESTDIR/sbin/cryptsetup
