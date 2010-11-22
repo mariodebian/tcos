@@ -219,6 +219,7 @@ def GetLast(ip):
     # try to connect with GDM througth dbus to read all 
     # sessions & display info, better than read wtmp
     try:
+        os.environ['TCOSMONITOR_NO_EXTENSIONS']='1'
         import tcosmonitor.Sessions
         app=tcosmonitor.Sessions.Sessions()
         for session in app.sessions:
