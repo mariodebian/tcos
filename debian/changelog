@@ -1,3 +1,15 @@
+tcos (0.89.70) unstable; urgency=low
+
+  * xmlrpc/sh/tcos-ftpclient: Parse OPEN in True/False way
+  * xmlrpc/sh/tcos-last: set TCOSMONITOR_NO_EXTENSIONS before importing
+    tcosmonitor
+  * debian/copyright: update GIT URL
+  * update GIT url
+  * change TCOS_DIR from /usr/share/initramfs-tools-tcos to
+    /usr/share/tcos
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 25 Nov 2010 13:25:47 +0100
+
 tcos (0.89.69) unstable; urgency=low
 
   * hooks-addons/13kbmap scripts/tcos-bottom/05inittcos: really fix
