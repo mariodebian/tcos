@@ -1,3 +1,12 @@
+tcos (0.89.71) unstable; urgency=low
+
+  * common.mk Update Ubuntu Lucid kernel 2.6.32-26
+  * conf/tcos-generation-functions.sh: fix templates dir, use absolute
+    path
+  * conf/tcos-generation-functions.sh: fix another wrong templates path
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 25 Nov 2010 17:15:15 +0100
+
 tcos (0.89.70) unstable; urgency=low
 
   * xmlrpc/sh/tcos-ftpclient: Parse OPEN in True/False way
