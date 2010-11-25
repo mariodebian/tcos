@@ -43,7 +43,7 @@ read_template() {
   fi
   [ "$tpl" = "" ] && _warning "(t-g-f) template don't have TCOS_TEMPLATE or TCOS_BASED_TEMPLATE. BUG???" && return
   #_debug "Template $tpl"
-  for tdir in $/usr/share/tcos/templates /etc/tcos/templates; do
+  for tdir in ${TCOS_DIR}/templates /etc/tcos/templates; do
     _verbose "(t-g-f) Searching in dir $tdir"
     [ -f $tdir/$tpl ] && echo "$tdir/$tpl" && break
   done
@@ -66,10 +66,10 @@ tcos_get_templates() {
   done
   if [ "$( echo $tpl2 | sed 's/[[:blank:]]//g' )" != "" ]; then
     _verbose "(t-g-f) return tpl2='base.conf $tpl2 $personalized'"
-    echo "${TCOS_DIR}/base.conf $tpl2 $personalized"
+    echo "${TCOS_DIR}/templates/base.conf $tpl2 $personalized"
   else
     _verbose "(t-g-f) return tpl1='base.conf $tpl1'"
-    echo "${TCOS_DIR}/base.conf $tpl1"
+    echo "${TCOS_DIR}/templates/base.conf $tpl1"
   fi
 }
 
