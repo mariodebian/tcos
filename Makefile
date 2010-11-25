@@ -102,7 +102,7 @@ install:
 	for i in `find hooks/ -type f`; do install -m 755 $$i $(DESTDIR)$(TCOS_DIR)/$$i; done
 	for i in `find hooks-addons/ -maxdepth 1 -type f`; do install -m 644 $$i $(DESTDIR)$(TCOS_DIR)/$$i; done
 
-	# delete tcosmain from initramfs-tools-tcos/hooks/
+	# delete tcosmain from tcos/hooks/
 	rm -rf $(DESTDIR)$(TCOS_DIR)/hooks/tcosmain
 	chmod -x $(DESTDIR)$(TCOS_DIR)/scripts/tcos
 

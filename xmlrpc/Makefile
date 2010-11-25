@@ -107,7 +107,7 @@ clean:
 
 install:
 	install -d $(DESTDIR)/$(TCOS_BINS)
-	install -d $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
+	install -d $(DESTDIR)/$(TCOS_DIR)/xmlrpc/
 	install -d $(DESTDIR)/$(PREFIX)/sbin
     
 	install -m 755 $(SERVER)       $(DESTDIR)/$(TCOS_BINS)/
@@ -135,14 +135,14 @@ install:
 	install -m 755 sh/pactl-controller.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/tcos-pam-usb.sh    $(DESTDIR)/$(TCOS_BINS)/
 
-	install -m 644 var/etc/mime.types  $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
+	install -m 644 var/etc/mime.types  $(DESTDIR)/$(TCOS_DIR)/xmlrpc/
 
 
-	install -m 644 var/etc/abyss.conf  $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
-	sed -i 's|__TCOS_ROOT__|/|g' $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/abyss.conf
-	sed -i 's|__TCOS_WWW__|/var/www|g' $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/abyss.conf
-	sed -i 's|__TCOS_LOG__|/var/log|g' $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/abyss.conf
-	sed -i 's|__TCOS_ETC__|/etc|g' $(DESTDIR)/$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/abyss.conf
+	install -m 644 var/etc/abyss.conf  $(DESTDIR)/$(TCOS_DIR)/xmlrpc/
+	sed -i 's|__TCOS_ROOT__|/|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
+	sed -i 's|__TCOS_WWW__|/var/www|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
+	sed -i 's|__TCOS_LOG__|/var/log|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
+	sed -i 's|__TCOS_ETC__|/etc|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
 
 	# standalone package
 	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)

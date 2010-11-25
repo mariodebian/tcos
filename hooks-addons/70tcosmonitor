@@ -34,7 +34,7 @@ cpifexists ${TCOS_BINS}/configctl.sh /sbin/
 # udev process
 cpifexists ${TCOS_BINS}/tcos-udevd.sh           /sbin/
 mkdir -p ${DESTDIR}/etc/udev/rules.d/
-cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/050_tcos_devices.rules  /etc/udev/rules.d/
+cpifexists ${TCOS_DIR}/xmlrpc/050_tcos_devices.rules  /etc/udev/rules.d/
 
 # with new kernels (>= 2.6.22) need mount/umount events
 cpifexists ${TCOS_BINS}/mount-listener           /usr/sbin/
@@ -91,8 +91,8 @@ mkdir -p $DESTDIR/usr/share/misc/
 
 
 
-cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/abyss.conf     /etc/
-cpifexists /usr/share/initramfs-tools-tcos/xmlrpc/mime.types     /etc/
+cpifexists ${TCOS_DIR}/xmlrpc/abyss.conf     /etc/
+cpifexists ${TCOS_DIR}/xmlrpc/mime.types     /etc/
 
 # configure /etc/abyss.conf
 # abs path of mime.types

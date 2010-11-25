@@ -1,6 +1,6 @@
 #.SILENT:
 
-PACKAGE=initramfs-tools-tcos
+PACKAGE=tcos
 
 ##################################
 # kernel default versions
@@ -55,7 +55,7 @@ TCOS_BINS=$(shell awk -F "=" '/TCOS_BINS=/ {print $$2}' $(TCOS_CONFIG_FILE) )
 TCOS_STANDALONE_DIR=/var/lib/tcos/standalone
 
 
-TCOS_XMLRPC_DIR=$(PREFIX)/share/initramfs-tools-tcos/xmlrpc/
+TCOS_XMLRPC_DIR=$(PREFIX)/share/tcos/xmlrpc/
 DBUS_CONF=/etc/dbus-1/system.d/
 X11_CONF=/etc/X11/Xsession.d/
 
