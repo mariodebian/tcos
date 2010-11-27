@@ -140,7 +140,6 @@ install:
 
 	install -m 644 conf/initramfs.conf $(DESTDIR)$(TCOS_CONF)/initramfs.conf
 	install -m 644 conf/template $(DESTDIR)$(TCOS_CONF)/hacking/template
-	install -m 644 grub/menu.lst-tcos $(DESTDIR)$(TCOS_CONF)/menu.lst-tcos
 
 	install -m 644 images/logo.xpm.gz $(DESTDIR)$(TCOS_DIR)/logo.xpm.gz
 

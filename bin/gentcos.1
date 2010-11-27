@@ -88,13 +88,7 @@ output filename (in /var/lib/tcos/tftp)
 .B CDROM method
 .B
 .IP \-cdrom
-Create initramfs and create a bootable iso based on isolunux or grub
-
-.B
-.IP \-type=isolinux
-.B
-.IP \-type=grub
-Select type of cdrom bootloader (default isolinux)
+Create initramfs and create a bootable iso based on isolunux
 Iso image is saved in /var/lib/tcos/isos/
 
 .SH EXAMPLES
@@ -105,7 +99,7 @@ Iso image is saved in /var/lib/tcos/isos/
      # gentcos \-nfs \-rootfs
 
 .B   CDROM boot
-     # gentcos \-cdrom \-type=grub
+     # gentcos \-cdrom
 
 .B   Floppy boot
      # gentcos \-nbi \-extra-append="splash vga=791 uselocal"

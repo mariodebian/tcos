@@ -168,22 +168,17 @@ install_kernel () {
        echo "Waiting for cdrom ${cdrom}..."
        sleep 5
        if [ $(grep -c "/cdrom" /proc/mounts) -gt 0 ]; then
-         if [ ! -d /cdrom/boot/grub ] && [ ! -d /cdrom/isolinux ]; then
-           echo "ERROR: $cdrom don't have grub or isolinux"
+         if [ ! -d /cdrom/isolinux ]; then
+           echo "ERROR: $cdrom don't have isolinux"
          else
            NET_INSTALL=0
-           #echo "$cdrom have grub or isolinux"
+           #echo "$cdrom have isolinux"
            break
          fi
        fi
     done
 
-    if [ -d /cdrom/boot/grub ]; then
-    log_begin_msg "Copying grub files to $HDD1"
-      cp /cdrom/boot/vmlinuz      /target/vmlinuz
-      cp /cdrom/boot/initrd.cdrom /target/initrd.gz
-    log_end_msg $?
-    elif [ -d /cdrom/isolinux ]; then
+    if [ -d /cdrom/isolinux ]; then
     log_begin_msg "Copying isolinux files to $HDD1"
       cp /cdrom/isolinux/vmlinuz       /target/vmlinuz
       cp /cdrom/isolinux/initrd.cdrom  /target/initrd.gz

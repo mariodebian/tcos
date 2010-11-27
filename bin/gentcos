@@ -314,32 +314,6 @@ create_nbi() {
  rm /tmp/initramfs-${TCOS_KERNEL}
 }
 
-create_grub_iso(){
- # Create temp dir
- dir=/tmp/grub-iso$$
- mkdir -p ${dir}/boot/grub
- [ ! -d ${ISOS} ] && mkdir -p ${ISOS}
- install -m 644 /etc/tcos/menu.lst-tcos ${dir}/boot/grub/menu.lst
- install -m 644 ${TCOS_DIR}/logo.xpm.gz   ${dir}/boot/grub/logo.xpm.gz
- [ -f /lib/grub/i386-pc/stage2_eltorito ] && install -m 644 /lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
- [ -f /usr/lib/grub/i386-pc/stage2_eltorito ] && install -m 644 /usr/lib/grub/i386-pc/stage2_eltorito ${dir}/boot/grub
- install -m 644 /boot/vmlinuz-${TCOS_KERNEL} ${dir}/boot/vmlinuz
- create_initramfs
- cp ${INITRAMFS} ${dir}/boot/initrd.cdrom
- sed -i s/"initramfs"/"initrd.cdrom"/g ${dir}/boot/grub/menu.lst
-
-
-${GENISO} -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b boot/grub/stage2_eltorito\
- -no-emul-boot -boot-load-size 4\
- -boot-info-table -o  ${OUTPUTIMAGE} ${dir}/ >/dev/null 2>&1
-  if [ $? = 0 ]; then
-    echo "Iso image done succesfully: ${OUTPUTIMAGE}"
-   else
-    echo "Error running mkisofs."
-  fi
-  rm -rf ${dir} > /dev/null 2>&1
-}
-
 create_isolinux_iso() {
  # ISOLINUX
  dir=/tmp/isolinux-iso$$
@@ -377,7 +351,7 @@ echo -e "Usage:
   $WHITE$(basename $0)$NORMAL $RED-tftp$NORMAL  [-o=initrd-pc1]           PXE (>= 64 Mb)
           $RED-nfs$NORMAL   [$GREEN-rootfs$NORMAL]                 LTSP like (28 - 64 Mb)
           $RED-nbi$NORMAL   [-nbi-output=linux.nbi]   Floppy
-          $RED-cdrom$NORMAL [-type=grub] [-force]     CDROM
+          $RED-cdrom$NORMAL [-force]     CDROM
           $RED-instpkg$NORMAL pkgname
           $RED-rmpkg$NORMAL pkgname
           $RED-listpkg$NORMAL
@@ -419,7 +393,6 @@ This is gentcos help info about generating net init images.
 
   ${BLUE}ISO IMAGES:${NORMAL}
      ${GREEN}-cdrom${NORMAL}  or [-c] create cdrom iso file in $ISOS
-    [${GREEN}-type=grub|isolinux${NORMAL}] make cdrom based on isolinux or grub
     [${GREEN}-force${NORMAL}] force cdrom build if external SQUASH is enabled
             ( this will put squashfs into initramfs )
 
@@ -452,7 +425,7 @@ This is gentcos help info about generating net init images.
 ${WHITE}
      gentcos -tftp -suffix=-pc1
      gentcos -nfs -rootfs
-     gentcos -cdrom -type=grub
+     gentcos -cdrom
      gentcos -nbi -extra-append=\"splash vga=791 uselocal\"
      gentcos -instpkg esound
      gentcos -rmpkg esound
@@ -852,11 +825,7 @@ fi
 
 # default isolinux
 if [ ! -z $TCOS_CDROM ]; then
- if [ "$TYPE" = "grub" ]; then
-    create_grub_iso
-  else
-    create_isolinux_iso
- fi
+  create_isolinux_iso
 fi
 
 
