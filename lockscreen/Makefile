@@ -8,6 +8,9 @@ XRES_SOURCES = screensize.c
 LOCKVNC_SOURCES = lockvnc.c
 LOCKVLC_SOURCES = lockvlc.c
 WAITFORX_SOURCES = waitforX.c
+GUD=get-xdg-desktop
+GUD_SOURCES=get-xdg-desktop.c
+GUD_LDD=-I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -lglib-2.0
 LIBS= -I/usr/lib
 LOCKLIBS+=$(shell pkg-config --libs imlib2)
 CFLAGS+=$(shell pkg-config --cflags imlib2)
@@ -36,8 +39,11 @@ $(LOCKVLC):
 $(WAITFORX):
 	$(QUIET_CC)$(CC) $(WAITFORX_SOURCES) $(LDADD_WAITFORX) -o $(WAITFORX)
 
+$(GUD):
+	$(QUIET_CC)$(CC) $(GUD_SOURCES) $(GUD_LDD) -o $(GUD)
+
 clean:
-	$(QUIET_CL)rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX) *~
+	$(QUIET_CL)rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX) $(GUD) *~
 
 debug: clean
 	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK) -DDEBUG=1
@@ -53,4 +59,5 @@ install:
 	install -m 755 $(LOCKVNC)   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(LOCKVLC)   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(WAITFORX)  $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 $(GUD)       $(DESTDIR)/$(TCOS_BINS)/
 	install -m 644 lockscreen.png $(DESTDIR)/$(PREFIX)/share/tcos-core/lockscreen.png
