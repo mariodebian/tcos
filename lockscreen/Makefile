@@ -19,7 +19,7 @@ LDADD_WAITFORX+=-O2 -ansi -pedantic -Wall -lX11 $(LIBS)
 CC=gcc
 
 
-all: $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX)
+all: $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX) $(GXD)
 
 include ../common.mk
 
@@ -59,5 +59,5 @@ install:
 	install -m 755 $(LOCKVNC)   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(LOCKVLC)   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 $(WAITFORX)  $(DESTDIR)/$(TCOS_BINS)/
-	install -m 755 $(GUD)       $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 $(GXD)       $(DESTDIR)/$(TCOS_BINS)/
 	install -m 644 lockscreen.png $(DESTDIR)/$(PREFIX)/share/tcos-core/lockscreen.png
