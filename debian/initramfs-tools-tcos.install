@@ -14,7 +14,6 @@ usr/share/tcos/tcos-modules.conf
 usr/share/tcos/inc
 usr/share/tcos/logo.xpm.gz
 etc/tcos/hacking/template
-etc/tcos/menu.lst-tcos
 etc/tcos/pxelinux.cfg.tpl
 etc/tcos/conf.d/branding.info
 etc/tcos/templates/branding-pxelinux.info
