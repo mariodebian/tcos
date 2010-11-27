@@ -8,9 +8,9 @@ XRES_SOURCES = screensize.c
 LOCKVNC_SOURCES = lockvnc.c
 LOCKVLC_SOURCES = lockvlc.c
 WAITFORX_SOURCES = waitforX.c
-GUD=get-xdg-desktop
-GUD_SOURCES=get-xdg-desktop.c
-GUD_LDD=-I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -lglib-2.0
+GXD=get-xdg-desktop
+GXD_SOURCES=get-xdg-desktop.c
+GXD_OPTS=-O2 -ansi -pedantic -Wall -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -lglib-2.0
 LIBS= -I/usr/lib
 LOCKLIBS+=$(shell pkg-config --libs imlib2)
 CFLAGS+=$(shell pkg-config --cflags imlib2)
@@ -39,11 +39,11 @@ $(LOCKVLC):
 $(WAITFORX):
 	$(QUIET_CC)$(CC) $(WAITFORX_SOURCES) $(LDADD_WAITFORX) -o $(WAITFORX)
 
-$(GUD):
-	$(QUIET_CC)$(CC) $(GUD_SOURCES) $(GUD_LDD) -o $(GUD)
+$(GXD):
+	$(QUIET_CC)$(CC) $(GXD_SOURCES) $(GXD_OPTS) -o $(GXD)
 
 clean:
-	$(QUIET_CL)rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX) $(GUD) *~
+	$(QUIET_CL)rm -f $(LOCK) $(XRES) $(LOCKVNC) $(LOCKVLC) $(WAITFORX) $(GXD) *~
 
 debug: clean
 	$(CC) $(SOURCES) $(LOCKLIBS) $(LDADD) -o $(LOCK) -DDEBUG=1
