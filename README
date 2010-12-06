@@ -53,12 +53,6 @@ INDEX:
 
 	 nounionfs ( disable unionfs mount on /usr, /usr will be read only )
 
-	 noautofs ( disable automount support for thin client devices:
-                 * floppy => /media/autofs/floppy/
-                 * flash (sda1) => /media/autofs/flash
-                 * flash1 (sda) => /media/autofs/flash1 ( pendrive without partitions)
-                 * cdrom0 => /media/autofs/cdrom0/ ( if terminal have more than one cdrom1 cdrom2... )
-
 
 
 ---------------------------------------
@@ -151,7 +145,6 @@ INDEX:
   break=swapon   # stop before create/mount swap file
   break=sqmount  # stop before download usr.squashfs or allmodules.squashfs
   break=ldconfig # stop before exec ldconfig
-  break=autofs   # stop before run automount daemon
 
   TCOS-bottom breaks
 

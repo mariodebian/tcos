@@ -18,8 +18,8 @@
   LTSPFS use X-Windows autentication protocol.
 
   (as root) # adduser USER fuse
-  (as $USER) $ mkdir $HOME/Desktop/Devices
-  (as $USER) $ ltspfs terminal:/media/autofs/ $HOME/Desktop/Devices
+  (as $USER) $ mkdir $HOME/Desktop/Device
+  (as $USER) $ ltspfs terminal:/mnt/DEVICE/ $HOME/Desktop/Device
 
 ===================
 2.- Using SHFS

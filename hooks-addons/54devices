@@ -1,5 +1,5 @@
 # hooks addon to use terminal devices
-# need autofs and ltspfs
+# need ltspfs
 # ltspfs
 # TCOS_REMOTEFS = shfs ltspfs
 
@@ -72,26 +72,5 @@ if [ $TCOS_NTFS_3G ] && [ ! -e /usr/share/initramfs-tools/hooks/ntfs_3g ]; then
     manual_add_modules fuse
     echo "fuse" >> $DESTDIR/etc/modules
    stat_after "NTFS-3G tools"
-fi
-
-
-if [ ! $TCOS_AUTOFS ]; then
-  _verbose "(05devices) TCOS_AUTOFS disabled"
-else
-  if [ -d /usr/share/doc/autofs ]; then
-   echo "ERROR"
-   echo ""
-   echo "No autofs support, please install autofs package."
-   echo "  => apt-get install autofs"
-   echo ""
-  else
-   # autofs
-   stat_before
-   cpifexists /usr/sbin/automount     /sbin/
-   mkdir -p $DESTDIR/usr/lib/autofs
-   copydir /usr/lib/autofs/          /usr/lib/
-   mkdir -p $DESTDIR/var/run/autofs
-   stat_after "Autofs mounter"
-  fi
 fi
 
