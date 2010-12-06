@@ -1,5 +1,5 @@
 /*
-* lockkeybmouse.c
+* screensize.c: returns scren size in horiz x vert
 * Copyright (C) 2006,2007,2008  mariodebian at gmail
 * Copyright (C) 2008  vidal_joshur at gva.es
 *
@@ -53,6 +53,7 @@ int main (int argc, char **argv) {
 	
 	printf("%dx%d\n", displayWidth, displayHeight);
 
+	XCloseDisplay(display);
 	return (0);
 
 }
