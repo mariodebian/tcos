@@ -82,21 +82,6 @@ MAGENTA="\033[1;35m"
 WHITE="\033[1;37m"
 
 
-# check for old dirs
-if [ ! -e /etc/tcos/chroot ] && [ -d /tftpboot/tcos ]  && [ ! -L /tftpboot/tcos ]; then
-   echo ""
-   echo "Warning: need to delete /tftpboot/tcos dir to work with this new version."
-   echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"
-   echo ""
-fi
-
-if [ ! -e /etc/tcos/chroot ] && [ -d /opt/tcos ]; then
-   echo ""
-   echo "Info:    You can delete /opt/tcos dir"
-   echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"
-   echo ""
-fi
-
 
 _exit () {
  if [ "$1" = "1" ];then
@@ -218,12 +203,6 @@ create_rootfs() {
     echo "          Ignore this if you are running with a 32bit chroot."
  fi
 
- if [ ! -e /etc/tcos/chroot ] && [ "$(grep -c ^${TCOS_VAR} /etc/exports 2>/dev/null)" = "0" ]; then
-    echo "  Warning:"
-    echo "         TCOS NFS dirs have changed, need to edit /etc/exports"
-    echo "         Please read /usr/share/doc/gentcos/UPGRADE.debian"
-    echo ""
- fi
  _echo "Creating NFS rootfs in ${TCOS_VAR}/fs-${TCOS_KERNEL}/"
  rm -rf ${OUTROOTFS_TMP} && mkdir -p ${OUTROOTFS_TMP}
 
