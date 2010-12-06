@@ -19,7 +19,6 @@ etc/tcos/conf.d/branding.info
 etc/tcos/templates/branding-pxelinux.info
 etc/tcos/version.conf
 etc/tcos/xorg.conf.tpl
-etc/tcos/SecurityPolicy
 etc/tcos/initramfs.conf
 etc/tcos/tcos.conf
 etc/tcos/pxelinux.menu.cfg.tpl

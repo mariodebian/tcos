@@ -41,12 +41,7 @@ cpifexists ${TCOS_BINS}/get_vga_vendor  /usr/bin/
 mkdir -p $DESTDIR/var/log
 mkdir -p $DESTDIR/etc/X11/xserver
 mkdir -p $DESTDIR/etc/X11/PreRun
-
-
-################ ugly hack ###########################
 mkdir -p $DESTDIR/etc/X11/xserver/
-cp ${TCOS_CONF}/SecurityPolicy $DESTDIR/etc/X11/xserver/
-#####################################################
 
 
 # copy xorg.conf template and generator

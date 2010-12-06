@@ -81,9 +81,6 @@ install:
 
 	install -m 644 xorgids/xorg.pciids $(DESTDIR)/$(TCOS_DIR)/inc/
 
-	# FIXME this file isn't in Xorg 7.0 anymore???
-	install -m 644 SecurityPolicy $(DESTDIR)/$(TCOS_CONF)
-
 	install -m 644 tcos/default.tpl $(DESTDIR)$(TCOS_CONF)/pxelinux.cfg.tpl
 
 	install -m 644 tcos/example.dual.server.conf $(DESTDIR)/$(TCOS_CONF)/pxelinux.d/example.dual.server.hook
