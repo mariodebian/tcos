@@ -1,3 +1,24 @@
+tcos (0.89.72) unstable; urgency=low
+
+  * Convert bin/get-xdg-desktop script in glib C app in lockscreen/get-
+    xdg-desktop.c
+  * debian/control: add libglib2.0-dev to Build Depends (get-xdg-
+    desktop)
+  * lockscreen/Makefile: compile get-xdg-desktop with warnings
+  * Remove GRUB to build ISOS
+  * lockscreen/Makefile: Add GXD to all target and fix install GXD
+  * debian/initramfs-tools-tcos.install: rmeove menu.lst-tcos
+  * tcos-standalone/Makefile: disable qcv locale
+  * Switch to dpkg-source 3.0 (native)
+  * Remove AUTOFS support
+  * remove destripar_initramfs.sh, not needed
+  * Remove UPGRADE.debian and references
+  * Remove not needed SecurityPolicy
+  * Remove obsolete daemonize dir
+  * lockscreen/screensize.c, fix header and close display
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 06 Dec 2010 16:13:52 +0100
+
 tcos (0.89.71) unstable; urgency=low
 
   * common.mk Update Ubuntu Lucid kernel 2.6.32-26
