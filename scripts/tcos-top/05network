@@ -195,7 +195,7 @@ fi
  
  log_begin_msg "Sending DHCP request on $TCOS_NET_LINK"
   _log "DHCLIENT $TCOS_NET_LINK"
-  busybox udhcpc -i $TCOS_NET_LINK -s /bin/udhcpc-script -O sipsrv >> /tmp/initramfs.debug  2>&1
+  busybox udhcpc -i $TCOS_NET_LINK -s /bin/udhcpc-script -O swapsrv sipsrv >> /tmp/initramfs.debug  2>&1
   myip=$(awk -F"=" '/^ip=/ {print $2}' /tmp/net.data)
   dhcpserver=$(awk -F"=" '/^dhcpserver=/ {print $2}' /tmp/net.data)
   hostname=$(awk -F"=" '/^hostname=/ {print $2}' /tmp/net.data)

@@ -14,16 +14,60 @@ case "$1" in
 		;;
 
 	renew|bound)
-		echo "ip=$ip" > /tmp/net.data
-		echo "dhcpserver=$serverid" >> /tmp/net.data
-		echo "hostname=$hostname" >> /tmp/net.data
-		echo "netmask=$subnet" >> /tmp/net.data
-		echo "gateway=$router" >> /tmp/net.data
-		echo "interface=$interface" >> /tmp/net.data
-		# sipsrv is x-display-manager and font-servers
-		echo "sipsrv=$sipsrv" >> /tmp/net.data
+#		echo "ip=$ip" > /tmp/net.data
+#		echo "dhcpserver=$serverid" >> /tmp/net.data
+#		echo "hostname=$hostname" >> /tmp/net.data
+#		echo "netmask=$subnet" >> /tmp/net.data
+#		echo "gateway=$router" >> /tmp/net.data
+#		echo "interface=$interface" >> /tmp/net.data
+#		# sipsrv is x-display-manager and font-servers
+#		echo "sipsrv=$sipsrv" >> /tmp/net.data
+#		echo "swapsrv=$swapsrv" >> /tmp/net.data
 		
-		/sbin/ifconfig $interface $ip $BROADCAST $NETMASK
+		( echo "# created by /bin/udhcpc-script"
+			[ -n "$boot_file" ] && echo "boot_file=$boot_file"
+			[ -n "$bootfile" ] && echo "bootfile=$bootfile"
+			[ -n "$bootsize" ] && echo "bootsize=$bootsize"
+			[ -n "$broadcast" ] && echo "broadcast=$broadcast"
+			[ -n "$clientid" ] && echo "clientid=$clientid"
+			[ -n "$cookiesrv" ] && echo "cookiesrv=$cookiesrv"
+			[ -n "$dhcptype" ] && echo "dhcptype=$dhcptype"
+			[ -n "$dns" ] && echo "dns=$dns"
+			[ -n "$domain" ] && echo "domain=$domain"
+			[ -n "$hostname" ] && echo "hostname=$hostname"
+			[ -n "$interface" ] && echo "interface=$interface"
+			[ -n "$ip" ] && echo "ip=$ip"
+			[ -n "$ipttl" ] && echo "ipttl=$ipttl"
+			[ -n "$lease" ] && echo "lease=$lease"
+			[ -n "$logsrv" ] && echo "logsrv=$logsrv"
+			[ -n "$lprsrv" ] && echo "lprsrv=$lprsrv"
+			[ -n "$message" ] && echo "message=$message"
+			[ -n "$mtu" ] && echo "mtu=$mtu"
+			[ -n "$namesrv" ] && echo "namesrv=$namesrv"
+			[ -n "$nisdomain" ] && echo "nisdomain=$nisdomain"
+			[ -n "$nissrv" ] && echo "nissrv=$nissrv"
+			[ -n "$ntpsrv" ] && echo "ntpsrv=$ntpsrv"
+			[ -n "$requestip" ] && echo "requestip=$requestip"
+			[ -n "$rootpath" ] && echo "rootpath=$rootpath"
+			[ -n "$router" ] && echo "router=$router"
+			[ -n "$search" ] && echo "search=$search"
+			[ -n "$serverid" ] && echo "serverid=$serverid"
+			[ -n "$siaddr" ] && echo "siaddr=$siaddr"
+			[ -n "$sname" ] && echo "sname=$sname"
+			[ -n "$staticroutes" ] && echo "staticroutes=$staticroutes"
+			[ -n "$subnet" ] && echo "subnet=$subnet"
+			[ -n "$swapsrv" ] && echo "swapsrv=$swapsrv"
+			[ -n "$tftp" ] && echo "tftp=$tftp"
+			[ -n "$timesrv" ] && echo "timesrv=$timesrv"
+			[ -n "$timezone" ] && echo "timezone=$timezone"
+			[ -n "$userclass" ] && echo "userclass=$userclass"
+			[ -n "$vendorclass" ] && echo "vendorclass=$vendorclass"
+			[ -n "$wins" ] && echo "wins=$wins"
+			[ -n "$wpad" ] && echo "wpad=$wpad"
+			[ -n "$sipsrv" ] && echo "sipsrv=$sipsrv"
+		) > /tmp/net.data
+		
+		ifconfig $interface $ip $BROADCAST $NETMASK
 
 		if [ -n "$router" ] ; then
 			echo "deleting routers"
