@@ -34,7 +34,6 @@ if [ "\$KILL_SPLASH" = "true" ] ; then
   [ -e /scripts/init-top/usplash ] && echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/usplash
   [ -e /scripts/init-top/plymouth ] && echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/plymouth
   [ -e /scripts/init-top/00_splashy ] && echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/00_splashy
-  kill_splash
 fi
 
 

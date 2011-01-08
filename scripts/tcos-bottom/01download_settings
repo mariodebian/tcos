@@ -13,7 +13,6 @@ maybe_break download_settings
 . /conf/tcos.conf
 . /conf/tcos-run-functions
 
-#MYIP=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $2}' | sed s/";"//g)
 MYIP=$(awk -F"=" '/^ip=/ {print $2}' /tmp/net.data)
 
 download_file /tcos/conf/${MYIP}.conf /conf/mysettings.conf 

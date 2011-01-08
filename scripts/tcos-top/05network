@@ -195,7 +195,11 @@ fi
  
  log_begin_msg "Sending DHCP request on $TCOS_NET_LINK"
   _log "DHCLIENT $TCOS_NET_LINK"
-  busybox udhcpc -i $TCOS_NET_LINK -s /bin/udhcpc-script -O swapsrv >> /tmp/initramfs.debug  2>&1
+  if [ -x /sbin/udhcpc ]; then
+    /sbin/udhcpc -i $TCOS_NET_LINK -s /bin/udhcpc-script >> /tmp/initramfs.debug  2>&1
+  else
+    busybox udhcpc -i $TCOS_NET_LINK -s /bin/udhcpc-script -O swapsrv >> /tmp/initramfs.debug  2>&1
+  fi
   myip=$(awk -F"=" '/^ip=/ {print $2}' /tmp/net.data)
   dhcpserver=$(awk -F"=" '/^serverid=/ {print $2}' /tmp/net.data)
   hostname=$(awk -F"=" '/^hostname=/ {print $2}' /tmp/net.data)
@@ -203,38 +207,7 @@ fi
   gateway=$(awk -F"=" '/^gateway=/ {print $2}' /tmp/net.data)
   TCOS_NET_ACTIVE=$(awk -F"=" '/^interface=/ {print $2}' /tmp/net.data)
   xserver=$(awk -F"=" '/^swapsrv=/ {print $2}' /tmp/net.data)
-  
-#  dhclient $TCOS_NET_LINK >> /tmp/initramfs.debug  2>&1
-#  myip=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases     | head -1| awk '{print $2}' | sed s/";"//g)
-
-#  if grep -q "server-name" /var/lib/dhcp/dhclient.leases; then
-#    dhcpserver=$(grep 'server-name' /var/lib/dhcp/dhclient.leases | awk -F'"' '{print $2}')
-#  else
-#    dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
-#  fi
-
-#  hostname=$(grep 'host-name' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}' | sed s/\"//g)
-#  TCOS_NET_ACTIVE=$(grep 'interface' /var/lib/dhcp/dhclient.leases  | head -1| awk '{print $2}' | sed s/";"//g | sed s/\"//g)
  log_end_msg 0
-
-# hack for dhcp3-client
-#if [ "$(route -n 2>&1| grep -c $TCOS_NET_ACTIVE)" = "0" ]; then
-#   log_begin_msg "Forcing net for dhcp3-client"
-#     myip=$(grep 'fixed-address' /var/lib/dhcp/dhclient.leases     | head -1| awk '{print $2}' | sed s/";"//g)
-
-#     if grep -q "server-name" /var/lib/dhcp/dhclient.leases; then
-#       dhcpserver=$(grep 'server-name' /var/lib/dhcp/dhclient.leases | awk -F'"' '{print $2}')
-#     else
-#       dhcpserver=$(grep 'dhcp-server' /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
-#     fi
-
-#     netmask=$(grep 'subnet-mask' /var/lib/dhcp/dhclient.leases | head -1| awk '{print $3}' | sed s/";"//g)
-#     gateway=$(grep 'routers' /var/lib/dhcp/dhclient.leases     | head -1| awk '{print $3}' | sed s/";"//g)
-#     #ifconfig $TCOS_NET_ACTIVE down
-#     ifconfig $TCOS_NET_ACTIVE $myip netmask $netmask up
-#     route add default dev $TCOS_NET_ACTIVE gw $gateway
-#   log_end_msg $?
-#fi
 
 
 if [ -n ${TCOS_DEBUG} ]; then
@@ -258,16 +231,11 @@ fi
 # search for other hosts
 TCOS_TFTP_SERVER=$(read_cmdline_var 'tftpserver' "${dhcpserver}")
 
-#if grep -q "x-display-manager" /var/lib/dhcp/dhclient.leases; then
-#  TCOS_XDMCP_SERVER=$(grep "x-display-manager" /var/lib/dhcp/dhclient.leases | tail -1| awk '{print $3}'| sed -e 's/;//g')
-#else
-#  TCOS_XDMCP_SERVER=$(read_cmdline_var 'xserver' "${dhcpserver}")
-#fi
 if [ "$xserver" != "" ]; then
-  TCOS_XDMCP_SERVER=${xserver}
-  TCOS_FONT_SERVER=${xserver}
-  TCOS_RDESKTOP_SERVER=${xserver}
-  TCOS_NFS_SERVER=${xserver}
+  TCOS_XDMCP_SERVER=$(read_cmdline_var 'xserver' "${xserver}")
+  TCOS_FONT_SERVER=$(read_cmdline_var 'fontserver' "${xserver}")
+  TCOS_RDESKTOP_SERVER=$(read_cmdline_var 'rdesktop' "${xserver}")
+  TCOS_NFS_SERVER=$(read_cmdline_var 'nfsserver' "${xserver}")
 else
   TCOS_XDMCP_SERVER=$(read_cmdline_var 'xserver' "${dhcpserver}")
   TCOS_FONT_SERVER=$(read_cmdline_var 'fontserver' "${dhcpserver}")
@@ -275,25 +243,16 @@ else
   TCOS_NFS_SERVER=$(read_cmdline_var 'nfsserver' "${dhcpserver}")
 fi
 
-#TCOS_RDESKTOP_SERVER=$(read_cmdline_var 'rdesktop' "${dhcpserver}")
-#TCOS_NFS_SERVER=$(read_cmdline_var 'nfsserver' "${dhcpserver}")
-
-#if grep -q "font-servers" /var/lib/dhcp/dhclient.leases; then
-#  TCOS_FONT_SERVER=$(grep font-servers /var/lib/dhcp/dhclient.leases | tail -1| awk '{print $3}'| sed -e 's/;//g')
-#else
-#  TCOS_FONT_SERVER=$(read_cmdline_var 'fontserver' "${dhcpserver}")
-#fi
-
 
 # Setup the hostname
 log_begin_msg "Setting hostname to ${hostname}"
   echo $hostname > /etc/hostname
   echo $hostname > /proc/sys/kernel/hostname
   cat <<EOF > /etc/hosts
-127.0.0.1       localhost.localdomain   localhost
-127.0.0.1	localhost
-${myip}		${hostname}
-${dhcpserver}	tcos-server
+127.0.0.1 localhost.localdomain localhost
+127.0.1.1 ${hostname}
+${myip} ${hostname}
+${dhcpserver} tcos-server
 ${TCOS_TFTP_SERVER} tftp-server
 ${TCOS_XDMCP_SERVER} xdmcp-server
 ${TCOS_RDESKTOP_SERVER} rdesktop-server
@@ -301,13 +260,8 @@ ${TCOS_NFS_SERVER} nfs-server
 ${TCOS_FONT_SERVER} font-server
 EOF
 
-## set dns
-#echo "nameserver $TCOS_DNS_SERVER" > /etc/resolv.conf
-
-
 hostname $hostname
 export HOSTNAME=$hostname
-#export hostname
 log_end_msg
 
 # start portmap

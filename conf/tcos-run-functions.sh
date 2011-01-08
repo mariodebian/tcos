@@ -20,15 +20,6 @@ while [ ! -$2 $1 ]; do
 done
 }
 
-
-start_splash() {
-  return
-}
-
-kill_splash() {
-  return
-}
-
 kill_xorg() {
   log_begin_msg "Killing Xorg"
     killall tryXorg >/dev/null 2>&1
@@ -112,13 +103,6 @@ get_server() {
    return
   fi
   # read server ip address from dhcp
-#  if [ ! -e /var/lib/dhcp/dhclient.leases ] || [ $(cat /var/lib/dhcp/dhclient.leases | wc -l) = 0 ]; then
-#    clear
-#    panic "Error, network not configured, check your DHCP server conf."
-#  fi
-#  SERVER=${TCOS_SERVER}
-#  SERVER=$(grep dhcp-server /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
-
   if [ ! -e /tmp/net.data ]; then
     clear
     panic "Error, network not configured, check your DHCP server / DNSMASQ conf."
@@ -172,14 +156,6 @@ read_cmdline_var() {
   _log "read_cmdline() reading $1 default=${2}"
  fi
 }
-
-
-update_progress() {
-  return
-}
-
-
-
 
 stat_before () {
   # read space in $DESTDIR (this functions is a checkpoint)

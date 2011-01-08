@@ -59,6 +59,7 @@ create_links "logger"
 create_links "ulimit"
 create_links "ifconfig"
 create_links "grep" # needed by a udev rule
+create_links "udhcpc"
 
 # use busybox mount/umount instead of klibc utils
 create_links "mount"

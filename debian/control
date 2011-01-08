@@ -46,7 +46,7 @@ Description: Tools for generating a TCOS thin client bootable image
 
 Package: tcos-core
 Architecture: any
-Depends: busybox | busybox-static , 
+Depends: busybox (>= 1:1.13.3) | busybox-static (>= 1:1.13.3) | udhcpc, 
          xterm, 
          x11vnc, 
          xvnc4viewer | xvncviewer, 
