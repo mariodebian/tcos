@@ -24,7 +24,4 @@ else
   log_end_msg 0 
 fi 
 
-update_progress 2
-
-
 exit 0

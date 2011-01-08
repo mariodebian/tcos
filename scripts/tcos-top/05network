@@ -15,10 +15,6 @@ quiet=n
 # if break=sqmount STOP here
 maybe_break network
 
-# file to save progress %
-echo 5 > /tmp/progress
-update_progress
-
 # localhost
 log_begin_msg "Bring up Local loopback device"
  ifconfig lo up
@@ -295,10 +291,6 @@ log_end_msg $?
 
 # start portmap
 [ -x /sbin/portmap ] && /sbin/portmap >/tmp/portmap.log 2>&1 &
-
-
-echo 18 > /tmp/progress
-update_progress
 
 
 exit 0

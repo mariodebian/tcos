@@ -53,10 +53,7 @@ if [ "${SQUASHFS_MODE}" = "nfs" ]; then
 
   # copy squashfs file in /mnt/tmp to not download
   log_begin_msg "Copy SQUASHFS to /mnt/tmp"
-    touch /tmp/downloading
-    /sbin/down-listener &
     cp ${NFS_RO}/usr-$(uname -r).squashfs /mnt/tmp/usr-$(uname -r).squashfs
-    rm -f /tmp/downloading
   log_end_msg 0
 
   umount ${NFS_RO}
@@ -65,10 +62,7 @@ elif [ "${SQUASHFS_MODE}" = "http" ]; then
 
 
   log_begin_msg "Downloading SQUASHFS using HTTP"
-    touch /tmp/downloading
-    /sbin/down-listener &
     wget http://$(read_server "nfs-server"):8080/usr-$(uname -r).squashfs -O- > /mnt/tmp/usr-$(uname -r).squashfs
-    rm -f /tmp/downloading
   log_end_msg 0
 
 

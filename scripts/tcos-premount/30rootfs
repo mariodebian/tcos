@@ -63,26 +63,17 @@ else
   log_end_msg $?
 fi
 
-update_progress
-
-  
 # Mount squashfs filesystems
 _log "ROOTFS mounting rootfs in /target"
 log_begin_msg "Mounting rootfs filesystem"
    mount -r -o loop -t squashfs ${rootfs_file} /target >> /tmp/initramfs.debug 2>&1
 log_end_msg $?
 
-update_progress
-
-  
 _log "ROOTFS remounting /target as RW"
 log_begin_msg "Remounting /target in rw mode"
    mkdir -p /.target
    mount_unionfs /mnt/rootram /.target /target
 log_end_msg $?
-
-update_progress
-  
 
 _log "ROOTFS copy some things on /target"
 
@@ -138,10 +129,6 @@ exec chroot . /scripts/init2 <dev/console >dev/console 2>&1
 
 _log "ROOTFS run-init /script"
 #exec run-init /target/ /scripts/init2 "$@" </target/dev/console >/target/dev/console
-  
-#update progress
-
-
 
 
 exit 0

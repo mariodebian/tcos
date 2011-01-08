@@ -49,8 +49,4 @@ fi
 
 
 
-update_progress 2
-
-
-
 exit 0

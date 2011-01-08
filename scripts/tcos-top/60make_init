@@ -74,7 +74,6 @@ cat /etc/hostname > /root/etc/hostname
 cat /etc/hosts > /root/etc/hosts
 cat /etc/resolv.conf > /root/etc/resolv.conf
 cat /etc/modules > /root/etc/modules
-cat /tmp/progress > /root/tmp/progress
 cat /tmp/initramfs.debug > /root/tmp/initramfs.debug
 cat /var/log/messages > /root/var/log/messages
 cat /tmp/less_ram > /root/tmp/less_ram

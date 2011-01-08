@@ -1,8 +1,4 @@
-# hook-addon for usplash support
-
-if [ ! -e /usr/lib/usplash/usplash-tcos.so ] && [ ! -e /sbin/usplash ]; then
-  _verbose "(90usplash) USPLASH not installed"
-else
+# hook-addon for disable usplash support
 
 if [ $TCOS_DISABLE_UPLASH ]; then
   rm -f ${DESTDIR}/lib/usplash
@@ -20,27 +16,7 @@ exit 0
 EOF
   chmod +x ${DESTDIR}/sbin/usplash_write
   _verbose "(90usplash) TCOS_DISABLE_USPLASH enabled !!!"
-else
-
-  # usplash support
-  mkdir -p $DESTDIR/usr/lib/usplash/
-
-  # delete theme if exists
-  [ -e $DESTDIR/usr/lib/usplash/usplash-artwork.so ] && \
-      rm -f $DESTDIR/usr/lib/usplash/usplash-artwork.so
-
-  if [ -f /usr/lib/usplash/${TCOS_USPLASH} ]; then
-    cp /usr/lib/usplash/${TCOS_USPLASH} $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
-  else
-    cp /usr/lib/usplash/usplash-tcos.so $DESTDIR/usr/lib/usplash/usplash-artwork.so > /dev/null 2>&1
-  fi
-
-  cat << EOF > $DESTDIR/etc/usplash.conf
-# Usplash configuration file for tcos
-xres=$TCOS_USPLASH_XRES
-yres=$TCOS_USPLASH_YRES
-EOF
 
 fi # end if TCOS_DISABLE_USPLASH
 
-fi # end if no usplash installed
+

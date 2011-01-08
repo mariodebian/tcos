@@ -14,14 +14,7 @@
 #
 #  Examples:
 #
-#     1.- Overwrite usplash theme
-#
-#       Create /etc/tcos/conf.d/usplash with this content
-#
-#         TCOS_USPLASH=[put your so filename here]
-#
-#
-#     2.- Overwrite TFTP image
+#     1.- Overwrite TFTP image
 #
 #       Create /etc/tcos/conf.d/tftp_image with this content
 #

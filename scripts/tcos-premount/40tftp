@@ -27,12 +27,6 @@ fi
 if [ ! -e /mnt/tmp/usr-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/usr.squashfs ]; then
   # download usr.squashfs from tftp server
 
-  # say to usplash more timeout
-  if [ -x /sbin/usplash_write ]; then
-    /sbin/usplash_write "TIMEOUT 180" || true
-  fi
-
-
   log_begin_msg "Downloading usr.squashfs from $(read_server "tftp-server")"
     _log "SQMOUNT downloading squashfs"
     value=0
@@ -61,11 +55,6 @@ if [ "$TCOS_ALL_MODULES_CMD" = "1" ] || [ ! -z $TCOS_ALL_MODULES_DOWNLOAD ]; the
 
   if [ ! -e /mnt/tmp/allmodules-$(uname -r).squashfs ] && [ ! -e /mnt/tmp/allmodules.squashfs ]; then
 
-    # say to usplash more timeout
-    if [ -x /sbin/usplash_write ]; then
-      usplash_write "TIMEOUT 180" || true
-    fi
-
     _log "SQMOUNT Downloading allmodules-$(uname -r).squashfs"
     log_begin_msg "Downloading all kernel modules: allmodules-$(uname -r).squashfs"
     download_file /tcos/allmodules-$(uname -r).squashfs /mnt/tmp/allmodules-$(uname -r).squashfs
@@ -80,8 +69,6 @@ if [ "$TCOS_ALL_MODULES_CMD" = "1" ] || [ ! -z $TCOS_ALL_MODULES_DOWNLOAD ]; the
   
 fi
 
-
-update_progress
 
 exit 0
 

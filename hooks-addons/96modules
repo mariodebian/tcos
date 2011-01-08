@@ -56,14 +56,6 @@ if [ "\$(pcimodules | grep -c r8101)" != "0" ]; then
   fi
 fi
 
-if [ "\$(pcimodules | grep -c sisfb)" != "0" ]; then
-  echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/framebuffer
-  [ -e /scripts/init-top/usplash ] && echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/usplash
-  [ -e /scripts/init-top/plymouth ] && echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/plymouth
-  [ -e /scripts/init-top/00_splashy ] && echo -e "#!/bin/sh\nexit 0" > /scripts/init-top/00_splashy
-  kill_splash
-fi
-
 
 EOF
 chmod +x ${DESTDIR}/scripts/init-top/tcos_modules

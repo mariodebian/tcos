@@ -109,5 +109,4 @@ _log "SWAP no swap avalaible"
 log_end_msg 1
 
 
-update_progress
 exit 0

@@ -109,11 +109,6 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
   chmod 644 $DESTDIR/mnt/tmp/${SQUASHFS_FILE}
   rm -rf $DESTDIR/usr/ && mkdir $DESTDIR/usr
 
-  # usplash/plymouth support outside squashfs
-  . ${TCOS_DIR}/hooks-addons/90usplash
-  . ${TCOS_DIR}/hooks-addons/90plymouth
-
-
   # overwrite TCOS_SQUASHFS from shell env var
   # this allow to create cdrom with usr.squashfs embedded
   if [ $(env | grep -c ^TCOS_SQUASHFS) = 1 ]; then

@@ -37,12 +37,6 @@ NFS_RW=/root
 mkdir -p /root 
 mkdir -p /mnt/nfs
 
-# say to usplash more timeout
-if [ -x /sbin/usplash_write ]; then
-  /sbin/usplash_write "TIMEOUT 180" || true
-fi
-
-
 # NFS or NBD ?
 NFS_MODE=$(read_cmdline_var "nfsmode" "nfs")
 

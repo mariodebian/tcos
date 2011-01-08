@@ -40,8 +40,6 @@ else
 fi
 
 
-update_progress
-
 if [ "$(which inetd)" ] && [ -e /etc/inetd.conf ] ; then
  _log "INITTCOS starting inetd daemon"
  log_begin_msg "Starting inetd"
@@ -50,7 +48,5 @@ if [ "$(which inetd)" ] && [ -e /etc/inetd.conf ] ; then
 else
  _log "INITTCOS not starting inetd"
 fi
-
-update_progress
 
 exit 0

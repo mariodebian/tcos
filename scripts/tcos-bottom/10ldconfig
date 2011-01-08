@@ -75,7 +75,4 @@ fi
 	 ln -s /usr/share/X11/xkb/rules/base.xml /usr/share/X11/xkb/rules/xorg.xml
 
 
-echo 67 > /tmp/progress
-update_progress
-
 exit 0

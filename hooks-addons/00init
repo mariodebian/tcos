@@ -18,10 +18,6 @@ if [ "${TCOS_INCLUDE_INIT}" = "1" ]; then
     rm -f $DESTDIR/bin/halt
 
 
-    ###
-    ### add usplash support to reboot and poweroff scripts
-    ###
-
     # reboot script
     cat <<EOF > ${DESTDIR}/sbin/reboot
 #!/bin/sh
@@ -32,8 +28,6 @@ if [ "${TCOS_INCLUDE_INIT}" = "1" ]; then
 kill_xorg
 
 clear
-start_splash
-
     log_begin_msg "Rebooting"
     log_end_msg 0
 
@@ -56,8 +50,6 @@ EOF
 
 kill_xorg
 clear
-start_splash
-
     log_begin_msg "Poweroff system"
     log_end_msg 0
 

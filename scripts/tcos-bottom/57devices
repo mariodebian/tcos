@@ -71,6 +71,4 @@ fi # end of TCOS_REMOTEFS=ltspfs
 
 
 
-update_progress
-
 exit 0

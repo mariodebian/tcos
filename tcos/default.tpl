@@ -8,19 +8,19 @@ F2 __TFTP_MSG_HELP2__
 
 label tcos
   kernel vmlinuz-__TCOS_KERNEL__
-  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash
+  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet
 
 label install
   kernel vmlinuz-__TCOS_KERNEL__
-  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash startx=N installer
+  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet startx=N installer
 
 label update
   kernel vmlinuz-__TCOS_KERNEL__
-  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet splash startx=N installer-update
+  append ramdisk_size=65536 initrd=initramfs-__TCOS_KERNEL__ root=/dev/ram0 boot=tcos quiet startx=N installer-update
 
 label nfs
   kernel vmlinuz-__TCOS_KERNEL__
-  append ramdisk_size=32768 initrd=initramfs-__TCOS_KERNEL__-nfs root=/dev/ram0 boot=tcos quiet splash
+  append ramdisk_size=32768 initrd=initramfs-__TCOS_KERNEL__-nfs root=/dev/ram0 boot=tcos quiet
 
 
 # other examples

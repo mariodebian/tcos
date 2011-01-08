@@ -22,66 +22,10 @@ done
 
 
 start_splash() {
-  # kill usplash if cmdline have "nousplash" or "nosplash"
-  for x in $(cat /proc/cmdline); do
-        case $x in
-        nosplash)
-                return
-                ;;
-        nousplash)
-                return
-                ;;
-        esac
-  done
-
-  if [ -x /sbin/usplash ]; then
-        [ -f /etc/usplash.conf ] && . /etc/usplash.conf
-	if [ "$xres" ] && [ "$xres" != 0 ] && \
-	   [ "$yres" ] && [ "$yres" != 0 ]; then
-		/sbin/usplash -c -x "$xres" -y "$yres" &
-	else
-		/sbin/usplash -c &
-	fi
-        /sbin/usplash_write "TEXT Starting usplash..."
-        /sbin/usplash_write "TIMEOUT 180"
-        /sbin/usplash_write "SUCCESS ok"
-  fi
-    if [ -x /sbin/splashy_update ]; then
-        /sbin/splashy boot
-        /sbin/splashy_update timeout180
-  fi
-  if [ -x /sbin/plymouthd ]; then
-        printf '\033[?25l' > /dev/tty7
-        /sbin/plymouthd --mode=boot --pid-file=/dev/.initramfs/plymouth.pid
-        /bin/plymouth --show-splash
-  fi
+  return
 }
 
 kill_splash() {
-  if [ -x /bin/plymouth ]; then
-    /bin/plymouth --quit 2>/dev/null
-  fi
-
-  # usplash
-  if [ -x /sbin/usplash ]; then
-    usplash_write "QUIT"  2> /dev/null
-    i=0
-    # Like usplash init script
-    while [ "$(pidof usplash | sed '/^$/d')" != "" ] ; do
-	i=$(($i + 1))
-	if [ $i -gt 10 ]; then
-		killall -SIGKILL usplash 2>/dev/null
-		break
-	fi
-	sleep 1
-    done
-    #chvt 1              2> /dev/null # this cause some problems :(
-  fi
-  if [ -x /sbin/splashy_update ]; then
-    /sbin/splashy_update QUIT  2> /dev/null
-    /sbin/splashy_update exit  2> /dev/null
-    killall splashy     2> /dev/null
-  fi
   return
 }
 
@@ -90,7 +34,6 @@ kill_xorg() {
     killall tryXorg >/dev/null 2>&1
     killall Xorg    >/dev/null 2>&1
   log_end_msg $?
-  update_progress "-5"
 }
 
 kill_all() {
@@ -100,14 +43,12 @@ kill_all() {
      log_begin_msg "Stopping ${proc}"
        killall $proc >  /dev/null 2>&1 &
      log_end_msg $?
-     update_progress "-5"
   done
   # kill all with -9
   for proc in ${process}; do
      log_begin_msg "Force kill ${proc}"
        killall -9 $proc >  /dev/null 2>&1 &
      log_end_msg $?
-     update_progress "-5"
   done
 }
 
@@ -115,7 +56,6 @@ umount_swap() {
  log_begin_msg "Disable swap"
    swapoff -a
  log_end_msg $?
- update_progress "-5"
 }
 
 umount_all() {
@@ -134,7 +74,6 @@ umount_all() {
      umount -l ${dev} >  /dev/null 2>&1
    done
   log_end_msg $?
-  update_progress "-5"
 }
 
 # common functions used in tcos scripts
@@ -190,19 +129,15 @@ download_file () {
 # $2 local file
 mkdir $(dirname $2) >/dev/null 2>&1
 _log "tftp -g -r ${1} -l ${2} "$(read_server "tftp-server")
-rm -f /tmp/downloading
-touch /tmp/downloading
-/sbin/down-listener &
 tftp -g -r ${1} -l ${2} $(read_server "tftp-server") > /dev/null 2> /tmp/download_file.log
 if [ $? = 0 ] ;then
- rm -f /tmp/downloading
  _log "download_file() OK"
+ rm -f /tmp/download_file.log
  return 0
 else
- rm -f /tmp/downloading
  _log "download_file() Error"
  cat /tmp/download_file.log >> /tmp/initramfs.debug 2> /dev/null
- rm /tmp/download_file.log > /dev/null 2>&1
+ rm -f /tmp/download_file.log
  return 1
 fi
 }
@@ -233,27 +168,7 @@ read_cmdline_var() {
 
 
 update_progress() {
-  # read /dev/.initramfs/progress_state and update
-  # $1 is number that sum at counter
-  sum=${1}
-  if [ "${sum}" = "" ]; then
-    # increase progressbar step
-    sum=3
-  fi
-  # /tmp/progress is created in scripts/tcos-top/10foo with value=5
-  old=$(cat /tmp/progress)
-  new=$(echo $old $sum | awk '{print $1+$2}')
-  #new=$((${old}+${sum}))
-  if [ -x /sbin/usplash_write ]; then
-    /sbin/usplash_write "PROGRESS ${new}"
-    #_log "updating progress to ${new} %"
-    echo ${new} > /tmp/progress
-  fi
-  if [ -x /sbin/splashy_update ]; then
-    /sbin/splashy_update "progress${new}"
-    #_log "updating progress to ${new} %"
-    echo ${new} > /tmp/progress
-  fi
+  return
 }
 
 

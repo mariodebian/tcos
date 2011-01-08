@@ -125,7 +125,5 @@ create_fstab ()
   _log "FSTAB done"
 [ "$NO_MSG" = "" ] && log_end_msg 0
 
-update_progress
-
 exit 0
 

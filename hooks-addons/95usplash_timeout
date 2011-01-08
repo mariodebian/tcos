@@ -41,34 +41,8 @@ fi
 EOF
 chmod +x $DESTDIR/scripts/init-top/00_nosplash
 
-cat << EOF >> $DESTDIR/scripts/init-top/usplash
-
-# new header not using prereqs
-if [ "\$1" = "prereqs" ]; then
-  echo ""
-  exit 0
-fi
-
-quiet=n
-
-
-if [ "\$SPLASH" = "true" ]; then
-   if [ -x /bin/plymouth ] && /bin/plymouth --ping; then
-	plymouth message --text="TEXT Preparing to boot TCOS..."
-   elif [ -x /sbin/usplash_write ]; then
-   	usplash_write "TEXT Preparing to boot TCOS..."
-   	usplash_write "TIMEOUT 180"
-   	usplash_write "SUCCESS ok"
-   fi
-fi
-
-
-EOF
-
 else 
-
   _verbose "(95usplash_timeout) Splash not found, timeout path not applied."
-
 fi
 
 

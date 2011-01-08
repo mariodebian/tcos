@@ -368,7 +368,7 @@ This is gentcos help info about generating net init images.
     [${GREEN}-nbi-output=linux-tcos1.nbi${NORMAL}] output nbi file 
               ( default ${OUTNBI}-${TCOS_KERNEL} )
     [${GREEN}-extra-append${NORMAL}] append more options to cmline of NBI image
-      ( Example: -extra-append=\"splash startx=N volume=80%\"
+      ( Example: -extra-append=\"startx=N volume=80%\"
 
   ${BLUE}ISO IMAGES:${NORMAL}
      ${GREEN}-cdrom${NORMAL}  or [-c] create cdrom iso file in $ISOS
@@ -405,7 +405,7 @@ ${WHITE}
      gentcos -tftp -suffix=-pc1
      gentcos -nfs -rootfs
      gentcos -cdrom
-     gentcos -nbi -extra-append=\"splash vga=791 uselocal\"
+     gentcos -nbi -extra-append=\"vga=791 uselocal\"
      gentcos -instpkg esound
      gentcos -rmpkg esound
      gentcos -listpkg

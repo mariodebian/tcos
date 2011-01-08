@@ -237,7 +237,6 @@ apt-get install $APT_OPTS linux-ubuntu-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS linux-restricted-modules-${TCOS_KERNEL} 
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
 apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
-echo "*** tcos-usplash is only in old distros, don't worry if fail ***"; apt-get install $APT_OPTS tcos-usplash
 apt-get clean
 /etc/init.d/dropbear stop || true
 EOC
@@ -255,7 +254,6 @@ export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND=
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL}
 apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
-echo "*** tcos-usplash is only in old distros, don't worry if fail ***"; apt-get install $APT_OPTS tcos-usplash
 apt-get clean
 /etc/init.d/dropbear stop || true
 rm -f /preseed
