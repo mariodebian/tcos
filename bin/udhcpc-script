@@ -14,16 +14,6 @@ case "$1" in
 		;;
 
 	renew|bound)
-#		echo "ip=$ip" > /tmp/net.data
-#		echo "dhcpserver=$serverid" >> /tmp/net.data
-#		echo "hostname=$hostname" >> /tmp/net.data
-#		echo "netmask=$subnet" >> /tmp/net.data
-#		echo "gateway=$router" >> /tmp/net.data
-#		echo "interface=$interface" >> /tmp/net.data
-#		# sipsrv is x-display-manager and font-servers
-#		echo "sipsrv=$sipsrv" >> /tmp/net.data
-#		echo "swapsrv=$swapsrv" >> /tmp/net.data
-		
 		( echo "# created by /bin/udhcpc-script"
 			[ -n "$boot_file" ] && echo "boot_file=$boot_file"
 			[ -n "$bootfile" ] && echo "bootfile=$bootfile"
@@ -70,7 +60,6 @@ case "$1" in
 		ifconfig $interface $ip $BROADCAST $NETMASK
 
 		if [ -n "$router" ] ; then
-			echo "deleting routers"
 			while route del default gw 0.0.0.0 dev $interface ; do
 				:
 			done
@@ -80,10 +69,8 @@ case "$1" in
 			done
 		fi
 
-		echo -n > $RESOLV_CONF
-		[ -n "$domain" ] && echo search $domain >> $RESOLV_CONF
+		[ -n "$domain" ] && echo search $domain > $RESOLV_CONF
 		for i in $dns ; do
-			echo adding dns $i
 			echo nameserver $i >> $RESOLV_CONF
 		done
 		;;

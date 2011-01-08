@@ -121,9 +121,9 @@ get_server() {
 
   if [ ! -e /tmp/net.data ]; then
     clear
-    panic "Error, network not configured, check your DHCP server conf."
+    panic "Error, network not configured, check your DHCP server / DNSMASQ conf."
   fi
-  SERVER=$(awk -F"=" '/^dhcpserver=/ {print $2}' /tmp/net.data)
+  SERVER=$(awk -F"=" '/^serverid=/ {print $2}' /tmp/net.data)
 
   # overwrite with cmdline
   # DOCUMENTME server | ip of XDMCP server
