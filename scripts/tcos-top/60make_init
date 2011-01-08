@@ -68,8 +68,9 @@ chmod +x /root/sbin/init
 mkdir -p /root/proc /root/dev /root/sys
 mkdir -p /root/var/run /root/var/www /root/var/log /root/tmp
 
-mkdir -p /root/var/lib/dhcp
-cat /var/lib/dhcp/dhclient.leases > /root/var/lib/dhcp/dhclient.leases
+#mkdir -p /root/var/lib/dhcp
+#cat /var/lib/dhcp/dhclient.leases > /root/var/lib/dhcp/dhclient.leases
+cat /tmp/net.data > /root/tmp/net.data
 cat /etc/hostname > /root/etc/hostname
 cat /etc/hosts > /root/etc/hosts
 cat /etc/resolv.conf > /root/etc/resolv.conf

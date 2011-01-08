@@ -159,6 +159,7 @@ install:
 	install -m 755 bin/get_server        $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/clean_string.sh   $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 bin/get_vga_vendor    $(DESTDIR)/$(TCOS_BINS)/
+	install -m 755 bin/udhcpc-script     $(DESTDIR)/$(TCOS_BINS)/
 
 
 	install -m 755 bin/tcos-bootchartd   $(DESTDIR)/$(TCOS_BINS)/

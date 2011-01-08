@@ -29,37 +29,6 @@ else
   
   cpifexists /usr/lib/dropbear/dropbearconvert /usr/lib/dropbear/
 
-   # copy pub key
-   if [ ${TCOS_ADMIN_USER} ]; then
-      mkdir -p $DESTDIR/root/.ssh
-      _echo "     Copying ${TCOS_ADMIN_USER} public SSH key"
-      if [ "${TCOS_ADMIN_USER}" = "root" ]; then
-        pkey=/root/.ssh/id_rsa.pub
-	key=/root/.ssh/id_rsa
-      else
-	home=$(getent passwd ${TCOS_ADMIN_USER} | head -1 | awk -F":" '{print $6}')
-        if [ "$home" = "" ]; then home="/home/${TCOS_ADMIN_USER}"; fi
-        pkey=${home}/.ssh/id_rsa.pub
-	key=${home}/.ssh/id_rsa
-      fi
-      
-        #### key exists? ###
-        if [ -f ${key} ]; then
-          #_echo "     Copying $key...."
-          cat $pkey >> $DESTDIR/root/.ssh/authorized_keys
-	  cat $pkey >> $DESTDIR/root/.ssh/id_rsa.pub
-	  cat $key >> $DESTDIR/root/.ssh/id_rsa
-	  chmod 600 $DESTDIR/root/.ssh/id_rsa
-        else
-          _echo "  WARNING: $key not found !!!"
-          _echo "    You need to create ssh-key as \"${TCOS_ADMIN_USER}\" user or select another user in preferences."
-          _echo "    => $ ssh-keygen -t rsa"
-        fi
-        ####################
-   else
-     _verbose "(14ssh) TCOS_ADMIN_USER is empty"
-   fi
-
  fi
  stat_after "Dropbear ssh server"
 

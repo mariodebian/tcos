@@ -13,114 +13,128 @@ sed '/hosts:/ chosts:          files dns' /etc/nsswitch.conf > $DESTDIR/etc/nssw
 dns1=$(grep ^nameserver /etc/resolv.conf 2>/dev/null | grep -v "127.0.0.1" | head -1 | awk '{print $2}')
 echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
 
-if [ ! -f /sbin/dhclient ]; then
+# check for "busybox udhcpc -O 290| grep sipsrv"
+# 290 option no exists, busybox return know options
+check=$(busybox udhcpc -O 290 2>&1| grep -c sipsrv)
+if [ "$check" != "0" ]; then
+  cpifexists ${TCOS_BINS}/udhcpc-script  /bin/
+else
  echo "ERROR"
  echo ""
- echo "NO DHCP support, please install dhcp-client package."
- echo "  => apt-get install dhcp-client (or)"
- echo "  => apt-get install dhcp3-client"
+ echo "NO UDHCP support, please install a recent busybox package."
  echo ""
- # critical error FIXME clean tmp files !!!!
- killall gentcos
-
-elif [ -f /sbin/dhclient3 ]; then
-
- #_echo ""
- #_echo "    WARNING: dhcp3-client package support is very bad,"
- #_echo "             please use dhcp-client instead"
- #_echo ""
- # exit 1
-
-
- copydir /etc/dhcp3                /etc/
- cpifexists /sbin/dhclient         /sbin/
- cat << EOF > $DESTDIR/sbin/dhclient-script
-#!/bin/sh
-
-if [ -f /tmp/dhclient-script.done ]; then
-  exit 0
 fi
 
 
-# we have some env vars apply it
-#
-# \${interface} should be network iface (ex: eth0)
-# \${new_ip_address} IP address of dhcp response
-# \${new_subnet_mask} netmask
-# \{new_routers} gateway
-#
 
-for varpar in \$(env); do
-  varname=\$(echo \$varpar| awk -F'=' '{print \$1}')
-  varvalue=\$(echo \$varpar| awk -F'=' '{print \$2}')
-  if [ "\$varname" = "new_ip_address" ]; then
-    IP=\$varvalue
-  fi
-  if [ "\$varname" = "interface" ]; then
-    INTERFACE=\$varvalue
-  fi
-  if [ "\$varname" = "new_subnet_mask" ]; then
-    NETMASK=\$varvalue
-  fi
-  if [ "\$varname" = "new_routers" ]; then
-    GATEWAY=\$varvalue
-  fi
-done
+#if [ ! -f /sbin/dhclient ]; then
+# echo "ERROR"
+# echo ""
+# echo "NO DHCP support, please install dhcp-client package."
+# echo "  => apt-get install dhcp-client (or)"
+# echo "  => apt-get install dhcp3-client"
+# echo ""
+# # critical error FIXME clean tmp files !!!!
+# killall gentcos
 
-# test if we have all needed variables
-if [ \$INTERFACE ] && [ \$IP ] && [ \$NETMASK ] && [ \$GATEWAY ] ; then
-   ifconfig \${INTERFACE} \${IP} netmask \${NETMASK} up
-   route add default dev \${INTERFACE} gw \${GATEWAY}
-   # create a file to not configure network again
-   touch /tmp/dhclient-script.done
-fi
+#elif [ -f /sbin/dhclient3 ]; then
 
-EOF
- chmod +x $DESTDIR/sbin/dhclient-script
+# #_echo ""
+# #_echo "    WARNING: dhcp3-client package support is very bad,"
+# #_echo "             please use dhcp-client instead"
+# #_echo ""
+# # exit 1
 
- mkdir -p $DESTDIR/var/lib/dhcp3 $DESTDIR/lib/dhcp3-client
- touch $DESTDIR/lib/dhcp3-client/call-dhclient-script
 
- # dhclient3 need dhcp user 
- dhcp_user=$(grep -c "dhcp:" /etc/passwd )
+# copydir /etc/dhcp3                /etc/
+# cpifexists /sbin/dhclient         /sbin/
+# cat << EOF > $DESTDIR/sbin/dhclient-script
+##!/bin/sh
 
- if [ $dhcp_user -gt 0 ]; then
-  grep "dhcp:" /etc/passwd >> $DESTDIR/etc/passwd
-  grep "dhcp:" /etc/group >> $DESTDIR/etc/group
-  grep "dhcp:" /etc/shadow >> $DESTDIR/etc/shadow
-  
- # # adjust owner and suids
-  chmod 4755 $DESTDIR/lib/dhcp3-client/call-dhclient-script
-  chown root:dhcp $DESTDIR/lib/dhcp3-client/call-dhclient-script
- fi
- 
+#if [ -f /tmp/dhclient-script.done ]; then
+#  exit 0
+#fi
 
-elif [ -x /sbin/dhclient ]; then
- # dhcp and network stuff
- cpifexists /sbin/dhclient     /sbin/
- mkdir -p $DESTDIR/var/lib/dhcp/
- [ -e /etc/dhclient-script ]  && cpifexists /etc/dhclient-script   /etc/
- [ -e /sbin/dhclient-script ] && cpifexists /sbin/dhclient-script   /sbin/
- [ -e /etc/dhclient.conf ]    && cpifexists /etc/dhclient.conf     /etc/
 
- # new version (4.1.1-P1-7) use libcrypto, move to /lib
- if ldd /sbin/dhclient| grep -q libcrypto; then
-   mv $DESTDIR/usr/lib/libcrypto.so* $DESTDIR/lib/
- fi
+## we have some env vars apply it
+##
+## \${interface} should be network iface (ex: eth0)
+## \${new_ip_address} IP address of dhcp response
+## \${new_subnet_mask} netmask
+## \{new_routers} gateway
+##
 
- if ldd /sbin/dhclient| grep -q libz; then
-   mv $DESTDIR/usr/lib/libz.so.* $DESTDIR/lib/
- fi
+#for varpar in \$(env); do
+#  varname=\$(echo \$varpar| awk -F'=' '{print \$1}')
+#  varvalue=\$(echo \$varpar| awk -F'=' '{print \$2}')
+#  if [ "\$varname" = "new_ip_address" ]; then
+#    IP=\$varvalue
+#  fi
+#  if [ "\$varname" = "interface" ]; then
+#    INTERFACE=\$varvalue
+#  fi
+#  if [ "\$varname" = "new_subnet_mask" ]; then
+#    NETMASK=\$varvalue
+#  fi
+#  if [ "\$varname" = "new_routers" ]; then
+#    GATEWAY=\$varvalue
+#  fi
+#done
 
-else
-  _echo ""
-  _echo "    ERROR:"
-  _echo "            No dhcp-client package detected"
-  _echo "            Please install dhcp-client package"
-  _echo "            thin clients don't work without dhcp-client package"
-  _echo ""
-  exit 1
+## test if we have all needed variables
+#if [ \$INTERFACE ] && [ \$IP ] && [ \$NETMASK ] && [ \$GATEWAY ] ; then
+#   ifconfig \${INTERFACE} \${IP} netmask \${NETMASK} up
+#   route add default dev \${INTERFACE} gw \${GATEWAY}
+#   # create a file to not configure network again
+#   touch /tmp/dhclient-script.done
+#fi
 
-fi
+#EOF
+# chmod +x $DESTDIR/sbin/dhclient-script
+
+# mkdir -p $DESTDIR/var/lib/dhcp3 $DESTDIR/lib/dhcp3-client
+# touch $DESTDIR/lib/dhcp3-client/call-dhclient-script
+
+# # dhclient3 need dhcp user 
+# dhcp_user=$(grep -c "dhcp:" /etc/passwd )
+
+# if [ $dhcp_user -gt 0 ]; then
+#  grep "dhcp:" /etc/passwd >> $DESTDIR/etc/passwd
+#  grep "dhcp:" /etc/group >> $DESTDIR/etc/group
+#  grep "dhcp:" /etc/shadow >> $DESTDIR/etc/shadow
+#  
+# # # adjust owner and suids
+#  chmod 4755 $DESTDIR/lib/dhcp3-client/call-dhclient-script
+#  chown root:dhcp $DESTDIR/lib/dhcp3-client/call-dhclient-script
+# fi
+# 
+
+#elif [ -x /sbin/dhclient ]; then
+# # dhcp and network stuff
+# cpifexists /sbin/dhclient     /sbin/
+# mkdir -p $DESTDIR/var/lib/dhcp/
+# [ -e /etc/dhclient-script ]  && cpifexists /etc/dhclient-script   /etc/
+# [ -e /sbin/dhclient-script ] && cpifexists /sbin/dhclient-script   /sbin/
+# [ -e /etc/dhclient.conf ]    && cpifexists /etc/dhclient.conf     /etc/
+
+# # new version (4.1.1-P1-7) use libcrypto, move to /lib
+# if ldd /sbin/dhclient| grep -q libcrypto; then
+#   mv $DESTDIR/usr/lib/libcrypto.so* $DESTDIR/lib/
+# fi
+
+# if ldd /sbin/dhclient| grep -q libz; then
+#   mv $DESTDIR/usr/lib/libz.so.* $DESTDIR/lib/
+# fi
+
+#else
+#  _echo ""
+#  _echo "    ERROR:"
+#  _echo "            No dhcp-client package detected"
+#  _echo "            Please install dhcp-client package"
+#  _echo "            thin clients don't work without dhcp-client package"
+#  _echo ""
+#  exit 1
+
+#fi
 
 

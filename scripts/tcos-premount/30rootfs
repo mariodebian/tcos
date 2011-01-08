@@ -82,8 +82,9 @@ rm -rf /target/conf/    && cp -ra /conf/   /target/
 rm -rf /target/scripts/ && cp -ra /scripts/  /target/
 mkdir -p /target/tmp    && cp -ra /tmp/*     /target/tmp
 
-mkdir -p /var/lib/dhcp/
-cp /var/lib/dhcp/dhclient.leases /target/var/lib/dhcp/dhclient.leases
+#mkdir -p /var/lib/dhcp/
+#cp /var/lib/dhcp/dhclient.leases /target/var/lib/dhcp/dhclient.leases
+cat /tmp/net.data > /root/tmp/net.data
 
 cp /etc/hostname /target/etc/hostname
 cp /etc/resolv.conf /target/etc/resolv.conf

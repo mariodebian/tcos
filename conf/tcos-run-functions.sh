@@ -112,12 +112,19 @@ get_server() {
    return
   fi
   # read server ip address from dhcp
-  if [ ! -e /var/lib/dhcp/dhclient.leases ] || [ $(cat /var/lib/dhcp/dhclient.leases | wc -l) = 0 ]; then
+#  if [ ! -e /var/lib/dhcp/dhclient.leases ] || [ $(cat /var/lib/dhcp/dhclient.leases | wc -l) = 0 ]; then
+#    clear
+#    panic "Error, network not configured, check your DHCP server conf."
+#  fi
+#  SERVER=${TCOS_SERVER}
+#  SERVER=$(grep dhcp-server /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
+
+  if [ ! -e /tmp/net.data ]; then
     clear
     panic "Error, network not configured, check your DHCP server conf."
   fi
-  SERVER=${TCOS_SERVER}
-  SERVER=$(grep dhcp-server /var/lib/dhcp/dhclient.leases | awk '{print $3}' | awk -F ";" '{print $1}')
+  SERVER=$(awk -F"=" '/^dhcpserver=/ {print $2}' /tmp/net.data)
+
   # overwrite with cmdline
   # DOCUMENTME server | ip of XDMCP server
   SERVER=$(read_cmdline_var "server" "${SERVER}")
