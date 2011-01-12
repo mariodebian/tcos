@@ -2,7 +2,12 @@
 
 # check for a decent version of busybox
 # ubuntu busybox-initramfs don't have some utils
-if [ $DESTDIR/bin/busybox ]; then
+if [ -e "${TCOS_BINS}/busybox" ]; then
+  _echo "    Found busybox in ${TCOS_BINS}/busybox"
+  rm $DESTDIR/bin/busybox
+  cpifexists "${TCOS_BINS}/busybox" /bin/
+
+elif [ $DESTDIR/bin/busybox ]; then
   test1=$($DESTDIR/bin/busybox tftp --help  2>&1 | grep -c -i usage)
   test2=$($DESTDIR/bin/busybox awk --help   2>&1 | grep -c -i usage)
   test3=$($DESTDIR/bin/busybox losetup --help 2>&1 | grep -c -i usage)
