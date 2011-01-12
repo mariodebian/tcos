@@ -105,10 +105,9 @@ create_fstab ()
 	for cd in $cdroms; do
 		entry="/dev/${cd}        /mnt/cdrom${num}   udf,iso9660 ro,noauto  0       0"
 		mkdir -p /mnt/cdrom${num} >> /var/log/initramfs.debug 2>&1
-		let num=num+1
+		num=$(($num+1))
 		echo $entry >> /etc/fstab
 	done
-	
 }
 
 
