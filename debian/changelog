@@ -1,3 +1,21 @@
+tcos (0.89.73) unstable; urgency=low
+
+  * tcos-standalone/tcos-standalone.desktop: replace gksu with su-to-
+    root
+  * bin/get_vga_vendor: use grep to extract vendor ID and product ID
+  * bin/configurexorg: change method to get PCI vendor ID and product ID
+  * remove usplash support
+  * remove dhcp-client depend, switch to busybox udhcpc
+  * udhcpc-script: use ifconfig without /sbin and save all vars in
+    /tmp/net/.data
+  * udhcpc read serverid instead of dhcpserver
+  * clean old dhcp & splash code, and use /sbin/udhcpc if avalaible
+    (lenny)
+  * hooks-addons/01busybox: use TCOS_BINS/busybox if found
+  * hooks-addons/01dhclient: make check with DESTDIR/busybox
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 12 Jan 2011 15:16:16 +0100
+
 tcos (0.89.72) unstable; urgency=low
 
   * Convert bin/get-xdg-desktop script in glib C app in lockscreen/get-
