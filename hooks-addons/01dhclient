@@ -6,7 +6,6 @@
 touch $DESTDIR/etc/hosts.allow
 touch $DESTDIR/etc/hosts.deny
 cpifexists /etc/host.conf        /etc/
-#cpifexists /etc/nsswitch.conf    /etc/
 sed '/hosts:/ chosts:          files dns' /etc/nsswitch.conf > $DESTDIR/etc/nsswitch.conf
 
 # put DNS server
@@ -15,7 +14,7 @@ echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
 
 # check for "busybox udhcpc -O 290| grep swapsrv"
 # 290 option no exists, busybox return know options
-check=$(busybox udhcpc -O 290 2>&1| grep -c swapsrv)
+check=$($DESTDIR/busybox udhcpc -O 290 2>&1| grep -c swapsrv)
 if [ "$check" != "0" ]; then
   cpifexists ${TCOS_BINS}/udhcpc-script  /bin/
 elif [ -x /sbin/udhcpc ]; then
@@ -23,7 +22,7 @@ elif [ -x /sbin/udhcpc ]; then
 else
  echo "ERROR"
  echo ""
- echo "NO UDHCP support, please install a recent busybox package."
+ echo "NO UDHCP support, please install a recent busybox/udhcpc package."
  echo ""
 fi
 
