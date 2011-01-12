@@ -60,7 +60,7 @@ if [ "$TCOS_ALL_MODULES_CMD" = "1" ] || [ ! -z $TCOS_ALL_MODULES_DOWNLOAD ]; the
     download_file /tcos/allmodules-$(uname -r).squashfs /mnt/tmp/allmodules-$(uname -r).squashfs
     sync
     if [ "$(if_is_zero /mnt/tmp/allmodules-$(uname -r).squashfs)" = "0" ]; then
-       echo -e "Error downloading allmodules"
+       echo "Error downloading allmodules"
        log_end_msg 1
        exit 0
     fi
