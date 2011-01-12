@@ -1,6 +1,6 @@
 # hooks addon for printer support
 
-function add_lp_modules() {
+add_lp_modules() {
    force_load parport_pc
    force_load usblp
    force_load lp
