@@ -13,8 +13,13 @@ tcos (0.89.73) unstable; urgency=low
     (lenny)
   * hooks-addons/01busybox: use TCOS_BINS/busybox if found
   * hooks-addons/01dhclient: make check with DESTDIR/busybox
+  * hooks-addons/22esd: remove obsolete
+  * hooks-addons/09printer: checkbashisms, remove function
+  * scripts/tcos-top/50fstab: checkbashism let => a=(())
+  * scripts/tcos-premount/40tftp: checkbashism 'echo -e'
+  * bin/gentcos: checkbashism 'echo -e'
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 12 Jan 2011 15:16:16 +0100
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 12 Jan 2011 15:40:15 +0100
 
 tcos (0.89.72) unstable; urgency=low
 
