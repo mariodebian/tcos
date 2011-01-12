@@ -12,17 +12,19 @@ sed '/hosts:/ chosts:          files dns' /etc/nsswitch.conf > $DESTDIR/etc/nssw
 dns1=$(grep ^nameserver /etc/resolv.conf 2>/dev/null | grep -v "127.0.0.1" | head -1 | awk '{print $2}')
 echo "TCOS_DNS_SERVER=${dns1}" >> ${DESTDIR}/conf/tcos.conf
 
-# check for "busybox udhcpc -O 290| grep swapsrv"
-# 290 option no exists, busybox return know options
-check=$($DESTDIR/busybox udhcpc -O 290 2>&1| grep -c swapsrv)
-if [ "$check" != "0" ]; then
-  cpifexists ${TCOS_BINS}/udhcpc-script  /bin/
-elif [ -x /sbin/udhcpc ]; then
-  cpifexists /sbin/udhcpc /sbin/
+BUSYBOX=/bin/busybox
+[ -e ${DESTDIR}/bin/busybox ] && BUSYBOX=${DESTDIR}/bin/busybox
+
+cpifexists ${TCOS_BINS}/udhcpc-script  /bin/
+
+check=$(${BUSYBOX} udhcpc -O 290 2>&1| grep -c swapsrv)
+if [ -e ${TCOS_BINS}/busybox ] || [ "${check}" != "0" ]; then
+  _echo " * busybox udhcpc support 'swapsrv' option"
+
 else
  echo "ERROR"
  echo ""
- echo "NO UDHCP support, please install a recent busybox/udhcpc package."
+ echo "NO UDHCP support, please install a recent busybox/udhcpc (>= 1:1.13.3) package."
  echo ""
 fi
 
