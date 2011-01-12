@@ -282,9 +282,8 @@ ramdisk_size () {
 create_nbi() {
  # call mknbi
  _echo "Creating nbi image with ${TCOS_KERNEL} kernel"
- # TCOS_APPEND add more append with -extra-append 
- echo "Building NBI image with this append:"
-   echo -e "    ${TCOS_APPEND} ${EXTRA_APPEND}"
+ # TCOS_APPEND add more append with -extra-append
+ echo "Building NBI image with this append: ${TCOS_APPEND} ${EXTRA_APPEND}"
  if [ "${EXTRA_APPEND}" = "" ]; then
    echo " Please add option -extra-append=\"your_modifiers\" "
  fi
@@ -326,7 +325,7 @@ ${GENISO} -l -r -J -V "${VOLUMENAME}" -hide-rr-moved -v -b isolinux/isolinux.bin
 
 
 usage() {
-echo -e "Usage:
+/bin/echo -e "Usage:
   $WHITE$(basename $0)$NORMAL $RED-tftp$NORMAL  [-o=initrd-pc1]           PXE (>= 64 Mb)
           $RED-nfs$NORMAL   [$GREEN-rootfs$NORMAL]                 LTSP like (28 - 64 Mb)
           $RED-nbi$NORMAL   [-nbi-output=linux.nbi]   Floppy
@@ -350,7 +349,7 @@ _exit 0
 }
 
 _help() {
-echo -e "
+/bin/echo -e "
 This is gentcos help info about generating net init images.
 
   ${BLUE}TFTP PXE images:${NORMAL}
@@ -584,13 +583,13 @@ tcos_inst_pkg() {
       echo "Unknow PKG_URI=${PKG_URI} protocol: ${PKG_PROTOCOL} "
       error=1
       PKG_FILE=""
-      echo -e "There are some errors during caching \"${PKG}\". PLEASE CHECK REPOSITORIES!!"
+      echo "There are some errors during caching \"${PKG}\". PLEASE CHECK REPOSITORIES!!"
     fi
     dpkg -I ${PKG_FILE} >/dev/null 2>&1
     if [ $? -ne 0 ] || [ "${PKG_FILE}" = "" ] ; then
       echo "Error: Unknow package: ${PKG}"
       error=1
-      echo -e "There are some errors during caching \"${PKG}\". PLEASE CHECK REPOSITORIES!!"
+      echo "There are some errors during caching \"${PKG}\". PLEASE CHECK REPOSITORIES!!"
     else
       echo "Extracting $(basename ${PKG_FILE})..."
       VER=$(LC_ALL=C apt-cache policy ${PKG} | awk -F"Candidate: " '/Candidate/ {print $2}' | sed 's/[[:blank:]]*//g')
@@ -607,7 +606,7 @@ tcos_inst_pkg() {
       [ -e /tmp/$(basename $PKG_URI) ] && rm -f /tmp/$(basename $PKG_URI)
     fi
   done
-  [ $error = 0 ] && echo -e "All package installed.\n"
+  [ $error = 0 ] && echo "All package installed."
   [ $error != 0 ] && _exit 1
 }
 
