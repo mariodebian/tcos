@@ -7,7 +7,7 @@ if [ -z "$TCOS_XFBDEV" ] && [ $TCOS_XORG ]; then
  stat_before
 if [ "$(pathof Xorg)" = /usr/bin/Xorg ]; then
    XORG=7
-   _echo "   USING Xorg 7.X dirs"
+   #_echo "   USING Xorg 7.X dirs"
    XORG_PATH=/usr/bin
 else
    _echo "   **ERROR** Xorg not found"
@@ -115,12 +115,6 @@ if [ -d /usr/share/xserver-xorg/pci ] ; then
 fi
 
 
-
-
-if [ ! -e /usr/lib/xorg/modules/input/kbd_drv.so ]; then
-  _echo "  * xserver-xorg-input-kbd not installed, trying to use evdev keyboard"
-fi
-
 # MODULES
 mkdir -p $DESTDIR/usr/lib/xorg/modules/input/
 
@@ -147,7 +141,7 @@ cpifexists /usr/lib/xorg/modules/drivers/vesa_drv.so /usr/lib/xorg/modules/drive
 
 if [ $TCOS_XORG_ALLDRIVERS ]; then
     driver_dir=/usr/lib/xorg/modules/drivers
-    _echo "    xorg: installing all drivers..."
+    _echo "  Xorg: installing all drivers..."
     for _drv in $(ls ${driver_dir}/*so|grep -v -e nvidia -e vmware -e vbox); do
         cpifexists $_drv ${driver_dir}/
     done

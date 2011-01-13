@@ -19,7 +19,7 @@ cpifexists ${TCOS_BINS}/udhcpc-script  /bin/
 
 check=$(${BUSYBOX} udhcpc -O 290 2>&1| grep -c swapsrv)
 if [ -e ${TCOS_BINS}/busybox ] || [ "${check}" != "0" ]; then
-  _echo " * busybox udhcpc support 'swapsrv' option"
+  echo " * busybox udhcpc support 'swapsrv' option" >/dev/null
 
 else
  echo "ERROR"

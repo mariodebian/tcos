@@ -3,7 +3,7 @@
 # check for a decent version of busybox
 # ubuntu busybox-initramfs don't have some utils
 if [ -e "${TCOS_BINS}/busybox" ]; then
-  _echo "    Found busybox in ${TCOS_BINS}/busybox"
+  _echo "  Found busybox in ${TCOS_BINS}/busybox"
   [ -e $DESTDIR/bin/busybox ] && rm -f $DESTDIR/bin/busybox
   cpifexists ${TCOS_BINS}/busybox /bin/
 
@@ -27,7 +27,7 @@ elif [ $DESTDIR/bin/busybox ]; then
        _echo ""
     fi
   else
-    _echo "    busybox pass test: OK"
+    _echo "  Busybox pass all tests OK"
   fi
 
   # check for busybox static

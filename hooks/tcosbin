@@ -60,11 +60,11 @@ done
 # read all files in ${TCOS_CONF}/hacking/ and load it ( personal files )
 
 _files=$(ls -1 ${TCOS_CONF}/hacking/ | grep -v -e dpkg -e .svn)
-for hack in $_files ; do 
+for hack in $_files ; do
   if [ "${hack}" != "template" ]; then
     _echo "  LOADING: hack: ${TCOS_CONF}/hacking/${hack}"
   fi
- . ${TCOS_CONF}/hacking/${hack} 
+ . ${TCOS_CONF}/hacking/${hack}
 done
 
 
@@ -91,10 +91,10 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
     echo "SQUASHFS_FILE=\"usr${TCOS_SUFFIX}-${version}.squashfs\"" >> $DESTDIR/conf/tcos.conf
   fi
   SQUASHFS_FILE="usr${TCOS_SUFFIX}-${version}.squashfs"
-  _echo "     Creating ${SQUASHFS_FILE} of /usr"
+  _echo "  Creating ${SQUASHFS_FILE} of /usr"
   mkdir -p $DESTDIR/mnt/tmp
   $MKSQUASHFS $DESTDIR/usr/ $DESTDIR/mnt/tmp/${SQUASHFS_FILE} > /tmp/tcos-mksquashfs.log 2>&1
-  
+
   # check for mksquashfs errors
   if [ $? != 0 ]; then
     _echo "   ERROR:"
@@ -116,7 +116,7 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
     _echo "DEBUG: overwrite TCOS_SQUASHFS=$TCOS_SQUASHFS"
   else
     if [ "${TCOS_SQUASHFS}" = "1" ] ; then
-      _echo "     Moving ${SQUASHFS_FILE} to ${TFTP_DIR}"
+      _echo "  Moving ${SQUASHFS_FILE} to ${TFTP_DIR}"
       mv $DESTDIR/mnt/tmp/${SQUASHFS_FILE} ${TFTP_DIR}
     fi
   fi # end of TCOS_SQUASHFS
@@ -124,7 +124,7 @@ fi # end of TCOS_DISABLE_SQUASHFS
 
 
 TCOS_INCLUDE_INIT=1
-. ${TCOS_DIR}/hooks-addons/00init  
+. ${TCOS_DIR}/hooks-addons/00init
 unset TCOS_INCLUDE_INIT
 
 
@@ -140,7 +140,7 @@ if [ -d $DESTDIR/lib/tls ]; then
       _echo "WARNING rm -f $lib"
      elif [ -f /lib/${notlslib1} ]; then
       _echo "WARNING cp -a /lib/${notlslib} $DESTDIR/lib"
-     else    
+     else
       _echo "$tlslib not found"
      fi
   done
@@ -161,11 +161,11 @@ if [ -d $DESTDIR/lib/i686 ]; then
      elif [ -f /lib/${noi686lib1} ]; then
       cp -f /lib/${noi686lib1} $DESTDIR/lib/
       rm -f $lib
-     else    
+     else
       _echo "WARNING equivalent to $i686lib not found"
      fi
   done
-  
+
   (rmdir ${DESTDIR}/lib/i686/cmov && rmdir ${DESTDIR}/lib/i686) || _echo "  * WARNING can't delete /lib/i686 from image (not empty)"
 fi # end of /lib/i686 dir exists
 
@@ -183,11 +183,11 @@ if [ -d $DESTDIR/usr/lib/i686 ]; then
      elif [ -f /usr/lib/${noi686lib1} ]; then
       cp -f /usr/lib/${noi686lib1} $DESTDIR/usr/lib/
       rm -f $lib
-     else    
+     else
       _echo "WARNING equivalent to $i686lib not found"
      fi
   done
-  
+
   (rmdir ${DESTDIR}/usr/lib/i686/cmov && rmdir ${DESTDIR}/usr/lib/i686) || _echo "  * WARNING can't delete /usr/lib/i686 from image (not empty)"
 fi # end of /usr/lib/i686 dir exists
 
@@ -223,7 +223,7 @@ fi
 # read shell env variables to search TCOS_ALL_MODULES
 if [ $(env | grep -c ^TCOS_ALL_MODULES) = 1 ]; then
     TCOS_ALL_MODULES=$(env | grep ^TCOS_ALL_MODULES | awk -F "=" '{print $2}')
-fi  
+fi
 
 # create allmodules.squashfs
 if [ $TCOS_ALL_MODULES ]; then
