@@ -54,7 +54,7 @@ TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11 pulsea
 
 DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools xterm wget dosfstools"
 DISTRO_PACKAGES="${DISTRO_PACKAGES} x11-utils debootstrap eject debconf syslinux squashfs-tools mknbi"
-DISTRO_PACKAGES="${DISTRO_PACKAGES} dhcp3-client python python-dbus alsa-base xauth xserver-xorg-input-all xserver-xorg-input-mouse"
+DISTRO_PACKAGES="${DISTRO_PACKAGES} python python-dbus alsa-base xauth xserver-xorg-input-all xserver-xorg-input-mouse"
 
 
 # apt options (force-yes)
