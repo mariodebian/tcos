@@ -245,6 +245,9 @@ patch_karmic: patch_version
 patch_lenny: patch_version
 	# nothing to patch
 
+patch_squeeze: patch_version
+	# nothing to patch
+
 patch_testing: patch_version
 	# nothing to patch
 

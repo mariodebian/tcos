@@ -7,6 +7,8 @@ PACKAGE=tcos
 
 KERNEL_lenny="2.6.26-2-486"
 
+KERNEL_squeeze="2.6.32-5-486"
+
 KERNEL_testing="2.6.32-5-486"
 
 KERNEL_unstable="2.6.32-5-486"
