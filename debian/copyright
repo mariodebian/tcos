@@ -1,9 +1,11 @@
 Format: http://dep.debian.net/deps/dep5
 Upstream-Name: tcos
+Upstream-Contact: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
 Source: http://tcosproject.org/cgit/tcos.git
 
 Files: xmlrpc/common.c (base64 functions)
-Copyright: 2005, Jouni Malinen <j@w1.fi>
+Comment: base64 encoding/decoding (RFC1341) functions
+Copyright: 2005 Jouni Malinen <j@w1.fi>
 License: GPL-2.0+
 
 Files: session-cmd/*
@@ -11,19 +13,23 @@ Copyright: 2007 Luis Garcia Gisbert <garcia_luigis@gva.es>
 License: GPL-2.0+
 
 Files: lockscreen/lockscreen.c lockscreen/lockscreen2.c
-Copyright: 2004,2005 Tobias Doerffel <tobias@doerffel.de>
+Comment: based on iTalC lockscreen
+Copyright: 2004-2005 Tobias Doerffel <tobias@doerffel.de>
 License: GPL-2.0+
 
-Files: lockscreen/waitforX.c (based on xinit.c code: waitforserver() )
-Copyright: 1986, 1998 The Open Group
+Files: lockscreen/waitforX.c
+Comment: based on xinit.c code, waitforserver()
+Copyright: 1986-1998 The Open Group
 License: The Open Group
 
 Files: *
-Copyright: 2005,2011 Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+Copyright: 2005-2011 Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+           2007-2010 Ignacio Vidal <vidal_joshur@gva.es>
 License: GPL-2.0+
 
 Files: debian/*
-Copyright: 2005,2011 Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+Copyright: 2005-2011 Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+           2007-2010 Ignacio Vidal <vidal_joshur@gva.es>
 License: GPL-2.0+
 
 License: GPL-2.0+
