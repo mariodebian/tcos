@@ -1,57 +1,65 @@
-This package was debianized by Mario Izquierdo (mariodebian)
-<mariodebian@gmail.com> on Sat, 14 Oct 2005 10:24:07 +0200.
+Format: http://dep.debian.net/deps/dep5
+Upstream-Name: tcos
+Source: http://tcosproject.org/cgit/tcos.git
 
-It was downloaded from:
-  http://tcosproject.org/cgit/tcos.git
+Files: xmlrpc/common.c (base64 functions)
+Copyright: 2005, Jouni Malinen <j@w1.fi>
+License: GPL-2.0+
 
-Author: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+Files: session-cmd/*
+Copyright: 2007 Luis Garcia Gisbert <garcia_luigis@gva.es>
+License: GPL-2.0+
 
-Homepage:
-     http://www.tcosproject.org
+Files: lockscreen/lockscreen.c lockscreen/lockscreen2.c
+Copyright: 2004,2005 Tobias Doerffel <tobias@doerffel.de>
+License: GPL-2.0+
 
-Licenses:
+Files: lockscreen/waitforX.c (based on xinit.c code: waitforserver() )
+Copyright: 1986, 1998 The Open Group
+License: The Open Group
 
-    All files except next exceptions are GPL2+:
-         2005 - 2009 Mario Izquierdo <mariodebian@gmail.com>
-         
-         This program is free software; you can redistribute it and/or modify
-         it under the terms of the GNU General Public License as published by
-         the Free Software Foundation; either version 2 of the License.
+Files: *
+Copyright: 2005,2011 Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+License: GPL-2.0+
 
-         This program is distributed in the hope that it will be useful,
-         but WITHOUT ANY WARRANTY; without even the implied warranty of
-         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-         GNU General Public License for more details.
+Files: debian/*
+Copyright: 2005,2011 Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+License: GPL-2.0+
 
-         You should have received a copy of the GNU General Public License with
-         the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL-2;
-         if not, write to the Free Software Foundation, Inc., 59 Temple Place,
-       
-    lockscreen/waitforX.c:
-        Copyright © 1986, 1998  The Open Group
-        based on xinit.c code (waitforserver)
-        http://distro.ibiblio.org/pub/linux/distributions/tinycorelinux/2.x/release/src/waitforX.c
+License: GPL-2.0+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
 
-    lockscreen/[lockscreen.c|lockscreen2.c]:
-        Based on screen_locker.c - screen-locker, which is part of the iTALC client-software
-        iTALC/Client-software
-        Copyright © 2004-2005 Tobias Doerffel <tobias@doerffel.de>
-
-
-    xmlrpc/common.c: (base64 stuff)
-        Base64 encoding/decoding (RFC1341)
-        Copyright © 2005, Jouni Malinen <j@w1.fi>
-        Adapted to TCOS by Mario Izquierdo (no line breaks output to stdout)
-        http://www.koders.com/c/fidC4909D9B4301A6E931115BCFD347E5DB79620A7D.aspx?s=base64_table#L20
-
-     session-cmd/*:
-        Scripts to exit from gnome using sockets
-        Copyright © 2007 Luis Garcia Gisbert <garcia_luigis@gva.es>
-
-
-On Debian systems, the complete text of the GNU General Public
-License, version 2, can be found in /usr/share/common-licenses/GPL-2.
-
-The Debian packaging is © 2005, Mario Izquierdo (mariodebian) 
-<mariodebian@gmail.com> and is licensed under the GPL, see above.
-
+License: The Open Group
+ Permission to use, copy, modify, distribute, and sell this software and its
+ documentation for any purpose is hereby granted without fee, provided that
+ the above copyright notice appear in all copies and that both that
+ copyright notice and this permission notice appear in supporting
+ documentation.
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ .
+ Except as contained in this notice, the name of The Open Group shall not be
+ used in advertising or otherwise to promote the sale, use or other dealings
+ in this Software without prior written authorization from The Open Group.
