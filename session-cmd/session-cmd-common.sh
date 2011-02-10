@@ -2,6 +2,7 @@
 # File:        session-cmd-common.sh
 # Description: common functions for session-cmd scripts
 # Author:      Luis Garcia Gisbert <garcia_luigis@gva.es>
+# Copyright (C) Luis Garcia Gisbert <garcia_luigis@gva.es>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
