@@ -71,8 +71,8 @@ Recommends: vlc,
             ethtool
 Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
 XB-Python-Version: ${python:Versions}
-Description: Common scripts and bins for generating a thin client bootable image: TCOS
- This package contain common scripts, libs , bins and dependencies to
+Description: Common scripts and bins for generating a TCOS thin client bootable image
+ This package contain common scripts, libs, bins and dependencies to
  generate network images or be used in standalone hosts.
 
 
@@ -111,20 +111,20 @@ Recommends: tcos-configurator,
            fuse-utils, 
             pulseaudio-esound-compat | esound
 XB-Python-Version: ${python:Versions}
-Description: New thin client implementation
+Description: Base package for install a TCOS (Thin client) server
  This is a system for generating thin client hosts using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
  thin client terminals.
  TCOS support dhcp, sound (alsa & esound | pulseaudio ), ltspfs, 
  Xorg and more utils.
  .
- This metapackage install and recommends all required packages to make a 
+ This package install and recommends all required packages to make a 
  TCOS thin client server.
 
 
 Package: tcos-tftp-dhcp
 Architecture: all
-Depends: atftpd, dhcp3-server | dhcp-server, ${misc:Depends}
+Depends: atftpd, isc-dhcp-server | dhcp3-server | dhcp-server, ${misc:Depends}
 Description: Metapackage to install TCOS with atftp and DHCP server
- This metapackage depends on atftp and a DHCP daemon to provide server 
+ This metapackage depends on atftp and a DHCP server to provide needed 
  daemons needed to run a TCOS server.
