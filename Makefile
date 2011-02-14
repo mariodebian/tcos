@@ -32,17 +32,8 @@ clean:
 	$(MAKE) -C tcos-standalone clean
 	$(MAKE) -C tmixer      clean
 
-gedit:
-	gedit $(shell find bin/gentcos hooks-addons/ hooks/ scripts/ -type f|grep -v svn) >/dev/null 2>&1 &
-
-boot_imgs:
-	ppmtolss16 '#c0cfc0=7' < images/logo.ppm > tcos/logo.lss
-
 distclean:
 	find . -type f -name "*~" | xargs rm -rf --
-
-config_svn:
-	svn propedit svn:ignore .
 
 install:
 	#  Creating directories
@@ -100,7 +91,7 @@ install:
 	for i in `find hooks-addons/ -maxdepth 1 -type f`; do install -m 644 $$i $(DESTDIR)$(TCOS_DIR)/$$i; done
 
 	# delete tcosmain from tcos/hooks/
-	rm -rf $(DESTDIR)$(TCOS_DIR)/hooks/tcosmain
+	rm -f $(DESTDIR)$(TCOS_DIR)/hooks/tcosmain
 	chmod -x $(DESTDIR)$(TCOS_DIR)/scripts/tcos
 
 
@@ -173,6 +164,7 @@ install:
 
 	# xmlrpc
 	$(MAKE) -C xmlrpc install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+	sed -i 's/__VERSION__/$(VERSION)/g' $(DESTDIR)/$(TCOS_BINS)/tcos-last
 
 	# udev
 	$(MAKE) -C udev install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) TCOS_BINS=$(TCOS_BINS)
@@ -191,67 +183,9 @@ install:
 
 	# tcos-standalone helper
 	$(MAKE) -C tcos-standalone install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+	sed -i 's/__VERSION__/$(VERSION)/g' $(DESTDIR)/$(PREFIX)/sbin/tcos-standalone
 
 	# tmixer
 	$(MAKE) -C tmixer install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
-
-
-targz: clean
-	rm -rf ../tmp 2> /dev/null
-	mkdir ../tmp
-	cp -ra * ../tmp
-	rm -rf `find ../tmp/* -type d -name .svn`
-	mv ../tmp ../initramfs-tools-tcos-$(VERSION)
-	tar -czf ../initramfs-tools-tcos-$(VERSION).tar.gz ../initramfs-tools-tcos-$(VERSION)
-	rm -rf ../initramfs-tools-tcos-$(VERSION)
-
-tcos: clean
-	rm -f ../tcos_*deb ../gentcos*deb ../initramfs-tools-tcos*deb ../tcos_*deb ../tcos-server-utils*deb
-	debuild -us -uc; true
-	sudo dpkg -i ../initramfs-tools-tcos*deb ../gentcos*deb ../tcos-server-utils*deb ../tcos_*deb
-
-patch_version:
-	# PATCHING VERSION
-	sed -i 's/__VERSION__/$(VERSION)/g' tcos-standalone/tcos-standalone.py
-	sed -i 's/__VERSION__/$(VERSION)/g' xmlrpc/sh/tcos-last
-
-patch_amd64:
-	#
-	#
-	#     obsolete amd64 patch
-	#
-	#
-
-patch_max: patch_version
-	# nothing to patch
-
-
-patch_hardy: patch_version
-	echo 6 > debian/compat
-	sed -i 's/7\.0\.0/6\.0\.0/g' debian/control
-	sed -i 's/3\.8\.0/3\.7\.2/g' debian/control
-
-patch_intrepid: patch_version
-	sed -i 's/libltdl3//g' debian/control
-
-patch_jaunty: patch_version
-	sed -i 's/libltdl3//g' debian/control
-
-patch_karmic: patch_version
-	sed -i 's/libltdl3//g' debian/control
-
-
-
-patch_lenny: patch_version
-	# nothing to patch
-
-patch_squeeze: patch_version
-	# nothing to patch
-
-patch_testing: patch_version
-	# nothing to patch
-
-patch_unstable: patch_version
-	# nothing to patch
 
 
