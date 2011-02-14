@@ -1,3 +1,15 @@
+tcos (0.89.76) unstable; urgency=low
+
+  * debian/copyright: Machine readable debian/copyright format
+  * update debian/copyright
+  * bin/get_vga_vendor: cache VGA Vendor output in /tmp/vga_vendor
+  * global license headers fix
+  * Makefile: delete obsolete targets
+  * debian/control: fix descriptions
+  * debian/*.p* clean scripts and set /bin/sh as shell
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 14 Feb 2011 17:41:29 +0100
+
 tcos (0.89.75) unstable; urgency=low
 
   * bin/tcos-buildchroot: remove dhcp3-client
