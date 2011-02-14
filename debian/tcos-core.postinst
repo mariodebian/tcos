@@ -1,20 +1,29 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
+# add tcos group if not exists
 if ! getent group tcos >/dev/null; then
   addgroup --quiet --system tcos || true
 fi
 
-if [ -d /etc/tcos/ssl ]; then 
-   chmod -f 640 /etc/tcos/ssl/* 2>/dev/null
-   chown -f root:tcos /etc/tcos/ssl/* 2>/dev/null
+if [ -d /etc/tcos/ssl ]; then
+  chmod -f 640 /etc/tcos/ssl/* 2>/dev/null
+  chown -f root:tcos /etc/tcos/ssl/* 2>/dev/null
 fi
 
-# set tnc rights for standalone hosts
-if [ ! -d /var/lib/tcos/tftp ] && [ -e /usr/lib/tcos/tnc ];then
-   chown -f root:root /usr/lib/tcos/tnc
-   chmod -f 0700 /usr/lib/tcos/tnc
+
+if [ -e /usr/lib/tcos/tnc ];then
+  if [ -d /var/lib/tcos/tftp ]; then
+    # TCOS server, set SUID in tcos-net-controller (iptables wrapper)
+    chown -f root:tcos /usr/lib/tcos/tnc
+    chmod -f 4750 /usr/lib/tcos/tnc
+  else
+    # TCOS standalone, set tnc rights for standalone hosts
+    chown -f root:root /usr/lib/tcos/tnc
+    chmod -f 0700 /usr/lib/tcos/tnc
+  fi
 fi
+
 
 if ! getent group tcosmonitor-exclude >/dev/null; then
   addgroup --quiet --system tcosmonitor-exclude || true

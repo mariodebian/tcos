@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 
 case "$1" in
     purge)
-	 #if getent group tcos >/dev/null; then
-      	 #   delgroup --quiet --system tcos > /dev/null || true
-    	 #fi
+	 if getent group tcos >/dev/null; then
+      	    delgroup --quiet --system tcos > /dev/null || true
+    	 fi
+
  	 # delete all generated files and dirs
  	 rm -rf /var/lib/tcos/tftp
  	 rm -rf /var/lib/tcos/fs-*

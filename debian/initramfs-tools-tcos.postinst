@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-# create group tcos
+# create tcos group if not exists
 if ! getent group tcos >/dev/null; then
   addgroup --quiet --system tcos || true
 fi
@@ -24,12 +24,6 @@ if [ -d /etc/tcos/templates ];then
    chmod -f -R 640 /etc/tcos/templates/tcos* 2>/dev/null || true
 fi
 
-# set SUID in tcos-net-controller (iptables wrapper)
-if [ -e /usr/lib/tcos/tnc ];then
-   chown -f root:tcos /usr/lib/tcos/tnc
-   chmod -f 4750 /usr/lib/tcos/tnc
-fi
-
 # create file
 [ ! -e /etc/tcos/modules ] && touch /etc/tcos/modules
 
@@ -44,8 +38,8 @@ function read_inetd() {
     if [ -f /etc/inetd.conf ]; then
       # get last word of tftp file
 
-      tmp=$(grep ^tftp /etc/inetd.conf 2>/dev/null | awk '{print $NF}')
-        if [ -d "${tmp}" ]; then 
+      tmp=$(awk '/^tftp/ {print $NF}' /etc/inetd.conf 2>/dev/null)
+        if [ -d "${tmp}" ]; then
          TFTPBOOT=${tmp}
         fi
     fi
@@ -55,8 +49,8 @@ function read_dnsmasq() {
     # read tftp-root var from /etc/dnsmasq.conf
     if [ -f /etc/dnsmasq.conf ]; then
 
-      tmp=$(grep ^tftp-root /etc/dnsmasq.conf 2>/dev/null | awk -F'=' '{print $2}')
-        if [ -d "${tmp}" ]; then 
+      tmp=$(awk -F'=' '/^tftp-root/ {print $2}' /etc/dnsmasq.conf 2>/dev/null)
+        if [ -d "${tmp}" ]; then
          TFTPBOOT=${tmp}
         fi
     fi
@@ -65,8 +59,8 @@ function read_dnsmasq() {
 function read_from_conf() {
     #$1 is conf file
     if [ -f "$1" ]; then
-      for txt in $(grep OPTIONS "$1" ); do 
-        if [ $(echo $txt |grep -c "/" ) = 1 ]; then 
+      for txt in $(grep OPTIONS "$1" ); do
+        if [ $(echo $txt |grep -c "/" ) = 1 ]; then
          TFTPBOOT=$(echo $txt| sed s/"\""/""/g)
         fi
       done

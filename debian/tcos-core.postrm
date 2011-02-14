@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 
@@ -18,18 +18,18 @@ case "$1" in
     configure|reconfigure)
       reload_dbus
     ;;
-    # purge)
-    #   if getent group tcosmonitor-exclude >/dev/null; then
-    #       delgroup --quiet --system tcosmonitor-exclude > /dev/null || true
-    #   fi
-    #   if getent group tcos >/dev/null; then
-    #  	   delgroup --quiet --system tcos > /dev/null || true
-    #   fi
-    #;;
-    remove)
+    purge)
+      if getent group tcosmonitor-exclude >/dev/null; then
+          delgroup --quiet --system tcosmonitor-exclude > /dev/null || true
+      fi
+      if getent group tcos >/dev/null; then
+          delgroup --quiet --system tcos > /dev/null || true
+      fi
        rm -f /etc/dbus/system.d/tcosmonitor.conf
        reload_dbus
     ;;
+    #remove)
+    #;;
 esac
 
 
