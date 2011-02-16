@@ -18,14 +18,14 @@ quiet=n
 . /conf/tcos-run-functions
 
 
-test1=\$(lspci -n |grep -c "1039:5315")
-
+test1=\$(grep -c "10395315" /proc/bus/pci/devices)
 
 if [ "\$test1" = "0" ]; then
    # no client with chip Silicon Integrated Systems [SiS] 550 PCI/AGP VGA Display Adapter
    exit 0
 fi
 
+echo "#/scripts/tcos-bottom/15etc2300" >> /conf/tcos.conf
 echo "TCOS_XORG_VIDEO_DRIVER=auto" >> /conf/tcos.conf
 
 EOF

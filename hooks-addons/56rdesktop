@@ -39,7 +39,7 @@ fi
 Xorg \${TCOS_XORG_OPTS}  >> /tmp/initramfs.debug 2>&1 &
 
 sleep 2
-waitforX
+waitforX || exit
 sleep 1
 
 # default server

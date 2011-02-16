@@ -29,7 +29,7 @@ if [ "\$1" != "now" ]; then
 fi
 
 echo "ltspfs-set-xprop::waitforX"
-waitforX
+waitforX || exit
 
 # wait until Xorg is complety started
 if [ "\$1" != "now" ]; then

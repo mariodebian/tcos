@@ -221,7 +221,7 @@ sleep 4
 #
 # wait for Xorg is started
 #
-waitforX
+waitforX || exit
 sleep 2
 #
 DISPLAY=:0 pax11publish -e

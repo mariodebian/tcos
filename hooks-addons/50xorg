@@ -126,12 +126,13 @@ for _inp in $(ls /usr/lib/xorg/modules/input/*); do
     cpifexists $_inp /usr/lib/xorg/modules/input/
 done
 
-mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
+if  [ -d /usr/lib/xorg/modules/linux ]; then
+  mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
 
-for _lnx in $(ls /usr/lib/xorg/modules/linux/lib*so); do
+  for _lnx in $(ls /usr/lib/xorg/modules/linux/lib*so); do
     cpifexists $_lnx /usr/lib/xorg/modules/linux/
-done
-
+  done
+fi
 
 # DRIVERS and EXTENSIONS
 mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
@@ -238,7 +239,7 @@ cp -ra ${XORG_XKB_DIR} ${DESTDIR}/usr/share/X11
 find ${DESTDIR}/usr/share/X11/ -type l | xargs rm -f --
 
 # keymap DB
-cpifexists /usr/share/X11/XKeysymDB /usr/share/X11/
+[ -e /usr/share/X11/XKeysymDB ] && cpifexists /usr/share/X11/XKeysymDB /usr/share/X11/
 
 
 
@@ -289,7 +290,7 @@ fi
 
 /sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
 
-waitforX
+waitforX || exit
 sleep 1
 
 xterm  >> /tmp/initramfs.debug 2>&1 &
@@ -320,7 +321,7 @@ fi
 
 /sbin/tryXorg  --xorgopts="\${TCOS_XORG_OPTS}" &
 
-waitforX
+waitforX || exit
 sleep 1
 
 # no window manager for freenx
@@ -369,7 +370,7 @@ fi
 
 /sbin/tryXorg --xorgopts="\${TCOS_XORG_OPTS}" &
 
-waitforX
+waitforX || exit
 sleep 1
 
 remoteuser=\$(read_cmdline_var "sshuser" "root")
