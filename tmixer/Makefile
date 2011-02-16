@@ -1,7 +1,7 @@
 DEBUGCFLAGS	+= -g -O2 -Wall
 CFLAGS		+= -g -O2 -Wall
 TVERSION	= -DTCOS_VERSION="\"$(VERSION)\""
-LDADD		+= -lasound
+LDADD		+= -lasound -lm
 bin_PROGRAMS = tmixer
 TMIXER_SOURCES= tmixer-alsa.c tmixer-oss.c
 CC=gcc

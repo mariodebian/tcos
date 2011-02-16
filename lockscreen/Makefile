@@ -14,7 +14,7 @@ GXD_OPTS=-O2 -ansi -pedantic -Wall -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/i
 LIBS= -I/usr/lib
 LOCKLIBS+=$(shell pkg-config --libs imlib2)
 CFLAGS+=$(shell pkg-config --cflags imlib2)
-LDADD+=-O2 -ansi -pedantic -Wall -lXaw $(LIBS) $(CFLAGS)
+LDADD+=-O2 -ansi -pedantic -Wall -lXaw $(LIBS) $(CFLAGS) -lX11 -lXext -lXt
 LDADD_WAITFORX+=-O2 -ansi -pedantic -Wall -lX11 $(LIBS)
 CC=gcc
 
