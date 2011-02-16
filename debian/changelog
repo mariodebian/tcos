@@ -1,3 +1,9 @@
+tcos (0.89.78) unstable; urgency=low
+
+  * lockscreen/Makefile tmixer/Makefile: add lost link flags, thanks ghe@d.o
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 16 Feb 2011 18:07:32 +0100
+
 tcos (0.89.77) unstable; urgency=low
 
   * bin/get_vga_vendor: Use /sys/bus/pci with CLASS 0x030000 to search VGA vendor
