@@ -33,7 +33,7 @@ TFTPBOOT_DEFAULT=/var/lib/tftpboot
 TFTPBOOT=
 
 
-function read_inetd() {
+read_inetd() {
     # read tftpboot dir from inetd.conf
     if [ -f /etc/inetd.conf ]; then
       # get last word of tftp file
@@ -45,7 +45,7 @@ function read_inetd() {
     fi
 }
 
-function read_dnsmasq() {
+read_dnsmasq() {
     # read tftp-root var from /etc/dnsmasq.conf
     if [ -f /etc/dnsmasq.conf ]; then
 
@@ -56,7 +56,7 @@ function read_dnsmasq() {
     fi
 }
 
-function read_from_conf() {
+read_from_conf() {
     #$1 is conf file
     if [ -f "$1" ]; then
       for txt in $(grep OPTIONS "$1" ); do
