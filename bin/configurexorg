@@ -677,8 +677,8 @@ if [ -d "${TCOS_XORG_CONF}" ]; then
   cat << EOF > ${TCOS_XORG_CONF}/60-fonts.conf
 
 Section "Files"
-	FontPath	${FONTS_DIR}"/misc"
-	FontPath	${FONTS_DIR}"/100dpi"
+	FontPath	"${FONTS_DIR}/misc"
+	FontPath	"${FONTS_DIR}/100dpi"
 	FontPath        "tcp/${SERVER}:7100"
 	FontPath        "tcp/${SERVER}:7101"
 EndSection
