@@ -239,7 +239,8 @@ debug "detect_driver()"
 #fi
 
 if [ -d /usr/share/xserver-xorg/pci/ ]; then
-  xpci=$(lspci -nn| grep VGA | grep -E -o '[0-9a-z]{4}\:[0-9a-z]{4}' | tr [a-z] [A-Z])
+  xpci=$(get_vga_vendor vendormodel)
+  #xpci=$(lspci -nn| grep VGA | grep -E -o '[0-9a-z]{4}\:[0-9a-z]{4}' | tr [a-z] [A-Z])
   #xpci=$(lspci -vn | awk '/VGA/ {print $3}' | tail -1 | tr [a-z] [A-Z])
   #xpci=$(lspci -n -s $(lspci | awk '/VGA/ {print $1}') | tail -1 | awk '{print $3}' | tr [a-z] [A-Z])
   if [ "${xpci}" != "" ]; then
@@ -667,6 +668,8 @@ save_settings() {
  fi
 
 if [ -d "${TCOS_XORG_CONF}" ]; then
+  FONTS_DIR="/usr/share/X11/fonts"
+  [ -d "/usr/share/fonts/X11" ] && FONTS_DIR="/usr/share/fonts/X11"
   # xorgauto delete /etc/X11/xorg.conf
   rm -f "${outputfile}"
 
@@ -674,10 +677,10 @@ if [ -d "${TCOS_XORG_CONF}" ]; then
   cat << EOF > ${TCOS_XORG_CONF}/60-fonts.conf
 
 Section "Files"
-	FontPath	"/usr/share/X11/fonts/misc"
-	FontPath	"/usr/share/X11/fonts/100dpi"
-	FontPath        "tcp/${SERVER}:7100"                    # local font server
-	FontPath        "tcp/${SERVER}:7101" # Truetype xfstt fonts
+	FontPath	${FONTS_DIR}"/misc"
+	FontPath	${FONTS_DIR}"/100dpi"
+	FontPath        "tcp/${SERVER}:7100"
+	FontPath        "tcp/${SERVER}:7101"
 EndSection
 
 EOF
