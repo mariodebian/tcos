@@ -22,8 +22,8 @@
 /* xmlrpc methods to export thin client info */
 
 /* extract pci info */
-#define PCI_ALL "for id in $(lspci| awk '{print $1}'); do echo -n \"$id \"; done; echo"
-#define READ_PCI_ID "lspci |grep \"00:08.0\" | sed s/\"00:08.0 \"//g"
+/*#define PCI_ALL "for id in $(lspci| awk '{print $1}'); do echo -n \"$id \"; done; echo"*/
+#define PCI_ALL "lspci | awk '{printf $1\" \"}'; echo"
 
 /* messages */
 #define PCI_UNKNOW "error: Unknow pci id"
