@@ -19,10 +19,14 @@
 if [ -f /tmp/vga_vendor ]; then
   VENDOR=$(cat /tmp/vga_vendor)
 else
+  #return /sys/bus/pci/devices/0000:06:05.0/class:0x030000
+  VGA_DEVPATH=$(grep 0x030000 /sys/bus/pci/devices/*/class | awk -F"/class" '{print $1}')
 
-#VENDOR=$(lspci -nn| awk '/VGA/ {if ( $(NF-1) == "(rev" ){print $(NF-2)} else print $NF }'| sed -e 's/\[//g' -e 's/\]//g' | tr [a-z] [A-Z] | awk -F":" '{print $1}')
-VENDOR=$(lspci -nn| grep VGA | grep -E -o '[0-9a-z]{4}\:[0-9a-z]{4}' | tr [a-z] [A-Z] | awk -F":" '{print $1}')
-echo "$VENDOR" > /tmp/vga_vendor
+  #0x1002
+  VENDOR=$(cat $VGA_DEVPATH/vendor | sed -e 's|0x||' | tr [a-z] [A-Z])
+
+  #VENDOR=$(lspci -nn| grep VGA | grep -E -o '[0-9a-z]{4}\:[0-9a-z]{4}' | tr [a-z] [A-Z] | awk -F":" '{print $1}')
+  echo "$VENDOR" > /tmp/vga_vendor
 fi
 
 
