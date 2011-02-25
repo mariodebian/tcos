@@ -1,3 +1,12 @@
+tcos (0.89.79) unstable; urgency=low
+
+  * bin/configurexorg: fix quotes in font paths
+  * debian/initramfs-tools-tcos.postinst: bashish, don't use function
+  * debian/tcos-standalone.init: cosmetic changes in init script
+  * debian/control: Use Standars 3.9.1 and add libxmlrpc-core-c3-dev as alternative of libxmlrpc-c3-dev
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 25 Feb 2011 18:38:33 +0100
+
 tcos (0.89.78) unstable; urgency=low
 
   * lockscreen/Makefile tmixer/Makefile: add lost link flags, thanks ghe@d.o
