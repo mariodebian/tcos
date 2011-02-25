@@ -2,10 +2,10 @@ Source: tcos
 Section: net
 Priority: optional
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 7.0.0), cdbs, libxmlrpc-c3-dev, libxau-dev, libxaw7-dev, 
+Build-Depends: debhelper (>= 7.0.0), cdbs, libxmlrpc-core-c3-dev | libxmlrpc-c3-dev, libxau-dev, libxaw7-dev, 
                libimlib2-dev, python, python-support (>= 0.3), pkg-config, libasound2-dev,
                libglib2.0-dev
-Standards-Version: 3.8.0
+Standards-Version: 3.9.1
 Vcs-Git: http://tcosproject.org/git/tcos.git
 Vcs-Browser: http://tcosproject.org/cgit/tcos.git/
 Homepage: http://www.tcosproject.org
