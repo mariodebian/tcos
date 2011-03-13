@@ -3,3 +3,4 @@ usr/share/locale/*
 usr/sbin/tcos-standalone
 usr/share/tcos-standalone/*
 usr/share/applications/tcos-standalone.desktop
+etc/avahi/services/tcos-standalone.service

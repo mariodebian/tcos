@@ -24,6 +24,9 @@ install:
 	install -d $(DESTDIR)/$(PREFIX)/share/applications
 	install -m 644 tcos-standalone.desktop $(DESTDIR)/$(PREFIX)/share/applications/
 
+	install -d $(DESTDIR)/etc/avahi/services
+	install -m 644 tcos-standalone.service $(DESTDIR)/etc/avahi/services/
+
 	# locales
 	@for lang in $(LANGUAGES); do \
 		install -d $(DESTDIR)/$(PREFIX)/share/locale/$$lang/LC_MESSAGES/; \

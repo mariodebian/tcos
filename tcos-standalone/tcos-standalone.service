@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+
+<service-group>
+  <name replace-wildcards="yes">tcos-standalone-%h</name>
+  <service>
+    <type>_workstation._tcp</type>
+  </service>
+
+  <service>
+    <type>_http._tcp</type>
+    <port>8998</port>
+  </service>
+</service-group>
