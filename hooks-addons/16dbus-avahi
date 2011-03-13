@@ -57,19 +57,6 @@ avahi:x:113:
 netdev:x:111:
 EOF
 
-cat << EOF > $DESTDIR/etc/avahi/services/tcosxmlrpc.service
-<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
-<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
-
-<service-group>
-  <name replace-wildcards="yes">tcosxmlrpc-%h</name>
-  <service>
-    <type>_http._tcp</type>
-    <port>8998</port>
-  </service>
-</service-group>
-EOF
-
 cat << EOF > $DESTDIR/etc/avahi/services/tcos.service
 <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
@@ -78,6 +65,11 @@ cat << EOF > $DESTDIR/etc/avahi/services/tcos.service
   <name replace-wildcards="yes">tcos-%h</name>
   <service>
     <type>_workstation._tcp</type>
+  </service>
+
+  <service>
+    <type>_http._tcp</type>
+    <port>8998</port>
   </service>
 </service-group>
 EOF
