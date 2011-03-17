@@ -1,13 +1,13 @@
 # hook to include openvpn
 # need openvpn
 
-if [ -n "TCOS_OPENVPN" ] && [ ! -d /etc/tcos/openvpn/keys ] ; then
+if [ -n "$TCOS_OPENVPN" ] && [ ! -d /etc/tcos/openvpn/keys ] ; then
   _echo "TCOS_OPENVPN enabled but no init"
   _echo ""
   _echo "Please run tcos-init-vpn as root user"
   _echo ""
 
-elif [ -n "TCOS_OPENVPN" ] && [ -d /etc/tcos/openvpn/keys ]; then
+elif [ -n "$TCOS_OPENVPN" ] && [ -d /etc/tcos/openvpn/keys ]; then
 
 stat_before
 
