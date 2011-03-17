@@ -2,9 +2,9 @@
 # need openvpn
 
 if [ -n "$TCOS_OPENVPN" ] && [ ! -d /etc/tcos/openvpn/keys ] ; then
-  _echo "TCOS_OPENVPN enabled but no init"
+  _echo "TCOS_OPENVPN enabled but no keys"
   _echo ""
-  _echo "Please run tcos-init-vpn as root user"
+  _echo "Please run 'tcos-init-openvpn' as root user"
   _echo ""
 
 elif [ -n "$TCOS_OPENVPN" ] && [ -d /etc/tcos/openvpn/keys ]; then
@@ -38,7 +38,7 @@ grep -v -e xdmcp-server -e font-server /etc/hosts > /etc/hosts.new
 mv /etc/hosts.new /etc/hosts
 echo "$TCOS_VPN_SERVER xdmcp-server" >> /etc/hosts
 echo "$TCOS_VPN_SERVER font-server" >> /etc/hosts
-echo "$TCOS_VPN_SERVER \$(hostname)" >> /etc/hosts
+echo "$TCOS_VPN_SERVER vpn-server" >> /etc/hosts
 
 EOF
 chmod +x $DESTDIR/scripts/tcos-bottom/18vpn
