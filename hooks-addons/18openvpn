@@ -40,13 +40,23 @@ echo "$TCOS_VPN_SERVER xdmcp-server" >> /etc/hosts
 echo "$TCOS_VPN_SERVER font-server" >> /etc/hosts
 echo "$TCOS_VPN_SERVER vpn-server" >> /etc/hosts
 
+# wait for carrier/ping in tap0
+while [ 1 ]; do
+  #if [ "\$(cat /sys/class/net/tap0/carrier)" = "1" ]; then
+  #  break
+  #fi
+  ping -q -W 1 -c 2 vpn-server >/dev/null 2>&1 && break
+  sleep 1
+done
+
+
 EOF
 chmod +x $DESTDIR/scripts/tcos-bottom/18vpn
 
 
 cat << EOF > $DESTDIR/usr/share/openvpn/client.conf
 client
-dev tun
+dev tap
 proto udp
 remote tcos-server 2194
 float

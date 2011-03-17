@@ -42,6 +42,11 @@ if [ -d "/sys/class/net/tun0" ]; then
   IFDEV="tun0"
 fi
 
+if [ -d "/sys/class/net/tap0" ]; then
+  # use tun0 if openvpn is running
+  IFDEV="tap0"
+fi
+
 
  KVER=$(uname -r)
  TCOS_CONF=/conf/tcos.conf
