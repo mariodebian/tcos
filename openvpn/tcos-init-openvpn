@@ -1,0 +1,66 @@
+#!/bin/sh
+set -e
+
+BASEDIR=/etc/tcos/openvpn
+if [ -d /var/lib/tcos/chroot/etc/tcos/ ]; then
+    # tcos chroot gen keys in chroot and link in /
+    BASEDIR=/var/lib/tcos/chroot/etc/tcos/openvpn
+    rm -rf /etc/tcos/openvpn/keys
+    mkdir -p $BASEDIR/keys
+    ln -s $BASEDIR/keys /etc/tcos/openvpn/keys
+else
+    rm -rf $BASEDIR/keys
+    mkdir -p $BASEDIR/keys
+fi
+
+export KEY_DIR="$BASEDIR/keys"
+export KEY_SIZE="1024"
+export CA_EXPIRE="3650"
+export KEY_EXPIRE="3650"
+export KEY_COUNTRY=""
+export KEY_PROVINCE=""
+export KEY_CITY=""
+export KEY_ORG="TcosProject"
+export KEY_EMAIL="admin@tcosserver"
+export KEY_OU="TcosProject"
+export KEY_CN="TcosServer"
+
+export CONFIG="$BASEDIR/openssl.conf"
+
+touch $KEY_DIR/index.txt
+echo "01" > $KEY_DIR/serial
+
+# gen dh
+openssl dhparam -out $KEY_DIR/dh1024.pem 1024
+
+# build CA
+openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 -sha1 -x509 \
+            -keyout $KEY_DIR/ca.key -out $KEY_DIR/ca.crt -config $CONFIG
+
+# server key
+openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 \
+            -keyout $KEY_DIR/tcosserver.key -out $KEY_DIR/tcosserver.csr \
+            -extensions server -config $CONFIG
+openssl ca -batch -days 3650 -out $KEY_DIR/tcosserver.crt \
+            -in $KEY_DIR/tcosserver.csr \
+            -extensions server -md sha1 -config $CONFIG
+
+
+
+export KEY_CN="TcosClient"
+# clients without passwd
+openssl req -batch -days 3650 -nodes -new -newkey rsa:1024 \
+            -keyout $KEY_DIR/client.key -out $KEY_DIR/client.csr \
+            -config $CONFIG
+openssl ca -batch -days 3650 -out $KEY_DIR/client.crt \
+            -in $KEY_DIR/client.csr -md sha1 -config $CONFIG
+
+
+rm -f /etc/openvpn/tcosserver.conf
+ln -s /etc/tcos/openvpn/tcosserver.conf /etc/openvpn/tcosserver.conf
+
+if ! grep -q ^AUTOSTART /etc/default/openvpn; then
+  echo 'AUTOSTART="tcosserver"' >> /etc/default/openvpn
+fi
+invoke-rc.d openvpn restart
+

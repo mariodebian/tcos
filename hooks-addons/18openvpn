@@ -1,0 +1,66 @@
+# hook to include openvpn
+# need openvpn
+
+if [ -n "TCOS_OPENVPN" ] && [ ! -d /etc/tcos/openvpn/keys ] ; then
+  _echo "TCOS_OPENVPN enabled but no init"
+  _echo ""
+  _echo "Please run tcos-init-vpn as root user"
+  _echo ""
+
+elif [ -n "TCOS_OPENVPN" ] && [ -d /etc/tcos/openvpn/keys ]; then
+
+stat_before
+
+tcos_manual_add_modules tun
+
+cpifexists /usr/sbin/openvpn /usr/bin/
+mkdir -p $DESTDIR/usr/share/openvpn
+cpifexists /etc/tcos/openvpn/keys/ca.crt     /usr/share/openvpn/
+cpifexists /etc/tcos/openvpn/keys/client.key /usr/share/openvpn/
+cpifexists /etc/tcos/openvpn/keys/client.crt /usr/share/openvpn/
+
+TCOS_VPN_SERVER=$(awk '/^server/ {print $2}' /etc/tcos/openvpn/tcosserver.conf | cut -d . -f -3)".1"
+
+# startup script
+cat << EOF > $DESTDIR/scripts/tcos-bottom/18vpn
+#!/bin/sh
+
+if [ "\$1" = "prereqs" ]; then
+  exit 0
+fi
+
+modprobe tun
+ln -s /bin/busybox /sbin/ifconfig
+ln -s /bin/busybox /sbin/route
+openvpn /usr/share/openvpn/client.conf > /tmp/openvpn.log 2>&1 &
+
+grep -v -e xdmcp-server -e font-server /etc/hosts > /etc/hosts.new
+mv /etc/hosts.new /etc/hosts
+echo "$TCOS_VPN_SERVER xdmcp-server" >> /etc/hosts
+echo "$TCOS_VPN_SERVER font-server" >> /etc/hosts
+echo "$TCOS_VPN_SERVER \$(hostname)" >> /etc/hosts
+
+EOF
+chmod +x $DESTDIR/scripts/tcos-bottom/18vpn
+
+
+cat << EOF > $DESTDIR/usr/share/openvpn/client.conf
+client
+dev tun
+proto udp
+remote tcos-server 2194
+float
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca "/usr/share/openvpn/ca.crt"
+cert "/usr/share/openvpn/client.crt"
+key "/usr/share/openvpn/client.key"
+comp-lzo
+verb 1
+ns-cert-type server
+EOF
+
+stat_after "OpenVPN"
+fi # end of TCOS_OPENVPN

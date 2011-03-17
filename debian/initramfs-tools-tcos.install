@@ -24,3 +24,5 @@ etc/tcos/tcos.conf
 etc/tcos/pxelinux.menu.cfg.tpl
 etc/tcos/hooks/tcosmain
 etc/tcos/pxelinux.d
+etc/tcos/openvpn
+usr/sbin/tcos-init-openvpn
