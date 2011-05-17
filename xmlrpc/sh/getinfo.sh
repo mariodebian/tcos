@@ -88,7 +88,11 @@ if [ -f ${TCOS_CONF} ]; then
  if [ "${STANDALONE}" = "0" ]; then
    echo "tcos"
  else
-   echo "standalone"
+   if [ -d /dev/usbseat ]; then
+     echo "multiseat"
+   else
+     echo "standalone"
+   fi
  fi
 elif [ -f /var/run/pxes/env ]; then
   echo "pxes"

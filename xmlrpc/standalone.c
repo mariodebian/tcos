@@ -56,6 +56,10 @@ xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud)
     snprintf( line, BSIZE, "%s %s 2>/dev/null", STANDALONE_SERVER, group);
     fp=(FILE*)popen(line, "r");
   }
+  else if ( strcmp(info, "get_multiseat") == 0 ) {
+    snprintf( line, BSIZE, "%s %s 2>/dev/null", STANDALONE_MULTISEAT, group);
+    fp=(FILE*)popen(line, "r");
+  }
   else if ( strcmp(info, "get_time") == 0 )
     fp=(FILE*)popen(STANDALONE_TIME, "r");
 

@@ -40,6 +40,8 @@ stunnel4 break STANDALONE_SERVER
   #define STANDALONE_SERVER  "/usr/bin/get_server"
 #endif
 
+#define STANDALONE_MULTISEAT  "/usr/lib/tcos/get_multiseat"
+
 /* messages */
 #define STANDALONE_UNKNOW "error: Unknow user"
 #define STANDALONE_ERROR  "error: tcos-last returned error"
