@@ -1,14 +1,14 @@
 #!/bin/sh
 set -e
 
-BASEDIR=/etc/tcos/openvpn
-if [ -d /var/lib/tcos/chroot/etc/tcos/ ]; then
+BASEDIR=/var/lib/tcos/openvpn
+if [ -d /var/lib/tcos/chroot/var/lib/tcos/ ]; then
     # tcos chroot gen keys in chroot and link in /
-    BASEDIR=/var/lib/tcos/chroot/etc/tcos/openvpn
+    BASEDIR=/var/lib/tcos/chroot/var/lib/tcos/openvpn
     echo " * Deleting keys in chroot..."
-    rm -rf /etc/tcos/openvpn/keys rm -rf $BASEDIR/keys
+    rm -rf /var/lib/tcos/openvpn/keys rm -rf $BASEDIR/keys
     mkdir -p $BASEDIR/keys
-    ln -s $BASEDIR/keys /etc/tcos/openvpn/keys
+    ln -s $BASEDIR/keys /var/lib/tcos/openvpn/keys
 else
     echo " * Deleting keys..."
     rm -rf $BASEDIR/keys
@@ -64,7 +64,7 @@ openssl ca -batch -days 3650 -out $KEY_DIR/client.crt \
 chmod 600 $KEY_DIR/*.key
 
 rm -f /etc/openvpn/tcosserver.conf
-ln -s /etc/tcos/openvpn/tcosserver.conf /etc/openvpn/tcosserver.conf
+ln -s /var/lib/tcos/openvpn/tcosserver.conf /etc/openvpn/tcosserver.conf
 
 if ! grep -q ^AUTOSTART /etc/default/openvpn; then
   echo '# added by tcos-init-openvpn' >> /etc/default/openvpn

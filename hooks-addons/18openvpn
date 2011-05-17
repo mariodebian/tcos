@@ -1,13 +1,13 @@
 # hook to include openvpn
 # need openvpn
 
-if [ -n "$TCOS_OPENVPN" ] && [ ! -d /etc/tcos/openvpn/keys ] ; then
+if [ -n "$TCOS_OPENVPN" ] && [ ! -d /var/lib/tcos/openvpn/keys ] ; then
   _echo "TCOS_OPENVPN enabled but no keys"
   _echo ""
   _echo "Please run 'tcos-init-openvpn' as root user"
   _echo ""
 
-elif [ -n "$TCOS_OPENVPN" ] && [ -d /etc/tcos/openvpn/keys ]; then
+elif [ -n "$TCOS_OPENVPN" ] && [ -d /var/lib/tcos/openvpn/keys ]; then
 
 stat_before
 
@@ -15,11 +15,11 @@ tcos_manual_add_modules tun
 
 cpifexists /usr/sbin/openvpn /usr/bin/
 mkdir -p $DESTDIR/usr/share/openvpn
-cpifexists /etc/tcos/openvpn/keys/ca.crt     /usr/share/openvpn/
-cpifexists /etc/tcos/openvpn/keys/client.key /usr/share/openvpn/
-cpifexists /etc/tcos/openvpn/keys/client.crt /usr/share/openvpn/
+cpifexists /var/lib/tcos/openvpn/keys/ca.crt     /usr/share/openvpn/
+cpifexists /var/lib/tcos/openvpn/keys/client.key /usr/share/openvpn/
+cpifexists /var/lib/tcos/openvpn/keys/client.crt /usr/share/openvpn/
 
-TCOS_VPN_SERVER=$(awk '/^server/ {print $2}' /etc/tcos/openvpn/tcosserver.conf | cut -d . -f -3)".1"
+TCOS_VPN_SERVER=$(awk '/^server/ {print $2}' /var/lib/tcos/openvpn/tcosserver.conf | cut -d . -f -3)".1"
 
 # startup script
 cat << EOF > $DESTDIR/scripts/tcos-bottom/18vpn

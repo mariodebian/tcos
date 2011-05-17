@@ -60,7 +60,7 @@ TCOS_STANDALONE_DIR=/var/lib/tcos/standalone
 TCOS_XMLRPC_DIR=$(PREFIX)/share/tcos/xmlrpc/
 DBUS_CONF=/etc/dbus-1/system.d/
 X11_CONF=/etc/X11/Xsession.d/
-OPENVPN_CONF=/etc/tcos/openvpn/
+OPENVPN_CONF=/var/lib/tcos/openvpn/
 
 DISTRO_VERSION=$(shell dpkg-parsechangelog | awk '/^Distribution/ {print $$2}')
 have_changelog := $(wildcard debian/changelog)
