@@ -41,6 +41,11 @@ if [ -d /etc/tcos/conf.d/ ]; then
 fi
 
 
+export LC_ALL=C
+export LC_MESSAGES=C
+export DEBCONF_FRONTEND="noninteractive"
+export DEBIAN_FRONTEND="noninteractive"
+
 # default settings
 TCOS_ARCH=i386
 TCOS_FLAVOUR=standard
@@ -125,6 +130,15 @@ cat << EOF
 EOF
 }
 
+createEmptyCMD() {
+cat << CMD > ${TCOS_CHROOT}/$1
+#!/bin/sh
+#echo " * Fake $1 called: '\$@'"
+exit 0
+CMD
+  chmod +x ${TCOS_CHROOT}/$1
+}
+
 chrootcreate() {
   mkdir -p ${TCOS_CHROOT}
  
@@ -152,12 +166,23 @@ chrootcreate() {
   cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
 
   # avoid to use a shell script in chroot
-  if [ "$(file ${TCOS_CHROOT}/sbin/start-stop-daemon | grep -c ELF)" = "1" ]; then
-        cp ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/sbin/start-stop-daemon.original
-  fi
-  if [ "$(file ${TCOS_CHROOT}/sbin/start-stop-daemon.REAL | grep -c ELF)" = "1" ]; then
-        cp ${TCOS_CHROOT}/sbin/start-stop-daemon.REAL ${TCOS_CHROOT}/sbin/start-stop-daemon.original
-  fi
+  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+                                    --add --rename --quiet \
+                                    --divert /sbin/start-stop-daemon.original \
+                                    /sbin/start-stop-daemon
+
+  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+                                    --add --rename --quiet \
+                                    --divert /usr/sbin/invoke-rc.d.original \
+                                    /usr/sbin/invoke-rc.d
+
+  # avoid calling udevadm inside chroot
+  # http://bugs.debian.org/627790
+  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+                                    --add --rename --quiet \
+                                    --divert /sbin/udevadm.original \
+                                    /sbin/udevadm
+  createEmptyCMD /sbin/udevadm
 
 
   cat << EOF > ${TCOS_CHROOT}/etc/apt/apt.conf
@@ -202,18 +227,10 @@ console-setup	console-setup/fontsize	string	16
 dash	dash/sh	boolean	false
 EOF
 
-  cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
-#!/bin/sh
-exit 0
-CMD
-  cat << CMD > ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
-#!/bin/sh
-exit 0
-CMD
-  chmod +x ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+  createEmptyCMD /sbin/start-stop-daemon
+  createEmptyCMD /usr/sbin/invoke-rc.d
 
   cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get $APT_OPTS update
 apt-get $APT_OPTS dist-upgrade
 apt-get install $APT_OPTS tcos-keyring
@@ -231,7 +248,6 @@ EOC
   if [ "${DISTRIBUTION}" = "ubuntu" ]; then
 
   cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} 
 apt-get install $APT_OPTS linux-ubuntu-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS linux-restricted-modules-${TCOS_KERNEL} 
@@ -250,7 +266,6 @@ EOC
   ######################################
   else # DISTRO != ubuntu
   cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL}
 apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
@@ -263,22 +278,38 @@ EOC
   touch ${TCOS_CHROOT}/etc/tcos/chroot
   umount -l ${TCOS_CHROOT}/proc
   umount -l ${TCOS_CHROOT}/sys
+  # remove udevadm diversion
+  chrootexit
 } # end of chrootcreate()
 
 ###############################################################################
 
-chrootupdate() {
-  cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
-[ ! -e ${TCOS_CHROOT}/sbin/start-stop-daemon ] && cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
-#!/bin/sh
-exit 0
-CMD
+chrootenter() {
+cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
+[ ! -e ${TCOS_CHROOT}/sbin/start-stop-daemon ] &&   createEmptyCMD /sbin/start-stop-daemon
+[ ! -e ${TCOS_CHROOT}/usr/sbin/invoke-rc.d ] && createEmptyCMD /usr/sbin/invoke-rc.d
 
-[ ! -e ${TCOS_CHROOT}/usr/sbin/invoke-rc.d ] && cat << CMD > ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
-#!/bin/sh
-exit 0
-CMD
-chmod +x ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+if [ ! -e /sbin/udevadm.original ]; then
+  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+                                    --add --rename --quiet \
+                                    --divert /sbin/udevadm.original \
+                                    /sbin/udevadm
+  createEmptyCMD /sbin/udevadm
+fi
+}
+
+chrootexit() {
+if [ -e ${TCOS_CHROOT}/sbin/udevadm.original ]; then
+  rm -f ${TCOS_CHROOT}/sbin/udevadm
+  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+                                    --remove --rename --quiet \
+                                    --divert /sbin/udevadm.original \
+                                    /sbin/udevadm
+fi
+}
+
+chrootupdate() {
+  chrootenter
 
 # copy console keymap
 if [ -e /etc/console/boottime.kmap.gz ]; then
@@ -295,7 +326,6 @@ if [ -e /etc/console-setup/cached.kmap.gz ]; then
 fi
 
   cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get update
 apt-get $APT_OPTS dist-upgrade
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
@@ -309,29 +339,20 @@ if [ -d ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ ]; then
 fi
 
 touch ${TCOS_CHROOT}/etc/tcos/chroot
+chrootexit
 }
 
 ###############################################################################
 
 chrootinstallpkg() {
-  cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
-[ ! -e ${TCOS_CHROOT}/sbin/start-stop-daemon ] && cat << CMD > ${TCOS_CHROOT}/sbin/start-stop-daemon
-#!/bin/sh
-exit 0
-CMD
-
-[ ! -e ${TCOS_CHROOT}/usr/sbin/invoke-rc.d ] && cat << CMD > ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
-#!/bin/sh
-exit 0
-CMD
-chmod +x ${TCOS_CHROOT}/sbin/start-stop-daemon ${TCOS_CHROOT}/usr/sbin/invoke-rc.d
+  chrootenter
 
   cat << EOC | chroot ${TCOS_CHROOT}
-export LC_ALL=C LC_MESSAGES=C DEBCONF_FRONTEND="noninteractive" DEBIAN_FRONTEND="noninteractive"
 apt-get update
 apt-get $APT_OPTS install $@
 apt-get clean
 EOC
+  chrootexit
 }
 
 ###############################################################################
@@ -342,7 +363,9 @@ chrootcp() {
   fi
 }
 chrootupdateimages() {
-cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
+chrootenter
+# remove udevadm diversion before gentcos
+chrootexit
 
 # copy some files
 chrootcp /usr/share/tcos-core/lockscreen-custom.png
@@ -364,7 +387,7 @@ fi
 mount --bind /proc ${TCOS_CHROOT}/proc
 
   cat << EOC | chroot ${TCOS_CHROOT}
-LC_ALL=C LC_MESSAGES=C gentcos ${GENTCOS_OPT}
+gentcos ${GENTCOS_OPT}
 EOC
 
 umount -l ${TCOS_CHROOT}/proc
