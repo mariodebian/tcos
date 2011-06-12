@@ -112,14 +112,18 @@ cpifexists /etc/services   /etc/
 # create (if not exists) empty modules file
 touch      $DESTDIR/etc/modules
 mkdir -p $DESTDIR/usr/lib
-cpifexists /lib/libresolv.so.2        /lib/
+
+LIB_DIR=/lib
+[ -e /lib/x86_64-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/x86_64-linux-gnu
+
+cpifexists ${LIB_DIR}/libresolv.so.2        /lib/
 cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
 
 # need to copy this libs to support usernames with busybox
-cpifexists /lib/libnss_compat.so.2        /lib/
-cpifexists /lib/libnss_files.so.2         /lib/
-cpifexists /lib/libnss_nis.so.2           /lib/
-cpifexists /lib/libnss_dns.so.2           /lib/
+cpifexists ${LIB_DIR}/libnss_compat.so.2        /lib/
+cpifexists ${LIB_DIR}/libnss_files.so.2         /lib/
+cpifexists ${LIB_DIR}/libnss_nis.so.2           /lib/
+cpifexists ${LIB_DIR}/libnss_dns.so.2           /lib/
 [ -e /usr/lib/libnss_db.so.2 ] && cpifexists /usr/lib/libnss_db.so.2        /usr/lib/
 
 # new lib (needed for DNS calls)
