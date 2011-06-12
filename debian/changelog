@@ -1,3 +1,33 @@
+tcos (0.89.80) unstable; urgency=low
+
+  * change xmlrpc dev build depends order
+  * xmlrpc/Makefile: use $(shell cmd) instead of
+  * hooks-addons/16dbus-avahi: add Avahi mDNS for autodiscover tcos hosts
+  * hooks-addons/16dbus-avahi: join the Avahi services in one file
+  * Add Avahi tcos-standalone.service file
+  * add OpenVPN support for TCOS images
+  * conf/base.conf: add TCOS_OPENVPN var (disabled by default)
+  * hooks-addons/18openvpn: fix var names
+  * scripts/tcos-top/05network: Use TCOS_SERVER instead of dhcpserver for tcos-server in /etc/hosts
+  * xmlrpc/sh/getinfo.sh: fix typo
+  * hooks-addons/18openvpn: don't save hostname as VPN server IP
+  * openvpn/tcos-init-openvpn: secure key files and restart openvpn with cond-restart
+  * scripts/tcos-bottom/25startx: Use getinfo to get NETWORK_IP
+  * openvpn/tcos-init-openvpn: add info messages
+  * xmlrpc/sh/getinfo.sh hooks-addons/18openvpn: use tap0 instead of tun0 and wait for VPN link
+  * hooks-addons/18openvpn: Add message when starting VPN
+  * Switch VPN dir from /etc/tcos/openvpn to /var/lib/tcos/openvpn
+  * initial multiseat support
+  * bin/tcos-buildchroot: fix udevadm calls in chroot and use dpkg-divert to move files
+  * openvpn: use tap instead of tun in server side
+  * hooks-addons/00main: Use /lib/x86_64-linux-gnu if found
+  * hooks-addons/01busybox: remove silent old busybox
+  * hooks-addons/03udev2: copy /lib/udev/pci-db if found (sound realated)
+  * hooks-addons/18openvpn: add break points
+  * bin/gentcos: convert module links in files and call parse_pxelinuxcfg after image build
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 12 Jun 2011 13:46:41 +0200
+
 tcos (0.89.79) unstable; urgency=low
 
   * bin/configurexorg: fix quotes in font paths
