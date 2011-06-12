@@ -2,9 +2,9 @@
 # need openvpn
 
 if [ -n "$TCOS_OPENVPN" ] && [ ! -d /var/lib/tcos/openvpn/keys ] ; then
-  _echo "TCOS_OPENVPN enabled but no keys"
+  _echo "    TCOS_OPENVPN enabled but no keys"
   _echo ""
-  _echo "Please run 'tcos-init-openvpn' as root user"
+  _echo "        Please run 'tcos-init-openvpn' as root user"
   _echo ""
 
 elif [ -n "$TCOS_OPENVPN" ] && [ -d /var/lib/tcos/openvpn/keys ]; then
@@ -31,6 +31,7 @@ fi
 
 quiet=n
 . /scripts/functions
+maybe_break openvpn1
 
 modprobe tun
 ln -s /bin/busybox /sbin/ifconfig
@@ -42,6 +43,8 @@ mv /etc/hosts.new /etc/hosts
 echo "$TCOS_VPN_SERVER xdmcp-server" >> /etc/hosts
 echo "$TCOS_VPN_SERVER font-server" >> /etc/hosts
 echo "$TCOS_VPN_SERVER vpn-server" >> /etc/hosts
+
+maybe_break openvpn2
 
 # wait for carrier/ping in tap0
 log_begin_msg "Waiting for OpenVPN connection"
