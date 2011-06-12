@@ -74,6 +74,7 @@ cpudev /lib/udev/console-setup-tty /lib/udev/
 cpudev /lib/udev/keymap /lib/udev/
 [ -d /lib/udev/keymaps/ ] && cp -ra /lib/udev/keymaps $DESTDIR/lib/udev/
 cpudev /lib/udev/findkeyboards /lib/udev/
+cpudev /lib/udev/pci-db /lib/udev/
 
 # delete not usessfull rules
 rm -f $DESTDIR/etc/udev/rules.d/024_hpmud.rules
