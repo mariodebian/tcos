@@ -40,7 +40,7 @@ xmlrpc_value *tcos_dpms(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
   char cmd[BIG_BUFFER];
-  char *fret;
+  /*char *fret;*/
 
 
   /* read what info search */
@@ -73,7 +73,7 @@ xmlrpc_value *tcos_dpms(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   strncpy(line, DPMS_CMD_ERROR, BIG_BUFFER);
 
   fp=(FILE*)popen(cmd, "r");
-  fret = fgets( line, sizeof line, fp);
+  (void)fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
 

@@ -79,7 +79,7 @@ int main (int argc, char **argv) {
 	XtResource desktopBackingStoreResources[] = { { XtNbackingStore, XtCBackingStore, XtRBackingStore, sizeof(int), 0, XtRImmediate, (XtPointer) Always, }, };
 
 	Display * display;
-	Visual * vis;
+	/*Visual * vis;*/
 
 	XSetWindowAttributes attr;
 	unsigned long valuemask;
@@ -113,7 +113,7 @@ int main (int argc, char **argv) {
 
 	display = XtDisplay(toplevel);
 
-	vis = DefaultVisual(display, DefaultScreen(display));
+	(void)DefaultVisual(display, DefaultScreen(display));
 
 	displayWidth = WidthOfScreen(DefaultScreenOfDisplay(display));
 	displayHeight = HeightOfScreen(DefaultScreenOfDisplay(display));

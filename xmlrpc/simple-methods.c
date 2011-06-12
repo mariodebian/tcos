@@ -59,7 +59,7 @@ xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_data)
   char *app=NULL;
   char cmd[BUFF_SIZE];
   char ret[BUFF_SIZE];
-  int fret;
+  /*int fret;*/
 
 
   dbgtcos("tcosxmlrpc::tcos_status() Init \n");
@@ -81,7 +81,7 @@ xmlrpc_value *tcos_status (xmlrpc_env *env, xmlrpc_value *in, void *user_data)
   }
 
   dbgtcos("tcosxmlrpc::tcos_status() reading from fp pointer\n");
-  fret = fscanf(fp, "%s", ret);
+  (void)fscanf(fp, "%s", ret);
   dbgtcos( "tcosxmlrpc::tcos_status() ret value=%s\n", ret);
   pclose(fp);
 

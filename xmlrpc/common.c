@@ -100,7 +100,7 @@ unsigned char *readfile(const char *name, size_t *len)
 {
 	FILE *f;
 	unsigned char *buf;
-	size_t fret;
+	/*size_t fret;*/
 
 	f = fopen(name, "rb");
 	if (f == NULL)
@@ -116,7 +116,7 @@ unsigned char *readfile(const char *name, size_t *len)
 		return NULL;
 	}
 
-	fret = fread(buf, 1, *len, f);
+	(void)fread(buf, 1, *len, f);
 	fclose(f);
 
 	return buf;

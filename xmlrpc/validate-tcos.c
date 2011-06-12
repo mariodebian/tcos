@@ -48,7 +48,7 @@ char *validate_tcos(char *user, char *pass)
   char line[BSIZE];
   char **tokens = NULL;
   int i=0;
-  char *fret;
+  /*char *fret;*/
   struct info *login=malloc(sizeof(struct info));
   fp = fopen ("/etc/tcospasswd", "r" );
   if (fp == NULL) {
@@ -56,7 +56,7 @@ char *validate_tcos(char *user, char *pass)
     return (char*) LOGIN_ERROR;
   }
 
-  fret = fgets( line, sizeof line, fp);
+  (void)fgets( line, sizeof line, fp);
   /*remove_line_break(line);*/
   fclose(fp);
   strncpy(login->line, line, BSIZE);

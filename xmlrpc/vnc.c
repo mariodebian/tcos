@@ -39,7 +39,7 @@ xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
   char cmd[BIG_BUFFER];
-  char *fret;
+  /*char *fret;*/
 
 
   /* read what info search */
@@ -70,7 +70,7 @@ xmlrpc_value *tcos_vnc(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error in line */
   strncpy(line, VNC_ERROR, BIG_BUFFER);
 
-  fret = fgets( line, sizeof line, fp);
+  (void)fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
   dbgtcos("tcosxmlrpc::tcos_vnc() line=\"%s\"\n", line);
