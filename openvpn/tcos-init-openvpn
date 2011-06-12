@@ -7,7 +7,7 @@ if [ -d /var/lib/tcos/chroot/var/lib/tcos/ ]; then
     BASEDIR=/var/lib/tcos/chroot/var/lib/tcos/openvpn
     echo " * Deleting keys in chroot..."
     rm -rf /var/lib/tcos/openvpn/keys rm -rf $BASEDIR/keys
-    mkdir -p $BASEDIR/keys
+    mkdir -p $BASEDIR/keys /var/lib/tcos/openvpn
     ln -s $BASEDIR/keys /var/lib/tcos/openvpn/keys
 else
     echo " * Deleting keys..."
