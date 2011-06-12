@@ -15,7 +15,7 @@ elif [ $DESTDIR/bin/busybox ]; then
   if [ $test1 = 0 -o $test2 = 0 -o $test3 = 0 ]; then
     if [ -x /bin/busybox ]; then
        _echo "   INFO:  Better busybox found, replacing it..."
-       rm $DESTDIR/bin/busybox
+       rm -f $DESTDIR/bin/busybox
        cpifexists /bin/busybox /bin/
     else
        _echo "ERROR:"
