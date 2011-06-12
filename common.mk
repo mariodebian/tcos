@@ -22,7 +22,9 @@ KERNEL_karmic="2.6.31-22-generic"
 KERNEL_lucid="2.6.32-32-generic"
 KERNEL_max="2.6.32-32-generic"
 
-KERNEL_maverick="2.6.35-22-generic"
+KERNEL_maverick="2.6.35-28-generic"
+
+KERNEL_natty="2.6.38-8-generic"
 ##################################
 
 
