@@ -136,6 +136,16 @@ call_mkinitramfs() {
  if depmod -h 2>&1|grep -q map; then
    DEPMOD_ARGS="-am -F /boot/System.map-${TCOS_KERNEL}"
  fi
+
+ # convert module kernel links in files
+ LINKS=$(find ${DESTDIR}/lib/modules/${TCOS_KERNEL}/ -type l)
+ for link in $LINKS; do
+   fname=$(echo $link| sed -e s@"$DESTDIR"@""@g)
+   #echo "  fname=$fname link=$link"
+   rm -f "$link"
+   cp "$fname" "$link"
+ done
+
  mkdir -p ${DESTDIR}/boot/
  cp /boot/System.map-${TCOS_KERNEL} ${DESTDIR}/boot/
  chroot ${DESTDIR}/ /sbin/depmod $DEPMOD_ARGS ${TCOS_KERNEL}
@@ -759,7 +769,7 @@ check_modules
 # check_xfs
 
 # make a pxelinux.cfg/default with this kernel
-parse_pxelinuxcfg
+#parse_pxelinuxcfg
 
 
 
@@ -845,4 +855,5 @@ if [ $TCOS_SIZE ]; then
   ramdisk_size
 fi
 
+parse_pxelinuxcfg
 _exit 0
