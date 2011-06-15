@@ -656,6 +656,16 @@ fix_nvidia_ati() {
     mv ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/libGL.so.1.2 \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2
 
+    # multiarch support i386
+    [ -e ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/i386-linux-gnu/libGL.so.1.2 ] && \
+    mv ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/i386-linux-gnu/libGL.so.1.2 \
+       ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2
+
+    # multiarch support amd64
+    [ -e ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/x86_64-linux-gnu/libGL.so.1.2 ] && \
+    mv ${TCOS_PKG_CACHE}/libgl1-mesa-glx/usr/lib/x86_64-linux-gnu/libGL.so.1.2 \
+       ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGL.so.1.2
+
     [ -e ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.xserver ] && \
        mv ${TCOS_PKG_CACHE}/xserver-xorg-core/VERSION.xserver \
        ${TCOS_PKG_CACHE}/fix-nvidia-ati/VERSION.xserver

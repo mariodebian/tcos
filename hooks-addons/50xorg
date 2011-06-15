@@ -168,6 +168,10 @@ if [ -e /usr/lib/mesa/libGL.so.1 ]; then
   LIBGL_PATH=/usr/lib/mesa/
 fi
 
+# multiarch support
+[ -e /usr/lib/i386-linux-gnu/libGL.so.1 ] && LIBGL_PATH=/usr/lib/i386-linux-gnu/
+[ -e /usr/lib/x86_64-linux-gnu/libGL.so.1 ] && LIBGL_PATH=/usr/lib/x86_64-linux-gnu/
+
 # delete vnc extension
 rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so
 

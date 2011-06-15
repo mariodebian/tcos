@@ -113,8 +113,10 @@ cpifexists /etc/services   /etc/
 touch      $DESTDIR/etc/modules
 mkdir -p $DESTDIR/usr/lib
 
+# multiarch support
 LIB_DIR=/lib
 [ -e /lib/x86_64-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/x86_64-linux-gnu
+[ -e /lib/i386-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/i386-linux-gnu
 
 cpifexists ${LIB_DIR}/libresolv.so.2        /lib/
 cpifexists /usr/lib/libgssapi_krb5.so.2 /usr/lib/
