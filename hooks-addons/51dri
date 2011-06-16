@@ -9,12 +9,14 @@
 #TCOS_XORG_DRI_UNICHROME=
 #TCOS_XORG_DRI_MATROX=
 
+DRI_DIR=/usr/lib/dri/
+[ -d /usr/lib/i386-linux-gnu/dri/   ] && DRI_DIR=/usr/lib/i386-linux-gnu/dri/
+[ -d /usr/lib/x86_64-linux-gnu/dri/ ] && DRI_DIR=/usr/lib/x86_64-linux-gnu/dri/
 
-
-mkdir -p ${DESTDIR}/usr/lib/dri
+mkdir -p ${DESTDIR}/${DRI_DIR}
 
 copy_dri() {
-  [ -e "/usr/lib/dri/$1" ] && cpifexists /usr/lib/dri/$1 /usr/lib/dri
+  [ -e "${DRI_DIR}/$1" ] && cpifexists ${DRI_DIR}/$1 ${DRI_DIR}
 }
 
 
