@@ -266,8 +266,9 @@ hostname $hostname
 export HOSTNAME=$hostname
 log_end_msg
 
-# start portmap
+# start portmap || rcpbind (for NFS)
 [ -x /sbin/portmap ] && /sbin/portmap >/tmp/portmap.log 2>&1 &
+[ -x /sbin/rpcbind ] && /sbin/rpcbind >/tmp/rpcbind.log 2>&1 &
 
 
 exit 0
