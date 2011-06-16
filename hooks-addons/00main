@@ -103,6 +103,11 @@ fi
 [ -f /etc/ld.so.conf ]   && cpifexists /etc/ld.so.conf       /etc/
 [ ! -f /etc/ld.so.conf ] && echo "/usr/lib" >>  $DESTDIR/etc/ld.so.conf
 
+# multiarch support
+mkdir -p $DESTDIR/etc/ld.so.conf.d/
+[ -f /etc/ld.so.conf.d/i486-linux-gnu.conf   ] && cpifexists /etc/ld.so.conf.d/i486-linux-gnu.conf   /etc/ld.so.conf.d/
+[ -f /etc/ld.so.conf.d/x86_64-linux-gnu.conf ] && cpifexists /etc/ld.so.conf.d/x86_64-linux-gnu.conf /etc/ld.so.conf.d/
+
 cpifexists /sbin/depmod    /sbin/
 cpifexists /etc/localtime  /etc/
 [ -f /etc/adjtime ] && cpifexists /etc/adjtime    /etc/
@@ -126,7 +131,7 @@ cpifexists ${LIB_DIR}/libnss_compat.so.2        /lib/
 cpifexists ${LIB_DIR}/libnss_files.so.2         /lib/
 cpifexists ${LIB_DIR}/libnss_nis.so.2           /lib/
 cpifexists ${LIB_DIR}/libnss_dns.so.2           /lib/
-[ -e /usr/lib/libnss_db.so.2 ] && cpifexists /usr/lib/libnss_db.so.2        /usr/lib/
+[ -e ${LIB_DIR}/libnss_db.so.2 ] && cpifexists ${LIB_DIR}/libnss_db.so.2        /usr/lib/
 
 # new lib (needed for DNS calls)
 [ -e /lib/libnss_mdns4_minimal.so.2 ] && cpifexists /lib/libnss_mdns4_minimal.so.2 /lib/
@@ -135,7 +140,7 @@ cpifexists ${LIB_DIR}/libnss_dns.so.2           /lib/
 
 # needed for NFS
 [ -x /sbin/portmap ] && cpifexists /sbin/portmap        /sbin
-
+[ -x /sbin/rpcbind ] && cpifexists /sbin/rpcbind        /sbin
 
 # create some dirs
 mkdir -p $DESTDIR/var/log
