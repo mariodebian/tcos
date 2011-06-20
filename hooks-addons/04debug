@@ -37,6 +37,7 @@ if [ ! -e \${file} ]; then
   echo "\${file} not found"
   exit 1
 fi
-/lib/ld-linux.so.2 --list \$file
+[ -e /lib/ld-linux.so.2 ] && /lib/ld-linux.so.2 --list \$file
+[ -e /lib64/ld-linux-x86-64.so.2 ] && /lib64/ld-linux-x86-64.so.2 --list \$file
 EOF
 chmod +x $DESTDIR/bin/ldd
