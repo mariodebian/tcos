@@ -160,6 +160,8 @@ rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so*
 rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so
 rm -f $DESTDIR/usr/lib/xorg/modules/libnvidia-wfb.so.*
 rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
+rm -rf $DESTDIR/usr/lib/libnvidia-*
+
 # delete linked nvidia driver (10Mb)
 rm -f $DESTDIR/usr/lib/libGL*
 
