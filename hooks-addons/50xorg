@@ -180,10 +180,12 @@ rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so
 if [ $TCOS_XORG_OPENGL ]; then
  _echo "    * OpenGL support is ENABLED"
  if [ "$(strings $LIBGL_PATH/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
+       [ "$(strings /usr/lib/xorg/modules/extensions/libglx.so 2>&1 |grep -c NVIDIA)" != 0 ] || \
        [ "$(strings $LIBGL_PATH/libGL.so.1|grep -c -i fgl)" != 0 ]; then
 
    if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
       rm -rf $DESTDIR/usr/lib/xorg/modules/libglx.so*
+      rm -f $DESTDIR/usr/lib/xorg/modules/libnvidia-wfb.so.*
       [ -e ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so ] && \
            cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libGLcore.so /usr/lib/xorg/modules/extensions/
 
