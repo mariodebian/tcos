@@ -37,13 +37,13 @@ fi
 
 # hack for ubuntu old udev
 while [ 1 ]; do
-     [ -d /sys/class/net/eth0 ] &&  break
-     [ -d /sys/class/net/eth1 ] &&  break
-     [ -d /sys/class/net/eth2 ] &&  break
-     [ -d /sys/class/net/wlan0 ] && break
-     [ -d /sys/class/net/wlan1 ] && break
-     [ -d /sys/class/net/ra0 ] && break
-     [ -d /sys/class/net/ra1 ] && break
+     [ -e /sys/class/net/eth0 ] &&  break
+     [ -e /sys/class/net/eth1 ] &&  break
+     [ -e /sys/class/net/eth2 ] &&  break
+     [ -e /sys/class/net/wlan0 ] && break
+     [ -e /sys/class/net/wlan1 ] && break
+     [ -e /sys/class/net/ra0 ] && break
+     [ -e /sys/class/net/ra1 ] && break
      [ -x /sbin/udevtrigger ] && /sbin/udevtrigger
      [ -x /sbin/udevplug ]    && /sbin/udevplug
      [ -x /sbin/udevadm ]    && /sbin/udevadm trigger

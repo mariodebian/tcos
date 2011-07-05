@@ -13,7 +13,7 @@ if [ "$TCOS_CPUFREQ" = "1" ]; then
 
   modprobe acpi-cpufreq
   modprobe cpufreq_powersave
-  if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
+  if [ -e /sys/devices/system/cpu/cpu0/cpufreq ]; then
     echo powersave > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
   fi
 

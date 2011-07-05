@@ -115,7 +115,7 @@ if [ $(read_cmdline_var 'wifi' '0') = "1" ]; then
   TCOS_NET_WIFI_ESSID=$(read_cmdline_var "essid" "")
   for dev in $TCOS_NET_DEVS; do
     # is wireless????
-    if [ -d /sys/class/net/$dev/wireless ]; then
+    if [ -e /sys/class/net/$dev/wireless ]; then
       TCOS_NET_WIFI=1
       TCOS_NET_LINK=$dev
       # stop searching

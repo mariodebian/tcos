@@ -26,7 +26,7 @@ fi
 
 
 # check if soundcard is avalaible
-if [ ! -d /proc/asound  ] && [ ! -e /dev/dsp ] ; then
+if [ ! -e /proc/asound  ] && [ ! -e /dev/dsp ] ; then
   _log "INITSOUND /proc/asound and /dev/dsp don't exists, need other kernel modules!!!"
   log_failure_msg "No soundcard found"
   log_end_msg 1
@@ -36,7 +36,7 @@ fi
 # DOCUMENTME volume=XX% | set master and pcm volume levels to value passed (0%-100% or integer from 1 to 31)
 TCOS_VOLUME=$(read_cmdline_var "volume" "${TCOS_VOLUME}")
 
-if [ -e /dev/dsp ] && [ ! -d /proc/asound ]; then
+if [ -e /dev/dsp ] && [ ! -e /proc/asound ]; then
    export TCOS_SOUND_OSS=1
    echo "TCOS_SOUND_OSS=1" >> /conf/tcos.conf
 
