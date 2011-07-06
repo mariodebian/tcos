@@ -1,3 +1,21 @@
+tcos (0.89.82) unstable; urgency=low
+
+  * Add Ubuntu Natty and update Ubuntu Maverick kernels
+  * lockscreen/Makefile: Use pkg-config to get glib-2.0 includes and libs
+  * Fix warnings: 'variable XXX set but not used [-Wunused-but-set-variable]'
+  * Fix multiarch support
+  * hooks-addons/51dri: Add multiarch support
+  * hooks-addons/00main: Add more multiarch code, and include rpcbind daemon
+  * scripts/tcos-top/05network: Exec rpcbind if found
+  * hooks-addons/04debug: ldd use x64 if exists
+  * hooks-addons/50xorg: delete libnvidia files in image
+  * bin/tcos-buildchroot: add file to package list in chroot
+  * hooks-addons/05compcache: Use 'zram' in newer kernels
+  * hooks-addons/50xorg: search for NVIDIA in libglx.so
+  * Use '-e' instead '-d' for dir tests
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 06 Jul 2011 14:42:59 +0200
+
 tcos (0.89.81) unstable; urgency=low
 
   * debian/initramfs-tools-tcos.install: Install OpenVPN files in /var/lib/tcos/openvpn
