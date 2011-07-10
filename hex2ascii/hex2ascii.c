@@ -53,7 +53,6 @@ void usage()
 
 int main(int argc, char* argv[])
 {
-  int i;
   char *p;
 
   if ( argc==1 ) {
@@ -63,7 +62,6 @@ int main(int argc, char* argv[])
 
   /* split by : */
   p = (char*) strtok ( argv[1],":");
-  i=0;
   while (p != NULL)
   {
    printf("%c", hexToAscii(p) );

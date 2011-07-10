@@ -230,14 +230,13 @@ status_iptables_user(char *args) {
    FILE *fp;
    char cmd[BSIZE];
    char line[BSIZE];
-   char *fret;
     /* iptables rules with tcos argument, allow not remove other rules. */
     sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | grep TCOS_TNC | awk 'BEGIN{count=0}{if ($(NF-3) == %d || $(NF-3) == \"%s\") count++}END{print count}'", IPTABLES, DEVNULL, (int)get_uid(args), args);
 #ifdef DEBUG
     debug("status_iptables_user() %s\n",cmd); 
 #endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       fret = fgets( line, sizeof line, fp);
+       (void)fgets( line, sizeof line, fp);
        pclose(fp);
        if ( line[strlen(line)-1] == '\n' ) 
          line[strlen(line)-1] = 0;
@@ -256,7 +255,6 @@ flush_iptables_user(char *arg1, char *arg2) {
    char *substring;
    char line[BSIZE];
    int i;
-   char *fret;
 
    char *delim = " ";
    char **tokens = NULL;
@@ -277,7 +275,7 @@ flush_iptables_user(char *arg1, char *arg2) {
     free(substring);
 
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       fret = fgets( line, sizeof line, fp);
+       (void)fgets( line, sizeof line, fp);
        pclose(fp);
        if( line[strlen(line)-1] == '\n' ) 
          line[strlen(line)-1] = 0;
@@ -309,7 +307,6 @@ add_iptables_user(char **args) {
    char *substring;
    char dirred[BSIZE];
    int i=0,j;
-   char *fret;
 
    char *delim = ",";
    char **tokens = NULL;
@@ -324,7 +321,7 @@ add_iptables_user(char **args) {
     debug("add_iptables_user() dired cmd=%s\n",cmd);
 #endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       fret = fgets( dirred, sizeof dirred, fp);
+       (void)fgets( dirred, sizeof dirred, fp);
        pclose(fp);
        if( dirred[strlen(dirred)-1] == '\n' ) 
           dirred[strlen(dirred)-1] = 0;

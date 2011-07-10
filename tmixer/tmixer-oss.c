@@ -125,10 +125,10 @@ void ErrorExitWarn(int error, int mode) {
 
 int SetShowNoninter(int dev, char *action, char *level) {
 	/* Change or display settings from the command line. */
-	char *devstr;
+	/*char *devstr;*/
 	int tmp;
 	if ( (strcmp(action, "scontents") == 0) || (strcmp(action, "sget") == 0) ) {
-		devstr = dev_name[dev];
+		/*devstr = dev_name[dev];*/
 		ErrorExitWarn(ReadLevel(dev, &tmp), 'e');
 		printf("%s,volume|switch|,%i,", dev_name[dev], (tmp & 0xFF) );
 		if ((tmp & 0xFF) > 0)
@@ -143,7 +143,7 @@ int SetShowNoninter(int dev, char *action, char *level) {
 		printf("\n");
 	}
 	else if ( strcmp(action, "scontrols") == 0 ) {
-		devstr = dev_name[dev];
+		/*devstr = dev_name[dev];*/
 		ErrorExitWarn(ReadLevel(dev, &tmp), 'e');
 		printf("%s|", dev_name[dev] );
 	}

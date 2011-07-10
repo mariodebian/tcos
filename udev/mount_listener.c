@@ -229,7 +229,7 @@ int compare(char *fname1, char *fname2)
 int main (int argc, char *argv[]) {
     int fd_file;
     struct pollfd fdarray;
-    int nfds, rc;
+    int rc;
     debug("DEBUG: *** comparing: %s <=> %s\n", argv[1], argv[2]);
 
     sync_files(argv[1], argv[2]);
@@ -242,11 +242,8 @@ int main (int argc, char *argv[]) {
     for (;;) {
         fdarray.fd = fd_file;
         fdarray.events = POLLIN | POLLERR;
-        nfds = 1;
 
         rc = poll(&fdarray, 1, POLL_TIMEOUT);
-
-        /*debug("DEBUG: rc is %d nfds is %d\n", rc, nfds);*/
 
         if (rc < 0) {
             perror("error reading poll() \n");
