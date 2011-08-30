@@ -39,7 +39,7 @@ log_begin_msg "Loading Intel Dot Station (Paquito) modules"
   PAQUITO_MODULES="${PAQUITO_MODULES}"
   _log "PAQUITO loading modules: \${PAQUITO_MODULES}"
 
-  for mod in \${PAQUITO_MODULES); do
+  for mod in \${PAQUITO_MODULES}; do
     modprobe  \$mod >> /tmp/initramfs.debug 2>&1
   done
 
