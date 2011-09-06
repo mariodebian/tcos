@@ -124,7 +124,7 @@ LIB_DIR=/lib
 [ -e /lib/i386-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/i386-linux-gnu
 
 cpifexists ${LIB_DIR}/libresolv.so.2        /lib/
-cpifexists ${LIB_DIR}/libgssapi_krb5.so.2 /usr/lib/
+cpifexists /usr/${LIB_DIR}/libgssapi_krb5.so.2 /usr/lib/
 
 # need to copy this libs to support usernames with busybox
 cpifexists ${LIB_DIR}/libnss_compat.so.2        /lib/
