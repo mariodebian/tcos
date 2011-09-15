@@ -1,10 +1,16 @@
+tcos (0.89.84) unstable; urgency=low
+
+  * hooks-addons/00main: really fix libgssapi_krb5
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 15 Sep 2011 15:43:18 +0200
+
 tcos (0.89.83) unstable; urgency=low
 
   * fix some compilations warnings variable ‘XXX’ set but not used [-Wunused-but-set-variable]
   * hooks-addons/00main: multiarch support for libgssapi_krb5.so
   * hooks-addons/51paquito: fix typo ) => }
 
- -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Tue, 06 Sep 2011 17:37:03 +0200
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 15 Sep 2011 15:42:54 +0200
 
 tcos (0.89.82) unstable; urgency=low
 
