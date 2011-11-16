@@ -4,13 +4,14 @@
 
 if [ $TCOS_WAKEONLAN ]; then
 
-  if [ ! -x /sbin/ethtool ]; then
+  if [ ! -x /sbin/ethtool ] || [ ! -x /usr/sbin/ethtool ]; then
     _echo " WARNING:"
     _echo "         WAKEONLAN enabled but ethtool package not installed !!!"
     _echo "         Please install ethtool or disable WAKEONLAN"
     _echo ""
   else
-    cpifexists /sbin/ethtool /sbin
+    [ -x /sbin/ethtool ]     && cpifexists /sbin/ethtool /sbin
+    [ -x /usr/sbin/ethtool ] && cpifexists /usr/sbin/ethtool /sbin
   fi
 else
   _verbose "(45wakeonlan) TCOS_WAKEONLAN disabled"

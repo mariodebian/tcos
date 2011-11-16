@@ -29,6 +29,10 @@ SCRIPTNAME=/etc/init.d/$NAME
 DEFAULT_CONF=/etc/default/tcos-standalone
 TCOS_STANDALONE_START=0
 
+ETHTOOL=/sbin/ethtool
+[ -x /usr/sbin/ethtool ] && ETHTOOL=/usr/sbin/ethtool
+
+
 # Exit if the package is not installed
 [ ! -e $DAEMON ] && exit 0
 
@@ -118,8 +122,8 @@ do_wakeonlan()
     	        # have link ???
     		if [ -e /sys/class/net/$dev/carrier ] && \
        	   	   [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
-		   [ "$(/sbin/ethtool $dev| grep -c 'Wake-on: g')" = "1" ]; then
-      			/sbin/ethtool -s $dev wol g > /dev/null 2>&1
+		   [ "$(${ETHTOOL} $dev| grep -c 'Wake-on: g')" = "1" ]; then
+      			${ETHTOOL} -s $dev wol g > /dev/null 2>&1
     		fi
 	done
 }
