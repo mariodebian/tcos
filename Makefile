@@ -188,7 +188,8 @@ install:
 	# tmixer
 	$(MAKE) -C tmixer install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
-	# openvpn
-	$(MAKE) -C openvpn install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+# VPN support not complete 
+#	# openvpn
+#	$(MAKE) -C openvpn install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
 
 
