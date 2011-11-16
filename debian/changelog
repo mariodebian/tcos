@@ -1,5 +1,7 @@
 tcos (0.89.84) unstable; urgency=low
 
+  * Promoted by "Antonio Pérez-Aranda <ant30tx@gmail.com>"
+             from Yaco Sistemas SL <www.yaco.es>
   * hooks-addons/00main: really fix libgssapi_krb5
 
  -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 15 Sep 2011 15:43:18 +0200

@@ -23,10 +23,10 @@ for dev in $TCOS_NET_DEVS; do
     # have link ???
     if [ -e /sys/class/net/$dev/carrier ] && \
        [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
-       [ "$(/usr/sbin/ethtool $dev| grep -c "Wake-on: g")" = "1" ] ; then
+       [ "$(/sbin/ethtool $dev| grep -c "Wake-on: g")" = "1" ] ; then
           _log "70WAKEONLAN Enabling WOL in $dev iface..."
-          [ -x /usr/sbin/ethtool ] && \
-               /usr/sbin/ethtool -s $dev wol g >> /tmp/initramfs.debug 2>&1
+          [ -x /sbin/ethtool ] && \
+               /sbin/ethtool -s $dev wol g >> /tmp/initramfs.debug 2>&1
     fi
 done
 

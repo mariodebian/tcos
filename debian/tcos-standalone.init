@@ -118,8 +118,8 @@ do_wakeonlan()
     	        # have link ???
     		if [ -e /sys/class/net/$dev/carrier ] && \
        	   	   [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
-		   [ "$(/usr/sbin/ethtool $dev| grep -c 'Wake-on: g')" = "1" ]; then
-      			/usr/sbin/ethtool -s $dev wol g > /dev/null 2>&1
+		   [ "$(/sbin/ethtool $dev| grep -c 'Wake-on: g')" = "1" ]; then
+      			/sbin/ethtool -s $dev wol g > /dev/null 2>&1
     		fi
 	done
 }
