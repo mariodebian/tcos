@@ -9,9 +9,9 @@ KERNEL_lenny="2.6.26-2-486"
 
 KERNEL_squeeze="2.6.32-5-486"
 
-KERNEL_testing="2.6.39-2-486"
+KERNEL_testing="3.0.0-1-486"
 
-KERNEL_unstable="2.6.39-2-486"
+KERNEL_unstable="3.1.0-1-486"
 
 KERNEL_experimental="2.6.32-5-486"
 
@@ -19,12 +19,16 @@ KERNEL_jaunty="2.6.28-19-generic"
 
 KERNEL_karmic="2.6.31-22-generic"
 
-KERNEL_lucid="2.6.32-32-generic"
-KERNEL_max="2.6.32-32-generic"
+KERNEL_lucid="2.6.32-35-generic"
+KERNEL_max="2.6.32-35-generic"
 
-KERNEL_maverick="2.6.35-28-generic"
+KERNEL_maverick="2.6.35-30-generic"
 
-KERNEL_natty="2.6.38-8-generic"
+KERNEL_natty="2.6.38-12-generic"
+
+KERNEL_oneiric="3.0.0-12-generic"
+
+KERNEL_precise="3.1.0-2-generic"
 ##################################
 
 
