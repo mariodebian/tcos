@@ -4,15 +4,19 @@
 
 if [ $TCOS_WAKEONLAN ]; then
 
-  if [ ! -x /sbin/ethtool ] && [ ! -x /usr/sbin/ethtool ]; then
+  if [ -x /sbin/ethtool ]; then
+    cpifexists /sbin/ethtool /sbin
+
+  elif [ -x /usr/sbin/ethtool ]; then
+    cpifexists /usr/sbin/ethtool /sbin
+
+  else
     _echo " WARNING:"
-    _echo "         WAKEONLAN enabled but ethtool package not installed !!!"
+    _echo "         WAKEONLAN enabled but ethtool package not found !!!"
     _echo "         Please install ethtool or disable WAKEONLAN"
     _echo ""
-  else
-    [ -x /sbin/ethtool ]     && cpifexists /sbin/ethtool /sbin
-    [ -x /usr/sbin/ethtool ] && cpifexists /usr/sbin/ethtool /sbin
   fi
+
 else
   _verbose "(45wakeonlan) TCOS_WAKEONLAN disabled"
 fi
