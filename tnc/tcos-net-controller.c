@@ -30,7 +30,6 @@
 
 #include <net/if.h>
 #include <netinet/in.h>
-#include <linux/if.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
