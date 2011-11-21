@@ -29,7 +29,8 @@ SCRIPTNAME=/etc/init.d/$NAME
 DEFAULT_CONF=/etc/default/tcos-standalone
 TCOS_STANDALONE_START=0
 
-ETHTOOL=/sbin/ethtool
+ETHTOOL=""
+[ -x /sbin/ethtool ] && ETHTOOL=/sbin/ethtool
 [ -x /usr/sbin/ethtool ] && ETHTOOL=/usr/sbin/ethtool
 
 
@@ -114,6 +115,10 @@ do_stop()
 #
 do_wakeonlan()
 {
+	if [ -n "${ETHTOOL}" ]; then
+		return
+	fi
+
 	# get list of network interfaces
 	TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v -e lo -e sit0 -e wmaster -e vmnet -e vbox)
 	
