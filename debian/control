@@ -80,7 +80,6 @@ Package: tcos-standalone
 Architecture: all
 Depends: tcos-core (>= 0.88.0), 
          tcosmonitor-common, 
-         ethtool, 
          openssl, 
          gksu, 
          python, 
@@ -89,6 +88,7 @@ Depends: tcos-core (>= 0.88.0),
          python-glade2, 
          ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: tcos-core (<< 0.87.15)
+Recommends: ethtool
 XB-Python-Version: ${python:Versions}
 Description: TCOS GUI configurator for standalone hosts
  This package contains a PyGTK+ gui configurator and dependencies
