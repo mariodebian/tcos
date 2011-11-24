@@ -69,6 +69,9 @@ else
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*augment*
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*phone*
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*position-event*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*filter*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*equalizer*
+ rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*rygel*
 
  # don't use suspend-idle (we don't use dbus yet to reload pulseaudio)
  rm -f ${DESTDIR}/usr/lib/pulse-*/modules/*idle*
