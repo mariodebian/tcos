@@ -1,12 +1,6 @@
 #!/usr/bin/make -f
 
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/makefile.mk
 
-# http://cdbs-doc.duckcorp.org/en/cdbs-doc.xhtml
-DEB_ISNATIVE=1
-DEB_DESTDIR := $(CURDIR)/debian/tmp
-DEB_DH_INSTALL_ARGS := --sourcedir=$(DEB_DESTDIR)
-DEB_MAKE_INSTALL_TARGET := install DESTDIR=$(DEB_DESTDIR)
+%:
+	dh $@ --with python2
 
-DEB_ALL_PACKAGES = initramfs-tools-tcos tcos-core tcos-standalone tcos tcos-tftp-dhcp
