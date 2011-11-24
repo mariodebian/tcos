@@ -1,6 +1,6 @@
 Source: tcos
 Section: net
-Priority: optional
+Priority: extra
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
 Build-Depends: debhelper (>= 7.0.0), cdbs, libxmlrpc-c3-dev | libxmlrpc-core-c3-dev, libxau-dev, libxaw7-dev, 
                libimlib2-dev, python, python-support (>= 0.3), pkg-config, libasound2-dev,
