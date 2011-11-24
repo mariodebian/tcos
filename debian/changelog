@@ -1,3 +1,20 @@
+tcos (0.89.85) unstable; urgency=low
+
+  * common.mk: Update kernel versions (add 2 last Ubuntus)
+  * tcos-standalone.init 45wakeonlan: Support old and new ethtool paths
+  * Makefile: disable openvpn install target
+  * hooks-addons/45wakeonlan: Fix OR => AND in ethtool paths
+  * tnc/tcos-net-controller.c: Remove not needed include, fix hurd-i386 build
+  * tcos-standalone: move ethtool from Depends to Recommends
+  * debian/tcos-standalone.init: Check if ethtool bin exists before run wakeonlan
+  * hooks-addons/45wakeonlan: refactor ethtool cpifexists
+  * Change Priority to extra, we depend on some extra packages
+  * move from CDBS to dh7
+  * hooks-addons/50xorg: Remove nVIDIA libs in multiarch paths too
+  * hooks-addons/21pulseaudio: No install filter, equalizer or rygel modules
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 24 Nov 2011 16:02:16 +0100
+
 tcos (0.89.84) unstable; urgency=low
 
   * Promoted by "Antonio Pérez-Aranda <ant30tx@gmail.com>"
