@@ -26,7 +26,12 @@ cpifexists ${TCOS_BINS}/vnc-controller.sh  /sbin/
 cpifexists ${TCOS_BINS}/vlc-controller.sh  /sbin/
 cpifexists ${TCOS_BINS}/rtp-controller.sh  /sbin/
 cpifexists ${TCOS_BINS}/pactl-controller.sh      /sbin/
-cpifexists /usr/bin/vncviewer              /usr/bin/
+
+# new VNC client (avalaible in armel)
+mkdir -p $DESTDIR/etc/X11/app-defaults
+# don't run ShowPopup() with F8
+grep -v ShowPopup /etc/X11/app-defaults/Vncviewer > $DESTDIR/etc/X11/app-defaults/Vncviewer
+cpifexists /usr/bin/xtightvncviewer /usr/bin/
 
 cpifexists ${TCOS_BINS}/soundctl.sh /sbin/
 cpifexists ${TCOS_BINS}/configctl.sh /sbin/

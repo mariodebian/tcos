@@ -49,7 +49,7 @@ Architecture: any
 Depends: busybox (>= 1:1.13.3) | busybox-static (>= 1:1.13.3) | udhcpc, 
          xterm, 
          x11vnc, 
-         xvnc4viewer | xvncviewer, 
+         xtightvncviewer, 
          dosfstools, 
          scrot, 
          eject, 

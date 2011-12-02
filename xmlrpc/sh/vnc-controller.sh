@@ -101,33 +101,22 @@ for arg in $1; do
      startclient)
         # exit if pass file not exists
         if [ ! -f "$3" ]; then echo "error: no passwd file"; exit 1; fi
-        
-        # check vncviewer version
-        VNC_NEW_VERSION=$(vncviewer --version 2>&1| grep built |grep -c "4.1")
+       
         if [ $STANDALONE = 0 ]; then
-            if [ $VNC_NEW_VERSION = 1 ]; then
-               /sbin/daemonize.sh "vncviewer" "$2 -ViewOnly -FullScreen -UseLocalCursor=0 -PasswordFile $3"
-               if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
-            else
-               /sbin/daemonize.sh "vncviewer" "$2 -viewonly -fullscreen -passwd $3"
-               if [ $? = 0 ]; then echo "ok"; else echo "error: starting vncviewer"; fi
-            fi
+            /sbin/daemonize.sh "xtightvncviewer" "$2 -viewonly -fullscreen -passwd $3"
+            if [ $? = 0 ]; then echo "ok"; else echo "error: starting xtightvncviewer"; fi
         else
-            if [ $VNC_NEW_VERSION = 1 ]; then
-               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -ViewOnly -FullScreen -UseLocalCursor=0 -PasswordFile $3"
-            else
-               $DBUS_HANDLER --auth=$4 --type=exec --text="vncviewer $2 -viewonly -fullscreen -passwd $3"
-            fi
+            $DBUS_HANDLER --auth=$4 --type=exec --text="xtightvncviewer $2 -viewonly -fullscreen -passwd $3"
         fi
      ;;
      stopclient)
         if [ $STANDALONE = 0 ]; then
-            killall -SIGKILL vncviewer
+            killall -SIGKILL xtightvncviewer
             # killall return != 0 if no proccess killed
             #if [ $? = 0 ]; then echo "ok"; else echo "error: killing vnc server"; fi
             echo "ok"
         else
-            $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL vncviewer"
+            $DBUS_HANDLER --auth=$2 --type=exec --text="killall -s KILL xtightvncviewer"
         fi
      ;;
      genpass)
