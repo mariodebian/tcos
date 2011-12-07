@@ -4,7 +4,8 @@ tcos (0.89.85) unstable; urgency=low
   * tcos-standalone.init 45wakeonlan: Support old and new ethtool paths
   * Makefile: disable openvpn install target
   * hooks-addons/45wakeonlan: Fix OR => AND in ethtool paths
-  * tnc/tcos-net-controller.c: Remove not needed include, fix hurd-i386 build
+  * tnc/tcos-net-controller.c: Remove not needed include, 
+    fix hurd-i386 build
   * tcos-standalone: move ethtool from Depends to Recommends
   * debian/tcos-standalone.init: Check if ethtool bin exists before run wakeonlan
   * hooks-addons/45wakeonlan: refactor ethtool cpifexists
