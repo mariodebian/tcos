@@ -1,3 +1,11 @@
+tcos (0.89.86) unstable; urgency=low
+
+  * Change 'xvnc4viewer | xvncviewer' with 
+    xtightvncviewer (avalaible in armel) (closes: #651188)
+  * debian/changelog: split a very long line
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 07 Dec 2011 23:24:48 +0100
+
 tcos (0.89.85) unstable; urgency=low
 
   * common.mk: Update kernel versions (add 2 last Ubuntus)
