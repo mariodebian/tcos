@@ -9,9 +9,16 @@ case "$1" in
     	 fi
 
  	 # delete all generated files and dirs
- 	 rm -rf /var/lib/tcos/tftp
- 	 rm -rf /var/lib/tcos/fs-*
- 	 rm -rf /var/cache/tcos
+	 rm -rf /var/lib/tcos/tftp
+	 rm -rf /var/lib/tcos/fs-*
+	 rm -rf /var/cache/tcos
+
+	 rm -rf /var/lib/tftpboot/tcos
+	 rmdir --ignore-fail-on-non-empty /var/lib/tftpboot || true
+
+	 rm -f /etc/tcos/modules
+	 rmdir --ignore-fail-on-non-empty /etc/tcos || true
+
     ;;
 esac
 
