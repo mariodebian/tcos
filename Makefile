@@ -96,13 +96,12 @@ install:
 
 
 	install -m 640 conf/tcos.conf.etc $(DESTDIR)$(TCOS_CONF)/tcos.conf
-	sed -i 's/__TCOS_DEFAULT_KERNEL__/$(TCOS_DEFAULT_KERNEL)/g' $(DESTDIR)$(TCOS_CONF)/tcos.conf
 
-	install -m 644 conf/version.conf $(DESTDIR)$(TCOS_CONF)/version.conf
-	sed -i 's/__TCOS_VERSION__/$(VERSION)/g'       $(DESTDIR)$(TCOS_CONF)/version.conf
-	sed -i 's/__TCOS_DISTRO__/$(DISTRO_VERSION)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
-	sed -i 's/__DISTRIBUTION__/$(DISTRO)/g' $(DESTDIR)$(TCOS_CONF)/version.conf
-	sed -i 's/__TCOS_ARCH__/$(TCOS_ARCH)/g'        $(DESTDIR)$(TCOS_CONF)/version.conf
+	install -m 644 conf/version.conf $(DESTDIR)/var/lib/tcos/version.conf
+	sed -i 's/__TCOS_VERSION__/$(VERSION)/g'       $(DESTDIR)/var/lib/tcos/version.conf
+	sed -i 's/__TCOS_DISTRO__/$(DISTRO_VERSION)/g' $(DESTDIR)/var/lib/tcos/version.conf
+	sed -i 's/__DISTRIBUTION__/$(DISTRO)/g'        $(DESTDIR)/var/lib/tcos/version.conf
+	sed -i 's/__TCOS_ARCH__/$(TCOS_ARCH)/g'        $(DESTDIR)/var/lib/tcos/version.conf
 
 
 	# tcos.conf templates

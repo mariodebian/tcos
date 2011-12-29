@@ -1,4 +1,5 @@
 var/lib/tcos/tftp/*
+var/lib/tcos/version.conf
 usr/sbin/gentcos
 usr/sbin/tcos-buildchroot
 usr/bin/tcos-genbootchart
@@ -17,7 +18,6 @@ etc/tcos/hacking/template
 etc/tcos/pxelinux.cfg.tpl
 etc/tcos/conf.d/branding.info
 etc/tcos/templates/branding-pxelinux.info
-etc/tcos/version.conf
 etc/tcos/xorg.conf.tpl
 etc/tcos/initramfs.conf
 etc/tcos/tcos.conf

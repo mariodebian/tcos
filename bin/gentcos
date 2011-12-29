@@ -28,7 +28,7 @@ if [ $ID -ne 0 ]; then
 fi
 
 . /etc/tcos/tcos.conf
-[ -e /etc/tcos/version.conf ] && . /etc/tcos/version.conf
+[ -e /var/lib/tcos/version.conf ] && . /var/lib/tcos/version.conf
 . ${TCOS_DIR}/tcos-generation-functions.sh
 . /usr/share/initramfs-tools/hook-functions
 

@@ -1,8 +1,9 @@
 # save generated date and version into tcos.conf
 
-if [ -f /etc/tcos/version.conf ]; then
-  cat /etc/tcos/version.conf >> ${DESTDIR}/conf/tcos.conf
+if [ -e /var/lib/tcos/version.conf ]; then
+  cat /var/lib/tcos/version.conf >> ${DESTDIR}/conf/tcos.conf
 fi
+
 
 # load forced settings for derivatives
 if [ -d $CONFDIR/conf.d/ ]; then
@@ -24,9 +25,6 @@ echo "export XAUTHORITY=/root/.Xauthority" >> ${DESTDIR}/conf/tcos.conf
 echo "export HOME=/root" >> ${DESTDIR}/conf/tcos.conf
 echo "export DISPLAY=:0" >> ${DESTDIR}/conf/tcos.conf
 echo "export PATH=/bin:/sbin:/usr/bin:/usr/sbin" >> ${DESTDIR}/conf/tcos.conf
-
-# set aufs if kernel is greater than 2.6.26
-echo "$TCOS_KERNEL" | awk -F"-" '{print $1}' | awk -F"." '{if($3>26) print "TCOS_UNIONFS=aufs"; else print "TCOS_UNIONFS=unionfs"}' >> ${DESTDIR}/conf/tcos.conf
 
 
 cat << EOF > $DESTDIR/etc/issue
