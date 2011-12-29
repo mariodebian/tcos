@@ -2,35 +2,6 @@
 
 PACKAGE=tcos
 
-##################################
-# kernel default versions
-
-KERNEL_lenny="2.6.26-2-486"
-
-KERNEL_squeeze="2.6.32-5-486"
-
-KERNEL_testing="3.0.0-1-486"
-
-KERNEL_unstable="3.1.0-1-486"
-
-KERNEL_experimental="2.6.32-5-486"
-
-KERNEL_jaunty="2.6.28-19-generic"
-
-KERNEL_karmic="2.6.31-22-generic"
-
-KERNEL_lucid="2.6.32-35-generic"
-KERNEL_max="2.6.32-35-generic"
-
-KERNEL_maverick="2.6.35-30-generic"
-
-KERNEL_natty="2.6.38-12-generic"
-
-KERNEL_oneiric="3.0.0-12-generic"
-
-KERNEL_precise="3.1.0-2-generic"
-##################################
-
 
 MAKE:=make -B
 GCC:=gcc
@@ -77,10 +48,6 @@ endif
 TCOS_ARCH:=$(shell dpkg-architecture  | awk -F"=" '/^DEB_BUILD_ARCH=/ {print $$2}')
 
 
-TCOS_DEFAULT_KERNEL=$(KERNEL_$(DISTRO_VERSION))
-
-
-
 
 
 # debian or ubuntu ???
@@ -124,7 +91,6 @@ test:
 	@echo OPENVPN_CONF=$(OPENVPN_CONF)
 	@echo
 	@echo DISTRO=$(DISTRO)
+	@echo DISTRO_VERSION=$(DISTRO_VERSION)
 	@echo "------------------------------------"
 
-	@echo DISTRO_VERSION=$(DISTRO_VERSION)
-	@echo TCOS_DEFAULT_KERNEL=$(TCOS_DEFAULT_KERNEL)
