@@ -49,12 +49,13 @@ export DEBIAN_FRONTEND="noninteractive"
 # default settings
 TCOS_ARCH=i386
 TCOS_FLAVOUR=standard
-TCOS_MIRROR="http://www.tcosproject.org"
+#TCOS_MIRROR="http://www.tcosproject.org"
+TCOS_MIRROR=
 
-
-TCOS_PACKAGES="tcos-keyring initramfs-tools-tcos p910nd xvnc4viewer fgetty"
+TCOS_PACKAGES="initramfs-tools-tcos p910nd fgetty"
 TCOS_PACKAGES="${TCOS_PACKAGES} binutils acpid alsa-utils twm dropbear mbr file"
-TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11 pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
+TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11"
+TCOS_PACKAGES="${TCOS_PACKAGES} pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
 
 
 DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools xterm wget dosfstools"
@@ -148,7 +149,8 @@ chrootcreate() {
   if [ $? != 0 ]; then echo "Error running debootstrap." ; exit $?; fi
 
   # Add TCOS mirror
-  echo "deb ${TCOS_MIRROR} $TCOS_DISTRO main $TCOS_EXPERIMENTAL" >> ${TCOS_CHROOT}/etc/apt/sources.list
+  [ "x${TCOS_MIRROR}" != "x" ] && echo "deb ${TCOS_MIRROR} ${TCOS_DISTRO} main ${TCOS_EXPERIMENTAL}" >> ${TCOS_CHROOT}/etc/apt/sources.list
+  [ "x${TCOS_MIRROR}" != "x" ] && TCOS_PACKAGES="${TCOS_PACKAGES} tcos-keyring"
 
   # add extras (universe and multiverse repos)
   if [ "${MIRROR_EXTRAS}" != "" ]; then
