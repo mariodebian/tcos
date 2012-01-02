@@ -1,5 +1,4 @@
 var/lib/tcos/tftp/*
-var/lib/tcos/version.conf
 usr/sbin/gentcos
 usr/sbin/tcos-buildchroot
 usr/bin/tcos-genbootchart

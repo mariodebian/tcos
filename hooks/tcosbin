@@ -25,7 +25,7 @@ fi
 if [ "${BOOT}" = "tcos" ]; then
 
 . $CONFDIR/tcos.conf
-[ -f $CONFDIR/version.conf ] && . $CONFDIR/version.conf
+[ -f /var/lib/tcos/version.conf ] && . /var/lib/tcos/version.conf
 . $TCOS_DIR/tcos-generation-functions.sh
 
 for tpl in $(tcos_get_templates); do
