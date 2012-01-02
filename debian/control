@@ -2,8 +2,14 @@ Source: tcos
 Section: net
 Priority: extra
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
-Build-Depends: debhelper (>= 7.0.0), libxmlrpc-c3-dev | libxmlrpc-core-c3-dev, libxau-dev, libxaw7-dev, 
-               libimlib2-dev, python (>= 2.6.6-3~), pkg-config, libasound2-dev,
+Build-Depends: debhelper (>= 7.0.50~),
+               python (>= 2.6.6-3~),
+               libxmlrpc-c3-dev | libxmlrpc-core-c3-dev,
+               libxau-dev,
+               libxaw7-dev,
+               libimlib2-dev,
+               pkg-config,
+               libasound2-dev,
                libglib2.0-dev
 Standards-Version: 3.9.2
 Vcs-Git: http://tcosproject.org/git/tcos.git
@@ -35,7 +41,6 @@ Recommends: mbr,
             cdparanoia,
             xfonts-100dpi,
             debootstrap
-Conflicts: tcosmonitor (<< 0.1.23.2), tcos (<< 0.89.26)
 Description: Tools for generating a TCOS thin client bootable image
  This package contains tools to create a bootable initramfs for prepackaged
  2.6 Linux kernel. The initramfs is an cpio archive. At boot time, the kernel
@@ -70,8 +75,6 @@ Recommends: vlc,
             stunnel4, 
             openssl,
             ethtool
-Conflicts: tcosmonitor (<< 0.1.23.2), initramfs-tools-tcos (<< 0.87.0)
-XB-Python-Version: ${python:Versions}
 Description: Common scripts and bins for generating a TCOS thin client bootable image
  This package contain common scripts, libs, bins and dependencies to
  generate network images or be used in standalone hosts.
@@ -88,9 +91,7 @@ Depends: tcos-core (>= 0.88.0),
          python-gtk2, 
          python-glade2, 
          ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
-Conflicts: tcos-core (<< 0.87.15)
 Recommends: ethtool
-XB-Python-Version: ${python:Versions}
 Description: TCOS GUI configurator for standalone hosts
  This package contains a PyGTK+ gui configurator and dependencies
  to install and configure a standalone TCOS host.
@@ -111,7 +112,6 @@ Recommends: tcos-configurator,
             ltspfs, 
            fuse-utils, 
             pulseaudio-esound-compat | esound
-XB-Python-Version: ${python:Versions}
 Description: Base package for install a TCOS (Thin client) server
  This is a system for generating thin client hosts using initramfs.
  TCOS is a set of build tools to prepare an initramfs image to boot
