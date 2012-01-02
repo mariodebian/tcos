@@ -1,3 +1,18 @@
+tcos (0.89.87) unstable; urgency=low
+
+  * conf/xorg.conf.tpl: Add ModulePath to not load propietary drivers
+  * tcos-core: Depends on adduser (for postinst/postrm)
+  * initramfs-tools-tcos.postrm: Delete (on purge) some files and dirs,
+    piuparts errors
+  * Don't hardcode TCOS_KERNEL_VERSION, use newest from /boot
+  * Move version.conf from /etc/tcos to /var/lib/tcos
+  * Move version.conf to tcos-core (arch depend)
+  * bin/tcos-buildchroot: TCOS_MIRROR optional now with TCOS in
+    Debian and Ubuntu
+  * debian/control: Remove conflicts and XB-Python-Version
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 02 Jan 2012 17:34:07 +0100
+
 tcos (0.89.86) unstable; urgency=low
 
   * Change 'xvnc4viewer | xvncviewer' with 
