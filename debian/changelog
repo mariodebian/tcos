@@ -1,3 +1,27 @@
+tcos (0.89.88) unstable; urgency=low
+
+  * bin/tcos-buildchroot:
+    - Install tcos-keyring only with tcos repo.
+    - Don't use universe/multiverse in ubuntu-security
+  * bin/gentcos: Set TCOS_KERNEL to newest vmlinuz in /boot
+  * bin/tcos-buildchroot:
+    - Add dbus,dbus-x11,avahi-daemon to chroot.
+    - Delete not needed code.
+    - Copy vmlinuz to tftp root
+  * conf/tcos.conf: Unset TCOS_KERNEL
+  * conf/tcos.conf.all: TCOS_DBUS=1, pulseaudio needs it
+  * scripts/tcos-top/01busybox:
+    - Delete ra interface.
+    - Send a line break after waiting for net
+  * hooks-addons/21pulseaudio:
+    - Enable module-udev-detect if avalaible
+  * hooks-addons/50xorg:
+    - Search libGL.so.1 in /usr/lib/ARCH-linux-gnu/mesa/
+  * hooks-addons/16dbus-avahi:
+    - Split TCOS_DBUS and TCOS_AVAHI, TCOS_DBUS is enabled by default now
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 08 Jan 2012 16:42:46 +0100
+
 tcos (0.89.87) unstable; urgency=low
 
   * conf/xorg.conf.tpl: Add ModulePath to not load propietary drivers
