@@ -42,8 +42,6 @@ while [ 1 ]; do
      [ -e /sys/class/net/eth2 ] &&  break
      [ -e /sys/class/net/wlan0 ] && break
      [ -e /sys/class/net/wlan1 ] && break
-     [ -e /sys/class/net/ra0 ] && break
-     [ -e /sys/class/net/ra1 ] && break
      [ -x /sbin/udevtrigger ] && /sbin/udevtrigger
      [ -x /sbin/udevplug ]    && /sbin/udevplug
      [ -x /sbin/udevadm ]    && /sbin/udevadm trigger
@@ -55,6 +53,7 @@ while [ 1 ]; do
      echo -n "."
      sleep 1
 done
+echo ""
 
 modprobe -q loop     >> /tmp/initramfs.debug 2>&1
 modprobe -q squashfs >> /tmp/initramfs.debug 2>&1
