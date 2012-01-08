@@ -112,15 +112,11 @@ else
    _SERVER=""
  fi
 
- #if [ -e /usr/lib/pulse-*/modules/module-udev-detect.so ]; then
- #  _MODULE="module-udev-detect"
- #else
- #  _MODULE="module-detect"
- #fi
-
-  # disable udev-detect by now, (in my system don't find cards)
-  _MODULE="module-detect"
-
+ if [ -e /usr/lib/pulse-*/modules/module-udev-detect.so ]; then
+   _MODULE="module-udev-detect"
+ else
+   _MODULE="module-detect"
+ fi
 
  cat << EOF >> ${DESTDIR}/sbin/startpulseaudio
 #!/bin/sh
