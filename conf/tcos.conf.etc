@@ -20,11 +20,7 @@ ISOS="/var/lib/tcos/isos"
 VOLUMENAME="TCOS boot cd"
 DISTRO="TCOS"
 
-
-# kernel used to build initramfs
-NEWEST_VMLINUZ=$(basename $(ls /boot/vmlinuz-*| head -1))
-TCOS_KERNEL=${NEWEST_VMLINUZ#vmlinuz-}
-
+TCOS_KERNEL=
 
 # Net boot menu (set to 1 to enable)
 TCOS_NETBOOT_MENU=
