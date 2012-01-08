@@ -56,6 +56,7 @@ TCOS_PACKAGES="initramfs-tools-tcos p910nd fgetty"
 TCOS_PACKAGES="${TCOS_PACKAGES} binutils acpid alsa-utils twm dropbear mbr file"
 TCOS_PACKAGES="${TCOS_PACKAGES} rdesktop pulseaudio pulseaudio-module-x11"
 TCOS_PACKAGES="${TCOS_PACKAGES} pulseaudio-utils pulseaudio-esound-compat libasound2-plugins"
+TCOS_PACKAGES="${TCOS_PACKAGES} dbus dbus-x11 avahi-daemon"
 
 
 DISTRO_PACKAGES="xserver-xorg xutils xfonts-base xfonts-100dpi libgl1-mesa-dri libgl1-mesa-glx libglu1-mesa mtools xterm wget dosfstools"
@@ -251,25 +252,15 @@ EOC
 
   cat << EOC | chroot ${TCOS_CHROOT}
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL} 
-apt-get install $APT_OPTS linux-ubuntu-modules-${TCOS_KERNEL}
-apt-get install $APT_OPTS linux-restricted-modules-${TCOS_KERNEL} 
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
-apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
 apt-get clean
 /etc/init.d/dropbear stop || true
 EOC
 
-  # need umount this directory to allow remove later chroot from distros grather than gutsy
-  #if [ ${TCOS_DISTRO} = "gutsy" -o ${TCOS_DISTRO} = "hardy" ]; then
-  if [ -d ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ ]; then
-    umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ >/dev/null 2>&1
-  fi
-  
   ######################################
   else # DISTRO != ubuntu
   cat << EOC | chroot ${TCOS_CHROOT}
 apt-get install $APT_OPTS linux-image-${TCOS_KERNEL}
-apt-get install $APT_OPTS tcos-extra-modules-${TCOS_KERNEL}
 apt-get install $APT_OPTS ${TCOS_PACKAGES}
 apt-get clean
 /etc/init.d/dropbear stop || true
@@ -335,11 +326,6 @@ apt-get install $APT_OPTS ${DISTRO_PACKAGES}
 apt-get clean
 EOC
 
-# need umount this directory to allow remove later chroot from distros grather than gutsy
-if [ -d ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ ]; then
-  umount ${TCOS_CHROOT}/lib/modules/${TCOS_KERNEL}/volatile/ >/dev/null 2>&1
-fi
-
 touch ${TCOS_CHROOT}/etc/tcos/chroot
 chrootexit
 }
@@ -401,8 +387,10 @@ rm -rf /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} \
        /var/lib/tcos/tftp/linux-${TCOS_KERNEL}.nbi \
        /var/lib/tcos/fs-${TCOS_KERNEL}
 
+# new Ubuntus chmod 600 vmlinuz, copy vmlinuz to tcos/tftp/
 [ ! -e /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL} ] && \
-	ln -s ${TCOS_CHROOT}/boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/
+	cp ${TCOS_CHROOT}/boot/vmlinuz-${TCOS_KERNEL} /var/lib/tcos/tftp/ && \
+	chmod 644 /var/lib/tcos/tftp/vmlinuz-${TCOS_KERNEL}
 
 [ ! -e /var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs ] && \
 	ln -s ${TCOS_CHROOT}/var/lib/tcos/tftp/usr-${TCOS_KERNEL}.squashfs /var/lib/tcos/tftp/
