@@ -1,61 +1,90 @@
 # hook to include DBus/avahi
-# need dbus and dbus-x11 packages
+# need dbus,dbus-x11,avahi-daemon packages
 
+if [ -n "$TCOS_DBUS" ]; then
+    stat_before
 
-if [ -n "$TCOS_DBUS" ] || [ -n "$TCOS_AVAHI" ]; then
+    mkdir -p $DESTDIR/usr/lib/dbus-1.0
+    mkdir -p $DESTDIR/etc/dbus-1/system.d
+    mkdir -p $DESTDIR/etc/dbus-1/session.d
 
-stat_before
+    cpifexists $(which dbus-daemon)      /usr/bin/
+    cpifexists $(which dbus-uuidgen)     /usr/bin/
+    cpifexists /usr/bin/dbus-launch      /usr/bin/
 
-mkdir -p $DESTDIR/usr/lib/dbus-1.0
-mkdir -p $DESTDIR/etc/dbus-1/system.d
-mkdir -p $DESTDIR/etc/dbus-1/session.d
+    cpifexists /etc/dbus-1/system.conf   /etc/dbus-1/
+    cpifexists /etc/dbus-1/session.conf  /etc/dbus-1/
 
-cpifexists /usr/bin/dbus-daemon      /usr/bin/
-cpifexists /usr/bin/dbus-uuidgen     /usr/bin/
+    if [ -f /etc/dbus-1/system.d/pulseaudio-system.conf ]; then
+      cpifexists /etc/dbus-1/system.d/pulseaudio-system.conf /etc/dbus-1/system.d/
+    fi
 
-cpifexists /etc/dbus-1/system.conf   /etc/dbus-1/
-cpifexists /etc/dbus-1/session.conf  /etc/dbus-1/
-
-if [ -f /etc/dbus-1/system.d/pulseaudio-system.conf ]; then
-  cpifexists /etc/dbus-1/system.d/pulseaudio-system.conf /etc/dbus-1/system.d/
-fi
-
-# avahi-utils avahi-daemon
-cpifexists /usr/sbin/avahi-daemon /usr/bin/
-mkdir -p $DESTDIR/var/run/avahi-daemon
-mkdir -p $DESTDIR/etc/avahi/services
-cpifexists /etc/avahi/avahi-daemon.conf /etc/avahi
-cat << EOF > $DESTDIR/etc/nsswitch.conf
-passwd:         compat
-group:          compat
-shadow:         compat
-hosts:          files mdns4_minimal [NOTFOUND=return] dns mdns4
-networks:       files
-protocols:      db files
-services:       db files
-ethers:         db files
-rpc:            db files
-netgroup:       nis
-EOF
-
-cpifexists /etc/dbus-1/system.d/avahi-dbus.conf /etc/dbus-1/system.d/
-
-
-cat << EOF >> $DESTDIR/etc/passwd
+    cat << EOF >> $DESTDIR/etc/passwd
 messagebus:x:104:107::/var/run/dbus:/bin/false
 avahi:x:106:113:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
 EOF
 
-cat << EOF >> $DESTDIR/etc/shadow
+    cat << EOF >> $DESTDIR/etc/shadow
 messagebus:*:14994:0:99999:7:::
 avahi:*:14994:0:99999:7:::
 EOF
 
-cat << EOF >> $DESTDIR/etc/group
+    cat << EOF >> $DESTDIR/etc/group
 messagebus:x:107:
-avahi:x:113:
 netdev:x:111:
+avahi:x:113:
 EOF
+
+    cat << EOF > $DESTDIR/scripts/tcos-bottom/15dbus-avahi
+#!/bin/sh
+if [ "\$1" = "prereqs" ]; then
+  exit 0
+fi
+
+mkdir -p /var/run/dbus /var/lib/dbus
+
+mkdir -p /var/run/avahi-daemon
+chown avahi:avahi /var/run/avahi-daemon
+chmod 755 /var/run/avahi-daemon
+chown messagebus:messagebus /var/lib/dbus /var/run/dbus
+
+dbus-uuidgen > /var/lib/dbus/machine-id
+
+start-stop-daemon --start --quiet --pidfile /var/run/dbus/dbus.pid \
+    --user messagebus --exec /usr/bin/dbus-daemon -- --system
+
+[ -x /usr/sbin/avahi-daemon ] && avahi-daemon --no-drop-root -D
+
+EOF
+
+    chmod +x $DESTDIR/scripts/tcos-bottom/15dbus-avahi
+
+    stat_after "DBus-Avahi"
+fi # end of TCOS_DBUS
+
+###############################################################################
+
+if [ -n "$TCOS_AVAHI" ]; then
+
+    # avahi-utils avahi-daemon
+    cpifexists /usr/sbin/avahi-daemon /usr/bin/
+    mkdir -p $DESTDIR/var/run/avahi-daemon
+    mkdir -p $DESTDIR/etc/avahi/services
+    cpifexists /etc/avahi/avahi-daemon.conf /etc/avahi
+    cat << EOF > $DESTDIR/etc/nsswitch.conf
+    passwd:         compat
+    group:          compat
+    shadow:         compat
+    hosts:          files mdns4_minimal [NOTFOUND=return] dns mdns4
+    networks:       files
+    protocols:      db files
+    services:       db files
+    ethers:         db files
+    rpc:            db files
+    netgroup:       nis
+    EOF
+
+    cpifexists /etc/dbus-1/system.d/avahi-dbus.conf /etc/dbus-1/system.d/
 
 cat << EOF > $DESTDIR/etc/avahi/services/tcos.service
 <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
@@ -74,31 +103,6 @@ cat << EOF > $DESTDIR/etc/avahi/services/tcos.service
 </service-group>
 EOF
 
+stat_after "Avahi"
 
-cat << EOF > $DESTDIR/scripts/tcos-bottom/15dbus-avahi
-#!/bin/sh
-if [ "\$1" = "prereqs" ]; then
-  exit 0
-fi
-
-mkdir -p /var/run/dbus /var/lib/dbus
-
-mkdir -p /var/run/avahi-daemon
-chown avahi:avahi /var/run/avahi-daemon
-chmod 755 /var/run/avahi-daemon
-chown messagebus:messagebus /var/lib/dbus /var/run/dbus
-
-dbus-uuidgen > /var/lib/dbus/machine-id
-
-start-stop-daemon --start --quiet --pidfile /var/run/dbus/dbus.pid \
-    --user messagebus --exec /usr/bin/dbus-daemon -- --system
-
-avahi-daemon --no-drop-root -D
-
-EOF
-
-chmod +x $DESTDIR/scripts/tcos-bottom/15dbus-avahi
-
-stat_after "DBus-Avahi"
-
-fi # end of TCOS_DBUS || TCOS_AVAHI
+fi # end of TCOS_AVAHI
