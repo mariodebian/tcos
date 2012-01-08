@@ -43,6 +43,10 @@ if [ -d /etc/tcos/conf.d/ ]; then
   done
 fi
 
+if [ -z $TCOS_KERNEL ]; then
+  NEWEST_VMLINUZ=$(basename $(ls /boot/vmlinuz-*| head -1))
+  TCOS_KERNEL=${NEWEST_VMLINUZ#vmlinuz-}
+fi
 
 # default output files
 OUTPUTIMAGE=${ISOS}/tcos-boot-usb.iso
