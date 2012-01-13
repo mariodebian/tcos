@@ -5,7 +5,7 @@ set -e
 case "$1" in
     purge)
 	 if getent group tcos >/dev/null; then
-      	    delgroup --quiet --system tcos > /dev/null || true
+      	    [ -x /usr/sbin/delgroup ] && delgroup --quiet --system tcos > /dev/null || true
     	 fi
 
  	 # delete all generated files and dirs
