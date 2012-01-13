@@ -28,7 +28,7 @@ fi
 [ ! -e /etc/tcos/modules ] && touch /etc/tcos/modules
 
 # obsolete file, moved to tcos-core:/var/lib/tcos/version.conf
-[ -e /etc/tcos/version.conf ] && /etc/tcos/version.conf
+[ -e /etc/tcos/version.conf ] && rm -f /etc/tcos/version.conf
 
 # FIXME, now tftp is /srv/tftp
 TFTPBOOT_DEFAULT=/var/lib/tftpboot
