@@ -211,6 +211,29 @@ mount_aufs() {
    mount -t aufs -o br:${ramdisk}:${rofs} none ${rwfs} >> /tmp/initramfs.debug 2>&1
 }
 
+mount_overlayfs() {
+  ramdisk=$1
+  rofs=$2
+  rwfs=$3
+  #
+  # example:
+  # mount_overlayfs /mnt/ram   /.usr /usr
+  #                    RAM      RO    RW
+  #
+  _log "OVERLAYFS Creating ramdisk ${ramdisk} of 2 Mb"
+   mkdir -p ${ramdisk} >> /tmp/initramfs.debug 2>&1
+   mount -t tmpfs -o "size=2m" tmpfs ${ramdisk} >> /tmp/initramfs.debug 2>&1
+
+   _log "OVERLAYFS Moving ${rwfs} squashfs to ${rofs}"
+   # move /usr
+   mkdir -p ${rofs} >> /tmp/initramfs.debug 2>&1
+   mount -o move ${rwfs} ${rofs}
+
+   _log "OVERLAYFS Mount with overlayfs ${rofs} and ${ramdisk} to create ${rwfs} in rw mode"
+   # mount overlayfs
+   mount -t overlayfs -o rw,relatime,lowerdir=${rofs},upperdir=${ramdisk} overlayfs ${rwfs} >> /tmp/initramfs.debug 2>&1
+}
+
 mount_unionfs() {
   # DOCUMENTME nounionfs | disable unionfs from /usr mount point
   nounionfs=$(read_cmdline_var "nounionfs" "0")
@@ -218,12 +241,17 @@ mount_unionfs() {
      _log "UNIONFS disabled from cmdline"
      return
   fi
-  # if module not loaded try with aufs or exit :(
-  if [ $(grep unionfs /proc/modules| wc -l) = 0 ]; then
-    if [ $(grep aufs /proc/modules| wc -l) != 0 ]; then
+  # if module not loaded try with aufs/overlayfs or exit :(
+  if ! grep -q unionfs /proc/modules ; then
+    if grep -q aufs /proc/modules ; then
       mount_aufs $1 $2 $3
       return
+
+    elif grep -q overlayfs /proc/modules; then
+      mount_overlayfs $1 $2 $3
+      return
     fi
+
     _log "UNIONFS ERROR mounting unionfs or aufs in rw mode"
     return
   fi
@@ -255,5 +283,4 @@ mount_unionfs() {
    # mount union
    mount -t unionfs -o dirs=${ramdisk}=rw:${rofs}=ro unionfs ${rwfs} >> /tmp/initramfs.debug 2>&1
 }
-
 

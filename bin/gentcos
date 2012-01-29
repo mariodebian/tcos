@@ -453,7 +453,7 @@ alert_need_module() {
 
 
 check_modules() {
-    NEED_MODULES="aufs|unionfs squashfs"
+    NEED_MODULES="aufs|overlayfs|unionfs squashfs"
 
     for _module in ${NEED_MODULES}; do
        have_module=0

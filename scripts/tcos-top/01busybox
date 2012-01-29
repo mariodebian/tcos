@@ -85,6 +85,6 @@ else
 
 fi
 
-
+grep -q -e aufs -e unionfs /proc/filesystems || modprobe -q -b overlayfs
 
 exit 0
