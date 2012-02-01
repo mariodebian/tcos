@@ -86,20 +86,7 @@ fi # end of NFS_MODE
 
 log_begin_msg "Remounting root in RW mode"
 
-  mkdir -p /mnt/ram
-  mount -t tmpfs -o size=5m tmpfs /mnt/ram
-
-  if [ $(grep -c unionfs /proc/modules) = 0 ] && [ $(grep -c aufs /proc/modules) != 0 ]; then
-       mount -t aufs -o br:/mnt/ram:/mnt/nfs none /root >> /tmp/initramfs.debug 2>&1
-  else
-
-     # NFS mounts must have nfsro instead of ro (see man unionfs) with kernel < 2.6.22
-     if [ "$(uname -r| awk -F"[.|-]" '{print $3}')" -lt 22 ] && [ "${NFS_MODE}" != "nbd" ] ; then
-       mount -t unionfs -o dirs=/mnt/ram=rw:/mnt/nfs=nfsro unionfs /root
-     else
-       mount -t unionfs -o dirs=/mnt/ram=rw:/mnt/nfs=ro unionfs /root
-     fi
-  fi
+  mount_unionfs /mnt/ram /mnt/nfs /root
 
 log_end_msg $?
 

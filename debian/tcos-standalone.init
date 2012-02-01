@@ -53,7 +53,7 @@ ETHTOOL=""
 do_start()
 {
         # don't start if start-stop-daemon is not a ELF file (installing in chroot)
-        if [ $(file /sbin/start-stop-daemon |grep -c ELF) != "1" ] ; then
+        if ! file /sbin/start-stop-daemon |grep -q ELF ; then
           log_begin_msg "Fake start-stop-daemon detected, not starting "
           return 0
         fi

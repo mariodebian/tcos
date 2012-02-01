@@ -86,7 +86,7 @@ MKSQUASHFS=mksquashfs
 
 if [ -z $TCOS_DISABLE_SQUASHFS ]; then
   # create usr.squashfs
-  if [ $(env | grep -c ^TCOS_SUFFIX) = 1 ]; then
+  if env | grep -q ^TCOS_SUFFIX ; then
     TCOS_SUFFIX=$(env | grep ^TCOS_SUFFIX | awk -F "=" '{print $2}')
     echo "SQUASHFS_FILE=\"usr${TCOS_SUFFIX}-${version}.squashfs\"" >> $DESTDIR/conf/tcos.conf
   fi
@@ -111,7 +111,7 @@ if [ -z $TCOS_DISABLE_SQUASHFS ]; then
 
   # overwrite TCOS_SQUASHFS from shell env var
   # this allow to create cdrom with usr.squashfs embedded
-  if [ $(env | grep -c ^TCOS_SQUASHFS) = 1 ]; then
+  if env | grep -q ^TCOS_SQUASHFS ; then
     TCOS_SQUASHFS=$(env | grep ^TCOS_SQUASHFS | awk -F "=" '{print $2}')
     _echo "DEBUG: overwrite TCOS_SQUASHFS=$TCOS_SQUASHFS"
   else
@@ -221,7 +221,7 @@ fi
 
 
 # read shell env variables to search TCOS_ALL_MODULES
-if [ $(env | grep -c ^TCOS_ALL_MODULES) = 1 ]; then
+if env | grep -q ^TCOS_ALL_MODULES ; then
     TCOS_ALL_MODULES=$(env | grep ^TCOS_ALL_MODULES | awk -F "=" '{print $2}')
 fi
 

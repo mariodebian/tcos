@@ -61,7 +61,7 @@ if [ -e /sbin/start-stop-daemon.original ]; then
   copy_exec /sbin/start-stop-daemon.original  /sbin/
   rm -f $DESTDIR/sbin/start-stop-daemon.original
   cp -a /sbin/start-stop-daemon.original $DESTDIR/sbin/start-stop-daemon
-  if [ "$(file ${DESTDIR}/sbin/start-stop-daemon | grep -c ELF)" = "0" ]; then
+  if ! file ${DESTDIR}/sbin/start-stop-daemon | grep -q ELF ; then
     _echo "   * WARNING:"
     _echo "          /sbin/start-stop-daemon is not a ELF (binary) file"
     _echo "          Some apps will not work."
@@ -71,7 +71,7 @@ elif [ -e /sbin/start-stop-daemon.REAL ]; then
   rm -f $DESTDIR/sbin/start-stop-daemon.REAL
   rm -f $DESTDIR/sbin/start-stop-daemon
   cp -a /sbin/start-stop-daemon.REAL $DESTDIR/sbin/start-stop-daemon
-  if [ "$(file ${DESTDIR}/sbin/start-stop-daemon | grep -c ELF)" = "0" ]; then
+  if ! file ${DESTDIR}/sbin/start-stop-daemon | grep -q ELF ; then
     _echo "   * WARNING:"
     _echo "          /sbin/start-stop-daemon is not a ELF (binary) file"
     _echo "          Some apps will not work."

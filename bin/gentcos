@@ -488,8 +488,7 @@ check_xfs() {
         echo "        and configure to allow remote connections. See README."
         echo ""
     else
-      xfs_config=$(grep -c "^no-listen" /etc/X11/fs/config 2>/dev/null)
-      if [ ! -e /etc/tcos/chroot ] && [ $xfs_config != 0 ]; then
+      if [ ! -e /etc/tcos/chroot ] && grep -q "^no-listen" /etc/X11/fs/config ; then
         echo "WARNING:"
         echo "        TCOS need a network font server. Please edit /etc/X11/fs/config"
         echo "        search for no-listen = tcp line and put like this:"
@@ -505,7 +504,7 @@ link_vmlinuz() {
        if [ -f $TCOS_VMLINUZ ] ; then
           vmlinuz=$(basename ${TCOS_VMLINUZ} )
           TCOS_KERNEL=${vmlinuz#vmlinuz-}
-           if [ $(find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -c vmlinuz) = 0 ]; then
+           if ! find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -q vmlinuz ; then
               # no link, create
               echo "Linking ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
               ln -s $TCOS_VMLINUZ ${TFTP_DIR}/
@@ -513,7 +512,7 @@ link_vmlinuz() {
        elif [ -f /boot/${TCOS_VMLINUZ} ]; then
           vmlinuz=${TCOS_VMLINUZ}
           TCOS_KERNEL=${vmlinuz#vmlinuz-}
-           if [ $(find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -c vmlinuz) = 0 ]; then
+           if ! find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -q vmlinuz ; then
               # no link, create
               echo "Linking ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
               ln -s /boot/$TCOS_VMLINUZ ${TFTP_DIR}/
