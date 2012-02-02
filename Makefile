@@ -95,7 +95,7 @@ install:
 	chmod -x $(DESTDIR)$(TCOS_DIR)/scripts/tcos
 
 
-	install -m 640 conf/tcos.conf.etc $(DESTDIR)$(TCOS_CONF)/tcos.conf
+	install -m 640 conf/tcos.conf $(DESTDIR)$(TCOS_CONF)/tcos.conf
 
 	install -m 644 conf/version.conf $(DESTDIR)/var/lib/tcos/version.conf
 	sed -i 's/__TCOS_VERSION__/$(VERSION)/g'       $(DESTDIR)/var/lib/tcos/version.conf
