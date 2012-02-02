@@ -173,10 +173,8 @@ if [ -e /usr/lib/mesa/libGL.so.1 ]; then
 fi
 
 # multiarch support
-[ -e /usr/lib/i386-linux-gnu/libGL.so.1 ] && LIBGL_PATH=/usr/lib/i386-linux-gnu/
-[ -e /usr/lib/x86_64-linux-gnu/libGL.so.1 ] && LIBGL_PATH=/usr/lib/x86_64-linux-gnu/
-[ -e /usr/lib/i386-linux-gnu/mesa/libGL.so.1 ] && LIBGL_PATH=/usr/lib/i386-linux-gnu/mesa/
-[ -e /usr/lib/x86_64-linux-gnu/mesa/libGL.so.1 ] && LIBGL_PATH=/usr/lib/x86_64-linux-gnu/mesa/
+[ -e $LIB_MULTIARCH/libGL.so.1 ] && LIBGL_PATH=$LIB_MULTIARCH
+[ -e $LIB_MULTIARCH/mesa/libGL.so.1 ] && LIBGL_PATH=$LIB_MULTIARCH/mesa/
 
 # delete vnc extension
 rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so

@@ -5,3 +5,4 @@
 cpifexists /usr/bin/pcimodules        /bin/
 mv -f $DESTDIR/usr/lib/libz.so.1 $DESTDIR/lib/libz.so.1 2>/dev/null
 mv -f $DESTDIR/usr/lib/libpci.so.3 $DESTDIR/lib/libpci.so.3 2>/dev/null
+mv -f $DESTDIR/$LIB_MULTIARCH/libpci.so.3 $DESTDIR/lib/libpci.so.3 2>/dev/null

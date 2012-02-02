@@ -105,10 +105,8 @@ create_link /usr/bin/mcopy /usr/bin/mmove
 create_link /usr/bin/mcopy /usr/bin/mmount
 create_link /usr/bin/mcopy /usr/bin/mtype
 
-create_link /usr/lib/libpci.so.3 /lib/libpci.so.3
-[ -e /lib/x86_64-linux-gnu/libpci.so.3 ] && create_link /usr/lib/x86_64-linux-gnu/libpci.so.3 /lib/libpci.so.3
-[ -e /lib/i386-linux-gnu/libpci.so.3 ]   && create_link /usr/lib/i386-linux-gnu/libpci.so.3   /lib/libpci.so.3
 
+create_link "$LIB_MULTIARCH/libpci.so.3" /lib/libpci.so.3
 create_link /usr/lib/libz.so.1 /lib/libz.so.1
 
 create_link /etc/console/boottime.kmap.gz /etc/boottime.kmap.gz

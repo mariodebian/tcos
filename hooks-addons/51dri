@@ -10,8 +10,7 @@
 #TCOS_XORG_DRI_MATROX=
 
 DRI_DIR=/usr/lib/dri/
-[ -d /usr/lib/i386-linux-gnu/dri/   ] && DRI_DIR=/usr/lib/i386-linux-gnu/dri/
-[ -d /usr/lib/x86_64-linux-gnu/dri/ ] && DRI_DIR=/usr/lib/x86_64-linux-gnu/dri/
+[ -d $LIB_MULTIARCH/dri ] && DRI_DIR=$LIB_MULTIARCH/dri/
 
 mkdir -p ${DESTDIR}/${DRI_DIR}
 

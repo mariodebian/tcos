@@ -27,6 +27,12 @@ if [ $ID -ne 0 ]; then
  exit 1
 fi
 
+# Multiarch DIR
+LIB_MULTIARCH=/usr/lib/
+[ -e /usr/lib/i386-linux-gnu   ] && LIB_MULTIARCH=/usr/lib/i386-linux-gnu/
+[ -e /usr/lib/x86_64-linux-gnu ] && LIB_MULTIARCH=/usr/lib/x86_64-linux-gnu/
+export LIB_MULTIARCH
+
 . /etc/tcos/tcos.conf
 [ -e /var/lib/tcos/version.conf ] && . /var/lib/tcos/version.conf
 . ${TCOS_DIR}/tcos-generation-functions.sh
