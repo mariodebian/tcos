@@ -1,0 +1,76 @@
+# Translation of tcosfr to french.
+# Copyright (C) Julien Patriarca 2012
+# This file is distributed under the same license as the tcosfr package.
+# Julien Patriarca <patriarcaj@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tcosfr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-06-30 10:10+0200\n"
+"PO-Revision-Date: 2012-04-26 08:36+0100\n"
+"Last-Translator: Julien Patriarca <patriarcaj@gmail.com>\n"
+"Language-Team: FRENCH <debian-l10n-fr@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tcos-standalone.glade:9
+msgid "TCOS Standalone"
+msgstr "TCOS Standalone"
+
+#: tcos-standalone.glade:32
+msgid "<span size=\"x-large\">Configure TCOS standalone mode</span>"
+msgstr "<span size=\"x-large\"> Configurer le mode autonome de TCOS</span>"
+
+#: tcos-standalone.glade:126
+msgid "Stop"
+msgstr "Arrêter"
+
+#: tcos-standalone.glade:204
+msgid "Start"
+msgstr "Démarrer"
+
+#: tcos-standalone.glade:282
+msgid "Apply"
+msgstr "Appliquer"
+
+#: tcos-standalone.glade:344
+msgid "Enable tcos-standalone daemon"
+msgstr "Activer le démon tcos-standalone"
+
+#: tcos-standalone.glade:365
+msgid "Username (root):"
+msgstr "Nom d'utilisateur (root) :"
+
+#: tcos-standalone.glade:414
+msgid "Password (not visible):"
+msgstr "Mot de passe (non visible) :"
+
+#: tcos-standalone.glade:521
+msgid "Enable SSL over XMLRPC"
+msgstr "Activer le mode SSL au travers de XMLRPC"
+
+#: tcos-standalone.glade:562
+msgid "Options"
+msgstr "Options"
+
+#: tcos-standalone.py:170
+msgid ""
+"Not user and password configured.\n"
+"Using root system user."
+msgstr ""
+"Le mot de passe et l'utilisateur ne sont pas configurés.\n"
+"L'utilisateur root du système sera utilisé."
+
+#: tcos-standalone.py:246
+msgid "New username and password used.\n"
+msgstr "Les nouveaux nom d'utilisateur et mot de passe seront utilisés.\n"
+
+#: tcos-standalone.py:269
+msgid "tcosxmlrpc running"
+msgstr "tcosxmlrpc est train de s'exécuter"
+
+#: tcos-standalone.py:274
+msgid "tcosxmlrpc stopped"
+msgstr "tcosxmlrpc est arrêté"
