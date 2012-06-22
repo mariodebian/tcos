@@ -1,3 +1,16 @@
+tcos (0.89.90) unstable; urgency=low
+
+  * debian/initramfs-tools-tcos.postrm:
+    - piuparts, don't call delgroup if can't
+  * Add overlayfs as aufs alternative
+  * hooks-addons/clean_initramfs: multiarch with libpci3
+  * Simplify grep commands
+  * Install conf/tcos.conf instead of conf/tcos.conf.etc
+  * Use a global LIB_MULTIARCH var
+  * tcos-standalone French translation, thanks to Julien Patriarca, (closes #672135)
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 22 Jun 2012 13:42:53 +0200
+
 tcos (0.89.89) unstable; urgency=low
 
   * debian/initramfs-tools-tcos.postinst:
