@@ -179,13 +179,13 @@ chrootcreate() {
                                     --divert /usr/sbin/invoke-rc.d.original \
                                     /usr/sbin/invoke-rc.d
 
-  # avoid calling udevadm inside chroot
-  # http://bugs.debian.org/627790
-  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
-                                    --add --rename --quiet \
-                                    --divert /sbin/udevadm.original \
-                                    /sbin/udevadm
-  createEmptyCMD /sbin/udevadm
+#  # avoid calling udevadm inside chroot
+#  # http://bugs.debian.org/627790
+#  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+#                                    --add --rename --quiet \
+#                                    --divert /sbin/udevadm.original \
+#                                    /sbin/udevadm
+#  createEmptyCMD /sbin/udevadm
 
 
   cat << EOF > ${TCOS_CHROOT}/etc/apt/apt.conf
@@ -282,23 +282,24 @@ cat /etc/resolv.conf > ${TCOS_CHROOT}/etc/resolv.conf
 [ ! -e ${TCOS_CHROOT}/sbin/start-stop-daemon ] &&   createEmptyCMD /sbin/start-stop-daemon
 [ ! -e ${TCOS_CHROOT}/usr/sbin/invoke-rc.d ] && createEmptyCMD /usr/sbin/invoke-rc.d
 
-if [ ! -e /sbin/udevadm.original ]; then
-  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
-                                    --add --rename --quiet \
-                                    --divert /sbin/udevadm.original \
-                                    /sbin/udevadm
-  createEmptyCMD /sbin/udevadm
-fi
+#if [ ! -e /sbin/udevadm.original ]; then
+#  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+#                                    --add --rename --quiet \
+#                                    --divert /sbin/udevadm.original \
+#                                    /sbin/udevadm
+#  createEmptyCMD /sbin/udevadm
+#fi
 }
 
 chrootexit() {
-if [ -e ${TCOS_CHROOT}/sbin/udevadm.original ]; then
-  rm -f ${TCOS_CHROOT}/sbin/udevadm
-  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
-                                    --remove --rename --quiet \
-                                    --divert /sbin/udevadm.original \
-                                    /sbin/udevadm
-fi
+return
+#if [ -e ${TCOS_CHROOT}/sbin/udevadm.original ]; then
+#  rm -f ${TCOS_CHROOT}/sbin/udevadm
+#  chroot ${TCOS_CHROOT} dpkg-divert --package initramfs-tools-tcos \
+#                                    --remove --rename --quiet \
+#                                    --divert /sbin/udevadm.original \
+#                                    /sbin/udevadm
+#fi
 }
 
 chrootupdate() {
