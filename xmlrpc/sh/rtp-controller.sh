@@ -118,8 +118,8 @@ set_mute_mic() {
   $MIXER sset 'Capture,3' nocap >/dev/null 2>&1
 }
 
-
-version=$(pactl --version 2>/dev/null | awk '{print $2}' | awk -F"." '{if ((int($2) >= 9) && (int($3) >= 10)) printf "yes"}')
+# version must be > 0.9.10 or 1.0
+version=$(pulseaudio --version 2>/dev/null | awk '{print $2}' | awk -F"." '{if ((int($2) >= 9) && (int($3) >= 10) || (int($1)>=1)) printf "yes"}')
 
 for arg in $1; do
   case $arg in
