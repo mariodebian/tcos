@@ -47,7 +47,7 @@ cpifexists ${TCOS_BINS}/get_filesystem /bin
 # limits
 cpifexists ${TCOS_BINS}/set-limits     /bin
 
-# exec and daemonize 
+# exec and daemonize
 cpifexists ${TCOS_BINS}/daemonize.sh /sbin
 
 # tcos-pam-usb.sh (tcosxmlrpc helper)
@@ -84,7 +84,7 @@ fi
 
 
 
-# exec and daemonize 
+# exec and daemonize
 cpifexists ${TCOS_BINS}/clear-logs  /bin
 
 if [ "${TCOS_INCLUDE_INIT}" != "1" ]; then
@@ -120,8 +120,12 @@ mkdir -p $DESTDIR/usr/lib
 
 # multiarch support
 LIB_DIR=/lib
-[ -e /lib/x86_64-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/x86_64-linux-gnu
-[ -e /lib/i386-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/i386-linux-gnu
+if [ "$TCOS_ARCH" = "amd64" ]; then
+    [ -e /lib/x86_64-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/x86_64-linux-gnu
+elif [ "$TCOS_ARCH" = "i386" ]; then
+    [ -e /lib/i386-linux-gnu/libresolv.so.2 ]   && LIB_DIR=/lib/i386-linux-gnu
+fi
+
 
 cpifexists ${LIB_DIR}/libresolv.so.2        /lib/
 cpifexists /usr/${LIB_DIR}/libgssapi_krb5.so.2 /usr/lib/

@@ -35,6 +35,9 @@ fi
 
 quiet=n
 
+. /conf/tcos.conf
+. /conf/tcos-run-functions
+
 # find total amount of available ram
 TOTAL_RAM=\$(grep MemTotal /proc/meminfo |tr -d ': [A-Z][a-z]')
 
@@ -52,13 +55,13 @@ if [ "\${kbytes}" -gt "\${AVALAIBLE_RAM}" ]; then
 fi
 
 
-if modprobe --list zram | grep -q zram; then
-  modprobe zram num_devices=1
+if tcos_find_module "zram"; then
+  modprobe zram
   echo \$((1024*\$kbytes)) > /sys/block/zram0/disksize
   /sbin/mkswap /dev/zram0 >/dev/null 2>&1
   /sbin/swapon -p 100 /dev/zram0 >/dev/null 2>&1
 else
-  modprobe -q --ignore-install ramzswap disksize_kb="\$kbytes"
+  modprobe -q --ignore-install ramzswap
 fi
 
 EOF

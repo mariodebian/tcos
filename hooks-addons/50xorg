@@ -172,9 +172,11 @@ if [ -e /usr/lib/mesa/libGL.so.1 ]; then
   LIBGL_PATH=/usr/lib/mesa/
 fi
 
+MULTIARCH=$(basename $LIB_MULTIARCH)
 # multiarch support
 [ -e $LIB_MULTIARCH/libGL.so.1 ] && LIBGL_PATH=$LIB_MULTIARCH
 [ -e $LIB_MULTIARCH/mesa/libGL.so.1 ] && LIBGL_PATH=$LIB_MULTIARCH/mesa/
+[ -e "/usr/lib/mesa-diverted/$MULTIARCH/libGL.so.1" ] && LIBGL_PATH="/usr/lib/mesa-diverted/$MULTIARCH/"
 
 # delete vnc extension
 rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libvnc.so

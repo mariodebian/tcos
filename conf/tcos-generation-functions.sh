@@ -158,13 +158,13 @@ cpifexists () {
   if [ -f $DESTDIR/$orig ]; then
     return 1
   fi
-  
-  
+
+
   if [ $# != 2 ]; then
    echo "    cpifexists(): ERROR: Need 2 arguments: \$1=$orig \$2=$dest"
    return 1
  fi
- 
+
  if [ ! -f $orig ]; then
    echo "    cpifexits() WARNING: $orig not found, searching with pathof()..."
    _file=$(pathof $(basename $orig) )
@@ -177,10 +177,10 @@ cpifexists () {
    else
      echo "   cpifexists(): ERROR: $(basename $orig) no found in PATH, please package that contain $orig"
      return 1
-   fi   
+   fi
  fi
 
- 
+
  if [ ! -d $DESTDIR/$dest ]; then
    echo "  cpifexits() WARNING: $DESTDIR/$dest don't exists"
  fi
@@ -201,7 +201,7 @@ copydir () {
    #_echo "     DEBUG: \$1=$1 \$2=$2"
    return 1
  fi
- 
+
 #_echo "cp -ra \"${1}\" \"${DESTDIR}/${2}\""
 cp -ra "${1}" "${DESTDIR}/${2}"
 return 0
@@ -245,6 +245,17 @@ force_add_module() {
                 ln -s "${this_module}" "${DESTDIR}/$(dirname "${this_module}")"
         fi
         # end of force copy
+}
+
+tcos_find_module() {
+  mod=$(find /lib/modules/${TCOS_KERNEL} -name ${1}.ko | tail -1)
+  if [ "$mod" = "" ] ; then
+    return 1
+  fi
+  if [ "$(basename $mod .ko)" = "$1" ]; then
+    return 0
+  fi
+  return 1
 }
 
 parse_pxelinuxcfg() {

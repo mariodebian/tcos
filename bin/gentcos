@@ -466,14 +466,10 @@ check_modules() {
        if [ "$(echo $_module | awk -F "|" '{print $2}')" != "" ]; then
          for _mod in $(echo $_module | sed 's/|/ /g'); do
            #_echo "searching for module $_mod"
-           have_one_module=$(modprobe --set-version="${TCOS_KERNEL}" -l ${_mod} | wc -l)
-           if [ ${have_one_module} != 0 ]; then
-              #_echo "have $_mod !!!"
-              have_module=1
-           fi
+           tcos_find_module "${_mod}" && have_module=1
          done
        else
-         have_module=$(modprobe --set-version="${TCOS_KERNEL}" -l ${_module} | wc -l)
+         tcos_find_module "${_module}" && have_module=1
        fi
 
        if [ ${have_module} = 0 ] ; then

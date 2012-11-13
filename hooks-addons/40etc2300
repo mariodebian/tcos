@@ -32,9 +32,9 @@ EOF
 chmod +x ${DESTDIR}/scripts/tcos-bottom/15etc2300
 
 stat_before
- 
+
   manual_add_modules sis5513
-  if modprobe --set-version="${TCOS_KERNEL}" -l| grep -q snd-sis7019 ; then
+  if ! tcos_find_module "snd-sis7019" ; then
     manual_add_modules ac97_codec
     manual_add_modules sis7019
   else

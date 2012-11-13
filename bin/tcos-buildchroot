@@ -314,9 +314,9 @@ if [ -e /etc/console-setup/boottime.kmap.gz ]; then
 	mkdir -p ${TCOS_CHROOT}/etc/console-setup
 	cp /etc/console-setup/boottime.kmap.gz ${TCOS_CHROOT}/etc/console-setup/
 fi
-if [ -e /etc/console-setup/cached.kmap.gz ]; then
+if [ -e /etc/console-setup/cached*.kmap.gz ]; then
 	mkdir -p ${TCOS_CHROOT}/etc/console-setup
-	cp /etc/console-setup/cached.kmap.gz ${TCOS_CHROOT}/etc/console-setup/
+	cp /etc/console-setup/cached*.kmap.gz ${TCOS_CHROOT}/etc/console-setup/
 fi
 
   cat << EOC | chroot ${TCOS_CHROOT}

@@ -1,5 +1,5 @@
 #!/bin/sh
-# 
+#
 if [ "$1" = "prereqs" ]; then
   exit 0
 fi
@@ -14,14 +14,14 @@ quiet=n
 
 # set kernel very silent
 if grep -q quiet /proc/cmdline ; then
-  echo "1 1 1 7" > /proc/sys/kernel/printk 
+  echo "1 1 1 7" > /proc/sys/kernel/printk
   dmesg -n 1
 fi
 
 
 # start syslogd (busybox embeded)
 killall syslogd 2>/dev/null
-syslogd 2>/dev/null 
+syslogd 2>/dev/null
 
 if [ $? != 0 ]; then
   # create a fuck logger
@@ -80,7 +80,7 @@ else
     modprobe -q aufs     >> /tmp/initramfs.debug 2>&1 &
   else
     _log "BUSYBOX load unionfs module and if fail try aufs"
-    modprobe unionfs  || modprobe aufs >> /tmp/initramfs.debug 2>&1 &
+    modprobe -q unionfs  || modprobe -q aufs >> /tmp/initramfs.debug 2>&1 &
   fi
 
 fi

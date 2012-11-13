@@ -13,19 +13,19 @@ else
 
   if [ -f /etc/console/boottime.kmap.gz ]; then
     mkdir -p $DESTDIR/etc/console
-    cp -ra /etc/console/boottime.kmap.gz $DESTDIR/etc/console
+    cp -ra /etc/console/boottime.kmap.gz $DESTDIR/etc/console/
   fi
 
   # for ubuntu
   if [ -f /etc/console-setup/boottime.kmap.gz ]; then
     mkdir -p $DESTDIR/etc/console
-    cp -ra /etc/console-setup/boottime.kmap.gz $DESTDIR/etc/console
+    cp -ra /etc/console-setup/boottime.kmap.gz $DESTDIR/etc/console/
   fi
 
   # for new console-setup
-  if [ -f /etc/console-setup/cached.kmap.gz ]; then
+  if [ -f /etc/console-setup/cached*.kmap.gz ]; then
     mkdir -p $DESTDIR/etc/console-setup
-    cp -ra /etc/console-setup/cached.kmap.gz $DESTDIR/etc/console-setup
+    cp -ra /etc/console-setup/cached*.kmap.gz $DESTDIR/etc/console-setup/cached.kmap.gz
   fi
 
 fi

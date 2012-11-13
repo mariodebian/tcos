@@ -92,18 +92,14 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
 
     # put floppy outside /lib/modules
     mkdir -p $DESTDIR/lib/extramodules
-    FLOPPY_MOD=$(modprobe --set-version="${TCOS_KERNEL}" --list "floppy" 2>/dev/null)
-    FLOPPY_IDE_MOD=$(modprobe --set-version="${TCOS_KERNEL}" --list "ide-floppy")
 
-    # new modprobe versions return relative PATH
-    if [ ! -e "${FLOPPY_MOD}" ] && [ "${FLOPPY_MOD}" != "" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_MOD}" ]; then
-      FLOPPY_MOD="/lib/modules/${TCOS_KERNEL}/${FLOPPY_MOD}"
+
+    if tcos_find_module "floppy"; then
+        FLOPPY_MOD=$(find /lib/modules/${TCOS_KERNEL} -name floppy.ko | tail -1)
     fi
-
-    if [ ! -e "${FLOPPY_IDE_MOD}" ] && [ "${FLOPPY_IDE_MOD}" != "" ] && [ -e "/lib/modules/${TCOS_KERNEL}/${FLOPPY_IDE_MOD}" ]; then
-      FLOPPY_IDE_MOD="/lib/modules/${TCOS_KERNEL}/${FLOPPY_IDE_MOD}"
+    if tcos_find_module "ide-floppy"; then
+        FLOPPY_IDE_MOD=$(find /lib/modules/${TCOS_KERNEL} -name ide-floppy.ko | tail -1)
     fi
-
 
     if [ "${FLOPPY_MOD}" != "" ]; then
       # don't use cpifexists
@@ -166,15 +162,8 @@ TCOS_DISABLE_IDE=$(read_env_var "TCOS_DISABLE_IDE" "$TCOS_DISABLE_IDE")
 
 
     if [ "$TCOS_CPUFREQ" = "1" ]; then
-        # modprobe -l| grep cpufreq_| awk -F"/" '{print $NF}'| sed -e 's/.ko//g'
-        CPUFREQ_MODS=$(modprobe --set-version="${TCOS_KERNEL}" --list 2>/dev/null| awk -F"/" '/cpufreq_/ {print $NF}'| sed -e s/".ko"//g)
-        CPUFREQ_CPU_MODS=$(modprobe --set-version="${TCOS_KERNEL}" --list 2>/dev/null| awk -F"/" '/cpu\/cpufreq/ {print $NF}' | sed -e s/".ko"//g)
-         _echo "   TCOS adding CPUFREQ modules"
-        for _mod in $CPUFREQ_MODS; do
-            tcos_manual_add_modules $_mod
-        done
-        for _mod in $CPUFREQ_CPU_MODS; do
-            tcos_manual_add_modules $_mod
+        for _mod in $(find /lib/modules/${TCOS_KERNEL} | grep cpufreq| grep ko$); do
+            tcos_manual_add_modules $(basename $_mod .ko)
         done
     fi
 

@@ -103,6 +103,17 @@ _log () {
   /bin/logger -t "$(echo $1| awk '{print $1}')" "$@" >> /tmp/initramfs.debug 2>&1
 }
 
+tcos_find_module() {
+  mod=$(find /lib/modules/${version} -name ${1}.ko | tail -1)
+  if [ "$mod" = "" ] ; then
+    return 1
+  fi
+  if [ "$(basename $mod .ko)" = "$1" ]; then
+    return 0
+  fi
+  return 1
+}
+
 read_server() {
   # $1 is server hostname
   nSERVER=$(grep "$1" /etc/hosts | awk '{print $1}' | head -1)

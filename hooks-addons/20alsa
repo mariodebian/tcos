@@ -7,10 +7,10 @@ if [ ! $TCOS_SOUND ]; then
 else
 
     stat_before
-    
+
     # TCOS MIXER (include ALSA and OSS support)
     cpifexists ${TCOS_BINS}/tmixer  /usr/bin/
- 
+
     mkdir -p $DESTDIR/usr/share/
     copydir /usr/share/alsa/ /usr/share/
 
@@ -26,7 +26,7 @@ else
 
     mkdir -p $DESTDIR/etc/init.d/
     [ -e /etc/init.d/alsa-utils ] && cpifexists /etc/init.d/alsa-utils /etc/init.d/
- 
+
     if [ -d /etc/alsa ]; then
       copydir /etc/alsa/      /etc/
     fi
@@ -50,20 +50,24 @@ else
     fi
 
 
-    mkdir -p ${DESTDIR}/usr/lib/alsa-lib/
-    [ -e /usr/lib/alsa-lib/libasound_module_pcm_pulse.so ] && \
-         cpifexists /usr/lib/alsa-lib/libasound_module_pcm_pulse.so    /usr/lib/alsa-lib/
-    [ -e /usr/lib/alsa-lib/libasound_module_ctl_pulse.so ]  && \
-         cpifexists /usr/lib/alsa-lib/libasound_module_ctl_pulse.so    /usr/lib/alsa-lib/
-    # new in Ubuntu??
-    [ -e /usr/lib/alsa-lib/libasound_module_conf_pulse.so ] && \
-         cpifexists /usr/lib/alsa-lib/libasound_module_conf_pulse.so /usr/lib/alsa-lib/
-    [ -e /usr/lib/alsa-lib/libasound_module_pcm_alsa_dsp.so ] && \
-         cpifexists /usr/lib/alsa-lib/libasound_module_pcm_alsa_dsp.so /usr/lib/alsa-lib/
+    ALSA_LIB_DIR=/usr/lib/alsa-lib/
+    [ -d /usr/lib/x86_64-linux-gnu/alsa-lib ] && ALSA_LIB_DIR=/usr/lib/x86_64-linux-gnu/alsa-lib
+    [ -d /usr/lib/i386-linux-gnu/alsa-lib ]   && ALSA_LIB_DIR=/usr/lib/i386-linux-gnu/alsa-lib
 
 
+    mkdir -p ${DESTDIR}/$ALSA_LIB_DIR
+    [ -e $ALSA_LIB_DIR/libasound_module_pcm_pulse.so ] && \
+         cpifexists $ALSA_LIB_DIR/libasound_module_pcm_pulse.so    $ALSA_LIB_DIR
 
- 
+    [ -e $ALSA_LIB_DIR/libasound_module_ctl_pulse.so ]  && \
+         cpifexists $ALSA_LIB_DIR/libasound_module_ctl_pulse.so    $ALSA_LIB_DIR
+
+    [ -e $ALSA_LIB_DIR/libasound_module_conf_pulse.so ] && \
+         cpifexists $ALSA_LIB_DIR/libasound_module_conf_pulse.so   $ALSA_LIB_DIR
+
+    [ -e $ALSA_LIB_DIR/libasound_module_pcm_alsa_dsp.so ] && \
+         cpifexists $ALSA_LIB_DIR/libasound_module_pcm_alsa_dsp.so $ALSA_LIB_DIR
+
     stat_after "Alsa sound support"
 
 fi # end of TCOS_SOUND
