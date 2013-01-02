@@ -1,3 +1,12 @@
+tcos (0.89.91) unstable; urgency=low
+
+  * Disable udevadm divert, fail on old versions
+  * Fix pulseaudio parse version
+  * Fix some multiarch libs, fix modprobe list (closes #694870),
+  * Use glx-alternative mesa instead of fix-nvidia-ati
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 02 Jan 2013 22:28:39 +0100
+
 tcos (0.89.90) unstable; urgency=low
 
   * debian/initramfs-tools-tcos.postrm:
