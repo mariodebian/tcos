@@ -23,9 +23,15 @@ else
   fi
 
   # for new console-setup
-  if [ -f /etc/console-setup/cached*.kmap.gz ]; then
+  if [ -f /etc/console-setup/cached.kmap.gz ]; then
     mkdir -p $DESTDIR/etc/console-setup
-    cp -ra /etc/console-setup/cached*.kmap.gz $DESTDIR/etc/console-setup/cached.kmap.gz
+    cp -ra /etc/console-setup/cached.kmap.gz $DESTDIR/etc/console-setup/cached.kmap.gz
+  fi
+
+  # for new console-setup
+  if [ -f /etc/console-setup/cached_UTF-8_del.kmap.gz ]; then
+    mkdir -p $DESTDIR/etc/console-setup
+    cp -ra /etc/console-setup/cached_UTF-8_del.kmap.gz $DESTDIR/etc/console-setup/cached.kmap.gz
   fi
 
 fi

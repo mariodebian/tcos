@@ -105,8 +105,8 @@ fi
 
 # multiarch support
 mkdir -p $DESTDIR/etc/ld.so.conf.d/
-[ -f /etc/ld.so.conf.d/i486-linux-gnu.conf   ] && cpifexists /etc/ld.so.conf.d/i486-linux-gnu.conf   /etc/ld.so.conf.d/
-[ -f /etc/ld.so.conf.d/x86_64-linux-gnu.conf ] && cpifexists /etc/ld.so.conf.d/x86_64-linux-gnu.conf /etc/ld.so.conf.d/
+MULTIARCH=$(basename $LIB_MULTIARCH)
+[ -f "/etc/ld.so.conf.d/${MULTIARCH}.conf"   ] && cpifexists "/etc/ld.so.conf.d/${MULTIARCH}.conf"   /etc/ld.so.conf.d/
 
 cpifexists /sbin/depmod    /sbin/
 cpifexists /etc/localtime  /etc/
@@ -119,12 +119,8 @@ touch      $DESTDIR/etc/modules
 mkdir -p $DESTDIR/usr/lib
 
 # multiarch support
-LIB_DIR=/lib
-if [ "$TCOS_ARCH" = "amd64" ]; then
-    [ -e /lib/x86_64-linux-gnu/libresolv.so.2 ] && LIB_DIR=/lib/x86_64-linux-gnu
-elif [ "$TCOS_ARCH" = "i386" ]; then
-    [ -e /lib/i386-linux-gnu/libresolv.so.2 ]   && LIB_DIR=/lib/i386-linux-gnu
-fi
+LIB_DIR=/lib/
+[ -e /lib/${MULTIARCH}/libresolv.so.2 ] && LIB_DIR=/lib/${MULTIARCH}
 
 
 cpifexists ${LIB_DIR}/libresolv.so.2        /lib/

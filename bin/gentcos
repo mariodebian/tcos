@@ -29,8 +29,10 @@ fi
 
 # Multiarch DIR
 LIB_MULTIARCH=/usr/lib/
-[ -e /usr/lib/i386-linux-gnu   ] && LIB_MULTIARCH=/usr/lib/i386-linux-gnu/
-[ -e /usr/lib/x86_64-linux-gnu ] && LIB_MULTIARCH=/usr/lib/x86_64-linux-gnu/
+DEB_HOST_MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>&1)
+if [ -n "$DEB_HOST_MULTIARCH" ] && [ -e "/usr/lib/$DEB_HOST_MULTIARCH" ]; then
+  LIB_MULTIARCH="/usr/lib/$DEB_HOST_MULTIARCH"
+fi
 export LIB_MULTIARCH
 
 . /etc/tcos/tcos.conf

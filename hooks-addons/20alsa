@@ -51,9 +51,7 @@ else
 
 
     ALSA_LIB_DIR=/usr/lib/alsa-lib/
-    [ -d /usr/lib/x86_64-linux-gnu/alsa-lib ] && ALSA_LIB_DIR=/usr/lib/x86_64-linux-gnu/alsa-lib
-    [ -d /usr/lib/i386-linux-gnu/alsa-lib ]   && ALSA_LIB_DIR=/usr/lib/i386-linux-gnu/alsa-lib
-
+    [ -d $LIB_MULTIARCH/alsa-lib ] && ALSA_LIB_DIR=$LIB_MULTIARCH/alsa-lib
 
     mkdir -p ${DESTDIR}/$ALSA_LIB_DIR
     [ -e $ALSA_LIB_DIR/libasound_module_pcm_pulse.so ] && \
