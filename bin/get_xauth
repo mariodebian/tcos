@@ -25,7 +25,8 @@ export DISPLAY=:0
 user=$(/usr/lib/tcos/tcos-last --user 2>/dev/null)
 home=$(getent passwd ${user} | head -1 | awk -F":" '{print $6}')
 if [ "$user" = "root" ]; then echo -n "error: root not allowed"; exit 1; fi
-if [ -e "${home}/.Xauthority" ]; then
+# test if file exists and not empty
+if [ -s "${home}/.Xauthority" ]; then
    XAUTHORITY=$home/.Xauthority
 else
    XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)

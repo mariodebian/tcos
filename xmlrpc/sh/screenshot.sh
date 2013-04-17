@@ -30,18 +30,8 @@ if [ -e /conf/tcos-run-functions ]; then
   export XAUTHORITY=/root/.Xauthority
 else
   _www=/var/lib/tcos/standalone/www
-  #user=$(w | awk '{ if ($3 == ":0" || $2 == ":0") print $1 }')
-  user=$(/usr/lib/tcos/tcos-last --user 2>/dev/null)
-  home=$(getent passwd ${user} | head -1 | awk -F":" '{print $6}')
-  if [ "$user" = "root" ]; then echo -n "error: root not allowed"; exit 1; fi
-  if [ -e "${home}/.Xauthority" ]; then
-     export XAUTHORITY=$home/.Xauthority
-  else
-      XAUTHORITY=$(find /tmp/ -name ".gdm*" -user ${user} 2>/dev/null | head -1)
-      [ -z $XAUTHORITY ] && XAUTHORITY=$(xauth info 2>/dev/null | awk '/^Authority/ {print $3}')
-      [ -z $XAUTHORITY -o "$XAUTHORITY" = "/root/.Xauthority" ] && XAUTHORITY="$(find /var/run/gdm*/ -name auth-for-* -user ${user} 2>/dev/null | head -1)/database"
-      export XAUTHORITY
-  fi
+  export XAUTHORITY=$(get_xauth)
+
   export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
   beepoff="xset b off"
   beepon="xset b on"
@@ -61,30 +51,6 @@ cd $_www
 $($beepoff)
 scrot 'capture.jpg' -t $_thumb_size
 $($beepon)
-# new Base64 getscreenshot don't need html files
-exit 0
-
-_files=$(ls *jpg)
-
-
-cat << EOF > $_www/index.html
-<html>
-<head>
-<title>Screenshots</title>
-</head>
-<body>
-<H1>Screenshots of $(hostname),<br>take on $(date)</H1>
-<br><br>
-EOF
-for _file in $_files; do
- echo "<a href=\"$_file\">$_file</a><br>" >> $_www/index.html
-done
-
-cat << EOF >> $_www/index.html
-</body>
-</html>
-EOF
-
-echo -n "ok"
 
 exit 0
+
