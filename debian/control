@@ -110,7 +110,7 @@ Recommends: tcos-configurator,
             dnsmasq | tcos-tftp-dhcp,
             tcosmonitor, tcosconfig, 
             ltspfs, 
-           fuse-utils, 
+            fuse, 
             pulseaudio-esound-compat | esound
 Description: Base package for install a TCOS (Thin client) server
  This is a system for generating thin client hosts using initramfs.
