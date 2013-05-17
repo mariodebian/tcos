@@ -87,7 +87,6 @@ Depends: tcos-core (>= 0.88.0),
          openssl, 
          gksu, 
          python, 
-         python-eggtrayicon | python-gnome2-extras, 
          python-gtk2, 
          python-glade2, 
          ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
