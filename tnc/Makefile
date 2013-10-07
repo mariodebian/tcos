@@ -1,6 +1,6 @@
 TNC = tnc
 SOURCE = tcos-net-controller.c
-LIBS= -I/usr/lib
+#LIBS= -I/usr/lib
 LDADD = -O2 -ansi -pedantic -Wall $(LIBS) $(CFLAGS)
 GCC=gcc
 
