@@ -29,7 +29,7 @@ fi
 
 # Multiarch DIR
 LIB_MULTIARCH=/usr/lib/
-DEB_HOST_MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>&1)
+DEB_HOST_MULTIARCH="__TCOS_MULTIARCH__"
 if [ -n "$DEB_HOST_MULTIARCH" ] && [ -e "/usr/lib/$DEB_HOST_MULTIARCH" ]; then
   LIB_MULTIARCH="/usr/lib/$DEB_HOST_MULTIARCH"
 fi

@@ -46,7 +46,7 @@ DISTRO_VERSION=$(shell dpkg-parsechangelog -l../debian/changelog | awk '/^Distri
 endif
 
 TCOS_ARCH:=$(shell dpkg-architecture  | awk -F"=" '/^DEB_BUILD_ARCH=/ {print $$2}')
-
+TCOS_MULTIARCH:=$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 
 
@@ -77,6 +77,7 @@ test:
 	@echo PACKAGE=$(PACKAGE)
 	@echo 
 	@echo TCOS_ARCH=$(TCOS_ARCH)
+	@echo TCOS_MULTIARCH=$(TCOS_MULTIARCH)
 	@echo 
 	@echo PREFIX=$(PREFIX)
 	@echo DESTDIR=$(DESTDIR)

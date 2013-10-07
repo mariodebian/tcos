@@ -4,7 +4,6 @@
 ##    mariodebian \/at\/ gmail \/dot\/ com
 ARCH:=$(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
-
 all:
 	$(MAKE) -C hex2ascii
 	$(MAKE) -C xmlrpc
@@ -102,6 +101,10 @@ install:
 	sed -i 's/__TCOS_DISTRO__/$(DISTRO_VERSION)/g' $(DESTDIR)/var/lib/tcos/version.conf
 	sed -i 's/__DISTRIBUTION__/$(DISTRO)/g'        $(DESTDIR)/var/lib/tcos/version.conf
 	sed -i 's/__TCOS_ARCH__/$(TCOS_ARCH)/g'        $(DESTDIR)/var/lib/tcos/version.conf
+	sed -i 's/__TCOS_MULTIARCH__/$(TCOS_MULTIARCH)/g'        $(DESTDIR)/var/lib/tcos/version.conf
+
+	install -m 755 bin/gentcos                               $(DESTDIR)/usr/sbin/
+	sed -i 's/__TCOS_MULTIARCH__/$(TCOS_MULTIARCH)/g'        $(DESTDIR)/usr/sbin/gentcos
 
 
 	# tcos.conf templates
