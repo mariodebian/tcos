@@ -1,3 +1,14 @@
+tcos (0.89.92) unstable; urgency=low
+
+  * Fix some multiarch and console-setup issues
+  * Use ~/.Xauthority only if not empty
+  * Replace fuse-utils with fuse package in Recommends, (closes #698181)
+  * Remove depends on python-eggtrayicon, (closes #702105)
+  * Remove -I/usr/lib in Makefiles, (closes #722844)
+  * Save multiarch during build
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 07 Oct 2013 15:22:53 +0200
+
 tcos (0.89.91) unstable; urgency=low
 
   * Disable udevadm divert, fail on old versions
