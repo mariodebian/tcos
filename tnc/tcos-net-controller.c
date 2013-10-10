@@ -46,6 +46,8 @@
 #define DEVNULL "2>/dev/null"
 #endif
 
+#define UNUSED(x) ((void)(x))
+
 void create_route(struct rtentry *p, char **args);
 
 char *strncpy( char *to, const char *from, size_t count );
@@ -229,13 +231,15 @@ status_iptables_user(char *args) {
    FILE *fp;
    char cmd[BSIZE];
    char line[BSIZE];
+   char *fret;
+   UNUSED(fret);
     /* iptables rules with tcos argument, allow not remove other rules. */
     sprintf( cmd, "%s -L OUTPUT --line-numbers -n %s | grep TCOS_TNC | awk 'BEGIN{count=0}{if ($(NF-3) == %d || $(NF-3) == \"%s\") count++}END{print count}'", IPTABLES, DEVNULL, (int)get_uid(args), args);
 #ifdef DEBUG
     debug("status_iptables_user() %s\n",cmd); 
 #endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       (void)fgets( line, sizeof line, fp);
+       fret=fgets( line, sizeof line, fp);
        pclose(fp);
        if ( line[strlen(line)-1] == '\n' ) 
          line[strlen(line)-1] = 0;
@@ -258,6 +262,9 @@ flush_iptables_user(char *arg1, char *arg2) {
    char *delim = " ";
    char **tokens = NULL;
 
+   char *fret;
+   UNUSED(fret);
+
     if ( (i = status_iptables_user(arg1)) == 0)
        return(1);
 
@@ -274,7 +281,7 @@ flush_iptables_user(char *arg1, char *arg2) {
     free(substring);
 
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       (void)fgets( line, sizeof line, fp);
+       fret=fgets( line, sizeof line, fp);
        pclose(fp);
        if( line[strlen(line)-1] == '\n' ) 
          line[strlen(line)-1] = 0;
@@ -310,6 +317,9 @@ add_iptables_user(char **args) {
    char *delim = ",";
    char **tokens = NULL;
 
+   char *fret;
+   UNUSED(fret);
+
     /* Delete rules that already exists for user*/
     flush_iptables_user(args[5], args[2]);
 
@@ -320,7 +330,7 @@ add_iptables_user(char **args) {
     debug("add_iptables_user() dired cmd=%s\n",cmd);
 #endif
     if ((fp=(FILE*)popen(cmd, "r")) != NULL) {
-       (void)fgets( dirred, sizeof dirred, fp);
+       fret=fgets( dirred, sizeof dirred, fp);
        pclose(fp);
        if( dirred[strlen(dirred)-1] == '\n' ) 
           dirred[strlen(dirred)-1] = 0;
