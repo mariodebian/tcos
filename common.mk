@@ -2,6 +2,8 @@
 
 PACKAGE=tcos
 
+# uncomment for verbose build
+#V=1
 
 MAKE:=make -B
 GCC:=gcc
@@ -93,5 +95,10 @@ test:
 	@echo
 	@echo DISTRO=$(DISTRO)
 	@echo DISTRO_VERSION=$(DISTRO_VERSION)
+	@echo
+	@echo CFLAGS=$(CFLAGS)
+	@echo LDFLAGS=$(LDFLAGS)
+	@echo CPPFLAGS=$(CPPFLAGS)
+	@echo CXXFLAGS=$(CXXFLAGS)
 	@echo "------------------------------------"
 

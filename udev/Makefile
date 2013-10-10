@@ -4,7 +4,7 @@ include ../common.mk
 
 
 mount-listener:
-	$(QUIET_CC)$(GCC) -Wall -O2 -o mount-listener mount_listener.c
+	$(QUIET_CC)$(GCC) -Wall $(CFLAGS) $(LDFLAGS) -o mount-listener mount_listener.c
 
 
 install:

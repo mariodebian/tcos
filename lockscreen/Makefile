@@ -10,12 +10,16 @@ LOCKVLC_SOURCES = lockvlc.c
 WAITFORX_SOURCES = waitforX.c
 GXD=get-xdg-desktop
 GXD_SOURCES=get-xdg-desktop.c
-GXD_OPTS=-O2 -ansi -pedantic -Wall $(shell pkg-config --cflags --libs glib-2.0)
-#LIBS= -I/usr/lib
+
+GXD_OPTS=$(CFLAGS) $(LDFLAGS) -ansi -pedantic -Wall $(shell pkg-config --cflags --libs glib-2.0)
+
 LOCKLIBS+=$(shell pkg-config --libs imlib2)
 CFLAGS+=$(shell pkg-config --cflags imlib2)
-LDADD+=-O2 -ansi -pedantic -Wall -lXaw $(LIBS) $(CFLAGS) -lX11 -lXext -lXt
-LDADD_WAITFORX+=-O2 -ansi -pedantic -Wall -lX11 $(LIBS)
+
+LDADD+=$(LDFLAGS) -ansi -pedantic -Wall -lXaw $(CFLAGS) -lX11 -lXext -lXt
+
+LDADD_WAITFORX+=$(LDFLAGS) -ansi -pedantic -Wall -lX11
+
 CC=gcc
 
 

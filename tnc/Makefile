@@ -1,7 +1,7 @@
 TNC = tnc
 SOURCE = tcos-net-controller.c
 #LIBS= -I/usr/lib
-LDADD = -O2 -ansi -pedantic -Wall $(LIBS) $(CFLAGS)
+LDADD += $(LDFLAGS) -ansi -pedantic -Wall $(LIBS) $(CFLAGS)
 GCC=gcc
 
 all: $(TNC)
@@ -10,7 +10,7 @@ include ../common.mk
 
 
 $(TNC):
-	$(QUIET_CC)$(CC) $(SOURCE) $(LDADD) -o $(TNC)
+	$(QUIET_CC)$(CC) $(SOURCE) $(CFLAGS) $(LDADD) -o $(TNC)
 
 debug:
 	$(CC) $(SOURCE) $(LDADD) -o $(TNC) -DDEVNULL="\"\"" -DDEBUG
