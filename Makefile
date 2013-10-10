@@ -104,7 +104,6 @@ install:
 	sed -i 's/__TCOS_MULTIARCH__/$(TCOS_MULTIARCH)/g'        $(DESTDIR)/var/lib/tcos/version.conf
 
 	install -m 755 bin/gentcos                               $(DESTDIR)/usr/sbin/
-	sed -i 's/__TCOS_MULTIARCH__/$(TCOS_MULTIARCH)/g'        $(DESTDIR)/usr/sbin/gentcos
 
 
 	# tcos.conf templates

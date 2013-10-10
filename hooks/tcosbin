@@ -72,6 +72,14 @@ done
 # we search links delete them and put file instead
 convert_links2files
 
+# multiarch clean
+#tree "${DESTDIR}/usr/lib/"
+# if [ -d "${DESTDIR}/usr/lib/$TCOS_MULTIARCH" ]; then
+#     _verbose "(tcosbin) Moving all multiarch ($TCOS_MULTIARCH) to /usr/lib/"
+#     mv "${DESTDIR}/usr/lib/$TCOS_MULTIARCH/"* "${DESTDIR}/usr/lib/"
+#     rmdir "${DESTDIR}/usr/lib/$TCOS_MULTIARCH/"
+#     #tree "${DESTDIR}/usr/lib/"
+# fi
 
 # read from env vars TCOS_BOOT
 TCOS_ENV_DISABLE_SQUASHFS=$(env| awk -F "=" '/^TCOS_ENV_DISABLE_SQUASHFS=/ {print $2}')
@@ -191,6 +199,15 @@ if [ -d $DESTDIR/usr/lib/i686 ]; then
   (rmdir ${DESTDIR}/usr/lib/i686/cmov && rmdir ${DESTDIR}/usr/lib/i686) || _echo "  * WARNING can't delete /usr/lib/i686 from image (not empty)"
 fi # end of /usr/lib/i686 dir exists
 
+
+# multiarch clean
+#tree "${DESTDIR}/lib/"
+# if [ -d "${DESTDIR}/lib/$TCOS_MULTIARCH" ]; then
+#     _verbose "(tcosbin) Moving all multiarch ($TCOS_MULTIARCH) to /lib/"
+#     mv "${DESTDIR}/lib/$TCOS_MULTIARCH/"* "${DESTDIR}/lib/"
+#     rmdir "${DESTDIR}/lib/$TCOS_MULTIARCH/"
+#     #tree "${DESTDIR}/lib/"
+# fi
 
 if [ $TCOS_DISABLE_ACPI ]; then
   stat_before

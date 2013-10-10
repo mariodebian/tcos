@@ -27,18 +27,21 @@ if [ $ID -ne 0 ]; then
  exit 1
 fi
 
-# Multiarch DIR
-LIB_MULTIARCH=/usr/lib/
-DEB_HOST_MULTIARCH="__TCOS_MULTIARCH__"
-if [ -n "$DEB_HOST_MULTIARCH" ] && [ -e "/usr/lib/$DEB_HOST_MULTIARCH" ]; then
-  LIB_MULTIARCH="/usr/lib/$DEB_HOST_MULTIARCH"
-fi
-export LIB_MULTIARCH
-
 . /etc/tcos/tcos.conf
 [ -e /var/lib/tcos/version.conf ] && . /var/lib/tcos/version.conf
 . ${TCOS_DIR}/tcos-generation-functions.sh
 . /usr/share/initramfs-tools/hook-functions
+
+
+# Multiarch DIR
+LIB_MULTIARCH=/lib/
+USRLIB_MULTIARCH=/usr/lib/
+if [ -n "$TCOS_MULTIARCH" ] && [ -e "/usr/lib/$TCOS_MULTIARCH" ]; then
+  LIB_MULTIARCH="/lib/$TCOS_MULTIARCH"
+  USRLIB_MULTIARCH="/usr/lib/$TCOS_MULTIARCH"
+fi
+export LIB_MULTIARCH
+export USRLIB_MULTIARCH
 
 for tpl in $(tcos_get_templates); do
   . $tpl
