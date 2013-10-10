@@ -20,7 +20,7 @@ else
  [ -e /usr/bin/strace ] && cpifexists /usr/bin/strace  /usr/bin/
  cpifexists /sbin/mkfs       /sbin/
  cpifexists /sbin/mkfs.vfat  /sbin/
- cpifexists /sbin/mkfs.ext3  /sbin/
+ cpifexists /sbin/mke2fs     /sbin/
 
  
  stat_after "Debug tools"

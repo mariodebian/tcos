@@ -116,6 +116,9 @@ create_link /usr/lib/xorg/modules/drivers/i810_drv.so /usr/lib/xorg/modules/driv
 create_link /usr/share/X11/xkb/rules/evdev.lst /usr/share/X11/xkb/rules/base.lst
 
 
+create_link /sbin/mke2fs /sbin/mkfs.ext3
+create_link /sbin/mke2fs /sbin/mkfs.ext4
+
 #( cd $DESTDIR/bin && rm -f zcat ; ln -s gunzip zcat )
 if [ -d $DESTDIR/lib/cmds ]; then
    ( cd $DESTDIR/lib/cmds && rm -f poweroff && ln -s reboot poweroff )
