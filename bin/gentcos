@@ -119,29 +119,19 @@ _exit () {
 }
 
 call_mkinitramfs() {
- rm -rf /tmp/mkinitramfs_*
+ rm -rf /tmp/mkinitramfs* /tmp/gentcos* /var/tmp/mkinitramfs*
  NEWINITRAMFS=$1
  #echo "mkinitramfs $MKVERBOSE -d ${TCOS_CONF} -o ${NEWINITRAMFS} ${TCOS_KERNEL}"
- mkinitramfs $MKVERBOSE -d ${TCOS_CONF} -o ${NEWINITRAMFS} ${TCOS_KERNEL}
+ mkinitramfs -k $MKVERBOSE -d ${TCOS_CONF} -o ${NEWINITRAMFS} ${TCOS_KERNEL}
 
- # test for empty initramfs
- if [ ! -s ${NEWINITRAMFS} ]; then
-   # workaround for this change http://bugs.debian.org/514938
-   MKDIR=$(echo /tmp/mkinitramfs_*)
-   echo "  Temp initramfs is empty (Debian BUG 514938) rebuilding..."
-   [ ! -d "${MKDIR}" ] && ( echo "  **ERROR** initramfs is empty and no /tmp/mkinitramfs_* dirs found" ; exit 1)
-   (cd "${MKDIR}" && find . | cpio --quiet --dereference -o -H newc | gzip > "${NEWINITRAMFS}" )
+ DESTDIR2="$(find /var/tmp/ /tmp/ -maxdepth 1 -type d -name "mkinitramfs*")"
+ #(cd "${MKDIR}" && find . | cpio --quiet --dereference -o -H newc | gzip > "${NEWINITRAMFS}" )
 
-   # clean mkinitramfs temp files
-   rm -rf /tmp/mkinitramfs*
+ if [ ! -d "$DESTDIR2/scripts" ]; then
+   _echo " **ERROR** mkinitramfs temp dir not found"
+   return
  fi
-
- # uncompress
- DESTDIR2="$(mktemp -t -d gentcos_XXXXXX)"
- zcat ${NEWINITRAMFS} > ${DESTDIR2}/initrd
- ( cd ${DESTDIR2} && cpio -i < initrd 2>/dev/null )
- rm "${DESTDIR2}/initrd"
-
+ 
  export DESTDIR="${DESTDIR2}"
  # clean dir
  bash ${TCOS_DIR}/hooks-addons/clean_initramfs
@@ -180,6 +170,7 @@ call_mkinitramfs() {
  #fi
 
  rm -rf "${DESTDIR2}"
+ rm -rf /tmp/mkinitramfs_* /tmp/gentcos_* /var/tmp/mkinitramfs*
 }
 
 
@@ -278,10 +269,9 @@ create_rootfs() {
 ramdisk_size () {
   # uncompress initramfs and exec du
   _echo "Uncompressing ramdisk to get sizes..."
-  tmpdir=/tmp/gentcos-$$
-  mkdir ${tmpdir}
+  tmpdir="$(mktemp -t -d gentcos_XXXXXX)"
   cp ${INITRAMFS} ${tmpdir}/initrd.gz
-  gunzip ${tmpdir}/initrd.gz
+  gunzip ${tmpdir}/initrd.gz || return
   oldpwd=$(pwd)
   cd ${tmpdir}/
   cpio -i < initrd >/dev/null 2>&1
