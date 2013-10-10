@@ -1,10 +1,29 @@
+tcos (0.89.93) unstable; urgency=low
+
+  * Bump standards version to 3.9.4, no changes needed
+  * Fix debian/copyright format
+    (lintian: unversioned copyright format uri)
+  * Read fgets() result
+  * Use build var TCOS_MULTIARCH
+  * Use mkinitramfs temp dir instead of initramfs file to 
+    avoid [intel|amd]-microcode in initrd.gz
+  * Enable hardening build
+  * Multiarch fixes
+  * Use mke2fs for ext3 and ext4
+  * Fix nvidia clean
+  * Check for DESTDIR/scripts dir before cleaning
+  * Read fgets() result in tnc/tcos-net-controller.c
+  * Use mktemp file in squash creation log file
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Thu, 10 Oct 2013 16:29:03 +0200
+
 tcos (0.89.92) unstable; urgency=low
 
   * Fix some multiarch and console-setup issues
   * Use ~/.Xauthority only if not empty
-  * Replace fuse-utils with fuse package in Recommends, (closes #698181)
-  * Remove depends on python-eggtrayicon, (closes #702105)
-  * Remove -I/usr/lib in Makefiles, (closes #722844)
+  * Replace fuse-utils with fuse package in Recommends, (closes: #698181)
+  * Remove depends on python-eggtrayicon, (closes: #702105)
+  * Remove -I/usr/lib in Makefiles, (closes: #722844)
   * Save multiarch during build
 
  -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 07 Oct 2013 15:22:53 +0200
@@ -13,7 +32,7 @@ tcos (0.89.91) unstable; urgency=low
 
   * Disable udevadm divert, fail on old versions
   * Fix pulseaudio parse version
-  * Fix some multiarch libs, fix modprobe list (closes #694870),
+  * Fix some multiarch libs, fix modprobe list (closes: #694870),
   * Use glx-alternative mesa instead of fix-nvidia-ati
 
  -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 02 Jan 2013 22:28:39 +0100
@@ -27,7 +46,7 @@ tcos (0.89.90) unstable; urgency=low
   * Simplify grep commands
   * Install conf/tcos.conf instead of conf/tcos.conf.etc
   * Use a global LIB_MULTIARCH var
-  * tcos-standalone French translation, thanks to Julien Patriarca, (closes #672135)
+  * tcos-standalone French translation, thanks to Julien Patriarca, (closes: #672135)
 
  -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Fri, 22 Jun 2012 13:42:53 +0200
 
