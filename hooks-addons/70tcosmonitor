@@ -11,11 +11,16 @@ copy_exec /usr/bin/eject /usr/bin/
 
 # SCROT package
 copy_exec /usr/bin/scrot /usr/bin/
-mkdir -p $DESTDIR/usr/lib/imlib2/filters/
-mkdir -p $DESTDIR/usr/lib/imlib2/loaders/
-cpifexists /usr/lib/imlib2/loaders/png.so        /usr/lib/imlib2/loaders/
-cpifexists /usr/lib/imlib2/loaders/jpeg.so       /usr/lib/imlib2/loaders/
-#cpifexists /usr/lib/imlib2/loaders/gif.so        /usr/lib/imlib2/loaders/
+
+IMLIB_DIR=/usr/lib/imlib2/loaders/
+[ -d $USRLIB_MULTIARCH/imlib2/loaders ] && IMLIB_DIR=$USRLIB_MULTIARCH/imlib2/loaders
+#/usr/lib/x86_64-linux-gnu/imlib2/loaders/png.so
+
+
+mkdir -p $DESTDIR/$IMLIB_DIR
+cpifexists $IMLIB_DIR/png.so        $IMLIB_DIR/
+cpifexists $IMLIB_DIR/jpeg.so       $IMLIB_DIR/
+
 
 # screenshot script and webserver
 cpifexists ${TCOS_BINS}/screenshot.sh      /sbin/

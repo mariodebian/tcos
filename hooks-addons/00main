@@ -115,27 +115,28 @@ cpifexists /etc/securetty  /etc
 cpifexists /etc/services   /etc/
 
 # create (if not exists) empty modules file
-touch      $DESTDIR/etc/modules
+touch    $DESTDIR/etc/modules
 mkdir -p $DESTDIR/usr/lib
+mkdir -p $DESTDIR/${USRLIB_MULTIARCH} $DESTDIR/${LIB_MULTIARCH}
 
 # multiarch support
 LIB_DIR=/lib/
-[ -e /lib/${MULTIARCH}/libresolv.so.2 ] && LIB_DIR=/lib/${MULTIARCH}
+[ -e $LIB_MULTIARCH/libresolv.so.2 ] && LIB_DIR=$LIB_MULTIARCH
 
 
-cpifexists ${LIB_DIR}/libresolv.so.2        /lib/
-cpifexists /usr/${LIB_DIR}/libgssapi_krb5.so.2 /usr/lib/
+cpifexists ${LIB_DIR}/libresolv.so.2               ${LIB_DIR}/
+cpifexists ${USRLIB_MULTIARCH}/libgssapi_krb5.so.2 ${USRLIB_MULTIARCH}/
 
 # need to copy this libs to support usernames with busybox
-cpifexists ${LIB_DIR}/libnss_compat.so.2        /lib/
-cpifexists ${LIB_DIR}/libnss_files.so.2         /lib/
-cpifexists ${LIB_DIR}/libnss_nis.so.2           /lib/
-cpifexists ${LIB_DIR}/libnss_dns.so.2           /lib/
+cpifexists ${LIB_DIR}/libnss_compat.so.2        ${LIB_DIR}/
+cpifexists ${LIB_DIR}/libnss_files.so.2         ${LIB_DIR}/
+cpifexists ${LIB_DIR}/libnss_nis.so.2           ${LIB_DIR}/
+cpifexists ${LIB_DIR}/libnss_dns.so.2           ${LIB_DIR}/
 [ -e ${LIB_DIR}/libnss_db.so.2 ] && cpifexists ${LIB_DIR}/libnss_db.so.2        /usr/lib/
 
 # new lib (needed for DNS calls)
 [ -e /lib/libnss_mdns4_minimal.so.2 ] && cpifexists /lib/libnss_mdns4_minimal.so.2 /lib/
-
+[ -e ${LIB_DIR}/libnss_mdns4_minimal.so.2 ] && cpifexists ${LIB_DIR}/libnss_mdns4_minimal.so.2 ${LIB_DIR}/
 
 
 # needed for NFS
