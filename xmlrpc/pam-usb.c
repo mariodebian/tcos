@@ -39,7 +39,8 @@ xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *cookie;
   char *hostname;
   int xauth_ok;
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
   unsigned char *buf, *e;
   size_t len, elen;/*, fwret;*/
@@ -121,7 +122,7 @@ xmlrpc_value *tcos_pam_usb(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error msg into line var */
   strncpy(line, PAM_USB_ERROR, BSIZE);
 
-  (void)fgets( line, sizeof line, fp);
+  fret=fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
   dbgtcos("tcosxmlrpc::tcos_pam_usb(%s) = %s \n", mycmd, line);

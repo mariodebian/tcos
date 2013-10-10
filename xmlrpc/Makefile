@@ -92,7 +92,7 @@ $(STANDALONE):
 	$(MAKE) cleanobjs
 
 $(TCOSPASSWD):
-	$(QUIET_CC)$(GCC) $(DEFINES) $(CFLAGS) -o $(TCOSPASSWD) $(TCOSPASSWD).c -lcrypt
+	$(QUIET_CC)$(GCC) $(DEFINES) $(CFLAGS) $(LDFLAGS) -o $(TCOSPASSWD) $(TCOSPASSWD).c -lcrypt
 
 
 

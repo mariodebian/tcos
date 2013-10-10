@@ -38,7 +38,8 @@ xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *cookie;
   char *hostname;
   int xauth_ok;
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
   dbgtcos("tcosxmlrpc::tcos_devices() Init \n");
 
@@ -72,7 +73,7 @@ xmlrpc_value *tcos_devices(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    /* put error msg into line var */
    strncpy(line, DEVICES_ERROR, BSIZE);
 
-   (void)fgets( line, sizeof line, fp);
+   fret=fgets( line, sizeof line, fp);
    remove_line_break(line);
    pclose(fp);
    dbgtcos("tcosxmlrpc::tcos_devices(%s) = %s \n", mycmd, line);

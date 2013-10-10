@@ -44,7 +44,8 @@ xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   int xauth_ok;
   struct ip_address ip;
   char ip_string[BSIZE];
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
   dbgtcos("tcosxmlrpc::tcos_sound() Init \n");
 
@@ -55,7 +56,7 @@ xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
 
   gethostname(hostname,BSIZE);
   fp=(FILE*)popen(MY_IP_ADDRESS, "r");
-  (void)fgets( ip_string, sizeof ip_string, fp);
+  fret=fgets( ip_string, sizeof ip_string, fp);
   remove_line_break(ip_string);
   pclose(fp);
 
@@ -88,7 +89,7 @@ xmlrpc_value *tcos_sound(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    /* put error msg into line var */
    strncpy(line, SOUND_ERROR, BSIZE);
 
-   (void)fgets( line, sizeof line, fp);
+   fret=fgets( line, sizeof line, fp);
    remove_line_break(line);
    pclose(fp);
 

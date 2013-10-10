@@ -39,7 +39,8 @@ xmlrpc_value *tcos_rtp(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *pass;
   char *login_ok;
   char cmd[BIG_BUFFER];
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
 
   /* read what info search */
@@ -70,7 +71,7 @@ xmlrpc_value *tcos_rtp(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error in line */
   strncpy(line, RTP_ERROR, BIG_BUFFER);
 
-  (void)fgets( line, sizeof line, fp);
+  fret=fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
   dbgtcos("tcosxmlrpc::tcos_rtp() line=\"%s\"\n", line);

@@ -32,7 +32,8 @@ xmlrpc_value *tcos_info(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char line[BIG_BUFFER];
   char *info;
   size_t *len;
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
   /* read what info search */
   xmlrpc_parse_value(env, in, "(s#)", &info, &len);
@@ -122,7 +123,7 @@ xmlrpc_value *tcos_info(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error into line var */
   strncpy(line, INFO_ERROR, BSIZE);
 
-  (void)fgets( line, sizeof line, fp);
+  fret=fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
 

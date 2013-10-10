@@ -38,7 +38,8 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *user;
   char *pass;
   char *login_ok;
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
 
   /* read what option and cmdline params need */
@@ -104,7 +105,7 @@ xmlrpc_value *tcos_xorg(xmlrpc_env *env, xmlrpc_value *in, void *ud)
    /* put error msg into line var */
    strncpy(line, XORG_ERROR, BSIZE);
 
-   (void)fgets( line, sizeof line, fp);
+   fret=fgets( line, sizeof line, fp);
    remove_line_break(line);
    pclose(fp);
 

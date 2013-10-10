@@ -37,6 +37,7 @@
 /* for split function */
 #define MAXTOKENS 256
 
+#define UNUSED(x) ((void)(x))
 
 typedef struct ip_address {
   int data[4] ;

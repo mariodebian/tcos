@@ -35,7 +35,8 @@ xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *info;
   char *group;
   size_t *len;
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
   /* read what info search */
   xmlrpc_parse_value(env, in, "(ss#)", &info, &group, &len);
@@ -73,7 +74,7 @@ xmlrpc_value *tcos_standalone(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error into line */
   strncpy(line, STANDALONE_ERROR, BIG_BUFFER);
 
-  (void)fgets( line, sizeof line, fp);
+  fret=fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
 
@@ -96,7 +97,8 @@ xmlrpc_value *tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   char *user;
   char *pass;
   char *login_ok;
-  /*char *fret;*/
+  char *fret;
+  UNUSED(fret);
 
   /* read what dbus search */
   xmlrpc_parse_value(env, in, "(sss)", &dbus, &user, &pass);
@@ -121,7 +123,7 @@ xmlrpc_value *tcos_dbus(xmlrpc_env *env, xmlrpc_value *in, void *ud)
   /* put error into line var */
   strncpy(line, DBUS_ERROR, BIG_BUFFER);
 
-  (void)fgets( line, sizeof line, fp);
+  fret=fgets( line, sizeof line, fp);
   remove_line_break(line);
   pclose(fp);
 
