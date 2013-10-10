@@ -159,8 +159,10 @@ done
 rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so* 
 rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so
 rm -f $DESTDIR/usr/lib/xorg/modules/libnvidia-wfb.so.*
-rm -rf $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
-rm -rf $DESTDIR/usr/lib/libnvidia-*
+rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
+rm -f $DESTDIR/usr/lib/libnvidia-*
+rm -f ${DESTDIR}/etc/modprobe.d/nvidia*
+
 # for multiarch
 rm -rf $DESTDIR/usr/lib/*/libnvidia-*
 
