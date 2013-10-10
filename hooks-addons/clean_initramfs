@@ -7,7 +7,7 @@
 _verbose "(clean_initramfs) Cleaning initramfs..."
 
 
-if [ "${DESTDIR}" = "" ] || [ "$DESTDIR" = "/" ]; then
+if [ "${DESTDIR}" = "" ] || [ "$DESTDIR" = "/" ] || [ ! -d "$DESTDIR/scripts" ]; then
   _echo "  * ERROR: DESTDIR var not set. not cleaning initramfs..."
   exit 1
 fi
@@ -166,7 +166,7 @@ fi
 
 
 if [ "$TCOS_DISABLE_USPLASH" = "1" ]; then
-  _echo "  * Remove usplash"
+  #_echo "  * Remove usplash"
   rm -f ${DESTDIR}/lib/usplash 2>/dev/null
   rm -f ${DESTDIR}/sbin/usplash 2>/dev/null
   rm -f ${DESTDIR}/sbin/usplash_write 2>/dev/null
