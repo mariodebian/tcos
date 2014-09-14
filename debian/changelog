@@ -1,3 +1,10 @@
+tcos (0.89.94) unstable; urgency=medium
+
+  * Depend on iproute2 | iproute. (closes: #753741)
+  * Bump standards version to 3.9.5, no changes needed
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 14 Sep 2014 16:12:20 +0200
+
 tcos (0.89.93) unstable; urgency=low
 
   * Bump standards version to 3.9.4, no changes needed

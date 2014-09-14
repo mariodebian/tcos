@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 7.0.50~),
                pkg-config,
                libasound2-dev,
                libglib2.0-dev
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Vcs-Git: http://tcosproject.org/git/tcos.git
 Vcs-Browser: http://tcosproject.org/cgit/tcos.git/
 Homepage: http://www.tcosproject.org
@@ -62,7 +62,7 @@ Depends: busybox (>= 1:1.13.3) | busybox-static (>= 1:1.13.3) | udhcpc,
          netpipes, 
          libnotify-bin, 
          libasound2-plugins, 
-         iproute, 
+         iproute2 | iproute, 
          xdg-utils, 
          pulseaudio-utils, 
          python, 
