@@ -62,7 +62,7 @@ chmod +x ${DESTDIR}/scripts/init-top/tcos_modules
 
 
 # add options to snd-hda-intel
-if ! grep -q snd-hda-intel ${DESTDIR}/etc/modprobe.d/alsa-base* ; then
+if ! grep -q snd-hda-intel ${DESTDIR}/etc/modprobe.d/alsa-base* 2>/dev/null ; then
    [ -e ${DESTDIR}/etc/modprobe.d/alsa-base ] && \
 	mv ${DESTDIR}/etc/modprobe.d/alsa-base ${DESTDIR}/etc/modprobe.d/alsa-base.conf
    echo "options snd-hda-intel model=auto" >> ${DESTDIR}/etc/modprobe.d/alsa-base.conf
