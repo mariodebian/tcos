@@ -35,7 +35,7 @@ CFLAGS+=-Wall -O2  $(shell xmlrpc-c-config abyss-server --cflags)
 LDFLAGS+=-Wl,-z,defs -Wl,-O1 
 LIBS+=$(shell xmlrpc-c-config abyss-server --libs) -lcrypt -lX11
 
-DEFINES:= -DVERSION=\"$(VERSION)\" -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
+DEFINES:= -DVERSION=\"$(VERSION)\" -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR) -DNEWAPI=1
 
 #TEST_DEFINES=-DDEBUG -DVERSION=\"$(VERSION)\" -DBSIZE=512 -DVISIBLE_PASSWD -DXMLRPC_INC=$(XMLRPC_INC) -DXMLRPC_VERSION_MAYOR=$(XMLRPC_VERSION_MAYOR) -DXMLRPC_VERSION_MINOR=$(XMLRPC_VERSION_MINOR)
 
@@ -135,29 +135,29 @@ install:
 	install -m 755 sh/pactl-controller.sh      $(DESTDIR)/$(TCOS_BINS)/
 	install -m 755 sh/tcos-pam-usb.sh    $(DESTDIR)/$(TCOS_BINS)/
 
-	install -m 644 var/etc/mime.types  $(DESTDIR)/$(TCOS_DIR)/xmlrpc/
-
-
-	install -m 644 var/etc/abyss.conf  $(DESTDIR)/$(TCOS_DIR)/xmlrpc/
-	sed -i 's|__TCOS_ROOT__|/|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
-	sed -i 's|__TCOS_WWW__|/var/www|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
-	sed -i 's|__TCOS_LOG__|/var/log|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
-	sed -i 's|__TCOS_ETC__|/etc|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
-
-	# standalone package
-	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)
-	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc
-	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/www
-	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/log
-
-
-	install -m 644 var/etc/abyss.conf       $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
-	sed -i 's|__TCOS_ROOT__|$(TCOS_STANDALONE_DIR)|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
-	sed -i 's|__TCOS_WWW__|$(TCOS_STANDALONE_DIR)/www|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
-	sed -i 's|__TCOS_LOG__|$(TCOS_STANDALONE_DIR)/log|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
-	sed -i 's|__TCOS_ETC__|$(TCOS_STANDALONE_DIR)/etc|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
-
-	install -m 644 var/etc/mime.types       $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/
+#	install -m 644 var/etc/mime.types  $(DESTDIR)/$(TCOS_DIR)/xmlrpc/
+#
+#
+#	install -m 644 var/etc/abyss.conf  $(DESTDIR)/$(TCOS_DIR)/xmlrpc/
+#	sed -i 's|__TCOS_ROOT__|/|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
+#	sed -i 's|__TCOS_WWW__|/var/www|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
+#	sed -i 's|__TCOS_LOG__|/var/log|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
+#	sed -i 's|__TCOS_ETC__|/etc|g' $(DESTDIR)/$(TCOS_DIR)/xmlrpc/abyss.conf
+#
+#	# standalone package
+#	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)
+#	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc
+#	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/www
+#	install -d $(DESTDIR)/$(TCOS_STANDALONE_DIR)/log
+#
+#
+#	install -m 644 var/etc/abyss.conf       $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
+#	sed -i 's|__TCOS_ROOT__|$(TCOS_STANDALONE_DIR)|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
+#	sed -i 's|__TCOS_WWW__|$(TCOS_STANDALONE_DIR)/www|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
+#	sed -i 's|__TCOS_LOG__|$(TCOS_STANDALONE_DIR)/log|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
+#	sed -i 's|__TCOS_ETC__|$(TCOS_STANDALONE_DIR)/etc|g' $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/abyss-standalone.conf
+#
+#	install -m 644 var/etc/mime.types       $(DESTDIR)/$(TCOS_STANDALONE_DIR)/etc/
 
 
 

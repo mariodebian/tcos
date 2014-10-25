@@ -40,9 +40,9 @@ fi
 
 # SSL disabled (not stunnel4 logs) read XMLRPC abyss log
 if [ -f $STANDALONE/log/access.log ]; then
-    tail -1 $STANDALONE/log/access.log | awk '{print $1}'
+    tail -1 $STANDALONE/log/access.log | awk -F":| " '{print $1}'
     exit 0
-fi  
+fi
 
 
 

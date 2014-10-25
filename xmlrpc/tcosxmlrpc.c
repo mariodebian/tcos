@@ -70,16 +70,22 @@ int main (int argc, char **argv)
 #endif
 
     /* check command line config file */
+    /*
     if (argc != 2) {
 	fprintf(stderr, "Usage:\n\t tcosxmlrpc /path/of/abyss.conf\n");
 	return(1);
     }
+    */
 
     /* initialize server */
 
 #ifdef NEWAPI
     xmlrpc_env_init(&envP);
     registryP = xmlrpc_registry_new(&envP);
+    if (envP.fault_occurred) {
+        printf("xmlrpc_registry_new() failed.  %s\n", envP.fault_string);
+        exit(1);
+    }
 #else
     xmlrpc_server_abyss_init(XMLRPC_SERVER_ABYSS_NO_FLAGS, argv[1]);
 #endif
@@ -236,9 +242,21 @@ Info methods:\n\
 
 
 #ifdef NEWAPI
-    serverparm.config_file_name = argv[1];
+    /* serverparm.config_file_name = argv[1]; */
+    serverparm.config_file_name = NULL;
     serverparm.registryP = registryP;
-    xmlrpc_server_abyss(&envP, &serverparm, XMLRPC_APSIZE(registryP));
+    serverparm.port_number      = 8998;
+#ifdef IS_STANDALONE
+    serverparm.log_file_name    = "/var/lib/tcos/standalone/log/access.log";
+#else
+    serverparm.log_file_name    = "/var/log/access.log";
+#endif
+    /* *** */
+    xmlrpc_server_abyss(&envP, &serverparm, XMLRPC_APSIZE(log_file_name));
+    if (envP.fault_occurred) {
+        printf("xmlrpc_server_abyss() failed.  %s\n", envP.fault_string);
+        exit(1);
+    }
 #else
     xmlrpc_server_abyss_run();
 #endif

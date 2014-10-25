@@ -101,15 +101,15 @@ mkdir -p $DESTDIR/usr/share/misc/
 
 
 
-cpifexists ${TCOS_DIR}/xmlrpc/abyss.conf     /etc/
-cpifexists ${TCOS_DIR}/xmlrpc/mime.types     /etc/
+#cpifexists ${TCOS_DIR}/xmlrpc/abyss.conf     /etc/
+#cpifexists ${TCOS_DIR}/xmlrpc/mime.types     /etc/
 
 # configure /etc/abyss.conf
 # abs path of mime.types
-sed -i s/"etc"/"\/etc"/g ${DESTDIR}/etc/abyss.conf
+#sed -i s/"etc"/"\/etc"/g ${DESTDIR}/etc/abyss.conf
 
 # configure user
-sed -i s/"nobody"/"root"/g ${DESTDIR}/etc/abyss.conf
+#sed -i s/"nobody"/"root"/g ${DESTDIR}/etc/abyss.conf
 
 mkdir -p $DESTDIR/var/log
 mkdir -p $DESTDIR/var/www
@@ -119,7 +119,7 @@ cat << EOF > $DESTDIR/sbin/startxmlrpc
 #!/bin/sh
 killall tcosxmlrpc >/dev/null 2>&1
 cd /
-/usr/bin/tcosxmlrpc /etc/abyss.conf >> /var/log/tcosxmlrpc.log 2>&1
+/usr/bin/tcosxmlrpc >> /var/log/tcosxmlrpc.log 2>&1
 exit 0
 EOF
 chmod +x $DESTDIR/sbin/startxmlrpc
