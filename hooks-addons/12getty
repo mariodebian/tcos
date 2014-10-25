@@ -13,12 +13,14 @@ if [ -e /sbin/fgetty ]; then
   cpifexists /bin/fgetty-login2  /bin/
   cpifexists /bin/checkpassword  /bin/
 
+  rm -f $DESTDIR/bin/login
   cat << EOF > $DESTDIR/bin/login
 #!/bin/sh
 fgetty-login \$@
 EOF
   chmod +x $DESTDIR/bin/login
 
+  rm -f $DESTDIR/sbin/rungetty
   cat << EOF > $DESTDIR/sbin/rungetty
 #!/bin/sh
 

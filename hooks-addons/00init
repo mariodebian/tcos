@@ -9,12 +9,13 @@ if [ "${TCOS_INCLUDE_INIT}" = "1" ]; then
     mkdir -p $DESTDIR/usr/sbin >/dev/null 2>&1
     mkdir -p $DESTDIR/lib/cmds >/dev/null 2>&1
     # init reboot poweroff
-    cpifexists /sbin/reboot       /lib/cmds/
-    cpifexists /sbin/poweroff     /lib/cmds/
+    cp /sbin/reboot       ${DESTDIR}/lib/cmds/
+    cp /sbin/poweroff     ${DESTDIR}/lib/cmds/
+    
     cpifexists ${TCOS_BINS}/down-controller  /sbin/
 
-    rm -f $DESTDIR/bin/reboot
-    rm -f $DESTDIR/bin/poweroff
+    rm -f $DESTDIR/bin/reboot    ${DESTDIR}/sbin/reboot
+    rm -f $DESTDIR/bin/poweroff  ${DESTDIR}/sbin/poweroff
     rm -f $DESTDIR/bin/halt
 
 

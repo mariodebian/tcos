@@ -18,6 +18,7 @@ if grep -q quiet /proc/cmdline ; then
   dmesg -n 1
 fi
 
+depmod -ae
 
 # start syslogd (busybox embeded)
 killall syslogd 2>/dev/null

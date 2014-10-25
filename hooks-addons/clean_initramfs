@@ -161,6 +161,9 @@ if [ $TCOS_DISABLE_ACPI ] ; then
 #	-not -name "sd_mod.ko" -not -name "sr_mod.ko" \
 #	-not -name "scsi_mod.ko" -not -name "sg.ko" )
 
+  # new /init try to load always local and NFS
+  touch $DESTDIR/scripts/local
+  touch $DESTDIR/scripts/nfs
 
 fi
 

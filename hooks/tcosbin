@@ -232,6 +232,10 @@ if [ $TCOS_DISABLE_ACPI ]; then
   manual_add_modules sd_mod
   manual_add_modules sr_mod
 
+  # new /init try to load always local and NFS
+  touch $DESTDIR/scripts/local
+  touch $DESTDIR/scripts/nfs
+
   stat_after "Disable ACPI and RAID support"
 else
   _verbose "(tcosbin)TCOS_DISABLE_ACPI not set"
