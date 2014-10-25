@@ -1,3 +1,18 @@
+tcos (0.89.95) unstable; urgency=low
+
+  * Copy instead of symlinking vmlinuz
+  * Force NEWAPI to libxmlrpc abyss server, and don't use abyss.conf file
+  * Include usblp and lp modules
+  * Add build depends dh-python
+  * Switch GIT repo from tcosproject to github.com/mariodebian
+  * Search for pxelinux.0 in old or new syslinux paths
+  * Fix initramfs boot, add empty local and nfs scripts
+    and fix reboot/poweroff commands
+  * Silent alsa modprobe conf check
+  * Create some links to busybox
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 25 Oct 2014 17:55:49 +0200
+
 tcos (0.89.94) unstable; urgency=medium
 
   * Depends on iproute2 | iproute. (closes: #753741)
