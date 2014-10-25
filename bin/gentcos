@@ -131,7 +131,7 @@ call_mkinitramfs() {
    _echo " **ERROR** mkinitramfs temp dir not found"
    return
  fi
- 
+
  export DESTDIR="${DESTDIR2}"
  # clean dir
  bash ${TCOS_DIR}/hooks-addons/clean_initramfs
@@ -182,8 +182,8 @@ create_initramfs() {
  call_mkinitramfs ${INITRAMFS}
 
  if [ ! -f ${TFTP_DIR}/vmlinuz-${TCOS_KERNEL} ]; then
-   _echo "  Linking vmlinuz-${TCOS_KERNEL} in ${TFTP_DIR}"
-   ln -s /boot/vmlinuz-${TCOS_KERNEL} ${TFTP_DIR}
+   _echo "  Copy vmlinuz-${TCOS_KERNEL} in ${TFTP_DIR}"
+   cp -f /boot/vmlinuz-${TCOS_KERNEL} ${TFTP_DIR}
  fi
 }
 
@@ -198,8 +198,8 @@ create_initramfs_nfs() {
  
 
  if [ ! -f ${TFTP_DIR}/vmlinuz-${TCOS_KERNEL} ]; then
-   _echo "  Linking vmlinuz-${TCOS_KERNEL} in ${TFTP_DIR}"
-   ln -s /boot/vmlinuz-${TCOS_KERNEL} ${TFTP_DIR}
+   _echo "  Copy vmlinuz-${TCOS_KERNEL} in ${TFTP_DIR}"
+   cp -f /boot/vmlinuz-${TCOS_KERNEL} ${TFTP_DIR}
  fi
 
 
@@ -503,16 +503,16 @@ link_vmlinuz() {
           TCOS_KERNEL=${vmlinuz#vmlinuz-}
            if ! find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -q vmlinuz ; then
               # no link, create
-              echo "Linking ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
-              ln -s $TCOS_VMLINUZ ${TFTP_DIR}/
+              echo "Copy ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
+              cp -f $TCOS_VMLINUZ ${TFTP_DIR}/
            fi
        elif [ -f /boot/${TCOS_VMLINUZ} ]; then
           vmlinuz=${TCOS_VMLINUZ}
           TCOS_KERNEL=${vmlinuz#vmlinuz-}
            if ! find  ${TFTP_DIR}/*${vmlinuz}* 2> /dev/null | grep -q vmlinuz ; then
               # no link, create
-              echo "Linking ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
-              ln -s /boot/$TCOS_VMLINUZ ${TFTP_DIR}/
+              echo "Copy ${TCOS_VMLINUZ} in ${TFTP_DIR}/"
+              cp -f /boot/$TCOS_VMLINUZ ${TFTP_DIR}/
            fi      
        else
           echo "ERROR: vmlinuz argument not found: ${TCOS_VMLINUZ}"
