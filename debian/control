@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
 Build-Depends: debhelper (>= 7.0.50~),
                python (>= 2.6.6-3~),
+               dh-python,
                libxmlrpc-c3-dev | libxmlrpc-core-c3-dev,
                libxau-dev,
                libxaw7-dev,
