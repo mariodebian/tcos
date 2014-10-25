@@ -29,13 +29,28 @@ rm -f $DESTDIR/bin/sh
 (cd $DESTDIR/bin && ln -s busybox sh)
 
 create_links() {
- ( cd $DESTDIR/bin && rm -f $1 ; ln -s busybox $1)
+  if [ "$2" = "force" ]; then
+    ( cd $DESTDIR/bin && rm -f "$1" ; ln -s busybox "$1")
+    return
+  fi
+  [ ! -e "$DESTDIR/bin/$1" ] && return
+  if cmp "$DESTDIR/bin/$1" "$DESTDIR/bin/busybox" >/dev/null 2>&1 ; then
+    ( cd $DESTDIR/bin && rm -f "$1" ; ln -s busybox "$1")
+  else
+    echo " * bin/$1 no busybox"
+  fi
 }
 
 # Some scripts without correct permissions
 chmod -R a+x ${DESTDIR}/scripts/panic/ 2>/dev/null
 chmod -R a+x ${DESTDIR}/scripts/init-*/
 chmod -R a+x ${DESTDIR}/scripts/tcos-*/
+
+# use busybox mount/umount instead of klibc utils
+create_links "mount" "force"
+create_links "umount" "force"
+create_links "dmesg" "force"
+
 
 create_links "date"
 create_links "bash"
@@ -48,7 +63,6 @@ create_links "head"
 create_links "whoami"
 create_links "swapon"
 create_links "swapoff"
-create_links "dmesg"
 create_links "route"
 create_links "run-parts"
 create_links "killall"
@@ -61,9 +75,188 @@ create_links "ifconfig"
 create_links "grep" # needed by a udev rule
 create_links "udhcpc"
 
-# use busybox mount/umount instead of klibc utils
-create_links "mount"
-create_links "umount"
+
+create_links "["
+create_links "[["
+create_links "ar"
+create_links "ash"
+create_links "basename"
+create_links "bunzip2"
+create_links "bzcat"
+create_links "bzip2"
+create_links "cal"
+create_links "chgrp"
+create_links "chmod"
+create_links "chvt"
+create_links "clear"
+create_links "cmp"
+create_links "cp"
+create_links "cttyhack"
+create_links "cut"
+create_links "dc"
+create_links "deallocvt"
+create_links "df"
+create_links "diff"
+create_links "dnsdomainname"
+create_links "dos2unix"
+create_links "du"
+create_links "dumpkmap"
+create_links "dumpleases"
+create_links "echo"
+create_links "egrep"
+create_links "env"
+create_links "expand"
+create_links "expr"
+create_links "fgrep"
+create_links "find"
+create_links "fold"
+create_links "free"
+create_links "ftpget"
+create_links "ftpput"
+create_links "getopt"
+create_links "groups"
+create_links "hexdump"
+create_links "hostid"
+create_links "hostname"
+create_links "id"
+create_links "ionice"
+create_links "ipcalc"
+create_links "last"
+create_links "less"
+create_links "logname"
+create_links "lzcat"
+create_links "lzma"
+create_links "lzop"
+create_links "lzopcat"
+create_links "md5sum"
+create_links "microcom"
+create_links "mktemp"
+create_links "more"
+create_links "mt"
+create_links "nc"
+create_links "netstat"
+create_links "nslookup"
+create_links "usleep"
+create_links "uudecode"
+create_links "uuencode"
+create_links "vi"
+create_links "watch"
+create_links "wget"
+create_links "who"
+create_links "xargs"
+create_links "xz"
+create_links "xzcat"
+create_links "yes"
+create_links "zcat"
+
+
+create_links "od"
+create_links "openvt"
+create_links "patch"
+create_links "ping"
+create_links "ping6"
+create_links "printf"
+create_links "ps"
+create_links "pwd"
+create_links "realpath"
+create_links "renice"
+create_links "reset"
+create_links "rev"
+create_links "rm"
+create_links "rmdir"
+create_links "rpm"
+create_links "rpm2cpio"
+create_links "sed"
+create_links "seq"
+create_links "setkeycodes"
+create_links "setsid"
+create_links "sha1sum"
+create_links "sha256sum"
+create_links "sha512sum"
+create_links "sort"
+create_links "stat"
+create_links "strings"
+create_links "stty"
+create_links "tac"
+create_links "tail"
+create_links "tar"
+create_links "taskset"
+create_links "tee"
+create_links "telnet"
+create_links "test"
+create_links "time"
+create_links "timeout"
+create_links "top"
+create_links "touch"
+create_links "tr"
+create_links "traceroute"
+create_links "traceroute6"
+create_links "tty"
+create_links "uncompress"
+create_links "unexpand"
+create_links "uniq"
+create_links "unix2dos"
+create_links "unlzma"
+create_links "unlzop"
+create_links "unxz"
+create_links "unzip"
+create_links "uptime"
+
+create_slinks() {
+  if [ "$2" = "force" ]; then
+    ( cd $DESTDIR/sbin && rm -f "$1" ; ln -s ../bin/busybox "$1")
+    return
+  fi
+  [ ! -e "$DESTDIR/sbin/$1" ] && return
+  if cmp "$DESTDIR/sbin/$1" "$DESTDIR/bin/busybox" >/dev/null 2>&1 ; then
+   ( cd $DESTDIR/sbin && rm -f "$1" ; ln -s ../bin/busybox "$1")
+  else
+    echo " * sbin/$1 no busybox"
+  fi
+}
+
+
+create_slinks "acpid" "force"
+create_slinks "adjtimex"
+create_slinks "arp"
+create_slinks "arping"
+create_slinks "blockdev"
+create_slinks "brctl"
+create_slinks "chroot"
+create_slinks "depmod" "force"
+create_slinks "devmem"
+create_slinks "freeramdisk"
+create_slinks "fstrim"
+create_slinks "getty"
+create_slinks "halt"
+create_slinks "httpd"
+create_slinks "ifconfig"
+create_slinks "init"
+create_slinks "insmod"
+create_slinks "ip"
+create_slinks "klogd"
+create_slinks "loadfont"
+create_slinks "loadkmap"
+create_slinks "logread"
+create_slinks "losetup"
+create_slinks "lsmod"
+create_slinks "mdev"
+create_slinks "mkswap"
+create_slinks "modinfo"
+create_slinks "nameif"
+create_slinks "pivot_root"
+create_slinks "rdate"
+create_slinks "route"
+create_slinks "swapoff"
+create_slinks "swapon"
+create_slinks "switch_root"
+create_slinks "sysctl"
+create_slinks "syslogd"
+create_slinks "udhcpc"
+create_slinks "udhcpd"
+create_slinks "vconfig"
+create_slinks "watchdog"
+
 
 
 
