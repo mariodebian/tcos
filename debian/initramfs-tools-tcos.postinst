@@ -113,6 +113,26 @@ chmod -f 775 /var/lib/tcos/tftp/conf
 chmod -f -R 664 /var/lib/tcos/tftp/conf/*  2>/dev/null || true
 
 
+# new SYSLINUX
+if [ -e /usr/lib/PXELINUX/pxelinux.0 ]; then
+    ln -f -s /usr/lib/PXELINUX/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
+fi
+
+if [ -e /usr/lib/syslinux/modules/bios/menu.c32 ]; then
+    ln -f -s /usr/lib/syslinux/modules/bios/menu.c32 /var/lib/tcos/tftp/menu.c32
+    ln -f -s /usr/lib/syslinux/modules/bios/vesamenu.c32 /var/lib/tcos/tftp/vesamenu.c32
+fi
+
+
+# OLD syslinux
+if [ -e /usr/lib/syslinux/pxelinux.0 ]; then
+    ln -f -s /usr/lib/syslinux/pxelinux.0 /var/lib/tcos/tftp/pxelinux.0
+fi
+
+if [ -e /usr/lib/syslinux/menu.c32 ]; then
+    ln -f -s /usr/lib/syslinux/menu.c32 /var/lib/tcos/tftp/menu.c32
+    ln -f -s /usr/lib/syslinux/vesamenu.c32 /var/lib/tcos/tftp/vesamenu.c32
+fi
 
 #DEBHELPER#
 
