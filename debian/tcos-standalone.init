@@ -22,8 +22,8 @@ DESC="TcosXMLRPC standalone"
 NAME=tcosxmlrpc-standalone
 DAEMON=/usr/lib/tcos/$NAME
 
-DAEMON_ARGS="/var/lib/tcos/standalone/etc/abyss-standalone.conf"
 DAEMON_WWW="/var/lib/tcos/standalone/www"
+PID_FILE="/var/lib/tcos/standalone/log/abyss.pid"
 
 SCRIPTNAME=/etc/init.d/$NAME
 DEFAULT_CONF=/etc/default/tcos-standalone
@@ -66,7 +66,7 @@ do_start()
                chown stunnel4:stunnel4 /var/lib/tcos/standalone/log/stunnel.log
 
            # generate SSL cert
-	   [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && \
+       [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && \
                rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
 
            openssl req -new -x509 -nodes -days 365 \
@@ -83,7 +83,9 @@ do_start()
 
            stunnel4 /var/lib/tcos/standalone/etc/stunnel/stunnel.conf > /dev/null 2>&1 &
         fi
-        $DAEMON $DAEMON_ARGS >> /var/lib/tcos/standalone/log/tcos-standalone.log 2>&1 || return 2
+        
+        start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null || return 1
+        start-stop-daemon --background --start --quiet --pidfile $PIDFILE --exec $DAEMON || return 2
 }
 
 #
@@ -92,22 +94,22 @@ do_start()
 do_stop()
 {
 
-        # stop stunnel4
-	if [ -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid ] ; then
-          kill -9 $(cat /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid) 2>/dev/null
-          rm -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid
-          [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && \
-              rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
-          # empty log file
-          cat /dev/null > /var/lib/tcos/standalone/log/stunnel.log
-        fi
+    # stop stunnel4
+    if [ -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid ] ; then
+        kill -9 $(cat /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid) 2>/dev/null
+        rm -f /var/lib/tcos/standalone/lib/stunnel4/stunnel4.pid
+        [ -e /var/lib/tcos/standalone/etc/stunnel/tcos.pem ] && \
+          rm -f /var/lib/tcos/standalone/etc/stunnel/tcos.pem
+        # empty log file
+        cat /dev/null > /var/lib/tcos/standalone/log/stunnel.log
+    fi
 
-        kill $(cat /var/lib/tcos/standalone/log/abyss.pid 2>/dev/null ) 2> /dev/null
-        killall tcosxmlrpc-standalone 2>/dev/null
-        rm -f /var/lib/tcos/standalone/log/abyss.pid
-        # clean www data
-        rm -f ${DAEMON_WWW}/*
-	return 0
+    kill $(cat /var/lib/tcos/standalone/log/abyss.pid 2>/dev/null ) 2> /dev/null
+    killall tcosxmlrpc-standalone 2>/dev/null
+    rm -f /var/lib/tcos/standalone/log/abyss.pid
+    # clean www data
+    rm -f ${DAEMON_WWW}/*
+    return 0
 }
 
 #
@@ -115,22 +117,22 @@ do_stop()
 #
 do_wakeonlan()
 {
-	if [ -n "${ETHTOOL}" ]; then
-		return
-	fi
+    if [ -n "${ETHTOOL}" ]; then
+        return
+    fi
 
-	# get list of network interfaces
-	TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v -e lo -e sit0 -e wmaster -e vmnet -e vbox)
-	
-	# search for network interfaces with link ok status
-	for dev in $TCOS_NET_DEVS; do
-    	        # have link ???
-    		if [ -e /sys/class/net/$dev/carrier ] && \
-       	   	   [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
-		   [ "$(${ETHTOOL} $dev| grep -c 'Wake-on: g')" = "1" ]; then
-      			${ETHTOOL} -s $dev wol g > /dev/null 2>&1
-    		fi
-	done
+    # get list of network interfaces
+    TCOS_NET_DEVS=$(ls /sys/class/net/|grep -v -e lo -e sit0 -e wmaster -e vmnet -e vbox)
+
+    # search for network interfaces with link ok status
+    for dev in $TCOS_NET_DEVS; do
+        # have link ???
+        if [ -e /sys/class/net/$dev/carrier ] && \
+           [ "$(cat /sys/class/net/$dev/carrier 2>/dev/null)" = 1 ] && \
+           [ "$(${ETHTOOL} $dev| grep -c 'Wake-on: g')" = "1" ]; then
+            ${ETHTOOL} -s $dev wol g > /dev/null 2>&1
+        fi
+    done
 }
 
 do_checklog_size()
