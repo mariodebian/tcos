@@ -1,3 +1,9 @@
+tcos (0.89.96) unstable; urgency=medium
+
+  * Start tcosxmlrpc with start-stop-daemon
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 27 Oct 2014 16:03:01 +0100
+
 tcos (0.89.95) unstable; urgency=low
 
   * Copy instead of symlinking vmlinuz
