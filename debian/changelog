@@ -1,3 +1,12 @@
+tcos (0.89.97) unstable; urgency=medium
+
+  * Change order of Build-Depends
+    libxmlrpc-core-c3-dev | libxmlrpc-c3-dev, (closes: #765129)
+  * Search whiptail with which
+  * Fix typo in tcos-standalone startup script
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Wed, 12 Nov 2014 23:46:57 +0100
+
 tcos (0.89.96) unstable; urgency=medium
 
   * Start tcosxmlrpc with start-stop-daemon
