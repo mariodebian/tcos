@@ -14,7 +14,7 @@ cpifexists /sbin/fdisk /sbin/
 if [ ! $TCOS_INSTALLER ]; then
   _verbose "(18_tcos_hdd_installer) TCOS_INSTALLER disabled"
 else
-  cpifexists /usr/bin/whiptail /usr/bin
+  cpifexists $(which whiptail) /usr/bin
   cpifexists /usr/bin/syslinux /usr/bin
   cpifexists /usr/bin/mcopy /usr/bin
   cpifexists /usr/bin/mattrib /usr/bin
