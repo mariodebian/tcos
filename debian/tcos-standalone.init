@@ -23,7 +23,7 @@ NAME=tcosxmlrpc-standalone
 DAEMON=/usr/lib/tcos/$NAME
 
 DAEMON_WWW="/var/lib/tcos/standalone/www"
-PID_FILE="/var/lib/tcos/standalone/log/abyss.pid"
+PIDFILE="/var/lib/tcos/standalone/log/abyss.pid"
 
 SCRIPTNAME=/etc/init.d/$NAME
 DEFAULT_CONF=/etc/default/tcos-standalone
