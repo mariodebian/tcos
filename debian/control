@@ -13,7 +13,7 @@ Build-Depends: debhelper (>= 7.0.50~),
                libasound2-dev,
                libglib2.0-dev
 Standards-Version: 3.9.5
-Vcs-Git: git@github.com:mariodebian/tcos.git
+Vcs-Git: https://github.com/mariodebian/tcos.git
 Vcs-Browser: https://github.com/mariodebian/tcos
 Homepage: http://www.tcosproject.org
 
