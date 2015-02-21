@@ -126,13 +126,13 @@ for _inp in $(ls /usr/lib/xorg/modules/input/*); do
     cpifexists $_inp /usr/lib/xorg/modules/input/
 done
 
-if  [ -d /usr/lib/xorg/modules/linux ]; then
-  mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
+# if  [ -d /usr/lib/xorg/modules/linux ]; then
+#   mkdir -p  $DESTDIR/usr/lib/xorg/modules/linux
 
-  for _lnx in $(ls /usr/lib/xorg/modules/linux/lib*so); do
-    cpifexists $_lnx /usr/lib/xorg/modules/linux/
-  done
-fi
+#   for _lnx in $(ls /usr/lib/xorg/modules/linux/lib*so); do
+#     cpifexists $_lnx /usr/lib/xorg/modules/linux/
+#   done
+# fi
 
 # DRIVERS and EXTENSIONS
 mkdir -p  $DESTDIR/usr/lib/xorg/modules/drivers
@@ -156,7 +156,8 @@ for _file in $(ls /usr/lib/xorg/modules/extensions/lib*.so| grep -v glx); do
 done
 
 # delete nvidia/ati glx module
-rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so* 
+rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libglx.so*
+rm -f $DESTDIR/usr/lib/xorg/modules/linux/libglx.so*
 rm -f $DESTDIR/usr/lib/xorg/modules/libwfb.so
 rm -f $DESTDIR/usr/lib/xorg/modules/libnvidia-wfb.so.*
 rm -f $DESTDIR/usr/lib/xorg/modules/extensions/libGLcore.so
@@ -187,6 +188,7 @@ if [ $TCOS_XORG_OPENGL ]; then
  _echo "    * OpenGL support is ENABLED"
  if [ "$(strings $LIBGL_PATH/libGL.so.1|grep -c NVIDIA)" != 0 ] || \
        [ "$(strings /usr/lib/xorg/modules/extensions/libglx.so 2>&1 |grep -c NVIDIA)" != 0 ] || \
+       [ "$(ldd /usr/lib/xorg/modules/extensions/libglx.so 2>&1 |grep -i -c nvidia)" != 0 ] || \
        [ "$(strings $LIBGL_PATH/libGL.so.1|grep -c -i fgl)" != 0 ]; then
 
    if [ -d ${TCOS_PKG_CACHE}/fix-nvidia-ati ]; then
@@ -201,6 +203,14 @@ if [ $TCOS_XORG_OPENGL ]; then
       [ -f ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so ] && \
           cpifexists ${TCOS_PKG_CACHE}/fix-nvidia-ati/libwfb.so    /usr/lib/xorg/modules/
       _echo "       * OpenGL use cached fix-nvidia-ati libs"
+   
+   elif [ -d "/usr/lib/mesa-diverted/$MULTIARCH/" ] ; then
+       cp /usr/lib/xorg/modules/extensions/libglx.so    $DESTDIR/usr/lib/xorg/modules/extensions/
+       cpifexists /usr/lib/mesa-diverted/$MULTIARCH/libGL.so.1  /usr/lib/
+
+       #[ -e $USRLIB_MULTIARCH/libxcb-glx.so.0 ] && cpifexists $USRLIB_MULTIARCH/libxcb-glx.so.0 /usr/lib/
+       _echo "    * OpenGL use mesa-diverted"
+
    else
       _echo " ********************************************** "
       _echo "    WARNING: NVIDIA/ATI libs found !!!!!!       "
