@@ -325,7 +325,7 @@ add_iptables_user(char **args) {
 
 
     /* Obtain network destination */
-    sprintf( cmd, "ip route %s | awk '{if ($3 == \"%s\") print $1}'", DEVNULL, args[4]);
+    sprintf( cmd, "ip route %s | awk '/kernel/ {if ($3 == \"%s\") print $1}'", DEVNULL, args[4]);
 #ifdef DEBUG
     debug("add_iptables_user() dired cmd=%s\n",cmd);
 #endif
@@ -388,7 +388,7 @@ add_iptables_user(char **args) {
        }
     
        /* Block output ! network*/
-       sprintf( cmd, "%s -A OUTPUT -d ! %s -m owner --uid-owner %s -m comment --comment TCOS_TNC -j DROP %s", IPTABLES,  dirred, args[5], DEVNULL);
+       sprintf( cmd, "%s -A OUTPUT ! -d %s -m owner --uid-owner %s -m comment --comment TCOS_TNC -j DROP %s", IPTABLES,  dirred, args[5], DEVNULL);
 #ifdef DEBUG
        debug("add_iptables_user() cmd=%s\n",cmd);
 #endif
