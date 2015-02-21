@@ -1,3 +1,11 @@
+tcos (0.89.98) unstable; urgency=low
+
+  * Fix tcos-standalone start, create pid file
+  * Change Vcs-Git header to https instead of git
+  * Fix libglx.so and mesa-diverted includes
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 21 Feb 2015 14:46:26 +0100
+
 tcos (0.89.97) unstable; urgency=medium
 
   * Change order of Build-Depends
