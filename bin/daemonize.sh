@@ -16,6 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
+
 cmd=$1
 
 if [ ! -e $cmd ]; then

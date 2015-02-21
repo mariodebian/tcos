@@ -30,9 +30,9 @@ if [ -e /conf/tcos-run-functions ]; then
   export XAUTHORITY=/root/.Xauthority
 else
   _www=/var/lib/tcos/standalone/www
+  export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
   export XAUTHORITY=$(get_xauth)
 
-  export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/lib/tcos
   beepoff="xset b off"
   beepon="xset b on"
 fi
