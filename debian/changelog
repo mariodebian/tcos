@@ -1,3 +1,10 @@
+tcos (0.89.99) unstable; urgency=low
+
+  * Fix iptables disable-internet for users
+  * Add /usr/lib/tcos to PATH in standalone clients
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sat, 21 Feb 2015 16:09:05 +0100
+
 tcos (0.89.98) unstable; urgency=low
 
   * Fix tcos-standalone start, create pid file
