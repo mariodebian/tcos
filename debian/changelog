@@ -1,3 +1,9 @@
+tcos (0.90.1) unstable; urgency=high
+
+  * tcos-standalone/tcos-standalone.py: Use systemd to get process status and start/stop
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Sun, 21 May 2017 18:07:01 +0200
+
 tcos (0.89.99) unstable; urgency=low
 
   * Fix iptables disable-internet for users
